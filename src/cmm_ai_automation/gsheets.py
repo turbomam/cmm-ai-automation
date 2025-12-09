@@ -15,7 +15,6 @@ Example:
 
 import os
 from pathlib import Path
-from typing import Optional
 
 import gspread
 import pandas as pd
@@ -33,7 +32,7 @@ KNOWN_SHEETS = {
 }
 
 
-def get_gspread_client(credentials_path: Optional[str] = None) -> gspread.Client:
+def get_gspread_client(credentials_path: str | None = None) -> gspread.Client:
     """Get an authenticated gspread client.
 
     Args:
@@ -65,7 +64,7 @@ def get_gspread_client(credentials_path: Optional[str] = None) -> gspread.Client
 
 
 def get_spreadsheet(
-    name_or_id: str, credentials_path: Optional[str] = None
+    name_or_id: str, credentials_path: str | None = None
 ) -> gspread.Spreadsheet:
     """Open a Google Spreadsheet by name or ID.
 
@@ -88,7 +87,7 @@ def get_spreadsheet(
         return client.open(name_or_id)
 
 
-def list_worksheets(name_or_id: str, credentials_path: Optional[str] = None) -> list[str]:
+def list_worksheets(name_or_id: str, credentials_path: str | None = None) -> list[str]:
     """List all worksheet (tab) names in a spreadsheet.
 
     Args:
@@ -102,10 +101,30 @@ def list_worksheets(name_or_id: str, credentials_path: Optional[str] = None) -> 
     return [ws.title for ws in spreadsheet.worksheets()]
 
 
+def get_sheet_records(
+    spreadsheet_name: str,
+    worksheet_name: str | None = None,
+    credentials_path: str | None = None,
+) -> list[dict[str, str | int | float]]:
+    """Read data from a Google Sheets worksheet as a list of dicts.
+
+    Args:
+        spreadsheet_name: Name or ID of the spreadsheet
+        worksheet_name: Name of the worksheet/tab. If None, uses the first sheet.
+        credentials_path: Optional path to service account credentials
+
+    Returns:
+        List of dicts, one per row (keys are column headers)
+    """
+    spreadsheet = get_spreadsheet(spreadsheet_name, credentials_path)
+    worksheet = spreadsheet.worksheet(worksheet_name) if worksheet_name else spreadsheet.sheet1
+    return worksheet.get_all_records()
+
+
 def get_sheet_data(
     spreadsheet_name: str,
-    worksheet_name: Optional[str] = None,
-    credentials_path: Optional[str] = None,
+    worksheet_name: str | None = None,
+    credentials_path: str | None = None,
 ) -> pd.DataFrame:
     """Read data from a Google Sheets worksheet into a DataFrame.
 
@@ -117,22 +136,15 @@ def get_sheet_data(
     Returns:
         pandas DataFrame with the sheet data
     """
-    spreadsheet = get_spreadsheet(spreadsheet_name, credentials_path)
-
-    if worksheet_name:
-        worksheet = spreadsheet.worksheet(worksheet_name)
-    else:
-        worksheet = spreadsheet.sheet1
-
-    data = worksheet.get_all_records()
-    return pd.DataFrame(data)
+    records = get_sheet_records(spreadsheet_name, worksheet_name, credentials_path)
+    return pd.DataFrame(records)
 
 
 def update_sheet_data(
     spreadsheet_name: str,
     worksheet_name: str,
     df: pd.DataFrame,
-    credentials_path: Optional[str] = None,
+    credentials_path: str | None = None,
     clear_first: bool = True,
 ) -> None:
     """Write a DataFrame to a Google Sheets worksheet.
@@ -151,5 +163,5 @@ def update_sheet_data(
         worksheet.clear()
 
     # Convert DataFrame to list of lists (including header)
-    data = [df.columns.tolist()] + df.values.tolist()
+    data = [df.columns.tolist(), *df.values.tolist()]
     worksheet.update(data, "A1")

@@ -528,7 +528,67 @@ if __name__ == '__main__':
 
 ---
 
-## 13. References
+## 13. Code Quality Assurance
+
+### Python Version
+
+Python 3.12+ is required (`requires-python = ">=3.12"`).
+
+**Rationale:**
+- Modern type hint syntax (`X | Y` unions, built-in generics)
+- Better error messages
+- Performance improvements
+- `uv` handles Python version management automatically (no pyenv needed)
+
+### QA Tools Configured
+
+| Tool | Purpose | Command |
+|------|---------|---------|
+| **ruff** | Linting and formatting | `uv run ruff check src/` |
+| **mypy** | Static type checking | `uv run mypy src/cmm_ai_automation/` |
+| **deptry** | Dependency checking | `uv run deptry src/` |
+| **pytest** | Unit testing | `uv run pytest` |
+| **pytest-cov** | Coverage reporting | `uv run pytest --cov` |
+| **pre-commit** | Git hooks | `uv run pre-commit run --all-files` |
+
+### Installing QA Dependencies
+
+```bash
+uv sync --group dev --group qa
+```
+
+### Pre-commit Setup
+
+```bash
+uv run pre-commit install
+```
+
+### Ruff Configuration
+
+Ruff is configured with these rule sets:
+- `E`, `W` - pycodestyle
+- `F` - Pyflakes
+- `I` - isort
+- `B` - flake8-bugbear
+- `C4` - flake8-comprehensions
+- `UP` - pyupgrade
+- `ARG` - unused arguments
+- `SIM` - simplify
+- `TCH` - type checking imports
+- `PTH` - pathlib
+- `RUF` - Ruff-specific
+
+Generated files (datamodel/, project/) are excluded from linting.
+
+### Coverage Requirements
+
+- Minimum coverage: 80%
+- Branch coverage enabled
+- Generated code excluded from coverage
+
+---
+
+## 14. References
 
 - [linkml-project-copier](https://github.com/dalito/linkml-project-copier) - Base template
 - [ai4curation/github-ai-integrations](https://github.com/ai4curation/github-ai-integrations) - AI automation template
