@@ -667,7 +667,106 @@ EOF
 
 ---
 
-## 15. References
+## 15. Google Sheets Authentication Setup
+
+**Date:** 2024-12-09
+
+### Google Cloud Project
+
+Used existing project `mam-gdrive-mcp-server` (already had Google Drive API enabled).
+
+### Steps Performed
+
+**1. Set active project:**
+```bash
+gcloud config set project mam-gdrive-mcp-server
+```
+
+**2. Enable Google Sheets API:**
+```bash
+gcloud services enable sheets.googleapis.com --project=mam-gdrive-mcp-server
+```
+
+**3. Create service account:**
+```bash
+gcloud iam service-accounts create cmm-sheets-access \
+  --display-name="CMM Sheets Access" \
+  --description="Service account for cmm-ai-automation Google Sheets access" \
+  --project=mam-gdrive-mcp-server
+```
+
+**4. Download credentials:**
+```bash
+mkdir -p ~/.config/gspread
+gcloud iam service-accounts keys create ~/.config/gspread/service_account.json \
+  --iam-account=cmm-sheets-access@mam-gdrive-mcp-server.iam.gserviceaccount.com \
+  --project=mam-gdrive-mcp-server
+```
+
+**5. Share spreadsheet with service account:**
+- Open "BER CMM Data for AI - for editing" in Google Sheets
+- Click Share → Add `cmm-sheets-access@mam-gdrive-mcp-server.iam.gserviceaccount.com`
+- Set permission: **Viewer** (read-only)
+- Uncheck "Notify people"
+
+### Service Account Details
+
+| Property | Value |
+|----------|-------|
+| Email | `cmm-sheets-access@mam-gdrive-mcp-server.iam.gserviceaccount.com` |
+| Project | `mam-gdrive-mcp-server` |
+| Access Level | Viewer (read-only) |
+| Credentials Location | `~/.config/gspread/service_account.json` |
+
+### Available Worksheets
+
+Verified access to "BER CMM Data for AI - for editing":
+
+| Tab Name | Records |
+|----------|---------|
+| taxa_and_genomes | 215 |
+| strains | - |
+| growth_media | - |
+| media_ingredients | 76 |
+| growth_preferences | - |
+| transcriptomics | - |
+| biosamples | - |
+| macromolecular_structures | - |
+| genes_and_proteins | - |
+| pathways | - |
+| protocols | - |
+| assays | - |
+| chemicals | - |
+| bioprocesses | - |
+| datasets | - |
+| publications | - |
+| screening_results | - |
+
+### Usage Example
+
+```python
+from cmm_ai_automation.gsheets import list_worksheets, get_sheet_records, get_sheet_data
+
+# List all tabs
+tabs = list_worksheets("BER CMM Data for AI - for editing")
+
+# Get data as list of dicts
+records = get_sheet_records("BER CMM Data for AI - for editing", "media_ingredients")
+
+# Get data as pandas DataFrame
+df = get_sheet_data("BER CMM Data for AI - for editing", "taxa_and_genomes")
+```
+
+### Security Notes
+
+- Credentials stored outside repository (`~/.config/gspread/`)
+- `.gitignore` updated to block `**/service_account.json` and similar patterns
+- Service account has read-only access
+- No credentials committed to git
+
+---
+
+## 16. References
 
 - [linkml-project-copier](https://github.com/dalito/linkml-project-copier) - Base template
 - [ai4curation/github-ai-integrations](https://github.com/ai4curation/github-ai-integrations) - AI automation template
