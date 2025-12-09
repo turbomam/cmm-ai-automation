@@ -68,7 +68,7 @@ These are included in the templates above but some general over-arching preferen
 ## Git and GitHub Practices
 
 * always work on branches, commit early and often, make PRs early
-* in general, ne PR = one issue (avoid mixing orthogonal concerns). Always reference issues in commits/PR messages
+* in general, one PR = one issue (avoid mixing orthogonal concerns). Always reference issues in commits/PR messages
 * use `gh` on command line for operations like finding issues, creating PRs
 * all the group copier templates include extensive github actions for ensuring PRs are high quality
 * github repo should have adequate metadata, links to docs, tags
@@ -86,4 +86,4 @@ These are included in the templates above but some general over-arching preferen
 * frameworks: mkdocs is generally favored due to simplicity but sphinx is ok for older projects
 * Every project must have a comprehensive up to date README.md (or the README.md can point to site generated from mkdocs)
 * jupyter notebooks can serve as combined integration tests/docs, use mkdocs-jupyter, for CLI examples, use `%%bash`
-* Formatting tips: lists should be preceded by a blank line to avoid formatting issues withmkdocs
+* Formatting tips: lists should be preceded by a blank line to avoid formatting issues with mkdocs

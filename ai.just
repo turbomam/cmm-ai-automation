@@ -5,7 +5,7 @@ goosehints:
   [ -f .goosehints ] || ln -s AGENTS.md .goosehints
 
 copilot-instructions:
-  [ -f .github/copilot-instructions.md ] || cd .github && ln -s ../AGENTS.md copilot-instructions.md
+  mkdir -p .github && [ -e .github/copilot-instructions.md ] || ln -s ../AGENTS.md .github/copilot-instructions.md
 
 setup-ai: setup-ai-instructions setup-gh
 
