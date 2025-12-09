@@ -149,3 +149,8 @@ dmypy.json
 **/client_secret*.json
 *.credentials
 **/*-credentials.json
+
+# Private data from Google Sheets - NEVER commit
+# The "BER CMM Data for AI - for editing" spreadsheet is private
+data/private/*
+!data/private/README.md
