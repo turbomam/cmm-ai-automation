@@ -20,6 +20,7 @@ dependencies = [
   "google-auth >=2.0.0",
   "google-auth-oauthlib >=1.0.0",
   "pandas >=2.0.0",
+  "click >=8.0.0",
 ]
 
 [dependency-groups]
