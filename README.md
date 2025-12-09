@@ -20,7 +20,11 @@ This project integrates with several knowledge graph and ontology resources:
 |---------|-------------|
 | [kg-microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) | Source of microbial knowledge graph data; CMM strains are linked via `kg_node_ids` |
 | [kgx](https://github.com/biolink/kgx) | Knowledge graph exchange format for importing/exporting Biolink Model-compliant data |
+| [biolink-model](https://github.com/biolink/biolink-model) | Schema and upper ontology for biological knowledge representation |
+| [biolink-model-toolkit](https://github.com/biolink/biolink-model-toolkit) | Python utilities for working with Biolink Model |
 | [metpo](https://github.com/berkeleybop/metpo) | Microbial Phenotype Ontology for annotating phenotypic traits of CMM-relevant organisms |
+
+See also: [biolink organization](https://github.com/orgs/biolink/repositories) for additional tools.
 
 ## Features
 
@@ -103,5 +107,8 @@ AI automation workflows adapted from [ai4curation/github-ai-integrations](https:
 
 - [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI) - AI-driven discovery for critical mineral metabolism research
 - [Knowledge-Graph-Hub/kg-microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) - Knowledge graph for microbial data integration
-- [biolink/kgx](https://github.com/biolink/kgx) - Knowledge Graph Exchange tools for Biolink Model-compliant graphs
+- [biolink organization](https://github.com/orgs/biolink/repositories) - Biolink Model ecosystem including:
+  - [biolink/kgx](https://github.com/biolink/kgx) - Knowledge Graph Exchange tools
+  - [biolink/biolink-model](https://github.com/biolink/biolink-model) - Schema and upper ontology
+  - [biolink/biolink-model-toolkit](https://github.com/biolink/biolink-model-toolkit) - Python utilities
 - [berkeleybop/metpo](https://github.com/berkeleybop/metpo) - Microbial Phenotype Ontology for phenotypic trait annotation

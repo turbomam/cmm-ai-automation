@@ -346,7 +346,11 @@ cp /path/to/service_account.json ~/.config/gspread/service_account.json
 |---------|---------|-------------------|
 | [kg-microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) | Microbial knowledge graph with strain/function data | Planned - CMM strains link via `kg_node_ids` column |
 | [kgx](https://github.com/biolink/kgx) | Knowledge Graph Exchange for Biolink Model graphs | Planned - Import/export KG data |
+| [biolink-model](https://github.com/biolink/biolink-model) | Schema and upper ontology for biological KGs | Planned - Data modeling alignment |
+| [biolink-model-toolkit](https://github.com/biolink/biolink-model-toolkit) | Python utilities for Biolink Model | Planned - Model validation |
 | [metpo](https://github.com/berkeleybop/metpo) | Microbial Phenotype Ontology | Planned - Phenotype annotation |
+
+See also: [biolink organization](https://github.com/orgs/biolink/repositories) for additional tools (ontobio, etc.).
 
 ### Data Flow
 
@@ -371,7 +375,10 @@ Biolink Model-compliant KG
 - [ai4curation/github-ai-integrations](https://github.com/ai4curation/github-ai-integrations) - AI automation template
 - [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI) - Collaborating project for CMM discovery
 - [kg-microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) - Microbial knowledge graph
-- [kgx](https://github.com/biolink/kgx) - Knowledge Graph Exchange tools
+- [biolink organization](https://github.com/orgs/biolink/repositories) - Biolink Model ecosystem
+  - [kgx](https://github.com/biolink/kgx) - Knowledge Graph Exchange tools
+  - [biolink-model](https://github.com/biolink/biolink-model) - Schema and upper ontology
+  - [biolink-model-toolkit](https://github.com/biolink/biolink-model-toolkit) - Python utilities
 - [metpo](https://github.com/berkeleybop/metpo) - Microbial Phenotype Ontology
 - [gspread documentation](https://docs.gspread.org/)
 - [LinkML documentation](https://linkml.io/)
