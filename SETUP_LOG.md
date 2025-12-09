@@ -354,6 +354,48 @@ See also:
 - [biolink organization](https://github.com/orgs/biolink/repositories) for additional tools (ontobio, etc.)
 - [biopragmatics organization](https://github.com/biopragmatics) for identifier and ontology tools (bioregistry, curies, pyobo, etc.)
 
+### OLS Embeddings Database
+
+A local copy of OLS text embeddings is available for semantic search and term mapping:
+
+| Property | Value |
+|----------|-------|
+| Location | `/home/mark/work/large/ontologies/embeddings.db` |
+| Size | 288 GB |
+| Total embeddings | ~9.5 million |
+| Model | OpenAI `text-embedding-3-small` (1536 dimensions) |
+| Source | [cthoyt.com/2025/08/04/ontology-text-embeddings.html](https://cthoyt.com/2025/08/04/ontology-text-embeddings.html) |
+
+**Database schema:**
+```sql
+CREATE TABLE embeddings (
+    ontologyId TEXT,
+    entityType TEXT,
+    iri TEXT,
+    document TEXT,
+    model TEXT,
+    hash TEXT,
+    embeddings TEXT,  -- JSON-encoded float array
+    PRIMARY KEY (ontologyId, entityType, iri)
+);
+```
+
+**Top ontologies by embedding count:**
+| Ontology | Count |
+|----------|-------|
+| ncbitaxon | 2,650,614 |
+| slm | 1,001,034 |
+| dron | 756,397 |
+| gaz | 678,436 |
+| pr | 364,392 |
+| snomed | 352,573 |
+| chebi | 221,776 |
+| go | 84,737 |
+
+**Planned CMM subset ontologies:** chebi, go, obi, envo, ncbitaxon (subset), micro, metpo
+
+**Reference implementation:** See `search_pcr_embeddings.py` and `chromadb_semantic_mapper.py` in [berkeleybop/metpo](https://github.com/berkeleybop/metpo).
+
 ### Data Flow
 
 ```

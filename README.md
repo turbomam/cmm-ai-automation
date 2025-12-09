@@ -31,6 +31,23 @@ See also:
   - [curies](https://github.com/biopragmatics/curies) - CURIE/URI conversion
   - [pyobo](https://github.com/biopragmatics/pyobo) - Python package for ontologies and nomenclatures
 
+### OLS Embeddings for Semantic Search
+
+This project can leverage pre-computed embeddings from the [Ontology Lookup Service (OLS)](https://www.ebi.ac.uk/ols4/) for semantic search and term mapping. See [cthoyt.com/2025/08/04/ontology-text-embeddings.html](https://cthoyt.com/2025/08/04/ontology-text-embeddings.html) for background.
+
+**Local embeddings database:**
+- ~9.5 million term embeddings from OLS-registered ontologies
+- Model: OpenAI `text-embedding-3-small` (1536 dimensions)
+- Schema: `(ontologyId, entityType, iri, document, model, hash, embeddings)`
+- Embeddings stored as JSON strings
+
+**Planned use cases:**
+- Search Google Sheets content (strain names, media ingredients) against ontology terms
+- Generate candidate mappings for unmapped terms
+- Create CMM-specific embedding subsets for faster search
+
+Reference implementation: [berkeleybop/metpo](https://github.com/berkeleybop/metpo) embeddings search code.
+
 ## Features
 
 - **LinkML Schema**: Data models for CMM microbial strain data
