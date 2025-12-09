@@ -48,6 +48,40 @@ This project can leverage pre-computed embeddings from the [Ontology Lookup Serv
 
 Reference implementation: [berkeleybop/metpo](https://github.com/berkeleybop/metpo) embeddings search code.
 
+### CMM-AI Data Sources and APIs
+
+The collaborating [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI) project uses the following APIs and data sources:
+
+**NCBI APIs (via Biopython Entrez):**
+| API | Used For |
+|-----|----------|
+| Entrez esearch/efetch/esummary | Assembly, BioSample, Taxonomy, PubMed/PMC |
+| PMC ID Converter | PMID to PMC ID resolution |
+| GEO/SRA | Transcriptomics datasets |
+
+**Other APIs:**
+| API | Used For |
+|-----|----------|
+| [KEGG REST](https://rest.kegg.jp) | Metabolic pathways |
+| [PubChem REST](https://pubchem.ncbi.nlm.nih.gov/rest/pug) | Chemical compounds |
+| [RCSB PDB](https://www.rcsb.org) | Protein structures |
+| [UniProt](https://www.uniprot.org) | Protein sequences and annotations |
+
+**Database links generated:**
+- Culture collections: ATCC, DSMZ, NCIMB
+- MetaCyc pathways
+- DOI resolution
+- AlphaFold predictions
+- JGI IMG/GOLD
+
+**Ontologies used:**
+CHEBI, GO, ENVO, OBI, NCBITaxon, MIxS, RHEA, BAO
+
+**Related issues:**
+- [CMM-AI #38](https://github.com/CultureBotAI/CMM-AI/issues/38) - Document how to obtain KG-Microbe database files
+- [CMM-AI #37](https://github.com/CultureBotAI/CMM-AI/issues/37) - Document sources for curated media data
+- [CMM-AI #16](https://github.com/CultureBotAI/CMM-AI/issues/16) - Document the 5 Data Sources in Schema
+
 ## Features
 
 - **LinkML Schema**: Data models for CMM microbial strain data
