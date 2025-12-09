@@ -43,6 +43,9 @@ qa = [
     "pandas-stubs>=2.0.0",
 ]
 
+[project.scripts]
+download-sheets = "cmm_ai_automation.scripts.download_sheets:main"
+
 # See https://hatch.pypa.io/latest/config/build/#file-selection for how to
 # explicitly include files other than default into the build distributions.
 
