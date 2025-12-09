@@ -12,6 +12,16 @@ This repository is developed in collaboration with [CultureBotAI/CMM-AI](https:/
 - Integration with private Google Sheets data sources
 - OBO Foundry ontology tooling for semantic annotation
 
+### Integration with Knowledge Graph Ecosystem
+
+This project integrates with several knowledge graph and ontology resources:
+
+| Project | Integration |
+|---------|-------------|
+| [kg-microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) | Source of microbial knowledge graph data; CMM strains are linked via `kg_node_ids` |
+| [kgx](https://github.com/biolink/kgx) | Knowledge graph exchange format for importing/exporting Biolink Model-compliant data |
+| [metpo](https://github.com/berkeleybop/metpo) | Microbial Phenotype Ontology for annotating phenotypic traits of CMM-relevant organisms |
+
 ## Features
 
 - **LinkML Schema**: Data models for CMM microbial strain data
@@ -92,3 +102,6 @@ AI automation workflows adapted from [ai4curation/github-ai-integrations](https:
 ## Related Projects
 
 - [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI) - AI-driven discovery for critical mineral metabolism research
+- [Knowledge-Graph-Hub/kg-microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) - Knowledge graph for microbial data integration
+- [biolink/kgx](https://github.com/biolink/kgx) - Knowledge Graph Exchange tools for Biolink Model-compliant graphs
+- [berkeleybop/metpo](https://github.com/berkeleybop/metpo) - Microbial Phenotype Ontology for phenotypic trait annotation

@@ -338,11 +338,41 @@ cp /path/to/service_account.json ~/.config/gspread/service_account.json
 
 ---
 
-## 10. References
+## 10. Planned Integrations
+
+### Knowledge Graph and Ontology Resources
+
+| Project | Purpose | Integration Status |
+|---------|---------|-------------------|
+| [kg-microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) | Microbial knowledge graph with strain/function data | Planned - CMM strains link via `kg_node_ids` column |
+| [kgx](https://github.com/biolink/kgx) | Knowledge Graph Exchange for Biolink Model graphs | Planned - Import/export KG data |
+| [metpo](https://github.com/berkeleybop/metpo) | Microbial Phenotype Ontology | Planned - Phenotype annotation |
+
+### Data Flow
+
+```
+Google Sheets (BER CMM Data)
+    ↓
+cmm-ai-automation (this repo)
+    ↓ LinkML schema validation
+    ↓ Ontology term lookup (OLS)
+    ↓
+kg-microbe (knowledge graph)
+    ↓ kgx export
+    ↓
+Biolink Model-compliant KG
+```
+
+---
+
+## 11. References
 
 - [linkml-project-copier](https://github.com/dalito/linkml-project-copier) - Base template
 - [ai4curation/github-ai-integrations](https://github.com/ai4curation/github-ai-integrations) - AI automation template
-- [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI) - Reference implementation
+- [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI) - Collaborating project for CMM discovery
+- [kg-microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) - Microbial knowledge graph
+- [kgx](https://github.com/biolink/kgx) - Knowledge Graph Exchange tools
+- [metpo](https://github.com/berkeleybop/metpo) - Microbial Phenotype Ontology
 - [gspread documentation](https://docs.gspread.org/)
 - [LinkML documentation](https://linkml.io/)
 - [Claude Code GitHub Action](https://github.com/anthropics/claude-code-action)
