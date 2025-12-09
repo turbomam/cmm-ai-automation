@@ -16,6 +16,10 @@ dynamic = ["version"]
 
 dependencies = [
   "linkml-runtime >=1.9.4",
+  "gspread >=6.0.0",
+  "google-auth >=2.0.0",
+  "google-auth-oauthlib >=1.0.0",
+  "pandas >=2.0.0",
 ]
 
 [dependency-groups]

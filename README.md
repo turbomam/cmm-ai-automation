@@ -2,7 +2,54 @@
 
 # cmm-ai-automation
 
-AI-assisted automation for Critical Mineral Metabolism data curation
+AI-assisted automation for Critical Mineral Metabolism (CMM) data curation using LinkML, OBO Foundry tools, and Google Sheets integration.
+
+## Features
+
+- **LinkML Schema**: Data models for CMM microbial strain data
+- **Google Sheets Integration**: Read/write access to private Google Sheets (e.g., BER CMM Data)
+- **AI Automation**: GitHub Actions with Claude Code for issue triage, summarization, and code assistance
+- **OBO Foundry Tools**: Integration with OLS (Ontology Lookup Service) for ontology term lookup
+
+## Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/turbomam/cmm-ai-automation.git
+cd cmm-ai-automation
+
+# Install dependencies with uv
+uv sync
+
+# Set up Google Sheets credentials (service account)
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
+
+# Or place credentials in default location
+# ~/.config/gspread/service_account.json
+```
+
+## Google Sheets Usage
+
+```python
+from cmm_ai_automation.gsheets import get_sheet_data, list_worksheets
+
+# List available tabs in the BER CMM spreadsheet
+tabs = list_worksheets("BER CMM Data for AI - for editing")
+print(tabs)
+
+# Read data from a specific tab
+df = get_sheet_data("BER CMM Data for AI - for editing", "media_ingredients")
+print(df.head())
+```
+
+## AI Integration
+
+This repo includes GitHub Actions that respond to `@claude` mentions in issues and PRs:
+- Issue triage and labeling
+- Issue summarization
+- Code assistance and PR reviews
+
+Requires `CLAUDE_CODE_OAUTH_TOKEN` secret to be configured.
 
 ## Documentation Website
 
