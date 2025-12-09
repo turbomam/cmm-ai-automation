@@ -350,7 +350,9 @@ cp /path/to/service_account.json ~/.config/gspread/service_account.json
 | [biolink-model-toolkit](https://github.com/biolink/biolink-model-toolkit) | Python utilities for Biolink Model | Planned - Model validation |
 | [metpo](https://github.com/berkeleybop/metpo) | Microbial Phenotype Ontology | Planned - Phenotype annotation |
 
-See also: [biolink organization](https://github.com/orgs/biolink/repositories) for additional tools (ontobio, etc.).
+See also:
+- [biolink organization](https://github.com/orgs/biolink/repositories) for additional tools (ontobio, etc.)
+- [biopragmatics organization](https://github.com/biopragmatics) for identifier and ontology tools (bioregistry, curies, pyobo, etc.)
 
 ### Data Flow
 
@@ -380,6 +382,10 @@ Biolink Model-compliant KG
   - [biolink-model](https://github.com/biolink/biolink-model) - Schema and upper ontology
   - [biolink-model-toolkit](https://github.com/biolink/biolink-model-toolkit) - Python utilities
 - [metpo](https://github.com/berkeleybop/metpo) - Microbial Phenotype Ontology
+- [biopragmatics organization](https://github.com/biopragmatics) - Identifier and ontology tools
+  - [bioregistry](https://github.com/biopragmatics/bioregistry) - Integrative registry
+  - [curies](https://github.com/biopragmatics/curies) - CURIE/URI conversion
+  - [pyobo](https://github.com/biopragmatics/pyobo) - Python ontology tools
 - [gspread documentation](https://docs.gspread.org/)
 - [LinkML documentation](https://linkml.io/)
 - [Claude Code GitHub Action](https://github.com/anthropics/claude-code-action)

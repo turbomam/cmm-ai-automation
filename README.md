@@ -24,7 +24,12 @@ This project integrates with several knowledge graph and ontology resources:
 | [biolink-model-toolkit](https://github.com/biolink/biolink-model-toolkit) | Python utilities for working with Biolink Model |
 | [metpo](https://github.com/berkeleybop/metpo) | Microbial Phenotype Ontology for annotating phenotypic traits of CMM-relevant organisms |
 
-See also: [biolink organization](https://github.com/orgs/biolink/repositories) for additional tools.
+See also:
+- [biolink organization](https://github.com/orgs/biolink/repositories) - Biolink Model ecosystem
+- [biopragmatics organization](https://github.com/biopragmatics) - Identifier and ontology tools including:
+  - [bioregistry](https://github.com/biopragmatics/bioregistry) - Integrative registry of biological databases and ontologies
+  - [curies](https://github.com/biopragmatics/curies) - CURIE/URI conversion
+  - [pyobo](https://github.com/biopragmatics/pyobo) - Python package for ontologies and nomenclatures
 
 ## Features
 
@@ -112,3 +117,7 @@ AI automation workflows adapted from [ai4curation/github-ai-integrations](https:
   - [biolink/biolink-model](https://github.com/biolink/biolink-model) - Schema and upper ontology
   - [biolink/biolink-model-toolkit](https://github.com/biolink/biolink-model-toolkit) - Python utilities
 - [berkeleybop/metpo](https://github.com/berkeleybop/metpo) - Microbial Phenotype Ontology for phenotypic trait annotation
+- [biopragmatics organization](https://github.com/biopragmatics) - Identifier and ontology tools including:
+  - [bioregistry](https://github.com/biopragmatics/bioregistry) - Integrative registry of biological databases and ontologies
+  - [curies](https://github.com/biopragmatics/curies) - CURIE/URI conversion
+  - [pyobo](https://github.com/biopragmatics/pyobo) - Python package for ontologies and nomenclatures
