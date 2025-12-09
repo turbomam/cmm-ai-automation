@@ -15,6 +15,17 @@ Create a GitHub repository for AI-assisted automation of Critical Mineral Metabo
 - Integration with private Google Sheets (specifically "BER CMM Data for AI - for editing")
 - AI/LLM automation via GitHub Actions (Claude Code)
 
+### Collaboration with CultureBotAI/CMM-AI
+
+This repository is developed in collaboration with [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI). The division of responsibilities:
+
+| Repository | Focus |
+|------------|-------|
+| [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI) | AI-driven biological discovery, microorganism identification, analysis workflows |
+| [turbomam/cmm-ai-automation](https://github.com/turbomam/cmm-ai-automation) | Data modeling (LinkML), Google Sheets integration, OBO Foundry ontology tooling |
+
+The AI automation workflows in this repository were adapted from those used in CMM-AI, which in turn came from the [ai4curation/github-ai-integrations](https://github.com/ai4curation/github-ai-integrations) template maintained by the Monarch Initiative.
+
 ---
 
 ## 2. Template Selection

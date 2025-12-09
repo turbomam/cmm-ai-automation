@@ -4,6 +4,14 @@
 
 AI-assisted automation for Critical Mineral Metabolism (CMM) data curation using LinkML, OBO Foundry tools, and Google Sheets integration.
 
+## Collaboration
+
+This repository is developed in collaboration with [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI), which focuses on AI-driven discovery of microorganisms relevant to critical mineral metabolism. While CMM-AI handles the biological discovery and analysis workflows, this repository provides:
+
+- Schema-driven data modeling with LinkML
+- Integration with private Google Sheets data sources
+- OBO Foundry ontology tooling for semantic annotation
+
 ## Features
 
 - **LinkML Schema**: Data models for CMM microbial strain data
@@ -78,3 +86,9 @@ They are written for the command runner [just](https://github.com/casey/just/). 
 ## Credits
 
 This project uses the template [linkml-project-copier](https://github.com/dalito/linkml-project-copier) published as [doi:10.5281/zenodo.15163584](https://doi.org/10.5281/zenodo.15163584).
+
+AI automation workflows adapted from [ai4curation/github-ai-integrations](https://github.com/ai4curation/github-ai-integrations) (Monarch Initiative).
+
+## Related Projects
+
+- [CultureBotAI/CMM-AI](https://github.com/CultureBotAI/CMM-AI) - AI-driven discovery for critical mineral metabolism research
