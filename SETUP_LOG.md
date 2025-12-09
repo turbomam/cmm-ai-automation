@@ -588,7 +588,86 @@ Generated files (datamodel/, project/) are excluded from linting.
 
 ---
 
-## 14. References
+## 14. GitHub Repository Configuration
+
+### Branch Protection (main)
+
+Configured via GitHub API on 2024-12-09:
+
+| Setting | Value | Rationale |
+|---------|-------|-----------|
+| Require PR reviews | 1 approval | Ensures code review before merge |
+| Dismiss stale reviews | Yes | Re-review after changes |
+| Require conversation resolution | Yes | All comments must be addressed |
+| Enforce admins | **No** | Owner (turbomam) can bypass for urgent fixes |
+| Allow force pushes | No | Preserve history |
+| Allow deletions | No | Protect main branch |
+
+**Key point:** `enforce_admins: false` allows the repository owner to push directly or merge without approval when needed, while still requiring reviews for other contributors.
+
+### Merge Settings
+
+| Setting | Value |
+|---------|-------|
+| Allow squash merge | Yes (preferred) |
+| Allow merge commit | No |
+| Allow rebase merge | Yes |
+| Delete branch on merge | Yes |
+| Allow auto-merge | Yes |
+
+### Other Settings
+
+| Setting | Value |
+|---------|-------|
+| Issues | Enabled |
+| Projects | Enabled |
+| Wiki | Disabled (use docs/ instead) |
+
+### Workflow for Contributors
+
+1. Create a feature branch: `git checkout -b feature/my-feature`
+2. Make changes and commit
+3. Push branch: `git push -u origin feature/my-feature`
+4. Create PR via `gh pr create` or GitHub web UI
+5. Request review (or owner can self-merge with bypass)
+6. Squash merge after approval
+7. Branch auto-deleted
+
+### Commands Used
+
+```bash
+# Set branch protection
+gh api repos/turbomam/cmm-ai-automation/branches/main/protection -X PUT \
+  --input - << 'EOF'
+{
+  "required_status_checks": null,
+  "enforce_admins": false,
+  "required_pull_request_reviews": {
+    "dismiss_stale_reviews": true,
+    "require_code_owner_reviews": false,
+    "required_approving_review_count": 1
+  },
+  "restrictions": null,
+  "required_conversation_resolution": true
+}
+EOF
+
+# Configure merge settings
+gh api repos/turbomam/cmm-ai-automation -X PATCH --input - << 'EOF'
+{
+  "has_wiki": false,
+  "allow_squash_merge": true,
+  "allow_merge_commit": false,
+  "allow_rebase_merge": true,
+  "delete_branch_on_merge": true,
+  "allow_auto_merge": true
+}
+EOF
+```
+
+---
+
+## 15. References
 
 - [linkml-project-copier](https://github.com/dalito/linkml-project-copier) - Base template
 - [ai4curation/github-ai-integrations](https://github.com/ai4curation/github-ai-integrations) - AI automation template
