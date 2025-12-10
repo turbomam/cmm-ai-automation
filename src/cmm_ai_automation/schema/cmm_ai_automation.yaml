@@ -1,96 +1,409 @@
 ---
 id: https://w3id.org/turbomam/cmm-ai-automation
 name: cmm-ai-automation
-title: cmm-ai-automation
+title: CMM AI Automation Schema
 description: |-
-  AI-assisted automation for Critical Mineral Metabolism data curation
+  Schema for Critical Mineral Metabolism (CMM) data curation.
+
+  Models microbial strains, growth media, ingredients, and their relationships
+  for knowledge graph generation.
+
 license: MIT
 see_also:
   - https://turbomam.github.io/cmm-ai-automation
 
 prefixes:
-  cmm_ai_automation: https://w3id.org/turbomam/cmm-ai-automation/
+  cmm: https://w3id.org/turbomam/cmm-ai-automation/
   linkml: https://w3id.org/linkml/
   biolink: https://w3id.org/biolink/
   schema: http://schema.org/
-  PATO: http://purl.obolibrary.org/obo/PATO_
-  example: https://example.org/
-default_prefix: cmm_ai_automation
+  CHEBI: http://purl.obolibrary.org/obo/CHEBI_
+  OBI: http://purl.obolibrary.org/obo/OBI_
+  UO: http://purl.obolibrary.org/obo/UO_
+  RO: http://purl.obolibrary.org/obo/RO_
+  NCBITaxon: http://purl.obolibrary.org/obo/NCBITaxon_
+  ENVO: http://purl.obolibrary.org/obo/ENVO_
+  # Culture collection prefixes
+  DSMZ: https://www.dsmz.de/collection/catalogue/details/culture/DSM-
+  ATCC: https://www.atcc.org/products/
+
+default_prefix: cmm
 default_range: string
 
 imports:
   - linkml:types
 
+# =============================================================================
+# CLASSES
+# =============================================================================
+
 classes:
 
+  # ---------------------------------------------------------------------------
+  # Base classes
+  # ---------------------------------------------------------------------------
+
   NamedThing:
-    description: >-
-      A generic grouping for any identifiable entity
+    abstract: true
+    description: A generic grouping for any identifiable entity
     slots:
       - id
       - name
       - description
+      - synonyms
     class_uri: schema:Thing
 
-  Person:
+  # ---------------------------------------------------------------------------
+  # Chemical entities
+  # ---------------------------------------------------------------------------
+
+  Ingredient:
     is_a: NamedThing
     description: >-
-      Represents a Person
+      A chemical entity that can be a component of solutions or media.
+      Represents the abstract ingredient, not a specific instance with concentration.
     slots:
-      - primary_email
-      - birth_date
-      - age_in_years
-      - vital_status
-    slot_usage:
-      primary_email:
-        pattern: "^\\S+@[\\S+\\.]+\\S+"
+      - chemical_formula
+      - chebi_id
+      - cas_rn
+      - inchikey
+      - pubchem_cid
+      - xrefs
+    id_prefixes:
+      - cmm
+      - CHEBI
 
-  PersonCollection:
-    tree_root: true
+  # ---------------------------------------------------------------------------
+  # Mixtures (Solutions and Media)
+  # ---------------------------------------------------------------------------
+
+  Mixture:
+    abstract: true
+    is_a: NamedThing
     description: >-
-      A holder for Person objects
+      Abstract base class for things composed of ingredients.
+      Both Solution and GrowthMedium are mixtures.
+    slots:
+      - has_ingredient_component
+
+  Solution:
+    is_a: Mixture
+    description: >-
+      A pre-made concentrated mixture of ingredients, typically diluted into media.
+      Examples: Trace element solution SL-6, Vitamin solution, Phosphate buffer stock.
+    slots:
+      - solution_type
+    id_prefixes:
+      - cmm
+
+  GrowthMedium:
+    is_a: Mixture
+    description: >-
+      A complete formulation for cultivating microorganisms.
+      Contains ingredients directly and/or pre-made solutions.
+    slots:
+      - medium_type
+      - ph
+      - sterilization_method
+      - has_solution_component
+      - target_organisms
+      - references
+    id_prefixes:
+      - cmm
+      - DSMZ
+      - ATCC
+
+  # ---------------------------------------------------------------------------
+  # Composition relationships (reified)
+  # ---------------------------------------------------------------------------
+
+  IngredientComponent:
+    description: >-
+      Reified relationship: an ingredient as used in a mixture, with concentration and role.
+      This captures the context-dependent properties of ingredient usage.
+    slots:
+      - ingredient
+      - concentration_value
+      - concentration_unit
+      - roles
+      - notes
+
+  SolutionComponent:
+    description: >-
+      Reified relationship: a solution as used in a medium, with volume/dilution.
+    slots:
+      - solution
+      - volume_per_liter
+      - volume_unit
+      - notes
+
+  # ---------------------------------------------------------------------------
+  # Cross-references
+  # ---------------------------------------------------------------------------
+
+  CrossReference:
+    description: A cross-reference to an external database or identifier
+    slots:
+      - xref_type
+      - xref_id
+      - xref_label
+
+  # ---------------------------------------------------------------------------
+  # Container for data
+  # ---------------------------------------------------------------------------
+
+  CMMDatabase:
+    tree_root: true
+    description: Container for all CMM entities
     attributes:
-      people:
-        range: Person
+      ingredients:
+        range: Ingredient
+        multivalued: true
+        inlined_as_list: true
+      solutions:
+        range: Solution
+        multivalued: true
+        inlined_as_list: true
+      media:
+        range: GrowthMedium
         multivalued: true
         inlined_as_list: true
 
+# =============================================================================
+# SLOTS
+# =============================================================================
+
 slots:
+
+  # Identity slots
   id:
     identifier: true
     slot_uri: schema:identifier
     range: uriorcurie
     description: A unique identifier for a thing
+
   name:
     slot_uri: schema:name
     description: A human-readable name for a thing
+
   description:
     slot_uri: schema:description
     description: A human-readable description for a thing
-  primary_email:
-    slot_uri: schema:email
-    description: The main email address of a person
-  birth_date:
-    slot_uri: schema:birthDate
-    range: date
-    description: Date on which a person is born
-  age_in_years:
+
+  synonyms:
+    multivalued: true
+    description: Alternative names for this entity
+
+  # Chemical identity slots
+  chemical_formula:
+    description: Chemical formula (e.g., NaCl, MgSO4·7H2O)
+
+  chebi_id:
+    range: uriorcurie
+    description: ChEBI identifier
+    id_prefixes:
+      - CHEBI
+
+  cas_rn:
+    description: CAS Registry Number
+    pattern: "^\\d{2,7}-\\d{2}-\\d$"
+
+  inchikey:
+    description: InChIKey for structural identification
+    pattern: "^[A-Z]{14}-[A-Z]{10}-[A-Z]$"
+
+  pubchem_cid:
     range: integer
-    description: Number of years since birth
-  vital_status:
-    range: PersonStatus
-    description: living or dead status
+    description: PubChem Compound ID
+
+  # Cross-reference slots
+  xrefs:
+    range: CrossReference
+    multivalued: true
+    inlined_as_list: true
+    description: Cross-references to external databases
+
+  xref_type:
+    description: Type of cross-reference (e.g., CHEBI, CAS-RN, kg-microbe-ingredient)
+
+  xref_id:
+    description: The identifier value
+
+  xref_label:
+    description: Human-readable label from the external source
+
+  # Composition slots
+  has_ingredient_component:
+    range: IngredientComponent
+    multivalued: true
+    inlined_as_list: true
+    description: Ingredients contained in this mixture with their concentrations
+
+  has_solution_component:
+    range: SolutionComponent
+    multivalued: true
+    inlined_as_list: true
+    description: Solutions contained in this medium
+
+  ingredient:
+    range: Ingredient
+    description: Reference to the ingredient entity
+
+  solution:
+    range: Solution
+    description: Reference to the solution entity
+
+  # Concentration slots
+  concentration_value:
+    range: float
+    description: Numeric concentration value
+
+  concentration_unit:
+    range: ConcentrationUnit
+    description: Unit of concentration
+
+  volume_per_liter:
+    range: float
+    description: Volume of solution added per liter of medium
+
+  volume_unit:
+    range: VolumeUnit
+    description: Unit of volume (typically mL)
+
+  # Role slots
+  roles:
+    range: IngredientRole
+    multivalued: true
+    description: >-
+      Functional roles of this ingredient in this specific mixture.
+      An ingredient can have multiple roles, and roles are context-dependent.
+
+  # Medium-specific slots
+  medium_type:
+    range: MediumType
+    description: Classification of the medium
+
+  solution_type:
+    range: SolutionType
+    description: Classification of the solution
+
+  ph:
+    range: float
+    description: Target pH of the medium
+    minimum_value: 0
+    maximum_value: 14
+
+  sterilization_method:
+    description: How the medium is sterilized (e.g., autoclave, filter)
+
+  target_organisms:
+    multivalued: true
+    description: Taxa or organism types this medium is designed for
+
+  references:
+    multivalued: true
+    description: Literature references for this medium formulation
+
+  notes:
+    description: Free-text notes about this component
+
+# =============================================================================
+# ENUMS
+# =============================================================================
 
 enums:
-  PersonStatus:
+
+  MediumType:
+    description: Classification of growth media
     permissible_values:
-      ALIVE:
-        description: the person is living
-        meaning: PATO:0001421
-      DEAD:
-        description: the person is deceased
-        meaning: PATO:0001422
-      UNKNOWN:
-        description: the vital status is not known
+      minimal:
+        description: Defined medium with minimal components
+      complex:
+        description: Contains undefined components like yeast extract
+      defined:
+        description: All components are chemically defined
+      selective:
+        description: Contains agents to select for specific organisms
+      differential:
+        description: Allows differentiation between organism types
+
+  SolutionType:
+    description: Classification of stock solutions
+    permissible_values:
+      trace_elements:
+        description: Concentrated trace element mixture
+      vitamin:
+        description: Vitamin mixture
+      buffer:
+        description: pH buffer stock
+      carbon_source:
+        description: Concentrated carbon source
+      other:
+        description: Other type of stock solution
+
+  IngredientRole:
+    description: >-
+      Functional role of an ingredient in a growth medium.
+      TODO: Map to grounded ontology terms (METPO, OBI, or custom).
+      See issue #11.
+    permissible_values:
+      carbon_source:
+        description: Provides carbon for biosynthesis and/or energy
         todos:
-          - map this to an ontology
+          - Map to appropriate ontology term
+      nitrogen_source:
+        description: Provides nitrogen for biosynthesis
+      phosphorus_source:
+        description: Provides phosphorus
+      sulfur_source:
+        description: Provides sulfur
+      trace_element:
+        description: Micronutrient required in small amounts
+      mineral:
+        description: Macro-mineral component
+      buffer:
+        description: pH buffering agent
+        meaning: CHEBI:35225
+      vitamin:
+        description: Essential vitamin or growth factor
+      solidifying_agent:
+        description: Agent for solid media (e.g., agar)
+      selective_agent:
+        description: Antibiotic or other selective compound
+      osmotic_stabilizer:
+        description: Maintains osmotic balance
+
+  ConcentrationUnit:
+    description: Units for concentration
+    permissible_values:
+      g_per_L:
+        description: Grams per liter
+        meaning: UO:0000175
+      mg_per_L:
+        description: Milligrams per liter
+      ug_per_L:
+        description: Micrograms per liter
+      M:
+        description: Molar
+        meaning: UO:0000062
+      mM:
+        description: Millimolar
+      uM:
+        description: Micromolar
+      percent_w_v:
+        description: Weight/volume percentage
+      percent_v_v:
+        description: Volume/volume percentage
+
+  VolumeUnit:
+    description: Units for volume
+    permissible_values:
+      mL:
+        description: Milliliters
+        meaning: UO:0000098
+      L:
+        description: Liters
+        meaning: UO:0000099
+      uL:
+        description: Microliters
+        meaning: UO:0000101
