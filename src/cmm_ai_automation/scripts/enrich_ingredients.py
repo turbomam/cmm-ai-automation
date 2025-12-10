@@ -4,6 +4,9 @@
 Reads an ingredients TSV file and queries PubChem for each ingredient,
 adding chemical identifiers like InChIKey, CID, and SMILES.
 
+Outputs one row per CID found, so ingredients with multiple matches
+will have multiple rows in the output.
+
 Uses a JSON cache to avoid re-querying PubChem for compounds we've already looked up.
 """
 
@@ -16,7 +19,7 @@ from typing import Any
 
 import click
 
-from cmm_ai_automation.clients.pubchem import CompoundResult, LookupError, PubChemClient
+from cmm_ai_automation.clients.pubchem import LookupError, PubChemClient
 
 # Default paths relative to project root
 # __file__ is src/cmm_ai_automation/scripts/enrich_ingredients.py
@@ -106,6 +109,9 @@ def main(
 
     Reads ingredients from a TSV file, queries PubChem for each one,
     and writes enriched data with chemical identifiers.
+
+    Outputs one row per CID found. Ingredients with multiple PubChem
+    matches will have multiple rows in the output.
     """
     setup_logging(verbose)
 
@@ -137,6 +143,7 @@ def main(
     success_count = 0
     error_count = 0
     cache_hit_count = 0
+    multi_match_count = 0
 
     for ing in ingredients:
         name = ing["ingredient_name"]
@@ -144,35 +151,55 @@ def main(
         # Check cache first
         if not no_cache and name in cache:
             cached = cache[name]
-            click.echo(f"Looking up: {name}... CACHED (CID:{cached.get('pubchem_cid', 'N/A')})")
-            enriched.append({**ing, **cached})
-            if cached.get("pubchem_error"):
-                error_count += 1
-            else:
+            if isinstance(cached, list):
+                # Multiple results cached
+                click.echo(f"Looking up: {name}... CACHED ({len(cached)} CIDs)")
+                for result_dict in cached:
+                    enriched.append({**ing, **result_dict})
                 success_count += 1
+                if len(cached) > 1:
+                    multi_match_count += 1
+            else:
+                # Single result or error cached (old format or error)
+                cid_display = cached.get("pubchem_cid", "N/A") or "ERROR"
+                click.echo(f"Looking up: {name}... CACHED (CID:{cid_display})")
+                enriched.append({**ing, **cached})
+                if cached.get("pubchem_error"):
+                    error_count += 1
+                else:
+                    success_count += 1
             cache_hit_count += 1
             continue
 
-        # Query PubChem
+        # Query PubChem for all matching compounds
         click.echo(f"Looking up: {name}... ", nl=False)
-        result = client.get_compound_by_name(name)
+        results = client.get_compounds_by_name(name)
 
-        if isinstance(result, CompoundResult):
-            click.echo(f"CID:{result.CID}")
-            result_dict = {
-                "pubchem_cid": str(result.CID),
-                "pubchem_inchikey": result.InChIKey or "",
-                "pubchem_canonical_smiles": result.CanonicalSMILES or "",
-                "pubchem_molecular_formula": result.MolecularFormula or "",
-                "pubchem_iupac_name": result.IUPACName or "",
-                "pubchem_title": result.Title or "",
-                "pubchem_error": "",
-            }
-            enriched.append({**ing, **result_dict})
-            cache[name] = result_dict
+        if isinstance(results, list):
+            cids = [r.CID for r in results]
+            click.echo(f"{len(results)} CID(s): {', '.join(map(str, cids))}")
+
+            result_dicts = []
+            for result in results:
+                result_dict = {
+                    "pubchem_cid": str(result.CID),
+                    "pubchem_inchikey": result.InChIKey or "",
+                    "pubchem_canonical_smiles": result.CanonicalSMILES or "",
+                    "pubchem_molecular_formula": result.MolecularFormula or "",
+                    "pubchem_iupac_name": result.IUPACName or "",
+                    "pubchem_title": result.Title or "",
+                    "pubchem_error": "",
+                }
+                enriched.append({**ing, **result_dict})
+                result_dicts.append(result_dict)
+
+            cache[name] = result_dicts
             success_count += 1
-        elif isinstance(result, LookupError):
-            click.echo(f"ERROR: {result.error_code}")
+            if len(results) > 1:
+                multi_match_count += 1
+
+        elif isinstance(results, LookupError):
+            click.echo(f"ERROR: {results.error_code}")
             result_dict = {
                 "pubchem_cid": "",
                 "pubchem_inchikey": "",
@@ -180,7 +207,7 @@ def main(
                 "pubchem_molecular_formula": "",
                 "pubchem_iupac_name": "",
                 "pubchem_title": "",
-                "pubchem_error": f"{result.error_code}: {result.error_message}",
+                "pubchem_error": f"{results.error_code}: {results.error_message}",
             }
             enriched.append({**ing, **result_dict})
             cache[name] = result_dict
@@ -215,10 +242,12 @@ def main(
     # Summary
     click.echo()
     click.echo("Summary:")
-    click.echo(f"  Success:    {success_count}")
-    click.echo(f"  Errors:     {error_count}")
-    click.echo(f"  Cache hits: {cache_hit_count}")
-    click.echo(f"  Total:      {len(enriched)}")
+    click.echo(f"  Ingredients queried: {len(ingredients)}")
+    click.echo(f"  Success:             {success_count}")
+    click.echo(f"  Errors:              {error_count}")
+    click.echo(f"  Multi-match:         {multi_match_count}")
+    click.echo(f"  Cache hits:          {cache_hit_count}")
+    click.echo(f"  Output rows:         {len(enriched)}")
 
     if error_count > 0:
         sys.exit(1)

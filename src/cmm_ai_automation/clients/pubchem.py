@@ -175,10 +175,91 @@ class PubChemClient:
         result: dict[str, Any] = response.json()
         return result
 
+    def get_cids_by_name(self, name: str) -> list[int] | LookupError:
+        """Get all CIDs matching a compound name.
+
+        Args:
+            name: Chemical name to search
+
+        Returns:
+            List of CIDs on success, LookupError on failure
+        """
+        encoded_name = quote(name)
+        url = f"{self.BASE_URL}/compound/name/{encoded_name}/cids/JSON"
+
+        try:
+            data = self._get(url)
+        except requests.HTTPError as e:
+            try:
+                error_data = e.response.json()
+                fault = error_data.get("Fault", {})
+                return LookupError(
+                    name_queried=name,
+                    error_code=fault.get("Code", "UNKNOWN"),
+                    error_message=fault.get("Message", str(e)),
+                )
+            except (json.JSONDecodeError, AttributeError, KeyError):
+                return LookupError(
+                    name_queried=name,
+                    error_code="HTTP_ERROR",
+                    error_message=str(e),
+                )
+        except requests.RequestException as e:
+            return LookupError(
+                name_queried=name,
+                error_code="REQUEST_ERROR",
+                error_message=str(e),
+            )
+
+        try:
+            cids: list[int] = data["IdentifierList"]["CID"]
+            return cids
+        except (KeyError, IndexError):
+            return []
+
+    def get_compounds_by_name(
+        self, name: str
+    ) -> list[CompoundResult] | LookupError:
+        """Look up all compounds matching a name.
+
+        Args:
+            name: Chemical name to search (e.g., "glucose", "magnesium sulfate heptahydrate")
+
+        Returns:
+            List of CompoundResult on success, LookupError on failure
+        """
+        # First get all matching CIDs
+        cids_result = self.get_cids_by_name(name)
+        if isinstance(cids_result, LookupError):
+            return cids_result
+
+        if not cids_result:
+            return LookupError(
+                name_queried=name,
+                error_code="NO_RESULTS",
+                error_message="No compounds found for this name",
+            )
+
+        # Fetch properties for all CIDs
+        results = []
+        for cid in cids_result:
+            result = self.get_compound_by_cid(cid)
+            if isinstance(result, CompoundResult):
+                result.name_queried = name
+                results.append(result)
+
+        return results if results else LookupError(
+            name_queried=name,
+            error_code="NO_VALID_RESULTS",
+            error_message=f"Found {len(cids_result)} CIDs but could not fetch properties",
+        )
+
     def get_compound_by_name(
         self, name: str
     ) -> CompoundResult | LookupError:
-        """Look up a compound by name.
+        """Look up a compound by name (returns first match only).
+
+        For all matches, use get_compounds_by_name() instead.
 
         Args:
             name: Chemical name to search (e.g., "glucose", "magnesium sulfate heptahydrate")
