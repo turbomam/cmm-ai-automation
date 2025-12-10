@@ -21,6 +21,7 @@ dependencies = [
   "google-auth-oauthlib >=1.0.0",
   "pandas >=2.0.0",
   "click >=8.0.0",
+  "requests >=2.28.0",
 ]
 
 [dependency-groups]
@@ -41,6 +42,7 @@ qa = [
     "pytest-xdist>=3.5.0",
     "pre-commit>=4.0.0",
     "pandas-stubs>=2.0.0",
+    "types-requests>=2.28.0",
 ]
 
 [project.scripts]
@@ -61,6 +63,9 @@ fallback-version = "0.0.0"
 # Ref.: https://docs.pytest.org/en/stable/reference/reference.html#configuration-options
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+markers = [
+    "integration: marks tests as integration tests (require network access)",
+]
 
 # Ref.: https://github.com/codespell-project/codespell
 [tool.codespell]
