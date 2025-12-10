@@ -6,6 +6,7 @@ from cmm_ai_automation.clients.pubchem import (
     CompoundResult,
     LookupError,
     PubChemClient,
+    _to_float,
 )
 
 
@@ -84,3 +85,35 @@ class TestPubChemClient:
         assert d["MolecularWeight"] == 180.16
         assert d["InChIKey"] == "WQZGKKKJIJFFOK-GASJEMHNSA-N"
         assert d["CanonicalSMILES"] is None  # Not set
+
+
+class TestToFloat:
+    """Unit tests for _to_float helper function."""
+
+    def test_to_float_with_none(self) -> None:
+        """Test that None returns None."""
+        assert _to_float(None) is None
+
+    def test_to_float_with_float(self) -> None:
+        """Test that float passes through."""
+        assert _to_float(3.14) == 3.14
+
+    def test_to_float_with_int(self) -> None:
+        """Test that int converts to float."""
+        assert _to_float(42) == 42.0
+
+    def test_to_float_with_string_number(self) -> None:
+        """Test that numeric string converts to float."""
+        assert _to_float("180.16") == 180.16
+
+    def test_to_float_with_invalid_string(self) -> None:
+        """Test that invalid string returns None."""
+        assert _to_float("not a number") is None
+
+    def test_to_float_with_empty_string(self) -> None:
+        """Test that empty string returns None."""
+        assert _to_float("") is None
+
+    def test_to_float_with_list(self) -> None:
+        """Test that non-convertible type returns None."""
+        assert _to_float([1, 2, 3]) is None

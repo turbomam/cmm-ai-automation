@@ -7,6 +7,7 @@ References:
     - CHEMINF ontology: https://pmc.ncbi.nlm.nih.gov/articles/PMC3184996/
 """
 
+import json
 import logging
 import time
 from dataclasses import dataclass
@@ -120,7 +121,7 @@ class PubChemClient:
         >>> client = PubChemClient()
         >>> result = client.get_compound_by_name("glucose")
         >>> if isinstance(result, CompoundResult):
-        ...     print(f"CID: {result.cid}, InChIKey: {result.inchikey}")
+        ...     print(f"CID: {result.CID}, InChIKey: {result.InChIKey}")
         CID: 5793, InChIKey: WQZGKKKJIJFFOK-GASJEMHNSA-N
     """
 
@@ -202,7 +203,7 @@ class PubChemClient:
                     error_code=fault.get("Code", "UNKNOWN"),
                     error_message=fault.get("Message", str(e)),
                 )
-            except Exception:
+            except (json.JSONDecodeError, AttributeError, KeyError):
                 return LookupError(
                     name_queried=name,
                     error_code="HTTP_ERROR",
@@ -265,7 +266,7 @@ class PubChemClient:
                     error_code=fault.get("Code", "UNKNOWN"),
                     error_message=fault.get("Message", str(e)),
                 )
-            except Exception:
+            except (json.JSONDecodeError, AttributeError, KeyError):
                 return LookupError(
                     name_queried=f"CID:{cid}",
                     error_code="HTTP_ERROR",
@@ -325,7 +326,7 @@ class PubChemClient:
                     error_code=fault.get("Code", "UNKNOWN"),
                     error_message=fault.get("Message", str(e)),
                 )
-            except Exception:
+            except (json.JSONDecodeError, AttributeError, KeyError):
                 return LookupError(
                     name_queried=f"CID:{cid}",
                     error_code="HTTP_ERROR",
