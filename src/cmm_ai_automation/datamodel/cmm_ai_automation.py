@@ -1,5 +1,5 @@
 # Auto generated from cmm_ai_automation.yaml by pythongen.py version: 0.0.1
-# Generation date: 2025-12-09T19:54:48
+# Generation date: 2025-12-09T20:08:54
 # Schema: cmm-ai-automation
 #
 # id: https://w3id.org/turbomam/cmm-ai-automation
@@ -303,14 +303,16 @@ class IngredientComponent(YAMLRoot):
     class_name: ClassVar[str] = "IngredientComponent"
     class_model_uri: ClassVar[URIRef] = CMM.IngredientComponent
 
-    ingredient: Optional[Union[str, IngredientId]] = None
+    ingredient: Union[str, IngredientId] = None
     concentration_value: Optional[float] = None
     concentration_unit: Optional[Union[str, "ConcentrationUnit"]] = None
     roles: Optional[Union[Union[str, "IngredientRole"], list[Union[str, "IngredientRole"]]]] = empty_list()
     notes: Optional[str] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
-        if self.ingredient is not None and not isinstance(self.ingredient, IngredientId):
+        if self._is_empty(self.ingredient):
+            self.MissingRequiredField("ingredient")
+        if not isinstance(self.ingredient, IngredientId):
             self.ingredient = IngredientId(self.ingredient)
 
         if self.concentration_value is not None and not isinstance(self.concentration_value, float):
@@ -341,13 +343,15 @@ class SolutionComponent(YAMLRoot):
     class_name: ClassVar[str] = "SolutionComponent"
     class_model_uri: ClassVar[URIRef] = CMM.SolutionComponent
 
-    solution: Optional[Union[str, SolutionId]] = None
+    solution: Union[str, SolutionId] = None
     volume_per_liter: Optional[float] = None
     volume_unit: Optional[Union[str, "VolumeUnit"]] = None
     notes: Optional[str] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
-        if self.solution is not None and not isinstance(self.solution, SolutionId):
+        if self._is_empty(self.solution):
+            self.MissingRequiredField("solution")
+        if not isinstance(self.solution, SolutionId):
             self.solution = SolutionId(self.solution)
 
         if self.volume_per_liter is not None and not isinstance(self.volume_per_liter, float):
@@ -374,15 +378,19 @@ class CrossReference(YAMLRoot):
     class_name: ClassVar[str] = "CrossReference"
     class_model_uri: ClassVar[URIRef] = CMM.CrossReference
 
-    xref_type: Optional[str] = None
-    xref_id: Optional[str] = None
+    xref_type: str = None
+    xref_id: str = None
     xref_label: Optional[str] = None
 
     def __post_init__(self, *_: str, **kwargs: Any):
-        if self.xref_type is not None and not isinstance(self.xref_type, str):
+        if self._is_empty(self.xref_type):
+            self.MissingRequiredField("xref_type")
+        if not isinstance(self.xref_type, str):
             self.xref_type = str(self.xref_type)
 
-        if self.xref_id is not None and not isinstance(self.xref_id, str):
+        if self._is_empty(self.xref_id):
+            self.MissingRequiredField("xref_id")
+        if not isinstance(self.xref_id, str):
             self.xref_id = str(self.xref_id)
 
         if self.xref_label is not None and not isinstance(self.xref_label, str):
@@ -420,7 +428,8 @@ class CMMDatabase(YAMLRoot):
 # Enumerations
 class MediumType(EnumDefinitionImpl):
     """
-    Classification of growth media
+    Classification of growth media by composition. Note: Functional properties like selective/differential are
+    orthogonal and should be captured separately if needed.
     """
     minimal = PermissibleValue(
         text="minimal",
@@ -431,16 +440,13 @@ class MediumType(EnumDefinitionImpl):
     defined = PermissibleValue(
         text="defined",
         description="All components are chemically defined")
-    selective = PermissibleValue(
-        text="selective",
-        description="Contains agents to select for specific organisms")
-    differential = PermissibleValue(
-        text="differential",
-        description="Allows differentiation between organism types")
+    semi_defined = PermissibleValue(
+        text="semi_defined",
+        description="Mostly defined but contains some complex components")
 
     _defn = EnumDefinition(
         name="MediumType",
-        description="Classification of growth media",
+        description="""Classification of growth media by composition. Note: Functional properties like selective/differential are orthogonal and should be captured separately if needed.""",
     )
 
 class SolutionType(EnumDefinitionImpl):
@@ -497,7 +503,8 @@ class IngredientRole(EnumDefinitionImpl):
         meaning=CHEBI["35225"])
     vitamin = PermissibleValue(
         text="vitamin",
-        description="Essential vitamin or growth factor")
+        description="Essential vitamin or growth factor",
+        meaning=CHEBI["33229"])
     solidifying_agent = PermissibleValue(
         text="solidifying_agent",
         description="Agent for solid media (e.g., agar)")
@@ -523,26 +530,30 @@ class ConcentrationUnit(EnumDefinitionImpl):
         meaning=UO["0000175"])
     mg_per_L = PermissibleValue(
         text="mg_per_L",
-        description="Milligrams per liter")
+        description="Milligrams per liter",
+        meaning=UO["0000176"])
     ug_per_L = PermissibleValue(
         text="ug_per_L",
-        description="Micrograms per liter")
+        description="Micrograms per liter",
+        meaning=UO["0000301"])
     M = PermissibleValue(
         text="M",
         description="Molar",
         meaning=UO["0000062"])
     mM = PermissibleValue(
         text="mM",
-        description="Millimolar")
+        description="Millimolar",
+        meaning=UO["0000063"])
     uM = PermissibleValue(
         text="uM",
-        description="Micromolar")
+        description="Micromolar",
+        meaning=UO["0000064"])
     percent_w_v = PermissibleValue(
         text="percent_w_v",
-        description="Weight/volume percentage")
+        description="Weight/volume percentage: % (w/v)")
     percent_v_v = PermissibleValue(
         text="percent_v_v",
-        description="Volume/volume percentage")
+        description="Volume/volume percentage: % (v/v)")
 
     _defn = EnumDefinition(
         name="ConcentrationUnit",
@@ -672,3 +683,15 @@ slots.cMMDatabase__solutions = Slot(uri=CMM.solutions, name="cMMDatabase__soluti
 
 slots.cMMDatabase__media = Slot(uri=CMM.media, name="cMMDatabase__media", curie=CMM.curie('media'),
                    model_uri=CMM.cMMDatabase__media, domain=None, range=Optional[Union[dict[Union[str, GrowthMediumId], Union[dict, GrowthMedium]], list[Union[dict, GrowthMedium]]]])
+
+slots.IngredientComponent_ingredient = Slot(uri=CMM.ingredient, name="IngredientComponent_ingredient", curie=CMM.curie('ingredient'),
+                   model_uri=CMM.IngredientComponent_ingredient, domain=IngredientComponent, range=Union[str, IngredientId])
+
+slots.SolutionComponent_solution = Slot(uri=CMM.solution, name="SolutionComponent_solution", curie=CMM.curie('solution'),
+                   model_uri=CMM.SolutionComponent_solution, domain=SolutionComponent, range=Union[str, SolutionId])
+
+slots.CrossReference_xref_type = Slot(uri=CMM.xref_type, name="CrossReference_xref_type", curie=CMM.curie('xref_type'),
+                   model_uri=CMM.CrossReference_xref_type, domain=CrossReference, range=str)
+
+slots.CrossReference_xref_id = Slot(uri=CMM.xref_id, name="CrossReference_xref_id", curie=CMM.curie('xref_id'),
+                   model_uri=CMM.CrossReference_xref_id, domain=CrossReference, range=str)

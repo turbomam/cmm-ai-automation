@@ -127,6 +127,9 @@ classes:
       - concentration_unit
       - roles
       - notes
+    slot_usage:
+      ingredient:
+        required: true
 
   SolutionComponent:
     description: >-
@@ -136,6 +139,9 @@ classes:
       - volume_per_liter
       - volume_unit
       - notes
+    slot_usage:
+      solution:
+        required: true
 
   # ---------------------------------------------------------------------------
   # Cross-references
@@ -147,6 +153,11 @@ classes:
       - xref_type
       - xref_id
       - xref_label
+    slot_usage:
+      xref_type:
+        required: true
+      xref_id:
+        required: true
 
   # ---------------------------------------------------------------------------
   # Container for data
@@ -314,7 +325,10 @@ slots:
 enums:
 
   MediumType:
-    description: Classification of growth media
+    description: >-
+      Classification of growth media by composition.
+      Note: Functional properties like selective/differential are orthogonal
+      and should be captured separately if needed.
     permissible_values:
       minimal:
         description: Defined medium with minimal components
@@ -322,10 +336,8 @@ enums:
         description: Contains undefined components like yeast extract
       defined:
         description: All components are chemically defined
-      selective:
-        description: Contains agents to select for specific organisms
-      differential:
-        description: Allows differentiation between organism types
+      semi_defined:
+        description: Mostly defined but contains some complex components
 
   SolutionType:
     description: Classification of stock solutions
@@ -366,6 +378,7 @@ enums:
         meaning: CHEBI:35225
       vitamin:
         description: Essential vitamin or growth factor
+        meaning: CHEBI:33229
       solidifying_agent:
         description: Agent for solid media (e.g., agar)
       selective_agent:
@@ -381,19 +394,23 @@ enums:
         meaning: UO:0000175
       mg_per_L:
         description: Milligrams per liter
+        meaning: UO:0000176
       ug_per_L:
         description: Micrograms per liter
+        meaning: UO:0000301
       M:
         description: Molar
         meaning: UO:0000062
       mM:
         description: Millimolar
+        meaning: UO:0000063
       uM:
         description: Micromolar
+        meaning: UO:0000064
       percent_w_v:
-        description: Weight/volume percentage
+        description: "Weight/volume percentage: % (w/v)"
       percent_v_v:
-        description: Volume/volume percentage
+        description: "Volume/volume percentage: % (v/v)"
 
   VolumeUnit:
     description: Units for volume
