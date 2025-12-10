@@ -1,9 +1,12 @@
 # Auto generated from cmm_ai_automation.yaml by pythongen.py version: 0.0.1
-# Generation date: 2025-12-09T17:06:42
+# Generation date: 2025-12-09T20:08:54
 # Schema: cmm-ai-automation
 #
 # id: https://w3id.org/turbomam/cmm-ai-automation
-# description: AI-assisted automation for Critical Mineral Metabolism data curation
+# description: Schema for Critical Mineral Metabolism (CMM) data curation.
+#
+#   Models microbial strains, growth media, ingredients, and their relationships
+#   for knowledge graph generation.
 # license: MIT
 
 import dataclasses
@@ -56,20 +59,26 @@ from rdflib import (
     URIRef
 )
 
-from linkml_runtime.linkml_model.types import Date, Integer, String, Uriorcurie
-from linkml_runtime.utils.metamodelcore import URIorCURIE, XSDDate
+from linkml_runtime.linkml_model.types import Float, Integer, String, Uriorcurie
+from linkml_runtime.utils.metamodelcore import URIorCURIE
 
 metamodel_version = "1.7.0"
 version = None
 
 # Namespaces
-PATO = CurieNamespace('PATO', 'http://purl.obolibrary.org/obo/PATO_')
+ATCC = CurieNamespace('ATCC', 'https://www.atcc.org/products/')
+CHEBI = CurieNamespace('CHEBI', 'http://purl.obolibrary.org/obo/CHEBI_')
+DSMZ = CurieNamespace('DSMZ', 'https://www.dsmz.de/collection/catalogue/details/culture/DSM-')
+ENVO = CurieNamespace('ENVO', 'http://purl.obolibrary.org/obo/ENVO_')
+NCBITAXON = CurieNamespace('NCBITaxon', 'http://purl.obolibrary.org/obo/NCBITaxon_')
+OBI = CurieNamespace('OBI', 'http://purl.obolibrary.org/obo/OBI_')
+RO = CurieNamespace('RO', 'http://purl.obolibrary.org/obo/RO_')
+UO = CurieNamespace('UO', 'http://purl.obolibrary.org/obo/UO_')
 BIOLINK = CurieNamespace('biolink', 'https://w3id.org/biolink/')
-CMM_AI_AUTOMATION = CurieNamespace('cmm_ai_automation', 'https://w3id.org/turbomam/cmm-ai-automation/')
-EXAMPLE = CurieNamespace('example', 'https://example.org/')
+CMM = CurieNamespace('cmm', 'https://w3id.org/turbomam/cmm-ai-automation/')
 LINKML = CurieNamespace('linkml', 'https://w3id.org/linkml/')
 SCHEMA = CurieNamespace('schema', 'http://schema.org/')
-DEFAULT_ = CMM_AI_AUTOMATION
+DEFAULT_ = CMM
 
 
 # Types
@@ -79,7 +88,19 @@ class NamedThingId(URIorCURIE):
     pass
 
 
-class PersonId(NamedThingId):
+class IngredientId(NamedThingId):
+    pass
+
+
+class MixtureId(NamedThingId):
+    pass
+
+
+class SolutionId(MixtureId):
+    pass
+
+
+class GrowthMediumId(MixtureId):
     pass
 
 
@@ -93,11 +114,12 @@ class NamedThing(YAMLRoot):
     class_class_uri: ClassVar[URIRef] = SCHEMA["Thing"]
     class_class_curie: ClassVar[str] = "schema:Thing"
     class_name: ClassVar[str] = "NamedThing"
-    class_model_uri: ClassVar[URIRef] = CMM_AI_AUTOMATION.NamedThing
+    class_model_uri: ClassVar[URIRef] = CMM.NamedThing
 
     id: Union[str, NamedThingId] = None
     name: Optional[str] = None
     description: Optional[str] = None
+    synonyms: Optional[Union[str, list[str]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.id):
@@ -111,85 +133,453 @@ class NamedThing(YAMLRoot):
         if self.description is not None and not isinstance(self.description, str):
             self.description = str(self.description)
 
+        if not isinstance(self.synonyms, list):
+            self.synonyms = [self.synonyms] if self.synonyms is not None else []
+        self.synonyms = [v if isinstance(v, str) else str(v) for v in self.synonyms]
+
         super().__post_init__(**kwargs)
 
 
 @dataclass(repr=False)
-class Person(NamedThing):
+class Ingredient(NamedThing):
     """
-    Represents a Person
+    A chemical entity that can be a component of solutions or media. Represents the abstract ingredient, not a
+    specific instance with concentration.
     """
     _inherited_slots: ClassVar[list[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = CMM_AI_AUTOMATION["Person"]
-    class_class_curie: ClassVar[str] = "cmm_ai_automation:Person"
-    class_name: ClassVar[str] = "Person"
-    class_model_uri: ClassVar[URIRef] = CMM_AI_AUTOMATION.Person
+    class_class_uri: ClassVar[URIRef] = CMM["Ingredient"]
+    class_class_curie: ClassVar[str] = "cmm:Ingredient"
+    class_name: ClassVar[str] = "Ingredient"
+    class_model_uri: ClassVar[URIRef] = CMM.Ingredient
 
-    id: Union[str, PersonId] = None
-    primary_email: Optional[str] = None
-    birth_date: Optional[Union[str, XSDDate]] = None
-    age_in_years: Optional[int] = None
-    vital_status: Optional[Union[str, "PersonStatus"]] = None
+    id: Union[str, IngredientId] = None
+    chemical_formula: Optional[str] = None
+    chebi_id: Optional[Union[str, URIorCURIE]] = None
+    cas_rn: Optional[str] = None
+    inchikey: Optional[str] = None
+    pubchem_cid: Optional[int] = None
+    xrefs: Optional[Union[Union[dict, "CrossReference"], list[Union[dict, "CrossReference"]]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.id):
             self.MissingRequiredField("id")
-        if not isinstance(self.id, PersonId):
-            self.id = PersonId(self.id)
+        if not isinstance(self.id, IngredientId):
+            self.id = IngredientId(self.id)
 
-        if self.primary_email is not None and not isinstance(self.primary_email, str):
-            self.primary_email = str(self.primary_email)
+        if self.chemical_formula is not None and not isinstance(self.chemical_formula, str):
+            self.chemical_formula = str(self.chemical_formula)
 
-        if self.birth_date is not None and not isinstance(self.birth_date, XSDDate):
-            self.birth_date = XSDDate(self.birth_date)
+        if self.chebi_id is not None and not isinstance(self.chebi_id, URIorCURIE):
+            self.chebi_id = URIorCURIE(self.chebi_id)
 
-        if self.age_in_years is not None and not isinstance(self.age_in_years, int):
-            self.age_in_years = int(self.age_in_years)
+        if self.cas_rn is not None and not isinstance(self.cas_rn, str):
+            self.cas_rn = str(self.cas_rn)
 
-        if self.vital_status is not None and not isinstance(self.vital_status, PersonStatus):
-            self.vital_status = PersonStatus(self.vital_status)
+        if self.inchikey is not None and not isinstance(self.inchikey, str):
+            self.inchikey = str(self.inchikey)
+
+        if self.pubchem_cid is not None and not isinstance(self.pubchem_cid, int):
+            self.pubchem_cid = int(self.pubchem_cid)
+
+        if not isinstance(self.xrefs, list):
+            self.xrefs = [self.xrefs] if self.xrefs is not None else []
+        self.xrefs = [v if isinstance(v, CrossReference) else CrossReference(**as_dict(v)) for v in self.xrefs]
 
         super().__post_init__(**kwargs)
 
 
 @dataclass(repr=False)
-class PersonCollection(YAMLRoot):
+class Mixture(NamedThing):
     """
-    A holder for Person objects
+    Abstract base class for things composed of ingredients. Both Solution and GrowthMedium are mixtures.
     """
     _inherited_slots: ClassVar[list[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = CMM_AI_AUTOMATION["PersonCollection"]
-    class_class_curie: ClassVar[str] = "cmm_ai_automation:PersonCollection"
-    class_name: ClassVar[str] = "PersonCollection"
-    class_model_uri: ClassVar[URIRef] = CMM_AI_AUTOMATION.PersonCollection
+    class_class_uri: ClassVar[URIRef] = CMM["Mixture"]
+    class_class_curie: ClassVar[str] = "cmm:Mixture"
+    class_name: ClassVar[str] = "Mixture"
+    class_model_uri: ClassVar[URIRef] = CMM.Mixture
 
-    people: Optional[Union[dict[Union[str, PersonId], Union[dict, Person]], list[Union[dict, Person]]]] = empty_dict()
+    id: Union[str, MixtureId] = None
+    has_ingredient_component: Optional[Union[Union[dict, "IngredientComponent"], list[Union[dict, "IngredientComponent"]]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
-        self._normalize_inlined_as_list(slot_name="people", slot_type=Person, key_name="id", keyed=True)
+        if not isinstance(self.has_ingredient_component, list):
+            self.has_ingredient_component = [self.has_ingredient_component] if self.has_ingredient_component is not None else []
+        self.has_ingredient_component = [v if isinstance(v, IngredientComponent) else IngredientComponent(**as_dict(v)) for v in self.has_ingredient_component]
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class Solution(Mixture):
+    """
+    A pre-made concentrated mixture of ingredients, typically diluted into media. Examples: Trace element solution
+    SL-6, Vitamin solution, Phosphate buffer stock.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = CMM["Solution"]
+    class_class_curie: ClassVar[str] = "cmm:Solution"
+    class_name: ClassVar[str] = "Solution"
+    class_model_uri: ClassVar[URIRef] = CMM.Solution
+
+    id: Union[str, SolutionId] = None
+    solution_type: Optional[Union[str, "SolutionType"]] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, SolutionId):
+            self.id = SolutionId(self.id)
+
+        if self.solution_type is not None and not isinstance(self.solution_type, SolutionType):
+            self.solution_type = SolutionType(self.solution_type)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class GrowthMedium(Mixture):
+    """
+    A complete formulation for cultivating microorganisms. Contains ingredients directly and/or pre-made solutions.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = CMM["GrowthMedium"]
+    class_class_curie: ClassVar[str] = "cmm:GrowthMedium"
+    class_name: ClassVar[str] = "GrowthMedium"
+    class_model_uri: ClassVar[URIRef] = CMM.GrowthMedium
+
+    id: Union[str, GrowthMediumId] = None
+    medium_type: Optional[Union[str, "MediumType"]] = None
+    ph: Optional[float] = None
+    sterilization_method: Optional[str] = None
+    has_solution_component: Optional[Union[Union[dict, "SolutionComponent"], list[Union[dict, "SolutionComponent"]]]] = empty_list()
+    target_organisms: Optional[Union[str, list[str]]] = empty_list()
+    references: Optional[Union[str, list[str]]] = empty_list()
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, GrowthMediumId):
+            self.id = GrowthMediumId(self.id)
+
+        if self.medium_type is not None and not isinstance(self.medium_type, MediumType):
+            self.medium_type = MediumType(self.medium_type)
+
+        if self.ph is not None and not isinstance(self.ph, float):
+            self.ph = float(self.ph)
+
+        if self.sterilization_method is not None and not isinstance(self.sterilization_method, str):
+            self.sterilization_method = str(self.sterilization_method)
+
+        if not isinstance(self.has_solution_component, list):
+            self.has_solution_component = [self.has_solution_component] if self.has_solution_component is not None else []
+        self.has_solution_component = [v if isinstance(v, SolutionComponent) else SolutionComponent(**as_dict(v)) for v in self.has_solution_component]
+
+        if not isinstance(self.target_organisms, list):
+            self.target_organisms = [self.target_organisms] if self.target_organisms is not None else []
+        self.target_organisms = [v if isinstance(v, str) else str(v) for v in self.target_organisms]
+
+        if not isinstance(self.references, list):
+            self.references = [self.references] if self.references is not None else []
+        self.references = [v if isinstance(v, str) else str(v) for v in self.references]
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class IngredientComponent(YAMLRoot):
+    """
+    Reified relationship: an ingredient as used in a mixture, with concentration and role. This captures the
+    context-dependent properties of ingredient usage.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = CMM["IngredientComponent"]
+    class_class_curie: ClassVar[str] = "cmm:IngredientComponent"
+    class_name: ClassVar[str] = "IngredientComponent"
+    class_model_uri: ClassVar[URIRef] = CMM.IngredientComponent
+
+    ingredient: Union[str, IngredientId] = None
+    concentration_value: Optional[float] = None
+    concentration_unit: Optional[Union[str, "ConcentrationUnit"]] = None
+    roles: Optional[Union[Union[str, "IngredientRole"], list[Union[str, "IngredientRole"]]]] = empty_list()
+    notes: Optional[str] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.ingredient):
+            self.MissingRequiredField("ingredient")
+        if not isinstance(self.ingredient, IngredientId):
+            self.ingredient = IngredientId(self.ingredient)
+
+        if self.concentration_value is not None and not isinstance(self.concentration_value, float):
+            self.concentration_value = float(self.concentration_value)
+
+        if self.concentration_unit is not None and not isinstance(self.concentration_unit, ConcentrationUnit):
+            self.concentration_unit = ConcentrationUnit(self.concentration_unit)
+
+        if not isinstance(self.roles, list):
+            self.roles = [self.roles] if self.roles is not None else []
+        self.roles = [v if isinstance(v, IngredientRole) else IngredientRole(v) for v in self.roles]
+
+        if self.notes is not None and not isinstance(self.notes, str):
+            self.notes = str(self.notes)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class SolutionComponent(YAMLRoot):
+    """
+    Reified relationship: a solution as used in a medium, with volume/dilution.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = CMM["SolutionComponent"]
+    class_class_curie: ClassVar[str] = "cmm:SolutionComponent"
+    class_name: ClassVar[str] = "SolutionComponent"
+    class_model_uri: ClassVar[URIRef] = CMM.SolutionComponent
+
+    solution: Union[str, SolutionId] = None
+    volume_per_liter: Optional[float] = None
+    volume_unit: Optional[Union[str, "VolumeUnit"]] = None
+    notes: Optional[str] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.solution):
+            self.MissingRequiredField("solution")
+        if not isinstance(self.solution, SolutionId):
+            self.solution = SolutionId(self.solution)
+
+        if self.volume_per_liter is not None and not isinstance(self.volume_per_liter, float):
+            self.volume_per_liter = float(self.volume_per_liter)
+
+        if self.volume_unit is not None and not isinstance(self.volume_unit, VolumeUnit):
+            self.volume_unit = VolumeUnit(self.volume_unit)
+
+        if self.notes is not None and not isinstance(self.notes, str):
+            self.notes = str(self.notes)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class CrossReference(YAMLRoot):
+    """
+    A cross-reference to an external database or identifier
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = CMM["CrossReference"]
+    class_class_curie: ClassVar[str] = "cmm:CrossReference"
+    class_name: ClassVar[str] = "CrossReference"
+    class_model_uri: ClassVar[URIRef] = CMM.CrossReference
+
+    xref_type: str = None
+    xref_id: str = None
+    xref_label: Optional[str] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.xref_type):
+            self.MissingRequiredField("xref_type")
+        if not isinstance(self.xref_type, str):
+            self.xref_type = str(self.xref_type)
+
+        if self._is_empty(self.xref_id):
+            self.MissingRequiredField("xref_id")
+        if not isinstance(self.xref_id, str):
+            self.xref_id = str(self.xref_id)
+
+        if self.xref_label is not None and not isinstance(self.xref_label, str):
+            self.xref_label = str(self.xref_label)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class CMMDatabase(YAMLRoot):
+    """
+    Container for all CMM entities
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = CMM["CMMDatabase"]
+    class_class_curie: ClassVar[str] = "cmm:CMMDatabase"
+    class_name: ClassVar[str] = "CMMDatabase"
+    class_model_uri: ClassVar[URIRef] = CMM.CMMDatabase
+
+    ingredients: Optional[Union[dict[Union[str, IngredientId], Union[dict, Ingredient]], list[Union[dict, Ingredient]]]] = empty_dict()
+    solutions: Optional[Union[dict[Union[str, SolutionId], Union[dict, Solution]], list[Union[dict, Solution]]]] = empty_dict()
+    media: Optional[Union[dict[Union[str, GrowthMediumId], Union[dict, GrowthMedium]], list[Union[dict, GrowthMedium]]]] = empty_dict()
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        self._normalize_inlined_as_list(slot_name="ingredients", slot_type=Ingredient, key_name="id", keyed=True)
+
+        self._normalize_inlined_as_list(slot_name="solutions", slot_type=Solution, key_name="id", keyed=True)
+
+        self._normalize_inlined_as_list(slot_name="media", slot_type=GrowthMedium, key_name="id", keyed=True)
 
         super().__post_init__(**kwargs)
 
 
 # Enumerations
-class PersonStatus(EnumDefinitionImpl):
-
-    ALIVE = PermissibleValue(
-        text="ALIVE",
-        description="the person is living",
-        meaning=PATO["0001421"])
-    DEAD = PermissibleValue(
-        text="DEAD",
-        description="the person is deceased",
-        meaning=PATO["0001422"])
-    UNKNOWN = PermissibleValue(
-        text="UNKNOWN",
-        description="the vital status is not known")
+class MediumType(EnumDefinitionImpl):
+    """
+    Classification of growth media by composition. Note: Functional properties like selective/differential are
+    orthogonal and should be captured separately if needed.
+    """
+    minimal = PermissibleValue(
+        text="minimal",
+        description="Defined medium with minimal components")
+    complex = PermissibleValue(
+        text="complex",
+        description="Contains undefined components like yeast extract")
+    defined = PermissibleValue(
+        text="defined",
+        description="All components are chemically defined")
+    semi_defined = PermissibleValue(
+        text="semi_defined",
+        description="Mostly defined but contains some complex components")
 
     _defn = EnumDefinition(
-        name="PersonStatus",
+        name="MediumType",
+        description="""Classification of growth media by composition. Note: Functional properties like selective/differential are orthogonal and should be captured separately if needed.""",
+    )
+
+class SolutionType(EnumDefinitionImpl):
+    """
+    Classification of stock solutions
+    """
+    trace_elements = PermissibleValue(
+        text="trace_elements",
+        description="Concentrated trace element mixture")
+    vitamin = PermissibleValue(
+        text="vitamin",
+        description="Vitamin mixture")
+    buffer = PermissibleValue(
+        text="buffer",
+        description="pH buffer stock")
+    carbon_source = PermissibleValue(
+        text="carbon_source",
+        description="Concentrated carbon source")
+    other = PermissibleValue(
+        text="other",
+        description="Other type of stock solution")
+
+    _defn = EnumDefinition(
+        name="SolutionType",
+        description="Classification of stock solutions",
+    )
+
+class IngredientRole(EnumDefinitionImpl):
+    """
+    Functional role of an ingredient in a growth medium. TODO: Map to grounded ontology terms (METPO, OBI, or custom).
+    See issue #11.
+    """
+    carbon_source = PermissibleValue(
+        text="carbon_source",
+        description="Provides carbon for biosynthesis and/or energy")
+    nitrogen_source = PermissibleValue(
+        text="nitrogen_source",
+        description="Provides nitrogen for biosynthesis")
+    phosphorus_source = PermissibleValue(
+        text="phosphorus_source",
+        description="Provides phosphorus")
+    sulfur_source = PermissibleValue(
+        text="sulfur_source",
+        description="Provides sulfur")
+    trace_element = PermissibleValue(
+        text="trace_element",
+        description="Micronutrient required in small amounts")
+    mineral = PermissibleValue(
+        text="mineral",
+        description="Macro-mineral component")
+    buffer = PermissibleValue(
+        text="buffer",
+        description="pH buffering agent",
+        meaning=CHEBI["35225"])
+    vitamin = PermissibleValue(
+        text="vitamin",
+        description="Essential vitamin or growth factor",
+        meaning=CHEBI["33229"])
+    solidifying_agent = PermissibleValue(
+        text="solidifying_agent",
+        description="Agent for solid media (e.g., agar)")
+    selective_agent = PermissibleValue(
+        text="selective_agent",
+        description="Antibiotic or other selective compound")
+    osmotic_stabilizer = PermissibleValue(
+        text="osmotic_stabilizer",
+        description="Maintains osmotic balance")
+
+    _defn = EnumDefinition(
+        name="IngredientRole",
+        description="""Functional role of an ingredient in a growth medium. TODO: Map to grounded ontology terms (METPO, OBI, or custom). See issue #11.""",
+    )
+
+class ConcentrationUnit(EnumDefinitionImpl):
+    """
+    Units for concentration
+    """
+    g_per_L = PermissibleValue(
+        text="g_per_L",
+        description="Grams per liter",
+        meaning=UO["0000175"])
+    mg_per_L = PermissibleValue(
+        text="mg_per_L",
+        description="Milligrams per liter",
+        meaning=UO["0000176"])
+    ug_per_L = PermissibleValue(
+        text="ug_per_L",
+        description="Micrograms per liter",
+        meaning=UO["0000301"])
+    M = PermissibleValue(
+        text="M",
+        description="Molar",
+        meaning=UO["0000062"])
+    mM = PermissibleValue(
+        text="mM",
+        description="Millimolar",
+        meaning=UO["0000063"])
+    uM = PermissibleValue(
+        text="uM",
+        description="Micromolar",
+        meaning=UO["0000064"])
+    percent_w_v = PermissibleValue(
+        text="percent_w_v",
+        description="Weight/volume percentage: % (w/v)")
+    percent_v_v = PermissibleValue(
+        text="percent_v_v",
+        description="Volume/volume percentage: % (v/v)")
+
+    _defn = EnumDefinition(
+        name="ConcentrationUnit",
+        description="Units for concentration",
+    )
+
+class VolumeUnit(EnumDefinitionImpl):
+    """
+    Units for volume
+    """
+    mL = PermissibleValue(
+        text="mL",
+        description="Milliliters",
+        meaning=UO["0000098"])
+    L = PermissibleValue(
+        text="L",
+        description="Liters",
+        meaning=UO["0000099"])
+    uL = PermissibleValue(
+        text="uL",
+        description="Microliters",
+        meaning=UO["0000101"])
+
+    _defn = EnumDefinition(
+        name="VolumeUnit",
+        description="Units for volume",
     )
 
 # Slots
@@ -197,29 +587,111 @@ class slots:
     pass
 
 slots.id = Slot(uri=SCHEMA.identifier, name="id", curie=SCHEMA.curie('identifier'),
-                   model_uri=CMM_AI_AUTOMATION.id, domain=None, range=URIRef)
+                   model_uri=CMM.id, domain=None, range=URIRef)
 
 slots.name = Slot(uri=SCHEMA.name, name="name", curie=SCHEMA.curie('name'),
-                   model_uri=CMM_AI_AUTOMATION.name, domain=None, range=Optional[str])
+                   model_uri=CMM.name, domain=None, range=Optional[str])
 
 slots.description = Slot(uri=SCHEMA.description, name="description", curie=SCHEMA.curie('description'),
-                   model_uri=CMM_AI_AUTOMATION.description, domain=None, range=Optional[str])
+                   model_uri=CMM.description, domain=None, range=Optional[str])
 
-slots.primary_email = Slot(uri=SCHEMA.email, name="primary_email", curie=SCHEMA.curie('email'),
-                   model_uri=CMM_AI_AUTOMATION.primary_email, domain=None, range=Optional[str])
+slots.synonyms = Slot(uri=CMM.synonyms, name="synonyms", curie=CMM.curie('synonyms'),
+                   model_uri=CMM.synonyms, domain=None, range=Optional[Union[str, list[str]]])
 
-slots.birth_date = Slot(uri=SCHEMA.birthDate, name="birth_date", curie=SCHEMA.curie('birthDate'),
-                   model_uri=CMM_AI_AUTOMATION.birth_date, domain=None, range=Optional[Union[str, XSDDate]])
+slots.chemical_formula = Slot(uri=CMM.chemical_formula, name="chemical_formula", curie=CMM.curie('chemical_formula'),
+                   model_uri=CMM.chemical_formula, domain=None, range=Optional[str])
 
-slots.age_in_years = Slot(uri=CMM_AI_AUTOMATION.age_in_years, name="age_in_years", curie=CMM_AI_AUTOMATION.curie('age_in_years'),
-                   model_uri=CMM_AI_AUTOMATION.age_in_years, domain=None, range=Optional[int])
+slots.chebi_id = Slot(uri=CMM.chebi_id, name="chebi_id", curie=CMM.curie('chebi_id'),
+                   model_uri=CMM.chebi_id, domain=None, range=Optional[Union[str, URIorCURIE]])
 
-slots.vital_status = Slot(uri=CMM_AI_AUTOMATION.vital_status, name="vital_status", curie=CMM_AI_AUTOMATION.curie('vital_status'),
-                   model_uri=CMM_AI_AUTOMATION.vital_status, domain=None, range=Optional[Union[str, "PersonStatus"]])
+slots.cas_rn = Slot(uri=CMM.cas_rn, name="cas_rn", curie=CMM.curie('cas_rn'),
+                   model_uri=CMM.cas_rn, domain=None, range=Optional[str],
+                   pattern=re.compile(r'^\d{2,7}-\d{2}-\d$'))
 
-slots.personCollection__people = Slot(uri=CMM_AI_AUTOMATION.people, name="personCollection__people", curie=CMM_AI_AUTOMATION.curie('people'),
-                   model_uri=CMM_AI_AUTOMATION.personCollection__people, domain=None, range=Optional[Union[dict[Union[str, PersonId], Union[dict, Person]], list[Union[dict, Person]]]])
+slots.inchikey = Slot(uri=CMM.inchikey, name="inchikey", curie=CMM.curie('inchikey'),
+                   model_uri=CMM.inchikey, domain=None, range=Optional[str],
+                   pattern=re.compile(r'^[A-Z]{14}-[A-Z]{10}-[A-Z]$'))
 
-slots.Person_primary_email = Slot(uri=SCHEMA.email, name="Person_primary_email", curie=SCHEMA.curie('email'),
-                   model_uri=CMM_AI_AUTOMATION.Person_primary_email, domain=Person, range=Optional[str],
-                   pattern=re.compile(r'^\S+@[\S+\.]+\S+'))
+slots.pubchem_cid = Slot(uri=CMM.pubchem_cid, name="pubchem_cid", curie=CMM.curie('pubchem_cid'),
+                   model_uri=CMM.pubchem_cid, domain=None, range=Optional[int])
+
+slots.xrefs = Slot(uri=CMM.xrefs, name="xrefs", curie=CMM.curie('xrefs'),
+                   model_uri=CMM.xrefs, domain=None, range=Optional[Union[Union[dict, CrossReference], list[Union[dict, CrossReference]]]])
+
+slots.xref_type = Slot(uri=CMM.xref_type, name="xref_type", curie=CMM.curie('xref_type'),
+                   model_uri=CMM.xref_type, domain=None, range=Optional[str])
+
+slots.xref_id = Slot(uri=CMM.xref_id, name="xref_id", curie=CMM.curie('xref_id'),
+                   model_uri=CMM.xref_id, domain=None, range=Optional[str])
+
+slots.xref_label = Slot(uri=CMM.xref_label, name="xref_label", curie=CMM.curie('xref_label'),
+                   model_uri=CMM.xref_label, domain=None, range=Optional[str])
+
+slots.has_ingredient_component = Slot(uri=CMM.has_ingredient_component, name="has_ingredient_component", curie=CMM.curie('has_ingredient_component'),
+                   model_uri=CMM.has_ingredient_component, domain=None, range=Optional[Union[Union[dict, IngredientComponent], list[Union[dict, IngredientComponent]]]])
+
+slots.has_solution_component = Slot(uri=CMM.has_solution_component, name="has_solution_component", curie=CMM.curie('has_solution_component'),
+                   model_uri=CMM.has_solution_component, domain=None, range=Optional[Union[Union[dict, SolutionComponent], list[Union[dict, SolutionComponent]]]])
+
+slots.ingredient = Slot(uri=CMM.ingredient, name="ingredient", curie=CMM.curie('ingredient'),
+                   model_uri=CMM.ingredient, domain=None, range=Optional[Union[str, IngredientId]])
+
+slots.solution = Slot(uri=CMM.solution, name="solution", curie=CMM.curie('solution'),
+                   model_uri=CMM.solution, domain=None, range=Optional[Union[str, SolutionId]])
+
+slots.concentration_value = Slot(uri=CMM.concentration_value, name="concentration_value", curie=CMM.curie('concentration_value'),
+                   model_uri=CMM.concentration_value, domain=None, range=Optional[float])
+
+slots.concentration_unit = Slot(uri=CMM.concentration_unit, name="concentration_unit", curie=CMM.curie('concentration_unit'),
+                   model_uri=CMM.concentration_unit, domain=None, range=Optional[Union[str, "ConcentrationUnit"]])
+
+slots.volume_per_liter = Slot(uri=CMM.volume_per_liter, name="volume_per_liter", curie=CMM.curie('volume_per_liter'),
+                   model_uri=CMM.volume_per_liter, domain=None, range=Optional[float])
+
+slots.volume_unit = Slot(uri=CMM.volume_unit, name="volume_unit", curie=CMM.curie('volume_unit'),
+                   model_uri=CMM.volume_unit, domain=None, range=Optional[Union[str, "VolumeUnit"]])
+
+slots.roles = Slot(uri=CMM.roles, name="roles", curie=CMM.curie('roles'),
+                   model_uri=CMM.roles, domain=None, range=Optional[Union[Union[str, "IngredientRole"], list[Union[str, "IngredientRole"]]]])
+
+slots.medium_type = Slot(uri=CMM.medium_type, name="medium_type", curie=CMM.curie('medium_type'),
+                   model_uri=CMM.medium_type, domain=None, range=Optional[Union[str, "MediumType"]])
+
+slots.solution_type = Slot(uri=CMM.solution_type, name="solution_type", curie=CMM.curie('solution_type'),
+                   model_uri=CMM.solution_type, domain=None, range=Optional[Union[str, "SolutionType"]])
+
+slots.ph = Slot(uri=CMM.ph, name="ph", curie=CMM.curie('ph'),
+                   model_uri=CMM.ph, domain=None, range=Optional[float])
+
+slots.sterilization_method = Slot(uri=CMM.sterilization_method, name="sterilization_method", curie=CMM.curie('sterilization_method'),
+                   model_uri=CMM.sterilization_method, domain=None, range=Optional[str])
+
+slots.target_organisms = Slot(uri=CMM.target_organisms, name="target_organisms", curie=CMM.curie('target_organisms'),
+                   model_uri=CMM.target_organisms, domain=None, range=Optional[Union[str, list[str]]])
+
+slots.references = Slot(uri=CMM.references, name="references", curie=CMM.curie('references'),
+                   model_uri=CMM.references, domain=None, range=Optional[Union[str, list[str]]])
+
+slots.notes = Slot(uri=CMM.notes, name="notes", curie=CMM.curie('notes'),
+                   model_uri=CMM.notes, domain=None, range=Optional[str])
+
+slots.cMMDatabase__ingredients = Slot(uri=CMM.ingredients, name="cMMDatabase__ingredients", curie=CMM.curie('ingredients'),
+                   model_uri=CMM.cMMDatabase__ingredients, domain=None, range=Optional[Union[dict[Union[str, IngredientId], Union[dict, Ingredient]], list[Union[dict, Ingredient]]]])
+
+slots.cMMDatabase__solutions = Slot(uri=CMM.solutions, name="cMMDatabase__solutions", curie=CMM.curie('solutions'),
+                   model_uri=CMM.cMMDatabase__solutions, domain=None, range=Optional[Union[dict[Union[str, SolutionId], Union[dict, Solution]], list[Union[dict, Solution]]]])
+
+slots.cMMDatabase__media = Slot(uri=CMM.media, name="cMMDatabase__media", curie=CMM.curie('media'),
+                   model_uri=CMM.cMMDatabase__media, domain=None, range=Optional[Union[dict[Union[str, GrowthMediumId], Union[dict, GrowthMedium]], list[Union[dict, GrowthMedium]]]])
+
+slots.IngredientComponent_ingredient = Slot(uri=CMM.ingredient, name="IngredientComponent_ingredient", curie=CMM.curie('ingredient'),
+                   model_uri=CMM.IngredientComponent_ingredient, domain=IngredientComponent, range=Union[str, IngredientId])
+
+slots.SolutionComponent_solution = Slot(uri=CMM.solution, name="SolutionComponent_solution", curie=CMM.curie('solution'),
+                   model_uri=CMM.SolutionComponent_solution, domain=SolutionComponent, range=Union[str, SolutionId])
+
+slots.CrossReference_xref_type = Slot(uri=CMM.xref_type, name="CrossReference_xref_type", curie=CMM.curie('xref_type'),
+                   model_uri=CMM.CrossReference_xref_type, domain=CrossReference, range=str)
+
+slots.CrossReference_xref_id = Slot(uri=CMM.xref_id, name="CrossReference_xref_id", curie=CMM.curie('xref_id'),
+                   model_uri=CMM.CrossReference_xref_id, domain=CrossReference, range=str)
