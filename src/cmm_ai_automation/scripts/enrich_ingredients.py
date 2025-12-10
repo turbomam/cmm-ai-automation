@@ -3,12 +3,16 @@
 
 Reads an ingredients TSV file and queries PubChem for each ingredient,
 adding chemical identifiers like InChIKey, CID, and SMILES.
+
+Uses a JSON cache to avoid re-querying PubChem for compounds we've already looked up.
 """
 
 import csv
+import json
 import logging
 import sys
 from pathlib import Path
+from typing import Any
 
 import click
 
@@ -19,8 +23,25 @@ from cmm_ai_automation.clients.pubchem import CompoundResult, LookupError, PubCh
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 DEFAULT_INPUT = PROJECT_ROOT / "data" / "private" / "normalized" / "ingredients.tsv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "private" / "enriched" / "ingredients_enriched.tsv"
+DEFAULT_CACHE = PROJECT_ROOT / "data" / "private" / "enriched" / "pubchem_cache.json"
 
 logger = logging.getLogger(__name__)
+
+
+def load_cache(cache_file: Path) -> dict[str, Any]:
+    """Load cache from JSON file."""
+    if cache_file.exists():
+        with cache_file.open(encoding="utf-8") as f:
+            cache: dict[str, Any] = json.load(f)
+            return cache
+    return {}
+
+
+def save_cache(cache_file: Path, cache: dict[str, Any]) -> None:
+    """Save cache to JSON file."""
+    cache_file.parent.mkdir(parents=True, exist_ok=True)
+    with cache_file.open("w", encoding="utf-8") as f:
+        json.dump(cache, f, indent=2)
 
 
 def setup_logging(verbose: bool) -> None:
@@ -50,16 +71,23 @@ def setup_logging(verbose: bool) -> None:
     help="Output TSV file with enriched data",
 )
 @click.option(
-    "--skip-no-chebi",
-    is_flag=True,
-    default=True,
-    help="Skip ingredients marked as no_chebi (undefined mixtures)",
-)
-@click.option(
     "--verbose",
     "-v",
     is_flag=True,
     help="Enable verbose logging",
+)
+@click.option(
+    "--cache",
+    "-c",
+    "cache_file",
+    type=click.Path(path_type=Path),
+    default=DEFAULT_CACHE,
+    help="JSON cache file for PubChem lookups",
+)
+@click.option(
+    "--no-cache",
+    is_flag=True,
+    help="Disable cache (always query PubChem)",
 )
 @click.option(
     "--dry-run",
@@ -69,8 +97,9 @@ def setup_logging(verbose: bool) -> None:
 def main(
     input_file: Path,
     output_file: Path,
-    skip_no_chebi: bool,
     verbose: bool,
+    cache_file: Path,
+    no_cache: bool,
     dry_run: bool,
 ) -> None:
     """Enrich ingredients with PubChem data.
@@ -88,18 +117,17 @@ def main(
 
     click.echo(f"Found {len(ingredients)} ingredients")
 
-    # Count skippable ingredients
-    no_chebi_count = sum(1 for ing in ingredients if ing.get("needs_curation") == "no_chebi")
-    if skip_no_chebi:
-        click.echo(f"Will skip {no_chebi_count} undefined mixtures (no_chebi)")
-
     if dry_run:
         click.echo("\n[DRY RUN] Would query PubChem for:")
         for ing in ingredients:
-            if skip_no_chebi and ing.get("needs_curation") == "no_chebi":
-                continue
             click.echo(f"  - {ing['ingredient_name']}")
         return
+
+    # Load cache
+    cache: dict[str, Any] = {}
+    if not no_cache:
+        cache = load_cache(cache_file)
+        click.echo(f"Loaded {len(cache)} cached entries from: {cache_file}")
 
     # Create PubChem client
     client = PubChemClient()
@@ -108,25 +136,21 @@ def main(
     enriched = []
     success_count = 0
     error_count = 0
-    skip_count = 0
+    cache_hit_count = 0
 
     for ing in ingredients:
         name = ing["ingredient_name"]
 
-        # Skip undefined mixtures
-        if skip_no_chebi and ing.get("needs_curation") == "no_chebi":
-            logger.debug(f"Skipping undefined mixture: {name}")
-            enriched.append({
-                **ing,
-                "pubchem_cid": "",
-                "pubchem_inchikey": "",
-                "pubchem_canonical_smiles": "",
-                "pubchem_molecular_formula": "",
-                "pubchem_iupac_name": "",
-                "pubchem_title": "",
-                "pubchem_error": "SKIPPED_NO_CHEBI",
-            })
-            skip_count += 1
+        # Check cache first
+        if not no_cache and name in cache:
+            cached = cache[name]
+            click.echo(f"Looking up: {name}... CACHED (CID:{cached.get('pubchem_cid', 'N/A')})")
+            enriched.append({**ing, **cached})
+            if cached.get("pubchem_error"):
+                error_count += 1
+            else:
+                success_count += 1
+            cache_hit_count += 1
             continue
 
         # Query PubChem
@@ -135,8 +159,7 @@ def main(
 
         if isinstance(result, CompoundResult):
             click.echo(f"CID:{result.CID}")
-            enriched.append({
-                **ing,
+            result_dict = {
                 "pubchem_cid": str(result.CID),
                 "pubchem_inchikey": result.InChIKey or "",
                 "pubchem_canonical_smiles": result.CanonicalSMILES or "",
@@ -144,12 +167,13 @@ def main(
                 "pubchem_iupac_name": result.IUPACName or "",
                 "pubchem_title": result.Title or "",
                 "pubchem_error": "",
-            })
+            }
+            enriched.append({**ing, **result_dict})
+            cache[name] = result_dict
             success_count += 1
         elif isinstance(result, LookupError):
             click.echo(f"ERROR: {result.error_code}")
-            enriched.append({
-                **ing,
+            result_dict = {
                 "pubchem_cid": "",
                 "pubchem_inchikey": "",
                 "pubchem_canonical_smiles": "",
@@ -157,8 +181,15 @@ def main(
                 "pubchem_iupac_name": "",
                 "pubchem_title": "",
                 "pubchem_error": f"{result.error_code}: {result.error_message}",
-            })
+            }
+            enriched.append({**ing, **result_dict})
+            cache[name] = result_dict
             error_count += 1
+
+    # Save cache
+    if not no_cache:
+        save_cache(cache_file, cache)
+        click.echo(f"Saved {len(cache)} entries to cache: {cache_file}")
 
     # Write output
     output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -167,8 +198,6 @@ def main(
     fieldnames = [
         "ingredient_uuid",
         "ingredient_name",
-        "chemical_formula",
-        "needs_curation",
         "pubchem_cid",
         "pubchem_inchikey",
         "pubchem_canonical_smiles",
@@ -186,10 +215,10 @@ def main(
     # Summary
     click.echo()
     click.echo("Summary:")
-    click.echo(f"  Success: {success_count}")
-    click.echo(f"  Errors:  {error_count}")
-    click.echo(f"  Skipped: {skip_count}")
-    click.echo(f"  Total:   {len(enriched)}")
+    click.echo(f"  Success:    {success_count}")
+    click.echo(f"  Errors:     {error_count}")
+    click.echo(f"  Cache hits: {cache_hit_count}")
+    click.echo(f"  Total:      {len(enriched)}")
 
     if error_count > 0:
         sys.exit(1)
