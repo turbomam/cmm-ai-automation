@@ -78,7 +78,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#cmm-ai-automation" class="md-skip">
+        <a href="#cmm-ai-automation-schema" class="md-skip">
           Skip to content
         </a>
       
@@ -546,8 +546,10 @@
   
 
 
-<h1 id="cmm-ai-automation">cmm-ai-automation</h1>
-<p>AI-assisted automation for Critical Mineral Metabolism data curation</p>
+<h1 id="cmm-ai-automation-schema">CMM AI Automation Schema</h1>
+<p>Schema for Critical Mineral Metabolism (CMM) data curation.</p>
+<p>Models microbial strains, growth media, ingredients, and their relationships
+for knowledge graph generation.</p>
 <p>URI: https://w3id.org/turbomam/cmm-ai-automation</p>
 <p>Name: cmm-ai-automation</p>
 <h2 id="classes">Classes</h2>
@@ -560,16 +562,40 @@
 </thead>
 <tbody>
 <tr>
+<td><a href="CMMDatabase/">CMMDatabase</a></td>
+<td>Container for all CMM entities</td>
+</tr>
+<tr>
+<td><a href="CrossReference/">CrossReference</a></td>
+<td>A cross-reference to an external database or identifier</td>
+</tr>
+<tr>
+<td><a href="IngredientComponent/">IngredientComponent</a></td>
+<td>Reified relationship: an ingredient as used in a mixture, with concentration ...</td>
+</tr>
+<tr>
 <td><a href="NamedThing/">NamedThing</a></td>
 <td>A generic grouping for any identifiable entity</td>
 </tr>
 <tr>
-<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="Person/">Person</a></td>
-<td>Represents a Person</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="Ingredient/">Ingredient</a></td>
+<td>A chemical entity that can be a component of solutions or media</td>
 </tr>
 <tr>
-<td><a href="PersonCollection/">PersonCollection</a></td>
-<td>A holder for Person objects</td>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="Mixture/">Mixture</a></td>
+<td>Abstract base class for things composed of ingredients</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="GrowthMedium/">GrowthMedium</a></td>
+<td>A complete formulation for cultivating microorganisms</td>
+</tr>
+<tr>
+<td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="Solution/">Solution</a></td>
+<td>A pre-made concentrated mixture of ingredients, typically diluted into media</td>
+</tr>
+<tr>
+<td><a href="SolutionComponent/">SolutionComponent</a></td>
+<td>Reified relationship: a solution as used in a medium, with volume/dilution</td>
 </tr>
 </tbody>
 </table>
@@ -583,36 +609,132 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="age_in_years/">age_in_years</a></td>
-<td>Number of years since birth</td>
+<td><a href="cas_rn/">cas_rn</a></td>
+<td>CAS Registry Number</td>
 </tr>
 <tr>
-<td><a href="birth_date/">birth_date</a></td>
-<td>Date on which a person is born</td>
+<td><a href="chebi_id/">chebi_id</a></td>
+<td>ChEBI identifier</td>
+</tr>
+<tr>
+<td><a href="chemical_formula/">chemical_formula</a></td>
+<td>Chemical formula (e</td>
+</tr>
+<tr>
+<td><a href="concentration_unit/">concentration_unit</a></td>
+<td>Unit of concentration</td>
+</tr>
+<tr>
+<td><a href="concentration_value/">concentration_value</a></td>
+<td>Numeric concentration value</td>
 </tr>
 <tr>
 <td><a href="description/">description</a></td>
 <td>A human-readable description for a thing</td>
 </tr>
 <tr>
+<td><a href="has_ingredient_component/">has_ingredient_component</a></td>
+<td>Ingredients contained in this mixture with their concentrations</td>
+</tr>
+<tr>
+<td><a href="has_solution_component/">has_solution_component</a></td>
+<td>Solutions contained in this medium</td>
+</tr>
+<tr>
 <td><a href="id/">id</a></td>
 <td>A unique identifier for a thing</td>
+</tr>
+<tr>
+<td><a href="inchikey/">inchikey</a></td>
+<td>InChIKey for structural identification</td>
+</tr>
+<tr>
+<td><a href="ingredient/">ingredient</a></td>
+<td>Reference to the ingredient entity</td>
+</tr>
+<tr>
+<td><a href="ingredients/">ingredients</a></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="media/">media</a></td>
+<td></td>
+</tr>
+<tr>
+<td><a href="medium_type/">medium_type</a></td>
+<td>Classification of the medium</td>
 </tr>
 <tr>
 <td><a href="name/">name</a></td>
 <td>A human-readable name for a thing</td>
 </tr>
 <tr>
-<td><a href="people/">people</a></td>
+<td><a href="notes/">notes</a></td>
+<td>Free-text notes about this component</td>
+</tr>
+<tr>
+<td><a href="ph/">ph</a></td>
+<td>Target pH of the medium</td>
+</tr>
+<tr>
+<td><a href="pubchem_cid/">pubchem_cid</a></td>
+<td>PubChem Compound ID</td>
+</tr>
+<tr>
+<td><a href="references/">references</a></td>
+<td>Literature references for this medium formulation</td>
+</tr>
+<tr>
+<td><a href="roles/">roles</a></td>
+<td>Functional roles of this ingredient in this specific mixture</td>
+</tr>
+<tr>
+<td><a href="solution/">solution</a></td>
+<td>Reference to the solution entity</td>
+</tr>
+<tr>
+<td><a href="solution_type/">solution_type</a></td>
+<td>Classification of the solution</td>
+</tr>
+<tr>
+<td><a href="solutions/">solutions</a></td>
 <td></td>
 </tr>
 <tr>
-<td><a href="primary_email/">primary_email</a></td>
-<td>The main email address of a person</td>
+<td><a href="sterilization_method/">sterilization_method</a></td>
+<td>How the medium is sterilized (e</td>
 </tr>
 <tr>
-<td><a href="vital_status/">vital_status</a></td>
-<td>living or dead status</td>
+<td><a href="synonyms/">synonyms</a></td>
+<td>Alternative names for this entity</td>
+</tr>
+<tr>
+<td><a href="target_organisms/">target_organisms</a></td>
+<td>Taxa or organism types this medium is designed for</td>
+</tr>
+<tr>
+<td><a href="volume_per_liter/">volume_per_liter</a></td>
+<td>Volume of solution added per liter of medium</td>
+</tr>
+<tr>
+<td><a href="volume_unit/">volume_unit</a></td>
+<td>Unit of volume (typically mL)</td>
+</tr>
+<tr>
+<td><a href="xref_id/">xref_id</a></td>
+<td>The identifier value</td>
+</tr>
+<tr>
+<td><a href="xref_label/">xref_label</a></td>
+<td>Human-readable label from the external source</td>
+</tr>
+<tr>
+<td><a href="xref_type/">xref_type</a></td>
+<td>Type of cross-reference (e</td>
+</tr>
+<tr>
+<td><a href="xrefs/">xrefs</a></td>
+<td>Cross-references to external databases</td>
 </tr>
 </tbody>
 </table>
@@ -626,8 +748,24 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="PersonStatus/">PersonStatus</a></td>
-<td></td>
+<td><a href="ConcentrationUnit/">ConcentrationUnit</a></td>
+<td>Units for concentration</td>
+</tr>
+<tr>
+<td><a href="IngredientRole/">IngredientRole</a></td>
+<td>Functional role of an ingredient in a growth medium</td>
+</tr>
+<tr>
+<td><a href="MediumType/">MediumType</a></td>
+<td>Classification of growth media by composition</td>
+</tr>
+<tr>
+<td><a href="SolutionType/">SolutionType</a></td>
+<td>Classification of stock solutions</td>
+</tr>
+<tr>
+<td><a href="VolumeUnit/">VolumeUnit</a></td>
+<td>Units for volume</td>
 </tr>
 </tbody>
 </table>
