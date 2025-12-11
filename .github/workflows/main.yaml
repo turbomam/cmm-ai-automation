@@ -19,7 +19,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.12", "3.13"]
+        # Note: 3.13 disabled until kgx/pyarrow has better support
+        python-version: ["3.12"]
       fail-fast: false
 
     steps:
