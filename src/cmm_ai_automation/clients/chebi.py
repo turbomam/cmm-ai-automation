@@ -19,7 +19,6 @@ import re
 import time
 from dataclasses import dataclass, field
 from typing import Any
-from urllib.parse import quote
 
 import requests
 
@@ -252,10 +251,7 @@ class ChEBIClient:
         """
         # Normalize the ChEBI ID
         chebi_str = str(chebi_id).upper()
-        if chebi_str.startswith("CHEBI:"):
-            chebi_numeric = chebi_str.split(":")[1]
-        else:
-            chebi_numeric = chebi_str
+        chebi_numeric = chebi_str.split(":")[1] if chebi_str.startswith("CHEBI:") else chebi_str
 
         url = f"{self.BASE_URL}/public/compound/{chebi_numeric}/"
 
@@ -393,7 +389,7 @@ class ChEBIClient:
         # Parse names/synonyms
         synonyms = []
         names_data = data.get("names", {})
-        for name_type, name_list in names_data.items():
+        for _name_type, name_list in names_data.items():
             for name_entry in name_list:
                 ascii_name = name_entry.get("ascii_name")
                 if ascii_name:
