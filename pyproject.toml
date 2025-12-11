@@ -16,6 +16,9 @@ dynamic = ["version"]
 
 dependencies = [
   "linkml-runtime >=1.9.4",
+  "linkml-store[mongodb]>=0.2.12",
+  "duckdb>=1.4.0",
+  "kgx>=2.1.0",
   "gspread >=6.0.0",
   "google-auth >=2.0.0",
   "google-auth-oauthlib >=1.0.0",
@@ -157,6 +160,8 @@ exclude = [
 module = [
   "gspread.*",
   "linkml_runtime.*",
+  "linkml_store.*",
+  "kgx.*",
 ]
 ignore_missing_imports = true
 
