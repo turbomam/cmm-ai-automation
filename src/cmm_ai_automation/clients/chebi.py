@@ -380,7 +380,7 @@ class ChEBIClient:
         chebi_id = data.get("chebi_accession", "")
 
         # Parse chemical data
-        chem_data = data.get("chemical_data", {})
+        chem_data = data.get("chemical_data") or {}
         formula = chem_data.get("formula")
         mass = _to_float(chem_data.get("mass"))
         monoisotopic_mass = _to_float(chem_data.get("monoisotopic_mass"))
@@ -388,7 +388,7 @@ class ChEBIClient:
 
         # Parse names/synonyms
         synonyms = []
-        names_data = data.get("names", {})
+        names_data = data.get("names") or {}
         for _name_type, name_list in names_data.items():
             for name_entry in name_list:
                 ascii_name = name_entry.get("ascii_name")
@@ -397,7 +397,7 @@ class ChEBIClient:
 
         # Parse roles
         roles = []
-        for role_data in data.get("roles_classification", []):
+        for role_data in data.get("roles_classification") or []:
             roles.append(
                 ChEBIRole(
                     chebi_id=f"CHEBI:{role_data.get('id', '')}",
@@ -411,7 +411,7 @@ class ChEBIClient:
 
         # Parse database references
         database_refs: dict[str, list[ChEBIDatabaseRef]] = {}
-        for db_type, ref_list in data.get("database_accessions", {}).items():
+        for db_type, ref_list in (data.get("database_accessions") or {}).items():
             database_refs[db_type] = []
             for ref in ref_list:
                 database_refs[db_type].append(
@@ -429,7 +429,7 @@ class ChEBIClient:
         parents = []
         has_roles = []
 
-        ont_data = data.get("ontology_relations", {})
+        ont_data = data.get("ontology_relations") or {}
         for rel in ont_data.get("outgoing_relations", []):
             relation = ChEBIRelation(
                 relation_type=rel.get("relation_type", ""),
