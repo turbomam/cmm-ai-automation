@@ -71,18 +71,41 @@ codify-strains input output chroma_path:
 enrich-strains input output:
   uv run python -m cmm_ai_automation.scripts.enrich_strains --input {{input}} --output {{output}}
 
+# Multi-source enrichment pipeline: enriches ingredients and stores in DuckDB
+# REQUIRES: PubChem, ChEBI, CAS (optional), Node Normalization APIs, NETWORK: yes, WRITES: data/enrichment.duckdb
+enrich-to-store:
+  uv run enrich-to-store --input data/private/normalized/ingredients.tsv
+
+# Multi-source enrichment with KGX export (complete pipeline)
+# REQUIRES: Multiple APIs, NETWORK: yes, EXPENSIVE: many API calls, WRITES: DuckDB + KGX TSV files
+enrich-and-export-kgx:
+  uv run enrich-to-store --input data/private/normalized/ingredients.tsv --export-kgx --output output/kgx/ingredients
+
+# Multi-source enrichment with limit for testing (first N ingredients)
+# REQUIRES: Multiple APIs, NETWORK: yes, SAFE: limited scope, WRITES: DuckDB
+enrich-to-store-test n='5':
+  uv run enrich-to-store --input data/private/normalized/ingredients.tsv --limit {{n}} --verbose
+
+# Export existing EnrichmentStore to KGX format (no API calls)
+# REQUIRES: data/enrichment.duckdb exists, SAFE: read-only on APIs, WRITES: output/kgx/*.tsv
+export-kgx:
+  uv run python -c "from cmm_ai_automation.store.enrichment_store import EnrichmentStore; from pathlib import Path; store = EnrichmentStore(); store.export_to_kgx(Path('output/kgx/ingredients')); print('✓ KGX export complete')"
+
 # =============================================================================
 # SMOKE TESTS - Verify CLI scripts can be imported and show help
 # =============================================================================
 
 # Run all smoke tests (safe, fast, no network/API calls)
-smoke-test-all: smoke-test-download-sheets smoke-test-enrich-ingredients smoke-test-enrich-strains smoke-test-codify-strains smoke-test-build-ncbitaxon smoke-test-load-bacdive smoke-test-load-mediadive-details
+smoke-test-all: smoke-test-download-sheets smoke-test-enrich-ingredients smoke-test-enrich-to-store smoke-test-enrich-strains smoke-test-codify-strains smoke-test-build-ncbitaxon smoke-test-load-bacdive smoke-test-load-mediadive-details
 
 smoke-test-download-sheets:
   @uv run download-sheets --help > /dev/null
 
 smoke-test-enrich-ingredients:
   @uv run enrich-ingredients --help > /dev/null
+
+smoke-test-enrich-to-store:
+  @uv run enrich-to-store --help > /dev/null
 
 smoke-test-enrich-strains:
   @uv run python -m cmm_ai_automation.scripts.enrich_strains --help > /dev/null

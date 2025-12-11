@@ -465,7 +465,7 @@ class EnrichmentStore:
         from kgx.sink.tsv_sink import TsvSink
 
         collection = self._get_collection()
-        all_records = list(collection.find({}))
+        all_records = collection.find({}).rows or []
 
         # Create KGX graph
         graph = NxGraph()
