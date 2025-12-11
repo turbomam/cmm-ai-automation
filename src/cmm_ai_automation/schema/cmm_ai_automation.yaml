@@ -252,14 +252,17 @@ classes:
     description: Container for all CMM entities
     attributes:
       ingredients:
+        description: Collection of all chemical ingredients in the database
         range: Ingredient
         multivalued: true
         inlined_as_list: true
       solutions:
+        description: Collection of all solution recipes (pre-made mixtures)
         range: Solution
         multivalued: true
         inlined_as_list: true
       media:
+        description: Collection of all growth medium recipes
         range: GrowthMedium
         multivalued: true
         inlined_as_list: true

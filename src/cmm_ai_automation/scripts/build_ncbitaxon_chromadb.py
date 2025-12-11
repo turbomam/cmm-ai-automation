@@ -22,7 +22,7 @@ from pathlib import Path
 
 import chromadb
 from chromadb.config import Settings
-from tqdm import tqdm
+from tqdm import tqdm  # type: ignore[import-untyped]
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -35,10 +35,10 @@ BATCH_SIZE = 5000
 
 def get_ncbitaxon_count(cursor: sqlite3.Cursor) -> int:
     """Get count of NCBITaxon embeddings."""
-    cursor.execute(
-        "SELECT COUNT(*) FROM embeddings WHERE ontologyId = 'ncbitaxon'"
-    )
-    return cursor.fetchone()[0]
+    cursor.execute("SELECT COUNT(*) FROM embeddings WHERE ontologyId = 'ncbitaxon'")
+    result = cursor.fetchone()
+    count: int = int(result[0]) if result else 0
+    return count
 
 
 def build_chromadb(
@@ -132,9 +132,9 @@ def build_chromadb(
                 if len(batch_ids) >= BATCH_SIZE:
                     collection.add(
                         ids=batch_ids,
-                        embeddings=batch_embeddings,
+                        embeddings=batch_embeddings,  # type: ignore[arg-type]
                         documents=batch_documents,
-                        metadatas=batch_metadatas,
+                        metadatas=batch_metadatas,  # type: ignore[arg-type]
                     )
                     pbar.update(len(batch_ids))
                     batch_ids = []
@@ -150,9 +150,9 @@ def build_chromadb(
         if batch_ids:
             collection.add(
                 ids=batch_ids,
-                embeddings=batch_embeddings,
+                embeddings=batch_embeddings,  # type: ignore[arg-type]
                 documents=batch_documents,
-                metadatas=batch_metadatas,
+                metadatas=batch_metadatas,  # type: ignore[arg-type]
             )
             pbar.update(len(batch_ids))
 
@@ -168,9 +168,7 @@ def build_chromadb(
 
 def main() -> None:
     """Build NCBITaxon ChromaDB collection."""
-    parser = argparse.ArgumentParser(
-        description="Build ChromaDB collection for NCBITaxon embeddings"
-    )
+    parser = argparse.ArgumentParser(description="Build ChromaDB collection for NCBITaxon embeddings")
     parser.add_argument(
         "--source-db",
         default=DEFAULT_SOURCE_DB,

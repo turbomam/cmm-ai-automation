@@ -101,7 +101,7 @@ class TestOLSClient:
         result = client.get_chebi_parents("CHEBI:17634")  # D-glucose
 
         # Should return a list (may be empty if API doesn't return parents)
-        assert isinstance(result, list) or isinstance(result, OLSLookupError)
+        assert isinstance(result, list | OLSLookupError)
 
     def test_chebi_term_to_dict(self) -> None:
         """Test ChEBITerm serialization."""

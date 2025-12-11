@@ -304,9 +304,11 @@ class ChEBIClient:
         try:
             data = self._get(url, params)
         except requests.HTTPError as e:
+            # Extract HTTP status code if available
+            status_code = e.response.status_code if e.response is not None else None
             return ChEBILookupError(
                 query=query,
-                error_code="HTTP_ERROR",
+                error_code=str(status_code) if status_code else "HTTP_ERROR",
                 error_message=str(e),
             )
         except requests.RequestException as e:
@@ -342,10 +344,15 @@ class ChEBIClient:
 
         Returns:
             ChEBISearchResult if found with exact match, None if not found,
-            ChEBILookupError on failure
+            ChEBILookupError on failure (network errors, API errors, etc., but not "not found")
         """
-        results = self.search(name, size=10)
+        # Try searching with the exact name first
+        results = self.search(name, size=20)
         if isinstance(results, ChEBILookupError):
+            # If it's a 404 "not found", treat as None (no results)
+            if results.error_code == "404":
+                return None
+            # Other errors (network, API) should be returned as errors
             return results
 
         # Look for exact match (case-insensitive)
@@ -356,11 +363,27 @@ class ChEBIClient:
             if result.name and _strip_html(result.name).lower() == name_lower:
                 return result
 
+        # If no exact match found with specific term, try a broader search
+        # by removing stereochemistry prefixes (D-, L-, etc.)
+        if name.startswith(("D-", "L-", "d-", "l-")):
+            broader_name = name[2:]
+            results = self.search(broader_name, size=20)
+            if isinstance(results, ChEBILookupError):
+                # Again, treat 404 as no results
+                if results.error_code == "404":
+                    return None
+                return results
+
+            # Look for exact match in broader results
+            for result in results:
+                if result.ascii_name and result.ascii_name.lower() == name_lower:
+                    return result
+                if result.name and _strip_html(result.name).lower() == name_lower:
+                    return result
+
         return None
 
-    def get_compounds_batch(
-        self, chebi_ids: list[str | int]
-    ) -> dict[str, ChEBICompound | ChEBILookupError]:
+    def get_compounds_batch(self, chebi_ids: list[str | int]) -> dict[str, ChEBICompound | ChEBILookupError]:
         """Get multiple compounds (makes individual requests).
 
         Args:

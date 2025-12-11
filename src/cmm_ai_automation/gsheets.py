@@ -63,9 +63,7 @@ def get_gspread_client(credentials_path: str | None = None) -> gspread.Client:
     return gspread.authorize(creds)
 
 
-def get_spreadsheet(
-    name_or_id: str, credentials_path: str | None = None
-) -> gspread.Spreadsheet:
+def get_spreadsheet(name_or_id: str, credentials_path: str | None = None) -> gspread.Spreadsheet:
     """Open a Google Spreadsheet by name or ID.
 
     Args:
@@ -118,7 +116,9 @@ def get_sheet_records(
     """
     spreadsheet = get_spreadsheet(spreadsheet_name, credentials_path)
     worksheet = spreadsheet.worksheet(worksheet_name) if worksheet_name else spreadsheet.sheet1
-    return worksheet.get_all_records()
+    raw_records = worksheet.get_all_records()
+    records: list[dict[str, str | int | float]] = raw_records
+    return records
 
 
 def get_sheet_data(

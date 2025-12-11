@@ -30,7 +30,7 @@ Additionally the group uses additional drop-in templates for AI integrations:
 
 ## Favored tools
 
-These are included in the templates above but some general over-arching preferences: 
+These are included in the templates above but some general over-arching preferences:
 
 * modern python dev stack: `uv`, `ruff` (currently `mypy` for typing but we may switch to  https://docs.astral.sh/ty/)
 * for builds, both `just` and `make` are favored, with `just` favored for non-pipeline cases

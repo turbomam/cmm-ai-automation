@@ -65,7 +65,8 @@ def fetch_detail(endpoint: str) -> dict[str, Any] | None:
             logger.warning(f"API error for {endpoint}: {data.get('msg')}")
             return None
 
-        return data.get("data")
+        detail_data: dict[str, Any] | None = data.get("data")
+        return detail_data
 
     except requests.RequestException as e:
         logger.warning(f"Request failed for {endpoint}: {e}")

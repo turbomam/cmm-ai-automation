@@ -12,8 +12,8 @@ from cmm_ai_automation.store.enrichment_store import (
 )
 
 __all__ = [
+    "AUTHORITATIVE_SOURCES",
     "EnrichmentStore",
     "generate_composite_key",
     "parse_composite_key",
-    "AUTHORITATIVE_SOURCES",
 ]

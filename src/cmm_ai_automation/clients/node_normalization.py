@@ -236,9 +236,7 @@ class NodeNormalizationClient:
 
         return self._parse_node(curie, node_data)
 
-    def normalize_batch(
-        self, curies: list[str]
-    ) -> dict[str, NormalizedNode | NormalizationError]:
+    def normalize_batch(self, curies: list[str]) -> dict[str, NormalizedNode | NormalizationError]:
         """Normalize multiple CURIEs in a single request.
 
         Args:
@@ -299,6 +297,12 @@ class NodeNormalizationClient:
         inchikey: str | None = None
         cas_rn: str | None = None
 
+        # If query was by CAS, InChI, or InChIKey, prefer that value
+        if query_id.startswith("CAS:"):
+            cas_rn = query_id.split(":", 1)[1]
+        elif query_id.startswith("INCHIKEY:"):
+            inchikey = query_id.split(":", 1)[1]
+
         for equiv in equiv_ids:
             identifier = equiv.get("identifier", "")
             label = equiv.get("label")
@@ -313,10 +317,11 @@ class NodeNormalizationClient:
                     equivalent_ids[prefix] = []
                 equivalent_ids[prefix].append(identifier)
 
-                # Extract special identifiers
-                if prefix == "INCHIKEY":
+                # Extract special identifiers (only if not already set from query_id)
+                if prefix == "INCHIKEY" and inchikey is None:
                     inchikey = identifier.split(":")[-1]
-                elif prefix == "CAS":
+                elif prefix == "CAS" and cas_rn is None:
+                    # Take the first CAS number if not queried by CAS
                     cas_rn = identifier.split(":")[-1]
 
         return NormalizedNode(
@@ -364,10 +369,7 @@ class NodeNormalizationClient:
         """
         # Handle various input formats
         chebi_str = str(chebi_id)
-        if chebi_str.upper().startswith("CHEBI:"):
-            curie = chebi_str.upper()
-        else:
-            curie = f"CHEBI:{chebi_str}"
+        curie = chebi_str.upper() if chebi_str.upper().startswith("CHEBI:") else f"CHEBI:{chebi_str}"
         return self.normalize(curie)
 
     def normalize_by_pubchem(self, cid: int) -> NormalizedNode | NormalizationError:

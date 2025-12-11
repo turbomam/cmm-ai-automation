@@ -51,7 +51,9 @@ watch:
 
 nav:
   - Home: index.md
+  - Best Practices: best-practices.md
   - Schema: elements/index.md
+  - Architecture: architecture.md
   - About: about.md
 
 exclude_docs: |

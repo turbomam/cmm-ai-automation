@@ -1,6 +1,5 @@
 """Tests for MediaDive client."""
 
-import json
 import tempfile
 from pathlib import Path
 

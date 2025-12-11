@@ -226,9 +226,7 @@ class PubChemClient:
         except (KeyError, IndexError):
             return []
 
-    def get_compounds_by_name(
-        self, name: str
-    ) -> list[CompoundResult] | LookupError:
+    def get_compounds_by_name(self, name: str) -> list[CompoundResult] | LookupError:
         """Look up all compounds matching a name.
 
         Args:
@@ -257,15 +255,17 @@ class PubChemClient:
                 result.name_queried = name
                 results.append(result)
 
-        return results if results else LookupError(
-            name_queried=name,
-            error_code="NO_VALID_RESULTS",
-            error_message=f"Found {len(cids_result)} CIDs but could not fetch properties",
+        return (
+            results
+            if results
+            else LookupError(
+                name_queried=name,
+                error_code="NO_VALID_RESULTS",
+                error_message=f"Found {len(cids_result)} CIDs but could not fetch properties",
+            )
         )
 
-    def get_compound_by_name(
-        self, name: str
-    ) -> CompoundResult | LookupError:
+    def get_compound_by_name(self, name: str) -> CompoundResult | LookupError:
         """Look up a compound by name (returns first match only).
 
         For all matches, use get_compounds_by_name() instead.
@@ -474,9 +474,7 @@ class PubChemClient:
 
         return result
 
-    def _extract_xrefs_from_section(
-        self, section: dict[str, Any], result: dict[str, str | None]
-    ) -> None:
+    def _extract_xrefs_from_section(self, section: dict[str, Any], result: dict[str, str | None]) -> None:
         """Extract CAS, ChEBI, Wikidata from a Names and Identifiers section."""
         for subsection in section.get("Section", []):
             toc = subsection.get("TOCHeading", "")
@@ -507,7 +505,9 @@ class PubChemClient:
                 value = info_list[0].get("Value", {})
                 markup_list = value.get("StringWithMarkup", [])
                 if markup_list:
-                    return markup_list[0].get("String")
+                    string_value = markup_list[0].get("String")
+                    result: str | None = str(string_value) if string_value is not None else None
+                    return result
         except (KeyError, IndexError, TypeError):
             pass
         return None

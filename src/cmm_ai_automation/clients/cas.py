@@ -122,8 +122,7 @@ class CASClient:
         self.api_key = api_key or os.environ.get("CAS_API_KEY")
         if not self.api_key:
             raise ValueError(
-                "CAS API key required. Set CAS_API_KEY environment variable "
-                "or pass api_key to constructor."
+                "CAS API key required. Set CAS_API_KEY environment variable or pass api_key to constructor."
             )
 
         self.rate_limit_delay = rate_limit_delay
