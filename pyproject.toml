@@ -15,7 +15,7 @@ requires-python = ">=3.12"
 dynamic = ["version"]
 
 dependencies = [
-  "linkml-runtime >=1.9.4",
+  "linkml-runtime>=1.9.5",
   "linkml-store[mongodb]>=0.2.12",
   "duckdb>=1.4.0",
   "kgx>=2.1.0",
@@ -32,12 +32,12 @@ dependencies = [
   "openai>=2.9.0",
   "beautifulsoup4>=4.14.3",
   "bacdive>=1.0.0",
-  "linkml",
+  "linkml>=1.9.5",
 ]
 
 [dependency-groups]
 dev = [
-    "linkml>=1.9.3",
+    "linkml>=1.9.5",
     "mkdocs-material>=8.2.8",
     "mkdocs-mermaid2-plugin>=1.1.1",
     "mkdocs-pymdownx-material-extras>=2.5.6",
