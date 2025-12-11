@@ -4,8 +4,8 @@ import pytest
 
 from cmm_ai_automation.clients.node_normalization import (
     NodeNormalizationClient,
-    NormalizedNode,
     NormalizationError,
+    NormalizedNode,
 )
 
 

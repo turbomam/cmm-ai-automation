@@ -28,7 +28,7 @@ import sys
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, TextIO
 from urllib.parse import quote_plus
 from xml.etree import ElementTree
 
@@ -125,8 +125,10 @@ class NCBITaxonomyClient:
         try:
             response = self.session.get(url, params=params, timeout=30)
             response.raise_for_status()
-            data = response.json()
-            return data.get("esearchresult", {}).get("idlist", [])
+            data: dict[str, Any] = response.json()
+            esearch: dict[str, Any] = data.get("esearchresult", {})
+            idlist: list[str] = esearch.get("idlist", [])
+            return idlist
         except Exception as e:
             logger.warning(f"NCBI search failed for '{query}': {e}")
             return []
@@ -185,9 +187,7 @@ class NCBITaxonomyClient:
             logger.warning(f"NCBI fetch failed for taxon {taxon_id}: {e}")
             return None
 
-    def search_strain(
-        self, species_name: str, strain_designation: str
-    ) -> dict[str, Any] | None:
+    def search_strain(self, species_name: str, strain_designation: str) -> dict[str, Any] | None:
         """Search for a specific strain.
 
         Args:
@@ -250,9 +250,7 @@ class BacDiveClient:
             logger.warning(f"BacDive authentication error: {e}")
             return False
 
-    def search_by_culture_collection(
-        self, collection: str, number: str
-    ) -> list[dict[str, Any]]:
+    def search_by_culture_collection(self, collection: str, number: str) -> list[dict[str, Any]]:
         """Search BacDive by culture collection ID.
 
         Args:
@@ -379,7 +377,7 @@ class BacDiveClient:
 class DSMZScraper:
     """Web scraper for DSMZ culture collection pages."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.session = requests.Session()
         self.session.headers.update(
             {
@@ -425,15 +423,14 @@ class DSMZScraper:
             ncbi_links = soup.find_all("a", href=re.compile(r"ncbi.*taxonomy", re.I))
             for link in ncbi_links:
                 href = link.get("href", "")
-                match = re.search(r"id=(\d+)", href)
+                href_str = str(href) if href else ""
+                match = re.search(r"id=(\d+)", href_str)
                 if match:
                     result["ncbi_taxon_id"] = match.group(1)
                     break
 
             # Look for GenBank accession numbers (can lead to taxon IDs)
-            genbank_links = soup.find_all(
-                "a", href=re.compile(r"ncbi.*nuccore|genbank", re.I)
-            )
+            genbank_links = soup.find_all("a", href=re.compile(r"ncbi.*nuccore|genbank", re.I))
             result["genbank_accessions"] = []
             for link in genbank_links:
                 acc = link.get_text(strip=True)
@@ -444,10 +441,10 @@ class DSMZScraper:
             result["culture_collections"] = []
             # Look for table rows containing collection abbreviations
             for abbrev in ["ATCC", "NCIMB", "JCM", "NBRC", "LMG", "CIP", "CCM", "CECT"]:
-                links = soup.find_all("a", string=re.compile(f"^{abbrev}", re.I))
-                for link in links:
+                # Find all links and filter by text content
+                for link in soup.find_all("a"):
                     text = link.get_text(strip=True)
-                    if text and text not in result["culture_collections"]:
+                    if text and text.upper().startswith(abbrev) and text not in result["culture_collections"]:
                         result["culture_collections"].append(text)
 
             return result
@@ -460,7 +457,7 @@ class DSMZScraper:
 class ATCCScraper:
     """Web scraper for ATCC culture collection pages."""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.session = requests.Session()
         self.session.headers.update(
             {
@@ -512,12 +509,11 @@ class ATCCScraper:
                     break
 
             # Look for NCBI taxonomy links
-            ncbi_links = soup.find_all(
-                "a", href=re.compile(r"ncbi.*taxonomy|txid", re.I)
-            )
+            ncbi_links = soup.find_all("a", href=re.compile(r"ncbi.*taxonomy|txid", re.I))
             for link in ncbi_links:
                 href = link.get("href", "")
-                match = re.search(r"id=(\d+)|txid(\d+)", href)
+                href_str = str(href) if href else ""
+                match = re.search(r"id=(\d+)|txid(\d+)", href_str)
                 if match:
                     result["ncbi_taxon_id"] = match.group(1) or match.group(2)
                     break
@@ -529,8 +525,8 @@ class ATCCScraper:
             # Look for other culture collection references
             result["culture_collections"] = []
             for abbrev in ["DSM", "NCIMB", "JCM", "NBRC", "LMG", "CIP"]:
-                pattern = re.compile(rf"{abbrev}[:\s]*(\d+)", re.I)
-                matches = pattern.findall(page_text)
+                cc_pattern = re.compile(rf"{abbrev}[:\s]*(\d+)", re.I)
+                matches = cc_pattern.findall(page_text)
                 for num in matches:
                     cc_id = f"{abbrev}:{num}"
                     if cc_id not in result["culture_collections"]:
@@ -577,9 +573,7 @@ class StrainEnricher:
 
         return results
 
-    def enrich_from_ncbi(
-        self, strain: EnrichedStrain, species_taxon_id: str | None = None
-    ) -> None:
+    def enrich_from_ncbi(self, strain: EnrichedStrain, species_taxon_id: str | None = None) -> None:
         """Enrich strain data from NCBI Taxonomy."""
         try:
             # If we have a species taxon ID, fetch its info
@@ -595,9 +589,7 @@ class StrainEnricher:
 
             # Try to find strain-level taxon
             if strain.strain_designation and strain.scientific_name:
-                strain_info = self.ncbi.search_strain(
-                    strain.scientific_name, strain.strain_designation
-                )
+                strain_info = self.ncbi.search_strain(strain.scientific_name, strain.strain_designation)
                 if strain_info:
                     strain.ncbi_strain_taxon_id = strain_info.get("taxon_id")
                     strain.sources_used.append("ncbi_strain")
@@ -606,9 +598,7 @@ class StrainEnricher:
                 for alt_name in strain.alternative_names.split(";"):
                     alt_name = alt_name.strip()
                     if alt_name:
-                        strain_info = self.ncbi.search_strain(
-                            alt_name, strain.strain_designation
-                        )
+                        strain_info = self.ncbi.search_strain(alt_name, strain.strain_designation)
                         if strain_info:
                             strain.ncbi_strain_taxon_id = strain_info.get("taxon_id")
                             strain.sources_used.append("ncbi_strain_via_synonym")
@@ -628,9 +618,7 @@ class StrainEnricher:
             cc_ids = self.parse_culture_collection_ids(strain.culture_collection_ids)
             for collection, number in cc_ids:
                 if collection in ("DSM", "ATCC", "JCM", "NBRC", "NCIMB", "LMG"):
-                    entries = self.bacdive.search_by_culture_collection(
-                        collection, number
-                    )
+                    entries = self.bacdive.search_by_culture_collection(collection, number)
                     if entries:
                         entry = entries[0]
                         info = BacDiveClient.extract_strain_info(entry)
@@ -638,12 +626,8 @@ class StrainEnricher:
                         strain.bacdive_id = str(entry.get("id", ""))
                         strain.bacdive_species_name = info.get("species_name")
                         strain.bacdive_ncbi_taxon_id = info.get("ncbi_taxon_id")
-                        strain.bacdive_strain_designation = info.get(
-                            "strain_designation"
-                        )
-                        strain.bacdive_culture_collections = info.get(
-                            "culture_collections", []
-                        )
+                        strain.bacdive_strain_designation = info.get("strain_designation")
+                        strain.bacdive_culture_collections = info.get("culture_collections", [])
                         strain.sources_used.append(f"bacdive_{collection}")
                         break
 
@@ -778,9 +762,7 @@ class StrainEnricher:
 
 def main() -> None:
     """Enrich CMM strains using multiple data sources."""
-    parser = argparse.ArgumentParser(
-        description="Enrich CMM strains using multiple data sources"
-    )
+    parser = argparse.ArgumentParser(description="Enrich CMM strains using multiple data sources")
     parser.add_argument(
         "--input",
         default=DEFAULT_INPUT,
@@ -863,9 +845,7 @@ def main() -> None:
                 settings=Settings(anonymized_telemetry=False),
             )
             chromadb_collection = client.get_collection(name="ncbitaxon_embeddings")
-            logger.info(
-                f"ChromaDB collection loaded with {chromadb_collection.count()} entries"
-            )
+            logger.info(f"ChromaDB collection loaded with {chromadb_collection.count()} entries")
     except Exception as e:
         logger.warning(f"ChromaDB not available: {e}")
 
@@ -921,7 +901,7 @@ def main() -> None:
         "errors",
     ]
 
-    def get_output_file():
+    def get_output_file() -> TextIO:
         if args.output:
             return Path(args.output).open("w", newline="", encoding="utf-8")
         return sys.stdout
@@ -946,11 +926,8 @@ def main() -> None:
                     "bacdive_ncbi_taxon_id": enriched.bacdive_ncbi_taxon_id or "",
                     "dsmz_ncbi_taxon_id": enriched.dsmz_ncbi_taxon_id or "",
                     "atcc_ncbi_taxon_id": enriched.atcc_ncbi_taxon_id or "",
-                    "chromadb_matched_taxon_id": enriched.chromadb_matched_taxon_id
-                    or "",
-                    "chromadb_distance": f"{enriched.chromadb_distance:.4f}"
-                    if enriched.chromadb_distance
-                    else "",
+                    "chromadb_matched_taxon_id": enriched.chromadb_matched_taxon_id or "",
+                    "chromadb_distance": f"{enriched.chromadb_distance:.4f}" if enriched.chromadb_distance else "",
                     "sources_used": "; ".join(enriched.sources_used),
                     "errors": "; ".join(enriched.errors),
                 }

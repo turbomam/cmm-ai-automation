@@ -171,9 +171,7 @@ class MediaDiveMongoClient:
     # Ingredient Lookups (MediaDive is authoritative for these)
     # =========================================================================
 
-    def get_ingredient_by_id(
-        self, ingredient_id: int
-    ) -> MediaDiveMongoIngredient | MediaDiveMongoLookupError:
+    def get_ingredient_by_id(self, ingredient_id: int) -> MediaDiveMongoIngredient | MediaDiveMongoLookupError:
         """Get an ingredient by MediaDive ID.
 
         Args:
@@ -202,9 +200,7 @@ class MediaDiveMongoClient:
                 error_message=str(e),
             )
 
-    def search_ingredients_by_name(
-        self, name: str, exact: bool = False
-    ) -> list[MediaDiveMongoIngredient]:
+    def search_ingredients_by_name(self, name: str, exact: bool = False) -> list[MediaDiveMongoIngredient]:
         """Search ingredients by name.
 
         Args:
@@ -234,9 +230,7 @@ class MediaDiveMongoClient:
             logger.warning(f"Error searching ingredients by name '{name}': {e}")
             return []
 
-    def find_ingredient_by_cas(
-        self, cas_rn: str
-    ) -> MediaDiveMongoIngredient | None:
+    def find_ingredient_by_cas(self, cas_rn: str) -> MediaDiveMongoIngredient | None:
         """Find an ingredient by CAS Registry Number.
 
         Args:
@@ -257,9 +251,7 @@ class MediaDiveMongoClient:
             logger.warning(f"Error finding ingredient by CAS '{cas_rn}': {e}")
             return None
 
-    def find_ingredient_by_chebi(
-        self, chebi_id: int | str
-    ) -> MediaDiveMongoIngredient | None:
+    def find_ingredient_by_chebi(self, chebi_id: int | str) -> MediaDiveMongoIngredient | None:
         """Find an ingredient by ChEBI ID.
 
         Args:
@@ -283,9 +275,7 @@ class MediaDiveMongoClient:
             logger.warning(f"Error finding ingredient by ChEBI '{chebi_id}': {e}")
             return None
 
-    def find_ingredient_by_pubchem(
-        self, pubchem_cid: int
-    ) -> MediaDiveMongoIngredient | None:
+    def find_ingredient_by_pubchem(self, pubchem_cid: int) -> MediaDiveMongoIngredient | None:
         """Find an ingredient by PubChem CID.
 
         Args:
@@ -306,9 +296,7 @@ class MediaDiveMongoClient:
             logger.warning(f"Error finding ingredient by PubChem '{pubchem_cid}': {e}")
             return None
 
-    def find_ingredient_by_kegg(
-        self, kegg_id: str
-    ) -> MediaDiveMongoIngredient | None:
+    def find_ingredient_by_kegg(self, kegg_id: str) -> MediaDiveMongoIngredient | None:
         """Find an ingredient by KEGG Compound ID.
 
         Args:
@@ -371,9 +359,7 @@ class MediaDiveMongoClient:
     # Solution Lookups
     # =========================================================================
 
-    def get_solution_by_id(
-        self, solution_id: int
-    ) -> MediaDiveMongoSolution | MediaDiveMongoLookupError:
+    def get_solution_by_id(self, solution_id: int) -> MediaDiveMongoSolution | MediaDiveMongoLookupError:
         """Get a solution by MediaDive ID.
 
         Args:
@@ -402,9 +388,7 @@ class MediaDiveMongoClient:
                 error_message=str(e),
             )
 
-    def search_solutions_by_name(
-        self, name: str, exact: bool = False
-    ) -> list[MediaDiveMongoSolution]:
+    def search_solutions_by_name(self, name: str, exact: bool = False) -> list[MediaDiveMongoSolution]:
         """Search solutions by name.
 
         Args:
@@ -439,14 +423,16 @@ class MediaDiveMongoClient:
     def get_ingredient_count(self) -> int:
         """Get total number of ingredients in the database."""
         try:
-            return self._get_ingredients_collection().count_documents({})
+            count: int = int(self._get_ingredients_collection().count_documents({}))
+            return count
         except Exception:
             return 0
 
     def get_solution_count(self) -> int:
         """Get total number of solutions in the database."""
         try:
-            return self._get_solutions_collection().count_documents({})
+            count: int = int(self._get_solutions_collection().count_documents({}))
+            return count
         except Exception:
             return 0
 

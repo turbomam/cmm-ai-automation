@@ -236,9 +236,7 @@ class NodeNormalizationClient:
 
         return self._parse_node(curie, node_data)
 
-    def normalize_batch(
-        self, curies: list[str]
-    ) -> dict[str, NormalizedNode | NormalizationError]:
+    def normalize_batch(self, curies: list[str]) -> dict[str, NormalizedNode | NormalizationError]:
         """Normalize multiple CURIEs in a single request.
 
         Args:
@@ -364,10 +362,7 @@ class NodeNormalizationClient:
         """
         # Handle various input formats
         chebi_str = str(chebi_id)
-        if chebi_str.upper().startswith("CHEBI:"):
-            curie = chebi_str.upper()
-        else:
-            curie = f"CHEBI:{chebi_str}"
+        curie = chebi_str.upper() if chebi_str.upper().startswith("CHEBI:") else f"CHEBI:{chebi_str}"
         return self.normalize(curie)
 
     def normalize_by_pubchem(self, cid: int) -> NormalizedNode | NormalizationError:

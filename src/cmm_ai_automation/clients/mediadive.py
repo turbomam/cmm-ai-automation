@@ -365,9 +365,7 @@ class MediaDiveClient:
 
         return self._parse_solution(solution_data)
 
-    def search_ingredients_by_name(
-        self, name: str
-    ) -> list[IngredientResult] | MediaDiveLookupError:
+    def search_ingredients_by_name(self, name: str) -> list[IngredientResult] | MediaDiveLookupError:
         """Search for ingredients by name.
 
         Note: MediaDive doesn't have a search endpoint, so this checks

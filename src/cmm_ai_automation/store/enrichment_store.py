@@ -333,9 +333,7 @@ class EnrichmentStore:
             return dict(results[0])
         return None
 
-    def get_by_key(
-        self, inchikey: str | None, cas_rn: str | None
-    ) -> dict[str, Any] | None:
+    def get_by_key(self, inchikey: str | None, cas_rn: str | None) -> dict[str, Any] | None:
         """Get an ingredient by (inchikey, cas_rn) tuple.
 
         Args:
@@ -398,8 +396,7 @@ class EnrichmentStore:
         return [
             dict(r)
             for r in all_records
-            if r.get("conflicts")
-            and any(c.get("resolution") == "unresolved" for c in r.get("conflicts", []))
+            if r.get("conflicts") and any(c.get("resolution") == "unresolved" for c in r.get("conflicts", []))
         ]
 
     def get_stats(self) -> dict[str, Any]:

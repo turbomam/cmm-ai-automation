@@ -49,7 +49,7 @@ def fetch_endpoint(endpoint: str, params: dict[str, Any] | None = None) -> list[
         raise RuntimeError(f"API error: {data.get('msg', 'Unknown error')}")
 
     count = data.get("count", 0)
-    records = data.get("data", [])
+    records: list[dict[str, Any]] = data.get("data", [])
     logger.info(f"  Retrieved {count} records")
 
     return records

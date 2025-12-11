@@ -358,9 +358,7 @@ class ChEBIClient:
 
         return None
 
-    def get_compounds_batch(
-        self, chebi_ids: list[str | int]
-    ) -> dict[str, ChEBICompound | ChEBILookupError]:
+    def get_compounds_batch(self, chebi_ids: list[str | int]) -> dict[str, ChEBICompound | ChEBILookupError]:
         """Get multiple compounds (makes individual requests).
 
         Args:

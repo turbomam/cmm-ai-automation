@@ -24,12 +24,12 @@ import os
 import time
 from typing import Any
 
-import bacdive
+import bacdive  # type: ignore[import-untyped]
 import requests
 from dotenv import load_dotenv
 from pymongo import MongoClient
 from pymongo.collection import Collection
-from tqdm import tqdm
+from tqdm import tqdm  # type: ignore[import-untyped]
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -69,8 +69,10 @@ def sparql_query(query: str, max_retries: int = 3) -> list[dict[str, Any]]:
                 timeout=300,
             )
             response.raise_for_status()
-            data = response.json()
-            return data.get("results", {}).get("bindings", [])
+            data: dict[str, Any] = response.json()
+            results: dict[str, Any] = data.get("results", {})
+            bindings: list[dict[str, Any]] = results.get("bindings", [])
+            return bindings
         except (requests.RequestException, ValueError) as e:
             if attempt < max_retries - 1:
                 logger.warning(f"SPARQL query failed (attempt {attempt + 1}): {e}")
@@ -194,9 +196,7 @@ def load_bacdive_to_mongodb(
 
 def main() -> None:
     """Download BacDive strain data and load into MongoDB."""
-    parser = argparse.ArgumentParser(
-        description="Download BacDive strain data into MongoDB"
-    )
+    parser = argparse.ArgumentParser(description="Download BacDive strain data into MongoDB")
     parser.add_argument(
         "--batch-size",
         type=int,
@@ -230,9 +230,7 @@ def main() -> None:
     password = os.environ.get("BACDIVE_PASSWORD")
 
     if not email or not password:
-        logger.error(
-            "BACDIVE_EMAIL and BACDIVE_PASSWORD must be set in environment or .env file"
-        )
+        logger.error("BACDIVE_EMAIL and BACDIVE_PASSWORD must be set in environment or .env file")
         return
 
     # Step 1: Get all valid IDs via SPARQL

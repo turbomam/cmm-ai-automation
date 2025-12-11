@@ -153,6 +153,118 @@ Requires `CLAUDE_CODE_OAUTH_TOKEN` secret to be configured.
 There are several pre-defined command-recipes available.
 They are written for the command runner [just](https://github.com/casey/just/). To list all pre-defined commands, run `just` or `just --list`.
 
+## Testing and Quality Assurance
+
+### Quick Start
+
+```bash
+# Install all dependencies including QA tools
+uv sync --group qa
+
+# Run unit tests (fast, no network)
+uv run pytest
+
+# Run with coverage report
+uv run pytest --cov=cmm_ai_automation
+```
+
+### Test Categories
+
+| Command | What it runs | Speed |
+|---------|--------------|-------|
+| `uv run pytest` | Unit tests only (default) | ~1.5s |
+| `uv run pytest -m integration` | Integration tests (real API calls) | Slower |
+| `uv run pytest --cov=cmm_ai_automation` | Unit tests with coverage | ~9s |
+| `uv run pytest --durations=20` | Show slowest 20 tests | ~1.5s |
+
+### Pre-commit Hooks
+
+Pre-commit hooks run automatically before each commit, catching issues early:
+
+```bash
+# Install pre-commit hooks (one-time setup)
+uv sync --group qa
+uv run pre-commit install
+
+# Run all hooks manually on all files
+uv run pre-commit run --all-files
+
+# Run specific hook
+uv run pre-commit run ruff --all-files
+uv run pre-commit run mypy --all-files
+```
+
+**Hooks included:**
+- `ruff` - Fast Python linter and formatter
+- `ruff-format` - Code formatting
+- `mypy` - Static type checking
+- `yamllint` - YAML linting
+- `codespell` - Spell checking
+- `typos` - Fast typo detection
+- `deptry` - Dependency checking
+- `check-yaml`, `end-of-file-fixer`, `trailing-whitespace` - General file hygiene
+
+### Running Individual QA Tools
+
+```bash
+# Linting with ruff
+uv run ruff check src/
+uv run ruff check --fix src/  # Auto-fix issues
+
+# Type checking with mypy
+uv run mypy src/cmm_ai_automation/
+
+# Format code
+uv run ruff format src/
+
+# Check dependencies
+uv run deptry src/
+```
+
+### Thorough QA Check (CI-equivalent)
+
+Run everything that CI runs:
+
+```bash
+# 1. Install all dependencies
+uv sync --group qa --group dev
+
+# 2. Run pre-commit on all files
+uv run pre-commit run --all-files
+
+# 3. Run tests with coverage
+uv run pytest --cov=cmm_ai_automation
+
+# 4. Build documentation (catches doc errors)
+uv run mkdocs build
+```
+
+### Integration Tests
+
+Integration tests make real API calls and are skipped by default (some APIs block CI IPs):
+
+```bash
+# Run integration tests (requires network, API keys)
+uv run pytest -m integration
+
+# Run specific integration test file
+uv run pytest tests/test_chebi.py -m integration
+
+# Run both unit and integration tests
+uv run pytest -m ""
+```
+
+**API keys for integration tests:**
+- `CAS_API_KEY` - CAS Common Chemistry API
+- Most other APIs (ChEBI, PubChem, MediaDive, NodeNormalization) work without keys
+
+### Coverage Targets
+
+Current coverage configuration (see `pyproject.toml`):
+- Scripts are excluded from coverage (CLI entry points)
+- Target: 30% minimum (see issue #29 for roadmap to 60%)
+- Run `uv run pytest --cov-report=term-missing` to see uncovered lines
+
 ## Credits
 
 This project uses the template [linkml-project-copier](https://github.com/dalito/linkml-project-copier) published as [doi:10.5281/zenodo.15163584](https://doi.org/10.5281/zenodo.15163584).

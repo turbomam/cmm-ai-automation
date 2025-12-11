@@ -255,9 +255,7 @@ def codify_strain(
             matched_document=best_match["document"][:100],  # Truncate
             distance=best_match["distance"],
             query_used=best_query,
-            match_quality=classify_match_quality(
-                best_match["distance"], distance_threshold
-            ),
+            match_quality=classify_match_quality(best_match["distance"], distance_threshold),
         )
 
     return StrainMatch(
@@ -276,9 +274,7 @@ def codify_strain(
 
 def main() -> None:
     """Codify CMM strains using NCBITaxon ChromaDB."""
-    parser = argparse.ArgumentParser(
-        description="Codify CMM strains using NCBITaxon ChromaDB semantic search"
-    )
+    parser = argparse.ArgumentParser(description="Codify CMM strains using NCBITaxon ChromaDB semantic search")
     parser.add_argument(
         "--input",
         default=DEFAULT_INPUT,

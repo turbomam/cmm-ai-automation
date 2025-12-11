@@ -199,10 +199,7 @@ class OLSClient:
         """
         # Normalize the ChEBI ID
         chebi_str = str(chebi_id).upper()
-        if chebi_str.startswith("CHEBI:"):
-            chebi_numeric = chebi_str.split(":")[1]
-        else:
-            chebi_numeric = chebi_str
+        chebi_numeric = chebi_str.split(":")[1] if chebi_str.startswith("CHEBI:") else chebi_str
 
         # Construct the IRI for the ChEBI term
         iri = f"http://purl.obolibrary.org/obo/CHEBI_{chebi_numeric}"
@@ -400,10 +397,7 @@ class OLSClient:
         """
         # Normalize the ChEBI ID
         chebi_str = str(chebi_id).upper()
-        if chebi_str.startswith("CHEBI:"):
-            chebi_numeric = chebi_str.split(":")[1]
-        else:
-            chebi_numeric = chebi_str
+        chebi_numeric = chebi_str.split(":")[1] if chebi_str.startswith("CHEBI:") else chebi_str
 
         iri = f"http://purl.obolibrary.org/obo/CHEBI_{chebi_numeric}"
         encoded_iri = quote(quote(iri, safe=""), safe="")
