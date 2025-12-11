@@ -154,3 +154,7 @@ dmypy.json
 # The "BER CMM Data for AI - for editing" spreadsheet is private
 data/private/*
 !data/private/README.md
+
+# Generated/cached data - rebuild locally
+data/chroma_ncbitaxon/
+data/mediadive_*.json
