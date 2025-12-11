@@ -276,6 +276,39 @@ def main(
     click.echo(f"\nInitializing enrichment store: {store_path}")
     store = EnrichmentStore(store_path=store_path)
 
+    # Ensure schema includes all fields by inserting a dummy record with all fields
+    # This forces linkml-store to create all columns in DuckDB
+    # We'll delete this immediately after
+    if (store_path.exists() and store_path.stat().st_size == 0) or not store_path.exists():
+        click.echo("Initializing database schema with all fields...")
+        dummy_record = {
+            "name": "_schema_init_",
+            "inchikey": "DUMMY",
+            "cas_rn": "0-00-0",
+            "chebi_id": "CHEBI:0",
+            "pubchem_cid": 0,
+            "mediadive_id": 0,
+            "kegg_id": "C00000",
+            "mesh_id": "D000000",
+            "drugbank_id": "DB00000",
+            "chemical_formula": "X",
+            "smiles": "C",
+            "inchi": "InChI=1S/X",
+            "molecular_mass": 0.0,
+            "monoisotopic_mass": 0.0,
+            "charge": 0,
+            "iupac_name": "dummy",
+            "biological_roles": ["dummy"],
+            "chemical_roles": ["dummy"],
+            "application_roles": ["dummy"],
+            "is_mixture": False,
+        }
+        store.upsert_ingredient(dummy_record, source="_schema_init_", query="_init_")
+        # Delete the dummy record
+        collection = store._get_collection()
+        collection.delete_where({"id": "DUMMY|0-00-0"})
+        click.echo("Schema initialized")
+
     # Initialize API clients
     pubchem_client = PubChemClient() if not no_pubchem else None
     chebi_client = ChEBIClient() if not no_chebi else None
@@ -362,9 +395,30 @@ def main(
                 logger.debug(f"CAS error for {name}", exc_info=True)
                 stats["errors"] += 1
 
-        # Now upsert each source's data - the store will handle entity resolution and merging
-        for source, data in sources_data.items():
-            store.upsert_ingredient(data, source=source, query=name)
+        # Merge all source data into a single record for this ingredient
+        # This ensures proper entity resolution and one record per ingredient
+        if sources_data:
+            # Start with the first source's data as base
+            merged_data: dict[str, Any] = {}
+
+            # Merge all fields from all sources
+            for _source, data in sources_data.items():
+                for key, value in data.items():
+                    if value is not None and key not in merged_data:
+                        merged_data[key] = value
+
+            # Now upsert the merged data for each source to track provenance
+            # This ensures the store has proper source_records tracking
+            for source, data in sources_data.items():
+                # Upsert with the merged key fields so all sources update the same record
+                data_with_keys = {**data}
+                # Add the InChIKey and CAS RN from merged data if not present in source data
+                if "inchikey" not in data_with_keys and merged_data.get("inchikey"):
+                    data_with_keys["inchikey"] = merged_data["inchikey"]
+                if "cas_rn" not in data_with_keys and merged_data.get("cas_rn"):
+                    data_with_keys["cas_rn"] = merged_data["cas_rn"]
+
+                store.upsert_ingredient(data_with_keys, source=source, query=name)
 
         # 4. Query Node Normalization (if we collected any IDs)
         if node_norm_client and sources_data:

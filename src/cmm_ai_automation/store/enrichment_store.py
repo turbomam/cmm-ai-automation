@@ -462,49 +462,93 @@ class EnrichmentStore:
             Tuple of (nodes_exported, edges_exported)
         """
         from kgx.graph.nx_graph import NxGraph
-        from kgx.sink.tsv_sink import TsvSink
 
         collection = self._get_collection()
         all_records = collection.find({}).rows or []
+
+        # Consolidate records by ingredient (group by name, merge all data)
+        # This ensures one node per ingredient in KGX output
+        from collections import defaultdict
+
+        by_name: dict[str, list[dict[str, Any]]] = defaultdict(list)
+        for record in all_records:
+            name = record.get("name")
+            if name:
+                name_key = name.lower().strip()
+                if name_key and name_key != "_schema_init_":
+                    by_name[name_key].append(record)
+
+        # Merge records for each ingredient
+        consolidated_records = []
+        for _name, records in by_name.items():
+            # Start with first record
+            merged = records[0].copy()
+
+            # Merge data from all records for this ingredient
+            for record in records[1:]:
+                for key, value in record.items():
+                    if key in ("id", "last_enriched"):
+                        continue  # Skip internal keys
+                    if value is not None and not merged.get(key):
+                        merged[key] = value
+                    # Merge source_records
+                    if key == "source_records" and value:
+                        existing_sources = merged.get("source_records", [])
+                        for source_rec in value:
+                            if source_rec not in existing_sources:
+                                existing_sources.append(source_rec)
+                        merged["source_records"] = existing_sources
+                    # Merge conflicts
+                    if key == "conflicts" and value:
+                        existing_conflicts = merged.get("conflicts", [])
+                        for conflict in value:
+                            if conflict not in existing_conflicts:
+                                existing_conflicts.append(conflict)
+                        merged["conflicts"] = existing_conflicts
+
+            consolidated_records.append(merged)
+
+        logger.info(f"Consolidated {len(all_records)} records into {len(consolidated_records)} ingredient nodes")
 
         # Create KGX graph
         graph = NxGraph()
         graph.name = "cmm-ai-automation"
 
-        # Add custom node properties to track
-        custom_node_props = {
-            "xref",
-            "inchikey",
-            "cas_rn",
-            "chebi_id",
-            "pubchem_cid",
-            "chemical_formula",
-            "smiles",
-            "biological_roles",
-            "molecular_mass",
-        }
-
-        # Edge properties - per Chris's request for better edge property usage
-        custom_edge_props = {
-            "knowledge_source",
-            "primary_knowledge_source",
-            "aggregator_knowledge_source",
-            "original_subject",
-            "original_object",
-        }
-
         node_count = 0
         edge_count = 0
 
-        for record in all_records:
-            # Build xrefs list
-            xrefs = []
+        for record in consolidated_records:
+            # Determine best ID for node (prefer ChEBI > CAS > PubChem > InChIKey)
+            node_id = None
             if record.get("chebi_id"):
+                node_id = record["chebi_id"]
+            elif record.get("cas_rn"):
+                node_id = f"CAS:{record['cas_rn']}"
+            elif record.get("pubchem_cid"):
+                node_id = f"PUBCHEM.COMPOUND:{record['pubchem_cid']}"
+            elif record.get("inchikey"):
+                node_id = f"INCHIKEY:{record['inchikey']}"
+            else:
+                # Skip records without any identifiable ID
+                logger.warning(f"Skipping record without identifiable ID: {record.get('id')}")
+                continue
+
+            # Build xrefs list (all IDs except the primary node_id)
+            xrefs = []
+            if record.get("chebi_id") and record["chebi_id"] != node_id:
                 xrefs.append(record["chebi_id"])
             if record.get("pubchem_cid"):
-                xrefs.append(f"PUBCHEM.COMPOUND:{record['pubchem_cid']}")
+                pubchem_id = f"PUBCHEM.COMPOUND:{record['pubchem_cid']}"
+                if pubchem_id != node_id:
+                    xrefs.append(pubchem_id)
             if record.get("cas_rn"):
-                xrefs.append(f"CAS:{record['cas_rn']}")
+                cas_id = f"CAS:{record['cas_rn']}"
+                if cas_id != node_id:
+                    xrefs.append(cas_id)
+            if record.get("inchikey"):
+                inchikey_id = f"INCHIKEY:{record['inchikey']}"
+                if inchikey_id != node_id:
+                    xrefs.append(inchikey_id)
             if record.get("kegg_id"):
                 xrefs.append(f"KEGG.COMPOUND:{record['kegg_id']}")
             if record.get("mesh_id"):
@@ -512,22 +556,20 @@ class EnrichmentStore:
             if record.get("drugbank_id"):
                 xrefs.append(f"DRUGBANK:{record['drugbank_id']}")
 
-            # Determine best ID for node (prefer ChEBI)
-            node_id = record.get("chebi_id") or record.get("id", "")
-            if not node_id.startswith("CHEBI:") and record.get("inchikey"):
-                node_id = f"INCHIKEY:{record['inchikey']}"
-
-            # Build node attributes
-            node_attrs = {
+            # Build node attributes with all available properties
+            node_attrs: dict[str, Any] = {
                 "name": record.get("name", ""),
-                "category": ["biolink:SmallMolecule"],
+                "category": ["biolink:SmallMolecule"],  # TODO: Use is_mixture to classify
                 "provided_by": ["cmm-ai-automation"],
             }
 
+            # Add all enriched properties
             if record.get("description"):
                 node_attrs["description"] = record["description"]
             if xrefs:
                 node_attrs["xref"] = xrefs
+
+            # Chemical identifiers
             if record.get("inchikey"):
                 node_attrs["inchikey"] = record["inchikey"]
             if record.get("cas_rn"):
@@ -536,62 +578,76 @@ class EnrichmentStore:
                 node_attrs["chebi_id"] = record["chebi_id"]
             if record.get("pubchem_cid"):
                 node_attrs["pubchem_cid"] = record["pubchem_cid"]
+            if record.get("kegg_id"):
+                node_attrs["kegg_id"] = record["kegg_id"]
+            if record.get("mesh_id"):
+                node_attrs["mesh_id"] = record["mesh_id"]
+            if record.get("drugbank_id"):
+                node_attrs["drugbank_id"] = record["drugbank_id"]
+
+            # Chemical structure
             if record.get("chemical_formula"):
                 node_attrs["chemical_formula"] = record["chemical_formula"]
             if record.get("smiles"):
                 node_attrs["smiles"] = record["smiles"]
+            if record.get("inchi"):
+                node_attrs["inchi"] = record["inchi"]
+            if record.get("iupac_name"):
+                node_attrs["iupac_name"] = record["iupac_name"]
+
+            # Physical properties
             if record.get("molecular_mass"):
                 node_attrs["molecular_mass"] = record["molecular_mass"]
+            if record.get("monoisotopic_mass"):
+                node_attrs["monoisotopic_mass"] = record["monoisotopic_mass"]
+            if record.get("charge"):
+                node_attrs["charge"] = record["charge"]
+
+            # Biological annotations
             if record.get("biological_roles"):
                 node_attrs["biological_roles"] = record["biological_roles"]
+            if record.get("chemical_roles"):
+                node_attrs["chemical_roles"] = record["chemical_roles"]
+            if record.get("application_roles"):
+                node_attrs["application_roles"] = record["application_roles"]
+
+            # Mixture classification
+            if record.get("is_mixture") is not None:
+                node_attrs["is_mixture"] = record["is_mixture"]
 
             # Add node to graph
             graph.add_node(node_id, **node_attrs)
             node_count += 1
 
-            # Create edges for "same_as" relationships between identifiers
-            # This captures the entity resolution we've done
-            if record.get("chebi_id") and record.get("pubchem_cid"):
-                pubchem_id = f"PUBCHEM.COMPOUND:{record['pubchem_cid']}"
-                edge_id = f"{record['chebi_id']}-same_as-{pubchem_id}"
+        # Write TSV files directly for better control over columns
+        import csv
 
-                # Rich edge properties per Chris's guidance
-                graph.add_edge(
-                    record["chebi_id"],
-                    pubchem_id,
-                    id=edge_id,
-                    subject=record["chebi_id"],
-                    predicate="biolink:same_as",
-                    object=pubchem_id,
-                    category=["biolink:ChemicalToChemicalAssociation"],
-                    provided_by=["cmm-ai-automation"],
-                    knowledge_source=["infores:cmm-ai-automation"],
-                    primary_knowledge_source="infores:cmm-ai-automation",
-                    aggregator_knowledge_source=["infores:chebi", "infores:pubchem"],
-                )
-                edge_count += 1
-
-        # Write using TsvSink
         output_path.parent.mkdir(parents=True, exist_ok=True)
-        sink = TsvSink(owner=None, filename=str(output_path), format="tsv")
 
-        # Add custom properties to sink
-        sink.node_properties.update(custom_node_props)
-        sink.edge_properties.update(custom_edge_props)
+        # Write nodes TSV
+        nodes_file = Path(str(output_path) + "_nodes.tsv")
+        with nodes_file.open("w", newline="", encoding="utf-8") as f:
+            # Collect all nodes with their attributes
+            node_rows = []
+            all_columns = {"id", "category", "name", "description", "provided_by"}
+            for node_id, node_data in graph.nodes(data=True):
+                row = {"id": node_id, **node_data}
+                node_rows.append(row)
+                all_columns.update(row.keys())
 
-        # Write nodes
-        for node_id, node_data in graph.nodes(data=True):
-            record = {"id": node_id, **node_data}
-            sink.write_node(record)
+            # Sort columns for consistent output (id first, then alphabetical)
+            sorted_columns = ["id", *sorted(c for c in all_columns if c != "id")]
 
-        # Write edges
-        for s, o, edge_data in graph.edges(data=True):
-            record = edge_data.copy()
-            if "id" not in record:
-                record["id"] = f"{s}-{record.get('predicate', 'related_to')}-{o}"
-            sink.write_edge(record)
+            writer = csv.DictWriter(f, fieldnames=sorted_columns, delimiter="\t", extrasaction="ignore")
+            writer.writeheader()
+            writer.writerows(node_rows)
 
-        sink.finalize()
+        # Write edges TSV (empty for now since we don't need edges)
+        edges_file = Path(str(output_path) + "_edges.tsv")
+        with edges_file.open("w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=["id", "subject", "predicate", "object", "category"], delimiter="\t")
+            writer.writeheader()
+            # No edges to write
 
         logger.info(f"Exported {node_count} nodes and {edge_count} edges to {output_path}")
         return (node_count, edge_count)
