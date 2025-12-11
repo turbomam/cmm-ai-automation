@@ -304,9 +304,11 @@ class ChEBIClient:
         try:
             data = self._get(url, params)
         except requests.HTTPError as e:
+            # Extract HTTP status code if available
+            status_code = e.response.status_code if e.response is not None else None
             return ChEBILookupError(
                 query=query,
-                error_code="HTTP_ERROR",
+                error_code=str(status_code) if status_code else "HTTP_ERROR",
                 error_message=str(e),
             )
         except requests.RequestException as e:
@@ -348,7 +350,7 @@ class ChEBIClient:
         results = self.search(name, size=20)
         if isinstance(results, ChEBILookupError):
             # If it's a 404 "not found", treat as None (no results)
-            if "404" in results.error_code or "404" in results.error_message:
+            if results.error_code == "404":
                 return None
             # Other errors (network, API) should be returned as errors
             return results
@@ -368,7 +370,7 @@ class ChEBIClient:
             results = self.search(broader_name, size=20)
             if isinstance(results, ChEBILookupError):
                 # Again, treat 404 as no results
-                if "404" in results.error_code or "404" in results.error_message:
+                if results.error_code == "404":
                     return None
                 return results
 

@@ -146,6 +146,7 @@ class TestCASClientIntegration:
         """Test searching for glucose."""
         if client is None:
             pytest.skip("CAS_API_KEY not set")
+        assert client is not None  # Type narrowing for mypy
 
         results = client.search_by_name("glucose")
         assert isinstance(results, list)
@@ -160,6 +161,7 @@ class TestCASClientIntegration:
         """Test looking up glucose by CAS RN."""
         if client is None:
             pytest.skip("CAS_API_KEY not set")
+        assert client is not None  # Type narrowing for mypy
 
         result = client.get_by_rn("50-99-7")
         assert isinstance(result, CASResult)
@@ -172,6 +174,7 @@ class TestCASClientIntegration:
         """Test that peptone is correctly identified as mixture."""
         if client is None:
             pytest.skip("CAS_API_KEY not set")
+        assert client is not None  # Type narrowing for mypy
 
         result = client.get_by_rn("73049-73-7")
         if isinstance(result, CASResult):
@@ -184,6 +187,7 @@ class TestCASClientIntegration:
         """Test looking up magnesium sulfate."""
         if client is None:
             pytest.skip("CAS_API_KEY not set")
+        assert client is not None  # Type narrowing for mypy
 
         result = client.get_by_rn("7487-88-9")
         assert isinstance(result, CASResult)
@@ -196,7 +200,8 @@ class TestCASClientIntegration:
         """Test that invalid CAS RN returns error."""
         if client is None:
             pytest.skip("CAS_API_KEY not set")
+        assert client is not None  # Type narrowing for mypy
 
         result = client.get_by_rn("999-99-9")
-        # Should be an error (invalid format or not found)
-        assert isinstance(result, CASResult | CASLookupError)
+        # Invalid CAS RN should return an error, not a result
+        assert isinstance(result, CASLookupError)

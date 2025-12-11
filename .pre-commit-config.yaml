@@ -55,8 +55,7 @@ repos:
         exclude: |
           (?x)^(
             project/.*|
-            src/cmm_ai_automation/datamodel/.*|
-            tests/.*
+            src/cmm_ai_automation/datamodel/.*
           )$
 
   - repo: https://github.com/fpgmaas/deptry

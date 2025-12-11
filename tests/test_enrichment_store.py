@@ -5,6 +5,7 @@ and KGX export functionality.
 """
 
 import tempfile
+from collections.abc import Generator
 from pathlib import Path
 
 import pytest
@@ -325,7 +326,7 @@ class TestEnrichmentStoreIntegration:
     """Integration tests for EnrichmentStore using temporary database."""
 
     @pytest.fixture
-    def temp_store(self) -> EnrichmentStore:
+    def temp_store(self) -> Generator[EnrichmentStore, None, None]:
         """Create a store with a temporary database."""
         with tempfile.TemporaryDirectory() as tmpdir:
             store_path = Path(tmpdir) / "test_enrichment.duckdb"

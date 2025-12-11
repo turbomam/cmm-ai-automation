@@ -194,10 +194,18 @@ class EnrichmentStore:
             merged["id"] = composite_key
             merged["last_enriched"] = datetime.now().isoformat()
             # Delete existing record and insert merged (upsert not implemented in DuckDB backend)
-            collection.delete_where({"id": composite_key})
-            collection.insert([merged])
-            collection.commit()  # Ensure changes are persisted
-            logger.info(f"Updated ingredient: {composite_key}")
+            # NOTE: This is not atomic - if insert fails, data is lost. Consider using transactions
+            # or a backup strategy for production use. For now, log the merged data before operations.
+            logger.debug(f"Updating ingredient {composite_key}: {merged}")
+            try:
+                collection.delete_where({"id": composite_key})
+                collection.insert([merged])
+                collection.commit()  # Ensure changes are persisted
+                logger.info(f"Updated ingredient: {composite_key}")
+            except Exception as e:
+                logger.error(f"Failed to update ingredient {composite_key}: {e}")
+                logger.error(f"Merged data that was lost: {merged}")
+                raise
         else:
             # New record
             data["id"] = composite_key
