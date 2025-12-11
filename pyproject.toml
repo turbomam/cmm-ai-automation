@@ -208,6 +208,3 @@ exclude_lines = [
 # Temporarily set to 30% while building out tests - see issue #29
 # TODO(#29): Raise to 60% once more tests are added
 fail_under = 30
-
-[tool.uv.sources]
-linkml = { path = "../linkml", editable = true }

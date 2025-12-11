@@ -602,7 +602,7 @@ requires-dist = [
     { name = "google-auth-oauthlib", specifier = ">=1.0.0" },
     { name = "gspread", specifier = ">=6.0.0" },
     { name = "kgx", specifier = ">=2.1.0" },
-    { name = "linkml", editable = "../linkml" },
+    { name = "linkml" },
     { name = "linkml-runtime", specifier = ">=1.9.4" },
     { name = "linkml-store", extras = ["mongodb"], specifier = ">=0.2.12" },
     { name = "openai", specifier = ">=2.9.0" },
@@ -616,7 +616,7 @@ requires-dist = [
 [package.metadata.requires-dev]
 dev = [
     { name = "jupyter", specifier = ">=1.0.0" },
-    { name = "linkml", editable = "../linkml" },
+    { name = "linkml", specifier = ">=1.9.3" },
     { name = "mkdocs-material", specifier = ">=8.2.8" },
     { name = "mkdocs-mermaid2-plugin", specifier = ">=1.1.1" },
     { name = "mkdocs-pymdownx-material-extras", specifier = ">=2.5.6" },
@@ -2254,7 +2254,8 @@ wheels = [
 
 [[package]]
 name = "linkml"
-source = { editable = "../linkml" }
+version = "1.9.6"
+source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "antlr4-python3-runtime" },
     { name = "click" },
@@ -2281,105 +2282,10 @@ dependencies = [
     { name = "sqlalchemy" },
     { name = "watchdog" },
 ]
-
-[package.metadata]
-requires-dist = [
-    { name = "antlr4-python3-runtime", specifier = ">=4.9.0,<4.10" },
-    { name = "click", specifier = ">=8.0,<8.2" },
-    { name = "graphviz", specifier = ">=0.10.1" },
-    { name = "hbreader" },
-    { name = "isodate", specifier = ">=0.6.0" },
-    { name = "jinja2", specifier = ">=3.1.0" },
-    { name = "jsonasobj2", specifier = ">=1.0.3,<2.0.0" },
-    { name = "jsonschema", extras = ["format"], specifier = ">=4.0.0" },
-    { name = "linkml-runtime", specifier = ">=1.9.5,<2.0.0" },
-    { name = "openpyxl" },
-    { name = "parse" },
-    { name = "prefixcommons", specifier = ">=0.1.7" },
-    { name = "prefixmaps", specifier = ">=0.2.2" },
-    { name = "pydantic", specifier = ">=1.0.0,<3.0.0" },
-    { name = "pyjsg", specifier = ">=0.11.6" },
-    { name = "pyshex", specifier = ">=0.7.20" },
-    { name = "pyshexc", specifier = ">=0.8.3" },
-    { name = "python-dateutil" },
-    { name = "pyyaml" },
-    { name = "rdflib", specifier = ">=6.0.0" },
-    { name = "requests", specifier = ">=2.22" },
-    { name = "sphinx-click", specifier = ">=6.0.0" },
-    { name = "sqlalchemy", specifier = ">=1.4.31" },
-    { name = "typing-extensions", marker = "python_full_version < '3.12'", specifier = ">=4.6.0" },
-    { name = "watchdog", specifier = ">=0.9.0" },
+sdist = { url = "https://files.pythonhosted.org/packages/0d/52/1e4e6e0af2296074822bbb26d60761a5dbd0b977b843fe263da8cc0a4be1/linkml-1.9.6.tar.gz", hash = "sha256:d2ef74bbb52bf5e48b67b5d9319ca2e4acb8184dd40bf43d00635222b2dc1d4c", size = 42963392 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/94/ff/b965a845fc0a9ca2331d8d6043e262cc834f5328ac0f1970db1622bac2cf/linkml-1.9.6-py3-none-any.whl", hash = "sha256:4ac3d2b7b6ea38c9da70e264a434977281a655f5e6040b33e65be76c63ab95cd", size = 402879 },
 ]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "black", specifier = ">=24.0.0" },
-    { name = "chardet" },
-    { name = "coverage", specifier = ">=6.4.1" },
-    { name = "gql", specifier = ">=4.0.0" },
-    { name = "ipykernel" },
-    { name = "ipython-genutils" },
-    { name = "jsonpatch", specifier = ">=1.33" },
-    { name = "jupyter" },
-    { name = "mock", specifier = ">=5.1.0" },
-    { name = "morph-kgc", marker = "python_full_version >= '3.10'", specifier = ">=2.9.0" },
-    { name = "myst-nb", marker = "python_full_version >= '3.9'", specifier = ">=1.0.0" },
-    { name = "nbconvert" },
-    { name = "nbformat" },
-    { name = "numpy", marker = "python_full_version < '3.12'", specifier = ">=1.24.3" },
-    { name = "numpy", marker = "python_full_version >= '3.12'", specifier = ">=1.25.2" },
-    { name = "numpydantic", specifier = ">=1.6.1" },
-    { name = "pandas" },
-    { name = "pandera", specifier = ">=0.19.0" },
-    { name = "polars-lts-cpu", specifier = ">=1.0.0" },
-    { name = "pyshacl", specifier = ">=0.25.0" },
-    { name = "pytest", specifier = ">=7.4.0" },
-    { name = "pytest-subtests", specifier = ">=0.11.0" },
-    { name = "pytest-xdist", specifier = ">=3.6.1" },
-    { name = "requests-cache", specifier = ">=1.2.0" },
-    { name = "rich", specifier = ">=13.7.1" },
-    { name = "sphinx-design", specifier = ">=0.5.0" },
-    { name = "testcontainers", specifier = "==3.7.1" },
-    { name = "tox", specifier = ">=4" },
-    { name = "tox-uv" },
-]
-docs = [
-    { name = "furo", specifier = ">=2023.3.27" },
-    { name = "matplotlib", specifier = ">=3.7" },
-    { name = "myst-parser" },
-    { name = "sphinx" },
-    { name = "sphinx-click" },
-    { name = "sphinx-jinja", specifier = ">=2.0.2" },
-    { name = "sphinx-rtd-theme" },
-    { name = "sphinxcontrib-mermaid", specifier = ">=0.7.1" },
-    { name = "sphinxcontrib-programoutput", specifier = ">=0.17" },
-]
-lint = [{ name = "black", specifier = ">=24.0.0" }]
-pandera = [
-    { name = "pandas" },
-    { name = "pandera", specifier = ">=0.19.0" },
-    { name = "polars-lts-cpu", specifier = ">=1.0.0" },
-]
-shacl = [{ name = "pyshacl", specifier = ">=0.25.0" }]
-tests = [
-    { name = "black", specifier = ">=24.0.0" },
-    { name = "morph-kgc", marker = "python_full_version >= '3.10'", specifier = ">=2.9.0" },
-    { name = "numpydantic", specifier = ">=1.6.1" },
-    { name = "pyshacl", specifier = ">=0.25.0" },
-]
-tests-extra = [
-    { name = "jsonpatch", specifier = ">=1.33" },
-    { name = "mock", specifier = ">=5.1.0" },
-    { name = "numpy", marker = "python_full_version < '3.12'", specifier = ">=1.24.3" },
-    { name = "numpy", marker = "python_full_version >= '3.12'", specifier = ">=1.25.2" },
-    { name = "pytest", specifier = ">=7.4.0" },
-    { name = "pytest-subtests", specifier = ">=0.11.0" },
-    { name = "pytest-xdist", specifier = ">=3.6.1" },
-    { name = "requests-cache", specifier = ">=1.2.0" },
-    { name = "testcontainers", specifier = "==3.7.1" },
-]
-tests-rustgen = [{ name = "maturin", specifier = ">=1.9.4" }]
-typing = [{ name = "numpydantic", specifier = ">=1.6.1" }]
 
 [[package]]
 name = "linkml-map"
