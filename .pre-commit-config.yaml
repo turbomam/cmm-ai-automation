@@ -65,3 +65,14 @@ repos:
       - id: deptry
         args: [src]
         pass_filenames: false  # scan entire src/ to avoid partial analysis
+
+  - repo: local
+    hooks:
+      - id: pytest-all
+        name: pytest (all tests including integration)
+        entry: uv run pytest
+        language: system
+        pass_filenames: false
+        always_run: true
+        # Override pyproject.toml's addopts to include integration tests
+        args: [-m, "", --tb=short]

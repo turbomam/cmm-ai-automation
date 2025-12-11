@@ -144,9 +144,12 @@ class EnrichmentStore:
         if self._collection is None:
             db = self._get_db()
             # Create or get the collection with schema
+            # Use EnrichedIngredient class from LinkML schema to define structure
             self._collection = db.create_collection(
                 "enriched_ingredients",
                 recreate_if_exists=False,
+                class_name="EnrichedIngredient",
+                schema_location=str(self.schema_path),
             )
         return self._collection
 
@@ -190,7 +193,10 @@ class EnrichmentStore:
             merged = self._merge_records(existing, data, source, query)
             merged["id"] = composite_key
             merged["last_enriched"] = datetime.now().isoformat()
+            # Delete existing record and insert merged (upsert not implemented in DuckDB backend)
+            collection.delete_where({"id": composite_key})
             collection.insert([merged])
+            collection.commit()  # Ensure changes are persisted
             logger.info(f"Updated ingredient: {composite_key}")
         else:
             # New record
@@ -329,8 +335,10 @@ class EnrichmentStore:
         """
         collection = self._get_collection()
         results = collection.find({"id": composite_key})
-        if results:
-            return dict(results[0])
+        # QueryResult has a rows attribute containing list of dicts
+        if results.rows:
+            row: dict[str, Any] = results.rows[0]
+            return row
         return None
 
     def get_by_key(self, inchikey: str | None, cas_rn: str | None) -> dict[str, Any] | None:
@@ -357,7 +365,7 @@ class EnrichmentStore:
         """
         collection = self._get_collection()
         results = collection.find({"chebi_id": chebi_id})
-        return [dict(r) for r in results]
+        return results.rows or []
 
     def find_by_pubchem(self, pubchem_cid: int) -> list[dict[str, Any]]:
         """Find ingredients by PubChem CID.
@@ -370,7 +378,7 @@ class EnrichmentStore:
         """
         collection = self._get_collection()
         results = collection.find({"pubchem_cid": pubchem_cid})
-        return [dict(r) for r in results]
+        return results.rows or []
 
     def find_by_cas(self, cas_rn: str) -> list[dict[str, Any]]:
         """Find ingredients by CAS Registry Number.
@@ -383,7 +391,7 @@ class EnrichmentStore:
         """
         collection = self._get_collection()
         results = collection.find({"cas_rn": cas_rn})
-        return [dict(r) for r in results]
+        return results.rows or []
 
     def get_all_conflicts(self) -> list[dict[str, Any]]:
         """Get all records that have unresolved conflicts.
@@ -394,8 +402,8 @@ class EnrichmentStore:
         collection = self._get_collection()
         all_records = collection.find({})
         return [
-            dict(r)
-            for r in all_records
+            r
+            for r in (all_records.rows or [])
             if r.get("conflicts") and any(c.get("resolution") == "unresolved" for c in r.get("conflicts", []))
         ]
 
@@ -406,7 +414,7 @@ class EnrichmentStore:
             Dict with counts and coverage statistics
         """
         collection = self._get_collection()
-        all_records = list(collection.find({}))
+        all_records = collection.find({}).rows or []
 
         total = len(all_records)
         with_chebi = sum(1 for r in all_records if r.get("chebi_id"))

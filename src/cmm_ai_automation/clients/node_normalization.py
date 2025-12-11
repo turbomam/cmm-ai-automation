@@ -297,6 +297,12 @@ class NodeNormalizationClient:
         inchikey: str | None = None
         cas_rn: str | None = None
 
+        # If query was by CAS, InChI, or InChIKey, prefer that value
+        if query_id.startswith("CAS:"):
+            cas_rn = query_id.split(":", 1)[1]
+        elif query_id.startswith("INCHIKEY:"):
+            inchikey = query_id.split(":", 1)[1]
+
         for equiv in equiv_ids:
             identifier = equiv.get("identifier", "")
             label = equiv.get("label")
@@ -311,10 +317,11 @@ class NodeNormalizationClient:
                     equivalent_ids[prefix] = []
                 equivalent_ids[prefix].append(identifier)
 
-                # Extract special identifiers
-                if prefix == "INCHIKEY":
+                # Extract special identifiers (only if not already set from query_id)
+                if prefix == "INCHIKEY" and inchikey is None:
                     inchikey = identifier.split(":")[-1]
-                elif prefix == "CAS":
+                elif prefix == "CAS" and cas_rn is None:
+                    # Take the first CAS number if not queried by CAS
                     cas_rn = identifier.split(":")[-1]
 
         return NormalizedNode(

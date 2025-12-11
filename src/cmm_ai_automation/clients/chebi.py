@@ -342,10 +342,15 @@ class ChEBIClient:
 
         Returns:
             ChEBISearchResult if found with exact match, None if not found,
-            ChEBILookupError on failure
+            ChEBILookupError on failure (network errors, API errors, etc., but not "not found")
         """
-        results = self.search(name, size=10)
+        # Try searching with the exact name first
+        results = self.search(name, size=20)
         if isinstance(results, ChEBILookupError):
+            # If it's a 404 "not found", treat as None (no results)
+            if "404" in results.error_code or "404" in results.error_message:
+                return None
+            # Other errors (network, API) should be returned as errors
             return results
 
         # Look for exact match (case-insensitive)
@@ -355,6 +360,24 @@ class ChEBIClient:
                 return result
             if result.name and _strip_html(result.name).lower() == name_lower:
                 return result
+
+        # If no exact match found with specific term, try a broader search
+        # by removing stereochemistry prefixes (D-, L-, etc.)
+        if name.startswith(("D-", "L-", "d-", "l-")):
+            broader_name = name[2:]
+            results = self.search(broader_name, size=20)
+            if isinstance(results, ChEBILookupError):
+                # Again, treat 404 as no results
+                if "404" in results.error_code or "404" in results.error_message:
+                    return None
+                return results
+
+            # Look for exact match in broader results
+            for result in results:
+                if result.ascii_name and result.ascii_name.lower() == name_lower:
+                    return result
+                if result.name and _strip_html(result.name).lower() == name_lower:
+                    return result
 
         return None
 
