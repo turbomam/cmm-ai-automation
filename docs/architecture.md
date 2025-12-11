@@ -226,8 +226,27 @@ results = client.search_ingredients_by_name("glucose")
 └──────────────────────────────────────────────────────────────┘
 ```
 
+## CURIE Prefix Map
+
+All CURIEs (Compact URIs) in this project expand to full URIs according to `prefix_map.json` in the repository root. This follows [bioregistry](https://bioregistry.io/) conventions.
+
+Key prefix expansions:
+
+| Prefix | URI Base |
+|--------|----------|
+| `CHEBI` | `http://purl.obolibrary.org/obo/CHEBI_` |
+| `NCBITaxon` | `http://purl.obolibrary.org/obo/NCBITaxon_` |
+| `PUBCHEM.COMPOUND` | `http://identifiers.org/pubchem.compound/` |
+| `CAS` | `http://identifiers.org/cas/` |
+| `INCHIKEY` | `http://identifiers.org/inchikey/` |
+
+Example: `CHEBI:17634` expands to `http://purl.obolibrary.org/obo/CHEBI_17634`
+
+The full prefix map is used by the enrichment pipeline and KGX export to ensure consistent URI generation.
+
 ## Related Resources
 
+- [Bioregistry](https://bioregistry.io/) - Community prefix registry
 - [KG-Microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) - Microbial knowledge graph
 - [METPO](https://github.com/berkeleybop/metpo) - Microbial Phenotype Ontology
 - [Biolink Model](https://biolink.github.io/biolink-model/) - Standard for biological knowledge graphs

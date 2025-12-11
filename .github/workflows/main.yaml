@@ -20,6 +20,7 @@ jobs:
     strategy:
       matrix:
         # Note: 3.13 disabled until kgx/pyarrow has better support
+        # TODO: Re-enable Python 3.13 once pyarrow builds on 3.13 (see #27)
         python-version: ["3.12"]
       fail-fast: false
 
