@@ -1,5 +1,5 @@
 # Auto generated from cmm_ai_automation.yaml by pythongen.py version: 0.0.1
-# Generation date: 2025-12-09T20:08:54
+# Generation date: 2025-12-11T09:58:01
 # Schema: cmm-ai-automation
 #
 # id: https://w3id.org/turbomam/cmm-ai-automation
@@ -59,22 +59,27 @@ from rdflib import (
     URIRef
 )
 
-from linkml_runtime.linkml_model.types import Float, Integer, String, Uriorcurie
-from linkml_runtime.utils.metamodelcore import URIorCURIE
+from linkml_runtime.linkml_model.types import Datetime, Float, Integer, String, Uriorcurie
+from linkml_runtime.utils.metamodelcore import URIorCURIE, XSDDateTime
 
 metamodel_version = "1.7.0"
 version = None
 
 # Namespaces
 ATCC = CurieNamespace('ATCC', 'https://www.atcc.org/products/')
+CAS = CurieNamespace('CAS', 'http://identifiers.org/cas/')
 CHEBI = CurieNamespace('CHEBI', 'http://purl.obolibrary.org/obo/CHEBI_')
+DRUGBANK = CurieNamespace('DRUGBANK', 'http://identifiers.org/drugbank/')
 DSMZ = CurieNamespace('DSMZ', 'https://www.dsmz.de/collection/catalogue/details/culture/DSM-')
 ENVO = CurieNamespace('ENVO', 'http://purl.obolibrary.org/obo/ENVO_')
+KEGG_COMPOUND = CurieNamespace('KEGG_COMPOUND', 'http://identifiers.org/kegg.compound/')
+MESH = CurieNamespace('MESH', 'http://identifiers.org/mesh/')
 NCBITAXON = CurieNamespace('NCBITaxon', 'http://purl.obolibrary.org/obo/NCBITaxon_')
 OBI = CurieNamespace('OBI', 'http://purl.obolibrary.org/obo/OBI_')
+PUBCHEM_COMPOUND = CurieNamespace('PUBCHEM_COMPOUND', 'http://identifiers.org/pubchem.compound/')
 RO = CurieNamespace('RO', 'http://purl.obolibrary.org/obo/RO_')
 UO = CurieNamespace('UO', 'http://purl.obolibrary.org/obo/UO_')
-BIOLINK = CurieNamespace('biolink', 'https://w3id.org/biolink/')
+BIOLINK = CurieNamespace('biolink', 'https://w3id.org/biolink/vocab/')
 CMM = CurieNamespace('cmm', 'https://w3id.org/turbomam/cmm-ai-automation/')
 LINKML = CurieNamespace('linkml', 'https://w3id.org/linkml/')
 SCHEMA = CurieNamespace('schema', 'http://schema.org/')
@@ -101,6 +106,10 @@ class SolutionId(MixtureId):
 
 
 class GrowthMediumId(MixtureId):
+    pass
+
+
+class EnrichedIngredientId(URIorCURIE):
     pass
 
 
@@ -367,6 +376,220 @@ class SolutionComponent(YAMLRoot):
 
 
 @dataclass(repr=False)
+class EnrichedIngredient(YAMLRoot):
+    """
+    A chemical entity enriched with data from multiple sources. Uses (inchikey, cas_rn) tuple as the primary key for
+    entity resolution. Each primary API is authoritative for its own ID type: - PubChem is authoritative for
+    pubchem_cid - ChEBI is authoritative for chebi_id and biological/chemical roles - CAS is authoritative for cas_rn
+    - MediaDive is authoritative for mediadive_id
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = BIOLINK["SmallMolecule"]
+    class_class_curie: ClassVar[str] = "biolink:SmallMolecule"
+    class_name: ClassVar[str] = "EnrichedIngredient"
+    class_model_uri: ClassVar[URIRef] = CMM.EnrichedIngredient
+
+    id: Union[str, EnrichedIngredientId] = None
+    inchikey: Optional[str] = None
+    cas_rn: Optional[str] = None
+    name: Optional[str] = None
+    synonyms: Optional[Union[str, list[str]]] = empty_list()
+    description: Optional[str] = None
+    chemical_formula: Optional[str] = None
+    chebi_id: Optional[Union[str, URIorCURIE]] = None
+    pubchem_cid: Optional[int] = None
+    mediadive_id: Optional[int] = None
+    kegg_id: Optional[str] = None
+    mesh_id: Optional[str] = None
+    drugbank_id: Optional[str] = None
+    inchi: Optional[str] = None
+    smiles: Optional[str] = None
+    molecular_mass: Optional[float] = None
+    monoisotopic_mass: Optional[float] = None
+    charge: Optional[int] = None
+    biological_roles: Optional[Union[str, list[str]]] = empty_list()
+    chemical_roles: Optional[Union[str, list[str]]] = empty_list()
+    application_roles: Optional[Union[str, list[str]]] = empty_list()
+    xrefs: Optional[Union[Union[dict, "CrossReference"], list[Union[dict, "CrossReference"]]]] = empty_list()
+    source_records: Optional[Union[Union[dict, "SourceRecord"], list[Union[dict, "SourceRecord"]]]] = empty_list()
+    conflicts: Optional[Union[Union[dict, "DataConflict"], list[Union[dict, "DataConflict"]]]] = empty_list()
+    last_enriched: Optional[Union[str, XSDDateTime]] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, EnrichedIngredientId):
+            self.id = EnrichedIngredientId(self.id)
+
+        if self.inchikey is not None and not isinstance(self.inchikey, str):
+            self.inchikey = str(self.inchikey)
+
+        if self.cas_rn is not None and not isinstance(self.cas_rn, str):
+            self.cas_rn = str(self.cas_rn)
+
+        if self.name is not None and not isinstance(self.name, str):
+            self.name = str(self.name)
+
+        if not isinstance(self.synonyms, list):
+            self.synonyms = [self.synonyms] if self.synonyms is not None else []
+        self.synonyms = [v if isinstance(v, str) else str(v) for v in self.synonyms]
+
+        if self.description is not None and not isinstance(self.description, str):
+            self.description = str(self.description)
+
+        if self.chemical_formula is not None and not isinstance(self.chemical_formula, str):
+            self.chemical_formula = str(self.chemical_formula)
+
+        if self.chebi_id is not None and not isinstance(self.chebi_id, URIorCURIE):
+            self.chebi_id = URIorCURIE(self.chebi_id)
+
+        if self.pubchem_cid is not None and not isinstance(self.pubchem_cid, int):
+            self.pubchem_cid = int(self.pubchem_cid)
+
+        if self.mediadive_id is not None and not isinstance(self.mediadive_id, int):
+            self.mediadive_id = int(self.mediadive_id)
+
+        if self.kegg_id is not None and not isinstance(self.kegg_id, str):
+            self.kegg_id = str(self.kegg_id)
+
+        if self.mesh_id is not None and not isinstance(self.mesh_id, str):
+            self.mesh_id = str(self.mesh_id)
+
+        if self.drugbank_id is not None and not isinstance(self.drugbank_id, str):
+            self.drugbank_id = str(self.drugbank_id)
+
+        if self.inchi is not None and not isinstance(self.inchi, str):
+            self.inchi = str(self.inchi)
+
+        if self.smiles is not None and not isinstance(self.smiles, str):
+            self.smiles = str(self.smiles)
+
+        if self.molecular_mass is not None and not isinstance(self.molecular_mass, float):
+            self.molecular_mass = float(self.molecular_mass)
+
+        if self.monoisotopic_mass is not None and not isinstance(self.monoisotopic_mass, float):
+            self.monoisotopic_mass = float(self.monoisotopic_mass)
+
+        if self.charge is not None and not isinstance(self.charge, int):
+            self.charge = int(self.charge)
+
+        if not isinstance(self.biological_roles, list):
+            self.biological_roles = [self.biological_roles] if self.biological_roles is not None else []
+        self.biological_roles = [v if isinstance(v, str) else str(v) for v in self.biological_roles]
+
+        if not isinstance(self.chemical_roles, list):
+            self.chemical_roles = [self.chemical_roles] if self.chemical_roles is not None else []
+        self.chemical_roles = [v if isinstance(v, str) else str(v) for v in self.chemical_roles]
+
+        if not isinstance(self.application_roles, list):
+            self.application_roles = [self.application_roles] if self.application_roles is not None else []
+        self.application_roles = [v if isinstance(v, str) else str(v) for v in self.application_roles]
+
+        if not isinstance(self.xrefs, list):
+            self.xrefs = [self.xrefs] if self.xrefs is not None else []
+        self.xrefs = [v if isinstance(v, CrossReference) else CrossReference(**as_dict(v)) for v in self.xrefs]
+
+        if not isinstance(self.source_records, list):
+            self.source_records = [self.source_records] if self.source_records is not None else []
+        self.source_records = [v if isinstance(v, SourceRecord) else SourceRecord(**as_dict(v)) for v in self.source_records]
+
+        if not isinstance(self.conflicts, list):
+            self.conflicts = [self.conflicts] if self.conflicts is not None else []
+        self.conflicts = [v if isinstance(v, DataConflict) else DataConflict(**as_dict(v)) for v in self.conflicts]
+
+        if self.last_enriched is not None and not isinstance(self.last_enriched, XSDDateTime):
+            self.last_enriched = XSDDateTime(self.last_enriched)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class SourceRecord(YAMLRoot):
+    """
+    Tracks the provenance of data from a specific source. Each field value can be traced back to its authoritative
+    source.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = CMM["SourceRecord"]
+    class_class_curie: ClassVar[str] = "cmm:SourceRecord"
+    class_name: ClassVar[str] = "SourceRecord"
+    class_model_uri: ClassVar[URIRef] = CMM.SourceRecord
+
+    source_name: Optional[str] = None
+    source_id: Optional[str] = None
+    source_timestamp: Optional[Union[str, XSDDateTime]] = None
+    source_query: Optional[str] = None
+    source_fields: Optional[Union[str, list[str]]] = empty_list()
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self.source_name is not None and not isinstance(self.source_name, str):
+            self.source_name = str(self.source_name)
+
+        if self.source_id is not None and not isinstance(self.source_id, str):
+            self.source_id = str(self.source_id)
+
+        if self.source_timestamp is not None and not isinstance(self.source_timestamp, XSDDateTime):
+            self.source_timestamp = XSDDateTime(self.source_timestamp)
+
+        if self.source_query is not None and not isinstance(self.source_query, str):
+            self.source_query = str(self.source_query)
+
+        if not isinstance(self.source_fields, list):
+            self.source_fields = [self.source_fields] if self.source_fields is not None else []
+        self.source_fields = [v if isinstance(v, str) else str(v) for v in self.source_fields]
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class DataConflict(YAMLRoot):
+    """
+    Records conflicts between data sources for reconciliation review. Primary APIs are considered authoritative for
+    their own ID types.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = CMM["DataConflict"]
+    class_class_curie: ClassVar[str] = "cmm:DataConflict"
+    class_name: ClassVar[str] = "DataConflict"
+    class_model_uri: ClassVar[URIRef] = CMM.DataConflict
+
+    field_name: Optional[str] = None
+    primary_source: Optional[str] = None
+    primary_value: Optional[str] = None
+    conflicting_source: Optional[str] = None
+    conflicting_value: Optional[str] = None
+    resolution: Optional[Union[str, "ConflictResolution"]] = None
+    resolution_notes: Optional[str] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self.field_name is not None and not isinstance(self.field_name, str):
+            self.field_name = str(self.field_name)
+
+        if self.primary_source is not None and not isinstance(self.primary_source, str):
+            self.primary_source = str(self.primary_source)
+
+        if self.primary_value is not None and not isinstance(self.primary_value, str):
+            self.primary_value = str(self.primary_value)
+
+        if self.conflicting_source is not None and not isinstance(self.conflicting_source, str):
+            self.conflicting_source = str(self.conflicting_source)
+
+        if self.conflicting_value is not None and not isinstance(self.conflicting_value, str):
+            self.conflicting_value = str(self.conflicting_value)
+
+        if self.resolution is not None and not isinstance(self.resolution, ConflictResolution):
+            self.resolution = ConflictResolution(self.resolution)
+
+        if self.resolution_notes is not None and not isinstance(self.resolution_notes, str):
+            self.resolution_notes = str(self.resolution_notes)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
 class CrossReference(YAMLRoot):
     """
     A cross-reference to an external database or identifier
@@ -582,6 +805,56 @@ class VolumeUnit(EnumDefinitionImpl):
         description="Units for volume",
     )
 
+class ConflictResolution(EnumDefinitionImpl):
+    """
+    How a data conflict between sources was resolved. Primary APIs are considered authoritative for their own ID types.
+    """
+    primary_source_wins = PermissibleValue(
+        text="primary_source_wins",
+        description="Primary/authoritative source value was used")
+    manual_review = PermissibleValue(
+        text="manual_review",
+        description="Conflict flagged for manual review")
+    merged = PermissibleValue(
+        text="merged",
+        description="Values were merged (e.g., for lists)")
+    unresolved = PermissibleValue(
+        text="unresolved",
+        description="Conflict not yet resolved")
+
+    _defn = EnumDefinition(
+        name="ConflictResolution",
+        description="""How a data conflict between sources was resolved. Primary APIs are considered authoritative for their own ID types.""",
+    )
+
+class DataSource(EnumDefinitionImpl):
+    """
+    Names of data sources used for enrichment. Each source is authoritative for its own ID type.
+    """
+    pubchem = PermissibleValue(
+        text="pubchem",
+        description="PubChem (authoritative for pubchem_cid)")
+    chebi = PermissibleValue(
+        text="chebi",
+        description="ChEBI 2.0 (authoritative for chebi_id, biological/chemical roles)")
+    cas = PermissibleValue(
+        text="cas",
+        description="CAS Common Chemistry (authoritative for cas_rn)")
+    mediadive = PermissibleValue(
+        text="mediadive",
+        description="MediaDive (authoritative for mediadive_id)")
+    node_normalization = PermissibleValue(
+        text="node_normalization",
+        description="NCATS Translator NodeNormalization API (identifier bridging)")
+    kg_microbe = PermissibleValue(
+        text="kg_microbe",
+        description="KG-Microbe knowledge graph")
+
+    _defn = EnumDefinition(
+        name="DataSource",
+        description="Names of data sources used for enrichment. Each source is authoritative for its own ID type.",
+    )
+
 # Slots
 class slots:
     pass
@@ -674,6 +947,87 @@ slots.references = Slot(uri=CMM.references, name="references", curie=CMM.curie('
 
 slots.notes = Slot(uri=CMM.notes, name="notes", curie=CMM.curie('notes'),
                    model_uri=CMM.notes, domain=None, range=Optional[str])
+
+slots.mediadive_id = Slot(uri=CMM.mediadive_id, name="mediadive_id", curie=CMM.curie('mediadive_id'),
+                   model_uri=CMM.mediadive_id, domain=None, range=Optional[int])
+
+slots.kegg_id = Slot(uri=CMM.kegg_id, name="kegg_id", curie=CMM.curie('kegg_id'),
+                   model_uri=CMM.kegg_id, domain=None, range=Optional[str])
+
+slots.mesh_id = Slot(uri=CMM.mesh_id, name="mesh_id", curie=CMM.curie('mesh_id'),
+                   model_uri=CMM.mesh_id, domain=None, range=Optional[str])
+
+slots.drugbank_id = Slot(uri=CMM.drugbank_id, name="drugbank_id", curie=CMM.curie('drugbank_id'),
+                   model_uri=CMM.drugbank_id, domain=None, range=Optional[str])
+
+slots.inchi = Slot(uri=CMM.inchi, name="inchi", curie=CMM.curie('inchi'),
+                   model_uri=CMM.inchi, domain=None, range=Optional[str])
+
+slots.smiles = Slot(uri=CMM.smiles, name="smiles", curie=CMM.curie('smiles'),
+                   model_uri=CMM.smiles, domain=None, range=Optional[str])
+
+slots.molecular_mass = Slot(uri=CMM.molecular_mass, name="molecular_mass", curie=CMM.curie('molecular_mass'),
+                   model_uri=CMM.molecular_mass, domain=None, range=Optional[float])
+
+slots.monoisotopic_mass = Slot(uri=CMM.monoisotopic_mass, name="monoisotopic_mass", curie=CMM.curie('monoisotopic_mass'),
+                   model_uri=CMM.monoisotopic_mass, domain=None, range=Optional[float])
+
+slots.charge = Slot(uri=CMM.charge, name="charge", curie=CMM.curie('charge'),
+                   model_uri=CMM.charge, domain=None, range=Optional[int])
+
+slots.biological_roles = Slot(uri=CMM.biological_roles, name="biological_roles", curie=CMM.curie('biological_roles'),
+                   model_uri=CMM.biological_roles, domain=None, range=Optional[Union[str, list[str]]])
+
+slots.chemical_roles = Slot(uri=CMM.chemical_roles, name="chemical_roles", curie=CMM.curie('chemical_roles'),
+                   model_uri=CMM.chemical_roles, domain=None, range=Optional[Union[str, list[str]]])
+
+slots.application_roles = Slot(uri=CMM.application_roles, name="application_roles", curie=CMM.curie('application_roles'),
+                   model_uri=CMM.application_roles, domain=None, range=Optional[Union[str, list[str]]])
+
+slots.source_records = Slot(uri=CMM.source_records, name="source_records", curie=CMM.curie('source_records'),
+                   model_uri=CMM.source_records, domain=None, range=Optional[Union[Union[dict, SourceRecord], list[Union[dict, SourceRecord]]]])
+
+slots.conflicts = Slot(uri=CMM.conflicts, name="conflicts", curie=CMM.curie('conflicts'),
+                   model_uri=CMM.conflicts, domain=None, range=Optional[Union[Union[dict, DataConflict], list[Union[dict, DataConflict]]]])
+
+slots.last_enriched = Slot(uri=CMM.last_enriched, name="last_enriched", curie=CMM.curie('last_enriched'),
+                   model_uri=CMM.last_enriched, domain=None, range=Optional[Union[str, XSDDateTime]])
+
+slots.source_name = Slot(uri=CMM.source_name, name="source_name", curie=CMM.curie('source_name'),
+                   model_uri=CMM.source_name, domain=None, range=Optional[str])
+
+slots.source_id = Slot(uri=CMM.source_id, name="source_id", curie=CMM.curie('source_id'),
+                   model_uri=CMM.source_id, domain=None, range=Optional[str])
+
+slots.source_timestamp = Slot(uri=CMM.source_timestamp, name="source_timestamp", curie=CMM.curie('source_timestamp'),
+                   model_uri=CMM.source_timestamp, domain=None, range=Optional[Union[str, XSDDateTime]])
+
+slots.source_query = Slot(uri=CMM.source_query, name="source_query", curie=CMM.curie('source_query'),
+                   model_uri=CMM.source_query, domain=None, range=Optional[str])
+
+slots.source_fields = Slot(uri=CMM.source_fields, name="source_fields", curie=CMM.curie('source_fields'),
+                   model_uri=CMM.source_fields, domain=None, range=Optional[Union[str, list[str]]])
+
+slots.field_name = Slot(uri=CMM.field_name, name="field_name", curie=CMM.curie('field_name'),
+                   model_uri=CMM.field_name, domain=None, range=Optional[str])
+
+slots.primary_source = Slot(uri=CMM.primary_source, name="primary_source", curie=CMM.curie('primary_source'),
+                   model_uri=CMM.primary_source, domain=None, range=Optional[str])
+
+slots.primary_value = Slot(uri=CMM.primary_value, name="primary_value", curie=CMM.curie('primary_value'),
+                   model_uri=CMM.primary_value, domain=None, range=Optional[str])
+
+slots.conflicting_source = Slot(uri=CMM.conflicting_source, name="conflicting_source", curie=CMM.curie('conflicting_source'),
+                   model_uri=CMM.conflicting_source, domain=None, range=Optional[str])
+
+slots.conflicting_value = Slot(uri=CMM.conflicting_value, name="conflicting_value", curie=CMM.curie('conflicting_value'),
+                   model_uri=CMM.conflicting_value, domain=None, range=Optional[str])
+
+slots.resolution = Slot(uri=CMM.resolution, name="resolution", curie=CMM.curie('resolution'),
+                   model_uri=CMM.resolution, domain=None, range=Optional[Union[str, "ConflictResolution"]])
+
+slots.resolution_notes = Slot(uri=CMM.resolution_notes, name="resolution_notes", curie=CMM.curie('resolution_notes'),
+                   model_uri=CMM.resolution_notes, domain=None, range=Optional[str])
 
 slots.cMMDatabase__ingredients = Slot(uri=CMM.ingredients, name="cMMDatabase__ingredients", curie=CMM.curie('ingredients'),
                    model_uri=CMM.cMMDatabase__ingredients, domain=None, range=Optional[Union[dict[Union[str, IngredientId], Union[dict, Ingredient]], list[Union[dict, Ingredient]]]])

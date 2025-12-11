@@ -15,9 +15,14 @@ see_also:
 prefixes:
   cmm: https://w3id.org/turbomam/cmm-ai-automation/
   linkml: https://w3id.org/linkml/
-  biolink: https://w3id.org/biolink/
+  biolink: https://w3id.org/biolink/vocab/
   schema: http://schema.org/
   CHEBI: http://purl.obolibrary.org/obo/CHEBI_
+  PUBCHEM.COMPOUND: http://identifiers.org/pubchem.compound/
+  CAS: http://identifiers.org/cas/
+  KEGG.COMPOUND: http://identifiers.org/kegg.compound/
+  MESH: http://identifiers.org/mesh/
+  DRUGBANK: http://identifiers.org/drugbank/
   OBI: http://purl.obolibrary.org/obo/OBI_
   UO: http://purl.obolibrary.org/obo/UO_
   RO: http://purl.obolibrary.org/obo/RO_
@@ -142,6 +147,85 @@ classes:
     slot_usage:
       solution:
         required: true
+
+  # ---------------------------------------------------------------------------
+  # Enriched Ingredient (for multi-source data integration)
+  # ---------------------------------------------------------------------------
+
+  EnrichedIngredient:
+    description: >-
+      A chemical entity enriched with data from multiple sources.
+      Uses (inchikey, cas_rn) tuple as the primary key for entity resolution.
+      Each primary API is authoritative for its own ID type:
+      - PubChem is authoritative for pubchem_cid
+      - ChEBI is authoritative for chebi_id and biological/chemical roles
+      - CAS is authoritative for cas_rn
+      - MediaDive is authoritative for mediadive_id
+    class_uri: biolink:SmallMolecule
+    slots:
+      - id  # Composite key: {inchikey}|{cas_rn} or generated UUID
+      - inchikey  # Part of primary key tuple
+      - cas_rn    # Part of primary key tuple
+      - name
+      - synonyms
+      - description
+      - chemical_formula
+      # Source-specific authoritative IDs
+      - chebi_id
+      - pubchem_cid
+      - mediadive_id
+      - kegg_id
+      - mesh_id
+      - drugbank_id
+      # Chemical structure
+      - inchi
+      - smiles
+      # Mass/charge
+      - molecular_mass
+      - monoisotopic_mass
+      - charge
+      # Biological annotations from ChEBI (authoritative)
+      - biological_roles
+      - chemical_roles
+      - application_roles
+      # Cross-references from all sources
+      - xrefs
+      # Provenance tracking
+      - source_records
+      - conflicts
+      - last_enriched
+    unique_keys:
+      inchikey_cas_key:
+        unique_key_slots:
+          - inchikey
+          - cas_rn
+    id_prefixes:
+      - cmm
+      - CHEBI
+
+  SourceRecord:
+    description: >-
+      Tracks the provenance of data from a specific source.
+      Each field value can be traced back to its authoritative source.
+    slots:
+      - source_name
+      - source_id
+      - source_timestamp
+      - source_query
+      - source_fields
+
+  DataConflict:
+    description: >-
+      Records conflicts between data sources for reconciliation review.
+      Primary APIs are considered authoritative for their own ID types.
+    slots:
+      - field_name
+      - primary_source
+      - primary_value
+      - conflicting_source
+      - conflicting_value
+      - resolution
+      - resolution_notes
 
   # ---------------------------------------------------------------------------
   # Cross-references
@@ -318,6 +402,114 @@ slots:
   notes:
     description: Free-text notes about this component
 
+  # EnrichedIngredient-specific slots
+  mediadive_id:
+    range: integer
+    description: MediaDive ingredient ID (MediaDive is authoritative)
+
+  kegg_id:
+    description: KEGG Compound ID (e.g., C00031)
+
+  mesh_id:
+    description: MeSH identifier
+
+  drugbank_id:
+    description: DrugBank identifier
+
+  inchi:
+    description: InChI string for structural identification
+
+  smiles:
+    description: SMILES string for structural representation
+
+  molecular_mass:
+    range: float
+    description: Average molecular mass in Daltons
+
+  monoisotopic_mass:
+    range: float
+    description: Monoisotopic mass in Daltons
+
+  charge:
+    range: integer
+    description: Formal charge of the molecule
+
+  biological_roles:
+    multivalued: true
+    description: >-
+      Biological roles from ChEBI (ChEBI is authoritative).
+      Examples: nutrient, metabolite, cofactor.
+
+  chemical_roles:
+    multivalued: true
+    description: >-
+      Chemical roles from ChEBI (ChEBI is authoritative).
+      Examples: acid, base, reducing agent.
+
+  application_roles:
+    multivalued: true
+    description: >-
+      Application roles from ChEBI.
+      Examples: drug, pesticide, food additive.
+
+  # Provenance tracking slots
+  source_records:
+    range: SourceRecord
+    multivalued: true
+    inlined_as_list: true
+    description: Records tracking which source provided which data
+
+  conflicts:
+    range: DataConflict
+    multivalued: true
+    inlined_as_list: true
+    description: Recorded conflicts between data sources
+
+  last_enriched:
+    range: datetime
+    description: Timestamp of last enrichment run
+
+  source_name:
+    description: >-
+      Name of the data source (e.g., pubchem, chebi, cas, mediadive, node_normalization)
+
+  source_id:
+    description: Identifier returned by this source
+
+  source_timestamp:
+    range: datetime
+    description: When this data was retrieved from the source
+
+  source_query:
+    description: The query used to retrieve data from this source
+
+  source_fields:
+    multivalued: true
+    description: List of field names populated by this source
+
+  # Conflict tracking slots
+  field_name:
+    description: Name of the field with conflicting values
+
+  primary_source:
+    description: The authoritative source for this field
+
+  primary_value:
+    description: Value from the authoritative source
+
+  conflicting_source:
+    description: The source with a different value
+
+  conflicting_value:
+    description: Value that conflicts with the authoritative source
+
+  resolution:
+    range: ConflictResolution
+    description: How the conflict was resolved
+
+  resolution_notes:
+    description: Notes about the conflict resolution
+
 # =============================================================================
 # ENUMS
 # =============================================================================
@@ -424,3 +616,35 @@ enums:
       uL:
         description: Microliters
         meaning: UO:0000101
+
+  ConflictResolution:
+    description: >-
+      How a data conflict between sources was resolved.
+      Primary APIs are considered authoritative for their own ID types.
+    permissible_values:
+      primary_source_wins:
+        description: Primary/authoritative source value was used
+      manual_review:
+        description: Conflict flagged for manual review
+      merged:
+        description: Values were merged (e.g., for lists)
+      unresolved:
+        description: Conflict not yet resolved
+
+  DataSource:
+    description: >-
+      Names of data sources used for enrichment.
+      Each source is authoritative for its own ID type.
+    permissible_values:
+      pubchem:
+        description: PubChem (authoritative for pubchem_cid)
+      chebi:
+        description: ChEBI 2.0 (authoritative for chebi_id, biological/chemical roles)
+      cas:
+        description: CAS Common Chemistry (authoritative for cas_rn)
+      mediadive:
+        description: MediaDive (authoritative for mediadive_id)
+      node_normalization:
+        description: NCATS Translator NodeNormalization API (identifier bridging)
+      kg_microbe:
+        description: KG-Microbe knowledge graph

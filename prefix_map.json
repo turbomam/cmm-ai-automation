@@ -1,0 +1,25 @@
+{
+  "@context": {
+    "CHEBI": "http://purl.obolibrary.org/obo/CHEBI_",
+    "NCBITaxon": "http://purl.obolibrary.org/obo/NCBITaxon_",
+    "PUBCHEM.COMPOUND": "http://identifiers.org/pubchem.compound/",
+    "CAS": "http://identifiers.org/cas/",
+    "KEGG.COMPOUND": "http://identifiers.org/kegg.compound/",
+    "MESH": "http://identifiers.org/mesh/",
+    "DRUGBANK": "http://identifiers.org/drugbank/",
+    "INCHIKEY": "http://identifiers.org/inchikey/",
+    "OBI": "http://purl.obolibrary.org/obo/OBI_",
+    "UO": "http://purl.obolibrary.org/obo/UO_",
+    "RO": "http://purl.obolibrary.org/obo/RO_",
+    "ENVO": "http://purl.obolibrary.org/obo/ENVO_",
+    "GO": "http://purl.obolibrary.org/obo/GO_",
+    "biolink": "https://w3id.org/biolink/vocab/",
+    "cmm": "https://w3id.org/turbomam/cmm-ai-automation/",
+    "DSMZ": "https://www.dsmz.de/collection/catalogue/details/culture/DSM-",
+    "ATCC": "https://www.atcc.org/products/",
+    "mediadive.medium": "https://mediadive.dsmz.de/medium/",
+    "mediadive.ingredient": "https://mediadive.dsmz.de/ingredient/",
+    "mediadive.solution": "https://mediadive.dsmz.de/solution/"
+  },
+  "_comment": "Prefix map for CURIE expansion following bioregistry conventions. See https://bioregistry.io/"
+}

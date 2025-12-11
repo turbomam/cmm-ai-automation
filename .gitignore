@@ -158,3 +158,6 @@ data/private/*
 # Generated/cached data - rebuild locally
 data/chroma_ncbitaxon/
 data/mediadive_*.json
+
+# Large inferred schemas - regenerate locally as needed
+mediadive-schemas/
