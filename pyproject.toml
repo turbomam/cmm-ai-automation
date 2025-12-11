@@ -74,6 +74,9 @@ testpaths = ["tests"]
 markers = [
     "integration: marks tests as integration tests (require network access)",
 ]
+# Skip integration tests by default (some APIs block CI IPs)
+# Run with: pytest -m integration --run-integration to include them
+addopts = "-m 'not integration'"
 
 # Ref.: https://github.com/codespell-project/codespell
 [tool.codespell]

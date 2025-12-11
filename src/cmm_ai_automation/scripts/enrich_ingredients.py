@@ -149,10 +149,18 @@ def main(
 
     click.echo(f"Found {len(ingredients)} ingredients")
 
+    # Validate required columns
+    if ingredients:
+        required_columns = ["ingredient_name"]
+        missing_columns = [col for col in required_columns if col not in ingredients[0]]
+        if missing_columns:
+            click.echo(f"ERROR: Input file is missing required columns: {', '.join(missing_columns)}")
+            sys.exit(1)
+
     if dry_run:
         click.echo("\n[DRY RUN] Would query PubChem for:")
         for ing in ingredients:
-            click.echo(f"  - {ing['ingredient_name']}")
+            click.echo(f"  - {ing.get('ingredient_name', 'UNKNOWN')}")
         return
 
     # Load caches
