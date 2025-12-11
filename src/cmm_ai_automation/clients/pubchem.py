@@ -62,6 +62,9 @@ class CompoundResult:
         MonoisotopicMass: Monoisotopic mass
         Charge: Formal charge
         XLogP: Computed XLogP (partition coefficient)
+        CAS: CAS Registry Number (from cross-references)
+        ChEBI: ChEBI identifier (from cross-references)
+        Wikidata: Wikidata entity ID (from cross-references)
     """
 
     CID: int
@@ -78,6 +81,9 @@ class CompoundResult:
     MonoisotopicMass: float | None = None
     Charge: int | None = None
     XLogP: float | None = None
+    CAS: str | None = None
+    ChEBI: str | None = None
+    Wikidata: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for serialization."""
@@ -96,6 +102,9 @@ class CompoundResult:
             "MonoisotopicMass": self.MonoisotopicMass,
             "Charge": self.Charge,
             "XLogP": self.XLogP,
+            "CAS": self.CAS,
+            "ChEBI": self.ChEBI,
+            "Wikidata": self.Wikidata,
         }
 
 
@@ -175,10 +184,91 @@ class PubChemClient:
         result: dict[str, Any] = response.json()
         return result
 
+    def get_cids_by_name(self, name: str) -> list[int] | LookupError:
+        """Get all CIDs matching a compound name.
+
+        Args:
+            name: Chemical name to search
+
+        Returns:
+            List of CIDs on success, LookupError on failure
+        """
+        encoded_name = quote(name)
+        url = f"{self.BASE_URL}/compound/name/{encoded_name}/cids/JSON"
+
+        try:
+            data = self._get(url)
+        except requests.HTTPError as e:
+            try:
+                error_data = e.response.json()
+                fault = error_data.get("Fault", {})
+                return LookupError(
+                    name_queried=name,
+                    error_code=fault.get("Code", "UNKNOWN"),
+                    error_message=fault.get("Message", str(e)),
+                )
+            except (json.JSONDecodeError, AttributeError, KeyError):
+                return LookupError(
+                    name_queried=name,
+                    error_code="HTTP_ERROR",
+                    error_message=str(e),
+                )
+        except requests.RequestException as e:
+            return LookupError(
+                name_queried=name,
+                error_code="REQUEST_ERROR",
+                error_message=str(e),
+            )
+
+        try:
+            cids: list[int] = data["IdentifierList"]["CID"]
+            return cids
+        except (KeyError, IndexError):
+            return []
+
+    def get_compounds_by_name(
+        self, name: str
+    ) -> list[CompoundResult] | LookupError:
+        """Look up all compounds matching a name.
+
+        Args:
+            name: Chemical name to search (e.g., "glucose", "magnesium sulfate heptahydrate")
+
+        Returns:
+            List of CompoundResult on success, LookupError on failure
+        """
+        # First get all matching CIDs
+        cids_result = self.get_cids_by_name(name)
+        if isinstance(cids_result, LookupError):
+            return cids_result
+
+        if not cids_result:
+            return LookupError(
+                name_queried=name,
+                error_code="NO_RESULTS",
+                error_message="No compounds found for this name",
+            )
+
+        # Fetch properties for all CIDs
+        results = []
+        for cid in cids_result:
+            result = self.get_compound_by_cid(cid)
+            if isinstance(result, CompoundResult):
+                result.name_queried = name
+                results.append(result)
+
+        return results if results else LookupError(
+            name_queried=name,
+            error_code="NO_VALID_RESULTS",
+            error_message=f"Found {len(cids_result)} CIDs but could not fetch properties",
+        )
+
     def get_compound_by_name(
         self, name: str
     ) -> CompoundResult | LookupError:
-        """Look up a compound by name.
+        """Look up a compound by name (returns first match only).
+
+        For all matches, use get_compounds_by_name() instead.
 
         Args:
             name: Chemical name to search (e.g., "glucose", "magnesium sulfate heptahydrate")
@@ -344,6 +434,83 @@ class PubChemClient:
             return synonyms
         except (KeyError, IndexError):
             return []
+
+    def get_xrefs(self, cid: int) -> dict[str, str | None]:
+        """Get cross-references (CAS, ChEBI, Wikidata) for a compound.
+
+        Uses PUG-VIEW API to fetch annotation data.
+
+        Args:
+            cid: PubChem Compound ID
+
+        Returns:
+            Dictionary with keys 'CAS', 'ChEBI', 'Wikidata' (values may be None)
+        """
+        url = f"https://pubchem.ncbi.nlm.nih.gov/rest/pug_view/data/compound/{cid}/JSON"
+
+        result: dict[str, str | None] = {"CAS": None, "ChEBI": None, "Wikidata": None}
+
+        try:
+            self._wait_for_rate_limit()
+            logger.debug(f"GET {url}")
+            response = self._session.get(url, timeout=self.timeout)
+            response.raise_for_status()
+            data = response.json()
+        except (requests.RequestException, json.JSONDecodeError) as e:
+            logger.warning(f"Failed to fetch xrefs for CID {cid}: {e}")
+            return result
+
+        # Parse the nested PUG-VIEW structure
+        try:
+            record = data.get("Record", {})
+            sections = record.get("Section", [])
+
+            for section in sections:
+                if section.get("TOCHeading") == "Names and Identifiers":
+                    self._extract_xrefs_from_section(section, result)
+                    break
+        except (KeyError, TypeError) as e:
+            logger.warning(f"Failed to parse xrefs for CID {cid}: {e}")
+
+        return result
+
+    def _extract_xrefs_from_section(
+        self, section: dict[str, Any], result: dict[str, str | None]
+    ) -> None:
+        """Extract CAS, ChEBI, Wikidata from a Names and Identifiers section."""
+        for subsection in section.get("Section", []):
+            toc = subsection.get("TOCHeading", "")
+
+            if toc == "Other Identifiers":
+                for item in subsection.get("Section", []):
+                    item_toc = item.get("TOCHeading", "")
+                    if item_toc == "CAS" and result["CAS"] is None:
+                        result["CAS"] = self._get_first_string_value(item)
+                    elif item_toc == "ChEBI ID" and result["ChEBI"] is None:
+                        result["ChEBI"] = self._get_first_string_value(item)
+                    elif item_toc == "Wikidata" and result["Wikidata"] is None:
+                        result["Wikidata"] = self._get_first_string_value(item)
+
+            # Also check direct subsections
+            if toc == "CAS" and result["CAS"] is None:
+                result["CAS"] = self._get_first_string_value(subsection)
+            elif toc == "ChEBI ID" and result["ChEBI"] is None:
+                result["ChEBI"] = self._get_first_string_value(subsection)
+            elif toc == "Wikidata" and result["Wikidata"] is None:
+                result["Wikidata"] = self._get_first_string_value(subsection)
+
+    def _get_first_string_value(self, section: dict[str, Any]) -> str | None:
+        """Extract the first string value from a PUG-VIEW section."""
+        try:
+            info_list = section.get("Information", [])
+            if info_list:
+                value = info_list[0].get("Value", {})
+                markup_list = value.get("StringWithMarkup", [])
+                if markup_list:
+                    return markup_list[0].get("String")
+        except (KeyError, IndexError, TypeError):
+            pass
+        return None
 
 
 def _to_float(value: Any) -> float | None:
