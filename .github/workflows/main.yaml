@@ -9,13 +9,15 @@ on:  # yamllint disable-line rule:truthy
   pull_request:
 
 env:
-  FORCE_COLOR: "1" # Make tools pretty.
+  FORCE_COLOR: "1"  # Make tools pretty.
+  # Disable pre-commit color for cleaner CI logs
+  PRE_COMMIT_COLOR: "never"
 
 permissions: {}
 
 jobs:
-  test:
-
+  ci:
+    name: CI (lint, test, docs)
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -47,11 +49,10 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Install just
-        run: |
-          uv tool install rust-just
+        run: uv tool install rust-just
 
-      - name: Install project
-        run: uv sync --dev
+      - name: Install project dependencies
+        run: uv sync --all-groups
 
-      - name: Run test suite
-        run: just test
+      - name: Run QA (lint, test, schema, docs, smoke tests)
+        run: just qa

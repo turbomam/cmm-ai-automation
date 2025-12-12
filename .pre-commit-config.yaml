@@ -7,6 +7,13 @@ repos:
       - id: check-toml
       - id: check-yaml
         args: [--unsafe]  # mkdocs.yml uses Python tags
+      - id: check-json
+      - id: pretty-format-json
+        args: [--autofix, --indent=2]
+        exclude: |
+          (?x)^(
+            \.vscode/.*
+          )$
       - id: end-of-file-fixer
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
@@ -58,6 +65,28 @@ repos:
             src/cmm_ai_automation/datamodel/.*
           )$
 
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.3
+    hooks:
+      - id: bandit
+        args: [-c, pyproject.toml]
+        additional_dependencies: ["bandit[toml]"]
+        exclude: |
+          (?x)^(
+            tests/.*|
+            project/.*|
+            src/cmm_ai_automation/datamodel/.*
+          )$
+
+  - repo: local
+    hooks:
+      - id: pip-audit
+        name: pip-audit (vulnerability scanner)
+        entry: uv run pip-audit
+        language: system
+        pass_filenames: false
+        always_run: true
+
   - repo: https://github.com/fpgmaas/deptry
     rev: 0.21.1
     hooks:
@@ -65,13 +94,36 @@ repos:
         args: [src]
         pass_filenames: false  # scan entire src/ to avoid partial analysis
 
+  # ==========================================================================
+  # Testing, Schema, Docs, Smoke Tests
+  # ==========================================================================
   - repo: local
     hooks:
-      - id: pytest-all
-        name: pytest (all tests including integration)
-        entry: uv run pytest
+      - id: pytest
+        name: pytest (tests with coverage)
+        entry: uv run pytest -m "" --cov --cov-report=term-missing -q
         language: system
         pass_filenames: false
         always_run: true
-        # Override pyproject.toml's addopts to include integration tests
-        args: [-m, "", --tb=short]
+        stages: [pre-push, manual]  # skip on commit, run on push or manual
+
+      - id: linkml-lint
+        name: linkml-lint (schema validation)
+        entry: uv run linkml-lint --config .linkml-lint.yaml src/cmm_ai_automation/schema/
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: mkdocs-build
+        name: mkdocs build (documentation)
+        entry: uv run mkdocs build --strict
+        language: system
+        pass_filenames: false
+        always_run: true
+
+      - id: smoke-tests
+        name: smoke tests (CLI verification)
+        entry: bash -c 'uv run download-sheets --help > /dev/null && uv run enrich-ingredients --help > /dev/null && uv run enrich-to-store --help > /dev/null && uv run python -m cmm_ai_automation.scripts.enrich_strains --help > /dev/null && uv run python -m cmm_ai_automation.scripts.codify_strains --help > /dev/null && uv run python -m cmm_ai_automation.scripts.build_ncbitaxon_chromadb --help > /dev/null && uv run python -m cmm_ai_automation.scripts.load_bacdive_mongodb --help > /dev/null && uv run python -m cmm_ai_automation.scripts.load_mediadive_details --help > /dev/null'
+        language: system
+        pass_filenames: false
+        always_run: true
