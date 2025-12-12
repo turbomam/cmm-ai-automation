@@ -33,6 +33,10 @@ dependencies = [
   "beautifulsoup4>=4.14.3",
   "bacdive>=1.0.0",
   "linkml>=1.9.5",
+  "asteval>=1.0.6",
+  "deepdiff>=8.6.1",
+  "urllib3>=2.6.0",
+  "pyarrow>=17.0.0",
 ]
 
 [dependency-groups]
@@ -43,6 +47,7 @@ dev = [
     "mkdocs-pymdownx-material-extras>=2.5.6",
     "jupyter>=1.0.0",
     "mknotebooks>= 0.8.0",
+    "pip-audit>=2.10.0",
 ]
 qa = [
     "ruff>=0.8.0",
@@ -210,6 +215,13 @@ exclude_lines = [
   "if __name__ == .__main__.:",
 ]
 # Target coverage for library code (excluding scripts)
-# Temporarily set to 30% while building out tests - see issue #29
-# TODO(#29): Raise to 60% once more tests are added
-fail_under = 30
+# Raised from 35% to 60% (2025-12-12) - see issue #28
+# Note: CI achieves ~62% without CAS API key, local achieves ~65% with it
+fail_under = 60
+
+# Ref.: https://bandit.readthedocs.io/
+[tool.bandit]
+exclude_dirs = ["tests", "project", "src/cmm_ai_automation/datamodel"]
+# Skip B110 (try-except-pass) - intentional for resilient API handling in scripts
+# Skip B405/B314 (XML) - parsing trusted API responses (NCBI Entrez)
+skips = ["B110", "B405", "B314"]

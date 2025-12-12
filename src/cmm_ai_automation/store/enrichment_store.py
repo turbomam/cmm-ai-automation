@@ -15,7 +15,7 @@ References:
 """
 
 import logging
-import uuid
+import re
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -24,6 +24,178 @@ from linkml_store import Client
 from linkml_store.api import Collection, Database
 
 logger = logging.getLogger(__name__)
+
+# Regex patterns for name cleaning and scoring
+CAS_RN_PATTERN = re.compile(r"^\d{1,7}-\d{2}-\d$")
+HTML_TAG_PATTERN = re.compile(r"<[^>]+>")
+SYSTEMATIC_PREFIXES = ("di", "tri", "tetra", "penta", "hexa", "hepta", "octa", "mono", "bis", "tris")
+
+
+def clean_html_tags(text: str | None) -> str | None:
+    """Remove HTML tags from text (e.g., <sub>, <sup>).
+
+    Args:
+        text: Input text that may contain HTML tags
+
+    Returns:
+        Cleaned text with HTML tags removed, or None if input is None
+    """
+    if not text:
+        return text
+    return HTML_TAG_PATTERN.sub("", text)
+
+
+def is_cas_number(text: str) -> bool:
+    """Check if a string looks like a CAS Registry Number.
+
+    Args:
+        text: String to check
+
+    Returns:
+        True if the string matches CAS RN format (e.g., 7732-18-5)
+    """
+    return bool(CAS_RN_PATTERN.match(text.strip()))
+
+
+def score_name_quality(name: str) -> int:
+    """Score a name for display quality (higher is better).
+
+    Prefers common names that are short, readable, and meaningful
+    to bacteriologists and laypeople.
+
+    Args:
+        name: Name to score
+
+    Returns:
+        Integer score (higher is better for display)
+    """
+    score = 100  # Start with base score
+
+    # Penalize very long names (systematic names tend to be long)
+    if len(name) > 50:
+        score -= 30
+    elif len(name) > 30:
+        score -= 15
+
+    # Penalize names with systematic chemistry prefixes
+    name_lower = name.lower()
+    for prefix in SYSTEMATIC_PREFIXES:
+        if name_lower.startswith(prefix):
+            score -= 10
+            break
+
+    # Penalize names with parenthetical formulas
+    if "(" in name and any(c.isdigit() for c in name):
+        score -= 15
+
+    # Penalize names with semicolons (IUPAC convention)
+    if ";" in name:
+        score -= 20
+
+    # Penalize all-uppercase names
+    if name.isupper():
+        score -= 5
+
+    # Penalize names that look like CAS numbers
+    if is_cas_number(name):
+        score -= 100
+
+    # Penalize HTML-looking content
+    if "<" in name:
+        score -= 25
+
+    # Bonus for capitalized first letter (proper name)
+    if name[0].isupper() and name[1:].islower():
+        score += 5
+
+    return score
+
+
+def select_display_name(record: dict[str, Any]) -> str:
+    """Select the best display name for an ingredient record.
+
+    Priority order:
+    1. Original query name (from source_records) - what bacteriologists use
+    2. ChEBI name - well-curated
+    3. Best-scoring name from available options
+    4. IUPAC name - last resort
+
+    Args:
+        record: Ingredient record with name, iupac_name, synonyms, source_records
+
+    Returns:
+        Best display name for the record
+    """
+    import json
+
+    candidates: list[tuple[str, int]] = []  # (name, priority_bonus)
+
+    # Get source records - check both _sources (in-memory) and source_records (from DB)
+    sources_raw = record.get("_sources") or record.get("source_records") or []
+
+    # Parse JSON strings if needed (DuckDB stores them as JSON strings in a list)
+    sources: list[dict[str, Any]] = []
+    for item in sources_raw:
+        if isinstance(item, dict):
+            sources.append(item)
+        elif isinstance(item, str):
+            try:
+                parsed = json.loads(item)
+                if isinstance(parsed, dict):
+                    sources.append(parsed)
+            except (json.JSONDecodeError, TypeError):
+                pass
+
+    # Extract query names from sources
+    query_names = set()
+    for source_record in sources:
+        query = source_record.get("source_query")
+        if query and isinstance(query, str):
+            query_names.add(query)
+
+    # Query names get highest priority bonus
+    for qname in query_names:
+        clean_name = clean_html_tags(qname)
+        if clean_name:
+            candidates.append((clean_name, 50))
+
+    # Current name field
+    if record.get("name"):
+        clean_name = clean_html_tags(record["name"])
+        if clean_name:
+            # Check if this came from ChEBI (bonus)
+            name_bonus = 20 if any(s.get("source_name", "").startswith("chebi") for s in sources) else 0
+            candidates.append((clean_name, name_bonus))
+
+    # Synonyms (lower priority)
+    synonyms = record.get("synonyms", [])
+    if isinstance(synonyms, list):
+        for syn in synonyms[:20]:  # Limit to first 20
+            if isinstance(syn, str):
+                clean_syn = clean_html_tags(syn)
+                if clean_syn and not is_cas_number(clean_syn):
+                    candidates.append((clean_syn, 0))
+
+    # IUPAC name (lowest priority)
+    if record.get("iupac_name"):
+        clean_iupac = clean_html_tags(record["iupac_name"])
+        if clean_iupac:
+            candidates.append((clean_iupac, -20))
+
+    if not candidates:
+        return str(record.get("name", "Unknown"))
+
+    # Score all candidates and pick the best
+    scored = []
+    for name, bonus in candidates:
+        quality_score = score_name_quality(name)
+        total_score = quality_score + bonus
+        scored.append((total_score, name))
+
+    # Sort by score descending, return best
+    scored.sort(key=lambda x: (-x[0], x[1]))
+    return scored[0][1]
+
 
 # Schema path
 SCHEMA_PATH = Path(__file__).parent.parent / "schema" / "cmm_ai_automation.yaml"
@@ -53,7 +225,7 @@ def generate_composite_key(inchikey: str | None, cas_rn: str | None) -> str:
     """Generate a composite key from (inchikey, cas_rn) tuple.
 
     The composite key format is: {inchikey}|{cas_rn}
-    If either is missing, a UUID is generated for that part.
+    Uses 'unknown' for missing parts (deterministic, not random).
 
     Args:
         inchikey: InChIKey string (may be None)
@@ -62,7 +234,7 @@ def generate_composite_key(inchikey: str | None, cas_rn: str | None) -> str:
     Returns:
         Composite key string
     """
-    ik_part = inchikey if inchikey else f"uuid:{uuid.uuid4().hex[:8]}"
+    ik_part = inchikey if inchikey else "unknown"
     cas_part = cas_rn if cas_rn else "unknown"
     return f"{ik_part}|{cas_part}"
 
@@ -80,7 +252,7 @@ def parse_composite_key(key: str) -> tuple[str | None, str | None]:
     if len(parts) != 2:
         return (None, None)
 
-    inchikey = None if parts[0].startswith("uuid:") else parts[0]
+    inchikey = None if parts[0] == "unknown" else parts[0]
     cas_rn = None if parts[1] == "unknown" else parts[1]
     return (inchikey, cas_rn)
 
@@ -167,8 +339,9 @@ class EnrichmentStore:
     ) -> str:
         """Insert or update an enriched ingredient.
 
-        Uses (inchikey, cas_rn) for entity resolution. If an existing record
-        is found with the same key, fields are merged with conflict detection.
+        Uses entity resolution to find existing records by EITHER inchikey OR cas_rn.
+        This ensures records from different sources are properly merged even if
+        one source doesn't provide all identifiers.
 
         Args:
             data: Ingredient data dictionary
@@ -180,28 +353,51 @@ class EnrichmentStore:
         """
         collection = self._get_collection()
 
-        # Generate composite key
         inchikey = data.get("inchikey")
         cas_rn = data.get("cas_rn")
-        composite_key = generate_composite_key(inchikey, cas_rn)
 
-        # Check for existing record
-        existing = self.get_by_composite_key(composite_key)
+        # Entity resolution: find existing record by EITHER inchikey OR cas_rn
+        existing = None
+        existing_key = None
+
+        # First try to find by inchikey (most reliable identifier)
+        if inchikey:
+            matches = self.find_by_inchikey(inchikey)
+            if matches:
+                existing = matches[0]
+                existing_key = existing.get("id")
+
+        # If not found by inchikey, try by cas_rn
+        if not existing and cas_rn:
+            matches = self.find_by_cas(cas_rn)
+            if matches:
+                existing = matches[0]
+                existing_key = existing.get("id")
+
+        # Generate new composite key using best available identifiers
+        # Prefer existing record's identifiers to fill gaps
+        final_inchikey = inchikey or (existing.get("inchikey") if existing else None)
+        final_cas_rn = cas_rn or (existing.get("cas_rn") if existing else None)
+        composite_key = generate_composite_key(final_inchikey, final_cas_rn)
 
         if existing:
             # Merge with existing record
             merged = self._merge_records(existing, data, source, query)
             merged["id"] = composite_key
             merged["last_enriched"] = datetime.now().isoformat()
-            # Delete existing record and insert merged (upsert not implemented in DuckDB backend)
-            # NOTE: This is not atomic - if insert fails, data is lost. Consider using transactions
-            # or a backup strategy for production use. For now, log the merged data before operations.
-            logger.debug(f"Updating ingredient {composite_key}: {merged}")
+            # Delete existing record (may have different key) and insert merged
+            # NOTE: This is not atomic - if insert fails, data is lost.
+            logger.debug(f"Updating ingredient {existing_key} -> {composite_key}: {merged}")
             try:
-                collection.delete_where({"id": composite_key})
+                # Delete by the OLD key (existing_key), not the new composite_key
+                if existing_key:
+                    collection.delete_where({"id": existing_key})
                 collection.insert([merged])
-                collection.commit()  # Ensure changes are persisted
-                logger.info(f"Updated ingredient: {composite_key}")
+                collection.commit()
+                if existing_key != composite_key:
+                    logger.info(f"Merged ingredient: {existing_key} -> {composite_key}")
+                else:
+                    logger.info(f"Updated ingredient: {composite_key}")
             except Exception as e:
                 logger.error(f"Failed to update ingredient {composite_key}: {e}")
                 logger.error(f"Merged data that was lost: {merged}")
@@ -401,6 +597,19 @@ class EnrichmentStore:
         results = collection.find({"cas_rn": cas_rn})
         return results.rows or []
 
+    def find_by_inchikey(self, inchikey: str) -> list[dict[str, Any]]:
+        """Find ingredients by InChIKey.
+
+        Args:
+            inchikey: InChIKey string
+
+        Returns:
+            List of matching ingredient records
+        """
+        collection = self._get_collection()
+        results = collection.find({"inchikey": inchikey})
+        return results.rows or []
+
     def get_all_conflicts(self) -> list[dict[str, Any]]:
         """Get all records that have unresolved conflicts.
 
@@ -587,7 +796,7 @@ class EnrichmentStore:
                 category = ["biolink:SmallMolecule"]
 
             node_attrs: dict[str, Any] = {
-                "name": record.get("name", ""),
+                "name": select_display_name(record),
                 "category": category,
                 "provided_by": ["cmm-ai-automation"],
             }
@@ -622,9 +831,17 @@ class EnrichmentStore:
             if record.get("inchi"):
                 node_attrs["inchi"] = record["inchi"]
             if record.get("iupac_name"):
-                node_attrs["iupac_name"] = record["iupac_name"]
+                node_attrs["iupac_name"] = clean_html_tags(record["iupac_name"])
             if record.get("synonyms"):
-                node_attrs["synonyms"] = record["synonyms"]
+                # Clean synonyms: remove HTML tags and filter out CAS numbers
+                clean_synonyms = []
+                for syn in record["synonyms"]:
+                    if isinstance(syn, str):
+                        cleaned = clean_html_tags(syn)
+                        if cleaned and not is_cas_number(cleaned):
+                            clean_synonyms.append(cleaned)
+                if clean_synonyms:
+                    node_attrs["synonyms"] = clean_synonyms
 
             # Physical properties
             if record.get("molecular_mass"):

@@ -44,6 +44,21 @@ DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "kgx" / "ingredients"
 logger = logging.getLogger(__name__)
 
 
+def normalize_inchikey(inchikey: str | None) -> str | None:
+    """Normalize InChIKey format by removing any prefix.
+
+    CAS API returns 'InChIKey=XXXX' format, others return bare 'XXXX'.
+    We standardize to bare format for consistent entity resolution.
+    """
+    if not inchikey:
+        return None
+    # Strip common prefixes
+    for prefix in ("InChIKey=", "INCHIKEY:", "inchikey:"):
+        if inchikey.startswith(prefix):
+            return inchikey[len(prefix) :]
+    return inchikey
+
+
 def setup_logging(verbose: bool) -> None:
     """Configure logging based on verbosity."""
     level = logging.DEBUG if verbose else logging.INFO
@@ -58,7 +73,7 @@ def pubchem_to_dict(result: CompoundResult, query: str) -> dict[str, Any]:
     return {
         "name": result.Title or query,
         "pubchem_cid": result.CID,
-        "inchikey": result.InChIKey,
+        "inchikey": normalize_inchikey(result.InChIKey),
         "smiles": result.CanonicalSMILES,
         "chemical_formula": result.MolecularFormula,
         "molecular_mass": result.MolecularWeight,
@@ -81,22 +96,35 @@ def chebi_to_dict(result: ChEBISearchResult, compound_data: dict[str, Any] | Non
     # Add full compound data if available
     if compound_data:
         if compound_data.get("inchikey"):
-            data["inchikey"] = compound_data["inchikey"]
+            data["inchikey"] = normalize_inchikey(compound_data["inchikey"])
         if compound_data.get("smiles"):
             data["smiles"] = compound_data["smiles"]
-        if compound_data.get("chemical_formula"):
-            data["chemical_formula"] = compound_data["chemical_formula"]
-        if compound_data.get("molecular_mass"):
-            data["molecular_mass"] = compound_data["molecular_mass"]
+        # ChEBI returns formula, we store as chemical_formula
+        if compound_data.get("formula"):
+            data["chemical_formula"] = compound_data["formula"]
+        if compound_data.get("mass"):
+            data["molecular_mass"] = compound_data["mass"]
+        if compound_data.get("monoisotopic_mass"):
+            data["monoisotopic_mass"] = compound_data["monoisotopic_mass"]
+        if compound_data.get("charge") is not None:
+            data["charge"] = compound_data["charge"]
+        if compound_data.get("inchi"):
+            data["inchi"] = compound_data["inchi"]
         if compound_data.get("definition"):
             data["description"] = compound_data["definition"]
         if compound_data.get("synonyms"):
             data["synonyms"] = compound_data["synonyms"]
 
-        # Add roles
-        roles = compound_data.get("chebi_ontology_roles", [])
+        # Add roles - ChEBICompound.to_dict() returns "roles" as list of dicts
+        # with keys: chebi_id, name, is_biological, is_chemical
+        roles = compound_data.get("roles", [])
         if roles:
-            data["biological_roles"] = roles
+            biological_roles = [r["chebi_id"] for r in roles if r.get("is_biological")]
+            chemical_roles = [r["chebi_id"] for r in roles if r.get("is_chemical")]
+            if biological_roles:
+                data["biological_roles"] = biological_roles
+            if chemical_roles:
+                data["chemical_roles"] = chemical_roles
 
     return data
 
@@ -110,7 +138,7 @@ def cas_to_dict(result: CASResult, query: str) -> dict[str, Any]:
     }
 
     if result.inchikey:
-        data["inchikey"] = result.inchikey
+        data["inchikey"] = normalize_inchikey(result.inchikey)
     if result.smiles:
         data["smiles"] = result.smiles
     if result.molecular_formula:
@@ -139,7 +167,7 @@ def node_norm_to_dict(result: NormalizedNode) -> dict[str, Any]:
     if result.cas_rn:
         data["cas_rn"] = result.cas_rn
     if result.inchikey:
-        data["inchikey"] = result.inchikey
+        data["inchikey"] = normalize_inchikey(result.inchikey)
 
     return data
 
