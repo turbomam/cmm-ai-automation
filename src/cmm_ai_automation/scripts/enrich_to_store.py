@@ -90,6 +90,8 @@ def chebi_to_dict(result: ChEBISearchResult, compound_data: dict[str, Any] | Non
             data["molecular_mass"] = compound_data["molecular_mass"]
         if compound_data.get("definition"):
             data["description"] = compound_data["definition"]
+        if compound_data.get("synonyms"):
+            data["synonyms"] = compound_data["synonyms"]
 
         # Add roles
         roles = compound_data.get("chebi_ontology_roles", [])
@@ -115,6 +117,8 @@ def cas_to_dict(result: CASResult, query: str) -> dict[str, Any]:
         data["chemical_formula"] = result.molecular_formula
     if result.molecular_mass:
         data["molecular_mass"] = result.molecular_mass
+    if result.synonyms:
+        data["synonyms"] = result.synonyms
 
     return data
 
@@ -138,6 +142,330 @@ def node_norm_to_dict(result: NormalizedNode) -> dict[str, Any]:
         data["inchikey"] = result.inchikey
 
     return data
+
+
+def extract_all_curies(data: dict[str, Any]) -> set[str]:
+    """Extract all CURIEs from enrichment data for normalization.
+
+    Extracts CURIEs in the format: CHEBI:*, PUBCHEM.COMPOUND:*, CAS:*, etc.
+
+    Args:
+        data: Enrichment data dictionary
+
+    Returns:
+        Set of CURIE strings
+    """
+    curies = set()
+
+    if data.get("chebi_id"):
+        curies.add(data["chebi_id"])
+    if data.get("pubchem_cid"):
+        curies.add(f"PUBCHEM.COMPOUND:{data['pubchem_cid']}")
+    if data.get("cas_rn"):
+        curies.add(f"CAS:{data['cas_rn']}")
+    if data.get("inchikey"):
+        curies.add(f"INCHIKEY:{data['inchikey']}")
+
+    return curies
+
+
+def merge_synonyms(sources_data: dict[str, dict[str, Any]]) -> list[str]:
+    """Merge and deduplicate synonyms from all sources.
+
+    Args:
+        sources_data: Dict mapping source name to data dict
+
+    Returns:
+        Deduplicated list of all synonyms, sorted alphabetically
+    """
+    all_synonyms = set()
+
+    for data in sources_data.values():
+        synonyms = data.get("synonyms")
+        if not synonyms:
+            continue
+
+        # Handle both list and single string
+        if isinstance(synonyms, list):
+            all_synonyms.update(synonyms)
+        elif isinstance(synonyms, str):
+            all_synonyms.add(synonyms)
+
+    # Sort for deterministic output
+    return sorted(all_synonyms)
+
+
+def determine_biolink_category(sources_data: dict[str, dict[str, Any]]) -> str:
+    """Determine biolink category from source data.
+
+    Uses CAS is_mixture field as authoritative source for classification.
+
+    Args:
+        sources_data: Dict mapping source name to data dict
+
+    Returns:
+        "biolink:SmallMolecule" or "biolink:ChemicalMixture"
+    """
+    # Check CAS data for mixture classification (authoritative)
+    for source_name, data in sources_data.items():
+        if source_name.startswith("cas"):
+            is_mixture = data.get("is_mixture")
+            if is_mixture is True:
+                return "biolink:ChemicalMixture"
+            elif is_mixture is False:
+                return "biolink:SmallMolecule"
+
+    # Default to SmallMolecule if no CAS data
+    return "biolink:SmallMolecule"
+
+
+def spider_enrich_ingredient(
+    name: str,
+    pubchem_client: PubChemClient | None,
+    chebi_client: ChEBIClient | None,
+    cas_client: Any | None,  # CASClient type
+    node_norm_client: NodeNormalizationClient,
+    max_iterations: int = 5,
+) -> dict[str, dict[str, Any]]:
+    """Enrich ingredient using iterative spidering.
+
+    Phase 1: Query all APIs by name
+    Phase 2: Iteratively normalize IDs and query discovered sources
+    Phase 3: Consolidate synonyms and determine biolink category
+
+    Args:
+        name: Ingredient name to enrich
+        pubchem_client: PubChem API client
+        chebi_client: ChEBI API client
+        cas_client: CAS API client
+        node_norm_client: Node Normalization client
+        max_iterations: Maximum spider iterations (safety limit)
+
+    Returns:
+        Dict mapping source name to enrichment data
+    """
+    sources_data: dict[str, dict[str, Any]] = {}
+
+    # Track queried IDs to prevent re-querying (infinite loop prevention)
+    queried_ids: set[str] = set()
+
+    iteration = 0
+
+    # Phase 1: Initial discovery by name
+    click.echo("  Phase 1: Initial discovery by name")
+
+    # Query PubChem by name
+    if pubchem_client:
+        click.echo("    → PubChem (by name): ", nl=False)
+        try:
+            results = pubchem_client.get_compounds_by_name(name)
+            if isinstance(results, list) and results:
+                click.echo(f"Found {len(results)} compound(s)")
+                result = results[0]
+                sources_data["pubchem_name"] = pubchem_to_dict(result, name)
+
+                # Extract synonyms
+                try:
+                    synonyms = pubchem_client.get_synonyms(result.CID)
+                    if isinstance(synonyms, list):
+                        sources_data["pubchem_name"]["synonyms"] = synonyms
+                except Exception:
+                    pass
+
+                # Mark as queried
+                queried_ids.add(f"PUBCHEM.COMPOUND:{result.CID}")
+            else:
+                click.echo("No results")
+        except Exception as e:
+            click.echo(f"ERROR: {e}")
+
+    # Query ChEBI by name
+    if chebi_client:
+        click.echo("    → ChEBI (by name): ", nl=False)
+        try:
+            chebi_result = chebi_client.search_exact(name)
+            if isinstance(chebi_result, ChEBISearchResult):
+                click.echo(f"Found {chebi_result.chebi_id}")
+                try:
+                    compound = chebi_client.get_compound(chebi_result.chebi_id)
+                    compound_dict = compound.to_dict() if isinstance(compound, ChEBICompound) else None
+                    sources_data["chebi_name"] = chebi_to_dict(chebi_result, compound_dict)
+                    queried_ids.add(chebi_result.chebi_id)
+                except Exception:
+                    sources_data["chebi_name"] = chebi_to_dict(chebi_result, None)
+                    queried_ids.add(chebi_result.chebi_id)
+            else:
+                click.echo("No exact match")
+        except Exception as e:
+            click.echo(f"ERROR: {e}")
+
+    # Query CAS by name
+    if cas_client:
+        click.echo("    → CAS (by name): ", nl=False)
+        try:
+            cas_results = cas_client.search_by_name(name)
+            if isinstance(cas_results, list) and cas_results:
+                cas_result = cas_results[0]
+                click.echo(f"Found {cas_result.rn} (mixture={cas_result.is_mixture})")
+                sources_data["cas_name"] = cas_to_dict(cas_result, name)
+                queried_ids.add(f"CAS:{cas_result.rn}")
+            else:
+                click.echo("No results")
+        except Exception as e:
+            click.echo(f"ERROR: {e}")
+
+    # Phase 2: Spider loop
+    click.echo(f"  Phase 2: Iterative spidering (max {max_iterations} iterations)")
+
+    while iteration < max_iterations:
+        iteration += 1
+        click.echo(f"    Iteration {iteration}:")
+
+        # Collect all CURIEs from current data
+        all_curies = set()
+        for data in sources_data.values():
+            all_curies.update(extract_all_curies(data))
+
+        # Find new IDs to query
+        new_ids = all_curies - queried_ids
+
+        if not new_ids:
+            click.echo("      No new IDs discovered, stopping spider")
+            break
+
+        click.echo(f"      Found {len(new_ids)} new IDs to normalize")
+
+        # Normalize all new IDs in batch
+        try:
+            norm_results = node_norm_client.normalize_batch(list(new_ids))
+        except Exception as e:
+            click.echo(f"      ERROR normalizing IDs: {e}")
+            break
+
+        new_discoveries = set()
+
+        for curie, norm_result in norm_results.items():
+            if not isinstance(norm_result, NormalizedNode):
+                continue
+
+            # Mark as queried
+            queried_ids.add(curie)
+
+            # Store normalization data
+            sources_data[f"node_norm_{curie}"] = node_norm_to_dict(norm_result)
+
+            # Extract discovered IDs from equivalent_ids
+            if hasattr(norm_result, "equivalent_ids") and norm_result.equivalent_ids:
+                for prefix, id_list in norm_result.equivalent_ids.items():
+                    if isinstance(id_list, list):
+                        for id_val in id_list:
+                            # Construct full CURIE
+                            if ":" in str(id_val):
+                                new_discoveries.add(str(id_val))
+                            else:
+                                new_discoveries.add(f"{prefix}:{id_val}")
+
+        # Query APIs for newly discovered IDs
+        ids_to_query = new_discoveries - queried_ids
+
+        if not ids_to_query:
+            click.echo("      No new API queries needed")
+            continue
+
+        click.echo(f"      Querying {len(ids_to_query)} IDs from APIs")
+
+        # Query ChEBI IDs
+        chebi_ids = [id for id in ids_to_query if id.startswith("CHEBI:")]
+        if chebi_ids and chebi_client:
+            click.echo(f"        → ChEBI: {len(chebi_ids)} IDs ", nl=False)
+            successes = 0
+            for chebi_id in chebi_ids:
+                try:
+                    compound = chebi_client.get_compound(chebi_id)
+                    if isinstance(compound, ChEBICompound):
+                        compound_dict = compound.to_dict()
+                        # Create a search result for chebi_to_dict
+                        search_result = ChEBISearchResult(
+                            chebi_id=chebi_id,
+                            name=compound.name or "",
+                            ascii_name=compound.ascii_name or "",
+                            definition=compound.definition or "",
+                            stars=compound.stars or 0,
+                            formula=compound.formula or "",
+                            mass=compound.mass or 0.0,
+                            score=0.0,
+                        )
+                        sources_data[f"chebi_{chebi_id}"] = chebi_to_dict(search_result, compound_dict)
+                        queried_ids.add(chebi_id)
+                        successes += 1
+                except Exception:
+                    pass
+            click.echo(f"({successes} succeeded)")
+
+        # Query PubChem CIDs
+        pubchem_ids = [id for id in ids_to_query if id.startswith("PUBCHEM.COMPOUND:")]
+        if pubchem_ids and pubchem_client:
+            click.echo(f"        → PubChem: {len(pubchem_ids)} CIDs ", nl=False)
+            successes = 0
+            for pc_id in pubchem_ids:
+                try:
+                    cid = int(pc_id.split(":")[1])
+                    result = pubchem_client.get_compound_by_cid(cid)  # type: ignore[assignment]
+                    if isinstance(result, CompoundResult):
+                        sources_data[f"pubchem_{cid}"] = pubchem_to_dict(result, name)
+
+                        # Get synonyms
+                        try:
+                            synonyms = pubchem_client.get_synonyms(cid)
+                            if isinstance(synonyms, list):
+                                sources_data[f"pubchem_{cid}"]["synonyms"] = synonyms
+                        except Exception:
+                            pass
+
+                        queried_ids.add(pc_id)
+                        successes += 1
+                except Exception:
+                    pass
+            click.echo(f"({successes} succeeded)")
+
+        # Query CAS RNs
+        cas_ids = [id for id in ids_to_query if id.startswith("CAS:")]
+        if cas_ids and cas_client:
+            click.echo(f"        → CAS: {len(cas_ids)} RNs ", nl=False)
+            successes = 0
+            for cas_id in cas_ids:
+                try:
+                    rn = cas_id.split(":")[1]
+                    result = cas_client.get_by_rn(rn)
+                    if isinstance(result, CASResult):
+                        sources_data[f"cas_{rn}"] = cas_to_dict(result, name)
+                        queried_ids.add(cas_id)
+                        successes += 1
+                except Exception:
+                    pass
+            click.echo(f"({successes} succeeded)")
+
+    if iteration >= max_iterations:
+        click.echo(f"      Reached maximum iterations ({max_iterations}), stopping")
+
+    # Phase 3: Consolidate
+    click.echo("  Phase 3: Consolidation")
+    click.echo(f"    Total sources: {len(sources_data)}")
+    click.echo(f"    Total IDs queried: {len(queried_ids)}")
+
+    # Merge synonyms across all sources
+    all_synonyms = merge_synonyms(sources_data)
+    if all_synonyms:
+        # Add merged synonyms to a consolidated record
+        sources_data["_consolidated_synonyms"] = {"synonyms": all_synonyms}
+        click.echo(f"    Total unique synonyms: {len(all_synonyms)}")
+
+    # Determine biolink category
+    category = determine_biolink_category(sources_data)
+    sources_data["_consolidated_category"] = {"biolink_category": category}
+    click.echo(f"    Biolink category: {category}")
+
+    return sources_data
 
 
 @click.command()
@@ -207,6 +535,12 @@ def node_norm_to_dict(result: NormalizedNode) -> dict[str, Any]:
     is_flag=True,
     help="Skip Node Normalization lookups",
 )
+@click.option(
+    "--max-spider-iterations",
+    type=int,
+    default=5,
+    help="Maximum spider iterations for iterative enrichment (default: 5)",
+)
 def main(
     input_file: Path,
     store_path: Path,
@@ -219,6 +553,7 @@ def main(
     no_chebi: bool,
     no_cas: bool,
     no_node_norm: bool,
+    max_spider_iterations: int,
 ) -> None:
     """Multi-source enrichment pipeline with EnrichmentStore.
 
@@ -298,6 +633,7 @@ def main(
             "monoisotopic_mass": 0.0,
             "charge": 0,
             "iupac_name": "dummy",
+            "synonyms": ["dummy"],
             "biological_roles": ["dummy"],
             "chemical_roles": ["dummy"],
             "application_roles": ["dummy"],
@@ -337,118 +673,69 @@ def main(
 
         stats["processed"] += 1
 
-        # Collect data from all sources into a single dict for proper entity resolution
-        # We'll track which sources contributed to the final record
-        sources_data: dict[str, dict[str, Any]] = {}
+        try:
+            # Use spider enrichment to iteratively discover and query all related IDs
+            sources_data = spider_enrich_ingredient(
+                name=name,
+                pubchem_client=pubchem_client if not no_pubchem else None,
+                chebi_client=chebi_client if not no_chebi else None,
+                cas_client=cas_client if not no_cas else None,
+                node_norm_client=node_norm_client,  # type: ignore[arg-type]
+                max_iterations=max_spider_iterations,
+            )
 
-        # 1. Query PubChem
-        if pubchem_client:
-            click.echo("  → PubChem: ", nl=False)
-            try:
-                results = pubchem_client.get_compounds_by_name(name)
-                if isinstance(results, list) and results:
-                    click.echo(f"Found {len(results)} compound(s)")
-                    # Take first result for now (could handle multiple)
-                    result = results[0]
-                    sources_data["pubchem"] = pubchem_to_dict(result, name)
-                    stats["pubchem_success"] += 1
-                else:
-                    click.echo("No results")
-            except Exception as e:
-                click.echo(f"ERROR: {e}")
-                logger.debug(f"PubChem error for {name}", exc_info=True)
-                stats["errors"] += 1
+            # Update stats based on sources found
+            if any(k.startswith("pubchem") for k in sources_data):
+                stats["pubchem_success"] += 1
+            if any(k.startswith("chebi") for k in sources_data):
+                stats["chebi_success"] += 1
+            if any(k.startswith("cas") for k in sources_data):
+                stats["cas_success"] += 1
+            if any(k.startswith("node_norm") for k in sources_data):
+                stats["node_norm_success"] += 1
 
-        # 2. Query ChEBI
-        if chebi_client:
-            click.echo("  → ChEBI: ", nl=False)
-            try:
-                chebi_result = chebi_client.search_exact(name)
-                if isinstance(chebi_result, ChEBISearchResult):
-                    click.echo(f"Found {chebi_result.chebi_id}")
-                    # Get full compound details for roles
-                    compound = chebi_client.get_compound(chebi_result.chebi_id)
-                    compound_dict = compound.to_dict() if isinstance(compound, ChEBICompound) else None
-                    sources_data["chebi"] = chebi_to_dict(chebi_result, compound_dict)
-                    stats["chebi_success"] += 1
-                else:
-                    click.echo("No exact match")
-            except Exception as e:
-                click.echo(f"ERROR: {e}")
-                logger.debug(f"ChEBI error for {name}", exc_info=True)
-                stats["errors"] += 1
+            # Store all source data with provenance
+            if sources_data:
+                # Merge all fields from all sources
+                merged_data: dict[str, Any] = {}
 
-        # 3. Query CAS
-        if cas_client:
-            click.echo("  → CAS: ", nl=False)
-            try:
-                cas_results = cas_client.search_by_name(name)
-                if isinstance(cas_results, list) and cas_results:
-                    cas_result = cas_results[0]
-                    click.echo(f"Found {cas_result.rn} (mixture={cas_result.is_mixture})")
-                    sources_data["cas"] = cas_to_dict(cas_result, name)
-                    stats["cas_success"] += 1
-                else:
-                    click.echo("No results")
-            except Exception as e:
-                click.echo(f"ERROR: {e}")
-                logger.debug(f"CAS error for {name}", exc_info=True)
-                stats["errors"] += 1
+                for source, data in sources_data.items():
+                    # Skip internal consolidation records during merging
+                    if source.startswith("_consolidated"):
+                        continue
 
-        # Merge all source data into a single record for this ingredient
-        # This ensures proper entity resolution and one record per ingredient
-        if sources_data:
-            # Start with the first source's data as base
-            merged_data: dict[str, Any] = {}
+                    for key, value in data.items():
+                        if value is not None and key not in merged_data:
+                            merged_data[key] = value
 
-            # Merge all fields from all sources
-            for _source, data in sources_data.items():
-                for key, value in data.items():
-                    if value is not None and key not in merged_data:
-                        merged_data[key] = value
+                # Add consolidated synonyms to merged_data
+                if "_consolidated_synonyms" in sources_data:
+                    merged_synonyms = sources_data["_consolidated_synonyms"].get("synonyms")
+                    if merged_synonyms:
+                        merged_data["synonyms"] = merged_synonyms
 
-            # Now upsert the merged data for each source to track provenance
-            # This ensures the store has proper source_records tracking
-            for source, data in sources_data.items():
-                # Upsert with the merged key fields so all sources update the same record
-                data_with_keys = {**data}
-                # Add the InChIKey and CAS RN from merged data if not present in source data
-                if "inchikey" not in data_with_keys and merged_data.get("inchikey"):
-                    data_with_keys["inchikey"] = merged_data["inchikey"]
-                if "cas_rn" not in data_with_keys and merged_data.get("cas_rn"):
-                    data_with_keys["cas_rn"] = merged_data["cas_rn"]
+                # Upsert for each source to track provenance
+                for source, data in sources_data.items():
+                    # Skip internal consolidation records
+                    if source.startswith("_consolidated"):
+                        continue
 
-                store.upsert_ingredient(data_with_keys, source=source, query=name)
+                    data_with_keys = {**data}
+                    # Add composite key fields from merged data
+                    if "inchikey" not in data_with_keys and merged_data.get("inchikey"):
+                        data_with_keys["inchikey"] = merged_data["inchikey"]
+                    if "cas_rn" not in data_with_keys and merged_data.get("cas_rn"):
+                        data_with_keys["cas_rn"] = merged_data["cas_rn"]
+                    # Add consolidated synonyms to each record
+                    if "synonyms" not in data_with_keys and merged_data.get("synonyms"):
+                        data_with_keys["synonyms"] = merged_data["synonyms"]
 
-        # 4. Query Node Normalization (if we collected any IDs)
-        if node_norm_client and sources_data:
-            # Check what IDs we got from any source
-            chebi_id = None
-            pubchem_cid = None
-            for source_data in sources_data.values():
-                if not chebi_id and source_data.get("chebi_id"):
-                    chebi_id = source_data["chebi_id"]
-                if not pubchem_cid and source_data.get("pubchem_cid"):
-                    pubchem_cid = source_data["pubchem_cid"]
+                    store.upsert_ingredient(data_with_keys, source=source, query=name)
 
-            if chebi_id or pubchem_cid:
-                click.echo("  → Node Normalization: ", nl=False)
-                try:
-                    query_id = chebi_id if chebi_id else f"PUBCHEM.COMPOUND:{pubchem_cid}"
-                    node_norm_result = node_norm_client.normalize(query_id)
-
-                    if isinstance(node_norm_result, NormalizedNode):
-                        click.echo(f"Resolved {len(node_norm_result.equivalent_ids)} IDs")
-                        data = node_norm_to_dict(node_norm_result)
-                        if data:  # Only upsert if we got new data
-                            store.upsert_ingredient(data, source="node_normalization", query=query_id)
-                            stats["node_norm_success"] += 1
-                    else:
-                        click.echo("No normalization found")
-                except Exception as e:
-                    click.echo(f"ERROR: {e}")
-                    logger.debug(f"Node Normalization error for {name}", exc_info=True)
-                    stats["errors"] += 1
+        except Exception as e:
+            click.echo(f"  ERROR during enrichment: {e}")
+            logger.debug(f"Enrichment error for {name}", exc_info=True)
+            stats["errors"] += 1
 
     # Print statistics
     click.echo("\n" + "=" * 60)

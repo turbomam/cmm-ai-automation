@@ -491,6 +491,16 @@ class EnrichmentStore:
                         continue  # Skip internal keys
                     if value is not None and not merged.get(key):
                         merged[key] = value
+                    # Prefer clean formulas over HTML-formatted ones
+                    elif key == "chemical_formula" and value and merged.get(key):
+                        existing = merged[key]
+                        # If existing has HTML but new value doesn't, prefer new value
+                        if (
+                            ("<sub>" in existing or "<sup>" in existing)
+                            and "<sub>" not in value
+                            and "<sup>" not in value
+                        ):
+                            merged[key] = value
                     # Merge source_records
                     if key == "source_records" and value:
                         existing_sources = merged.get("source_records", [])
@@ -505,6 +515,14 @@ class EnrichmentStore:
                             if conflict not in existing_conflicts:
                                 existing_conflicts.append(conflict)
                         merged["conflicts"] = existing_conflicts
+                    # Merge synonyms
+                    if key == "synonyms" and value:
+                        existing_synonyms = merged.get("synonyms", [])
+                        if isinstance(value, list):
+                            for syn in value:
+                                if syn not in existing_synonyms:
+                                    existing_synonyms.append(syn)
+                        merged["synonyms"] = sorted(existing_synonyms)
 
             consolidated_records.append(merged)
 
@@ -557,9 +575,20 @@ class EnrichmentStore:
                 xrefs.append(f"DRUGBANK:{record['drugbank_id']}")
 
             # Build node attributes with all available properties
+            # Determine category from is_mixture field
+            # Handle both boolean and string values from DuckDB
+            is_mixture = record.get("is_mixture")
+            if is_mixture is True or is_mixture == "true":
+                category = ["biolink:ChemicalMixture"]
+            elif is_mixture is False or is_mixture == "false":
+                category = ["biolink:SmallMolecule"]
+            else:
+                # Default if unknown
+                category = ["biolink:SmallMolecule"]
+
             node_attrs: dict[str, Any] = {
                 "name": record.get("name", ""),
-                "category": ["biolink:SmallMolecule"],  # TODO: Use is_mixture to classify
+                "category": category,
                 "provided_by": ["cmm-ai-automation"],
             }
 
@@ -594,6 +623,8 @@ class EnrichmentStore:
                 node_attrs["inchi"] = record["inchi"]
             if record.get("iupac_name"):
                 node_attrs["iupac_name"] = record["iupac_name"]
+            if record.get("synonyms"):
+                node_attrs["synonyms"] = record["synonyms"]
 
             # Physical properties
             if record.get("molecular_mass"):
