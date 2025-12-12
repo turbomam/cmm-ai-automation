@@ -1,0 +1,1592 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/best-practices/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../elements/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Best Practices - cmm-ai-automation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+
+      
+    
+<script src="../assets/pymdownx-extras/material-extra-theme-2ek1P7jT.js" type="text/javascript"></script>
+<script src="../assets/pymdownx-extras/material-extra-3rdparty-BUCF4rjN.js" type="text/javascript"></script>
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+    
+      <link rel="stylesheet" href="../assets/pymdownx-extras/extra-c6ab11540a.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#best-practices" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+<header class="md-header" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="header.title"
+  >
+    <a
+      href="https://turbomam.github.io/cmm-ai-automation/"
+      title="cmm-ai-automation"
+      class="md-header__button md-logo"
+      aria-label="cmm-ai-automation"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            cmm-ai-automation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Best Practices
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      <div class="md-header-nav__scheme md-header-nav__button md-source__icon md-icon">
+          <a
+            href="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+          </a>
+           <a
+            href="javascript:toggleScheme();"
+            title="Unknown scheme"
+            class="unknown-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.07 11.25-.9.92C13.45 12.89 13 13.5 13 15h-2v-.5c0-1.11.45-2.11 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2 2 0 0 0-2-2 2 2 0 0 0-2 2H8a4 4 0 0 1 4-4 4 4 0 0 1 4 4 3.2 3.2 0 0 1-.93 2.25M13 19h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg>
+          </a>
+      </div>
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="cmm-ai-automation" class="md-nav__button md-logo" aria-label="cmm-ai-automation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    cmm-ai-automation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#schema-first-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema-First Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#explicit-source-authoritativeness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explicit Source Authoritativeness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composite-keys-for-entity-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composite Keys for Entity Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provenance-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provenance Tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engineering-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Engineering Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modern-python-toolchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modern Python Toolchain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Design
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifier-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifier Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-quality-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Quality Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Quality Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-before-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Before Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conflict-detection-and-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conflict Detection and Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exact-matching-for-identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exact Matching for Identifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-integration-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Integration Guardrails
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI Integration Guardrails">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-commit-unverified-ai-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Commit Unverified AI Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structured-prompts-with-schema-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structured Prompts with Schema Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#citation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Citation Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diataxis-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diataxis Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples-as-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples as Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#community-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Community Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#biolink-model-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biolink Model Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obo-foundry-ontologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OBO Foundry Ontologies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kgx-format-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KGX Format Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#schema-first-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema-First Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#explicit-source-authoritativeness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explicit Source Authoritativeness
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#composite-keys-for-entity-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Composite Keys for Entity Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#provenance-tracking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provenance Tracking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#engineering-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Engineering Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#modern-python-toolchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modern Python Toolchain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cli-design" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Design
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#identifier-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifier Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-quality-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Quality Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Quality Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#validation-before-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Before Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conflict-detection-and-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conflict Detection and Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exact-matching-for-identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exact Matching for Identifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ai-integration-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI Integration Guardrails
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AI Integration Guardrails">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#never-commit-unverified-ai-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Never Commit Unverified AI Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#structured-prompts-with-schema-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Structured Prompts with Schema Context
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#citation-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Citation Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Documentation Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#diataxis-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Diataxis Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#examples-as-tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Examples as Tests
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#community-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Community Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Community Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#biolink-model-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biolink Model Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obo-foundry-ontologies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OBO Foundry Ontologies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kgx-format-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KGX Format Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="best-practices">Best Practices</h1>
+<p>This document describes the engineering, data modeling, and community practices followed in cmm-ai-automation. These align with <a href="https://github.com/berkeleybop/bbop-skills">BBOP/Mungall group standards</a> and represent modern approaches to knowledge graph development.</p>
+<h2 id="design-principles">Design Principles</h2>
+<h3 id="schema-first-development">Schema-First Development</h3>
+<p>All data structures are defined in <a href="https://linkml.io/">LinkML schemas</a> before writing any code. This ensures:</p>
+<ul>
+<li><strong>Type safety</strong>: Auto-generated Pydantic models catch errors at development time</li>
+<li><strong>Documentation</strong>: Schema serves as machine-readable documentation</li>
+<li><strong>Validation</strong>: Data is validated against schema before storage</li>
+<li><strong>Interoperability</strong>: Standard formats (JSON-LD, RDF, TSV) generated automatically</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="c1"># src/cmm_ai_automation/schema/cmm_ai_automation.yaml</span>
+<span class="nt">EnrichedIngredient</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">class_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biolink:SmallMolecule</span>
+<span class="w">  </span><span class="nt">slots</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchikey</span><span class="w">           </span><span class="c1"># Structural identity</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cas_rn</span><span class="w">             </span><span class="c1"># Registration identity</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_records</span><span class="w">     </span><span class="c1"># Provenance tracking</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conflicts</span><span class="w">          </span><span class="c1"># Data conflict documentation</span>
+</code></pre></div>
+<p><strong>Contrast with legacy approaches</strong>: Imperative code that builds data structures directly without schema validation leads to inconsistent data, undocumented fields, and runtime errors.</p>
+<h3 id="explicit-source-authoritativeness">Explicit Source Authoritativeness</h3>
+<p>Each data source is explicitly designated as authoritative for specific fields:</p>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Authoritative For</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ChEBI</td>
+<td><code>chebi_id</code>, biological/chemical roles</td>
+<td>OBO Foundry ontology with expert curation</td>
+</tr>
+<tr>
+<td>CAS Common Chemistry</td>
+<td><code>cas_rn</code></td>
+<td>Official registry operator</td>
+</tr>
+<tr>
+<td>PubChem</td>
+<td><code>pubchem_cid</code>, structure data</td>
+<td>NIH's authoritative compound database</td>
+</tr>
+<tr>
+<td>MediaDive</td>
+<td><code>mediadive_id</code></td>
+<td>Primary growth media database</td>
+</tr>
+</tbody>
+</table>
+<p>When sources conflict, the authoritative source wins automatically. Conflicts are logged with full provenance for review.</p>
+<p><strong>Contrast with legacy approaches</strong>: Accepting the first or last value encountered, or silently overwriting, leads to data quality issues that are impossible to debug.</p>
+<h3 id="composite-keys-for-entity-resolution">Composite Keys for Entity Resolution</h3>
+<p>Chemical entities are identified by the <code>(InChIKey, CAS-RN)</code> tuple:</p>
+<div class="highlight"><pre><span></span><code>CSNNHWWHGAXBCP-UHFFFAOYSA-L|7487-88-9  # Magnesium sulfate
+WQZGKKKJIJFFOK-GASJEMHNSA-N|50-99-7     # D-glucose
+</code></pre></div>
+<ul>
+<li><strong>InChIKey</strong>: What the molecule IS (structural identity)</li>
+<li><strong>CAS-RN</strong>: How the molecule is NAMED (registration identity)</li>
+</ul>
+<p>This resolves ambiguity from synonyms, hydration states, and trivial names.</p>
+<p><strong>Contrast with legacy approaches</strong>: Using string matching on names, or single identifiers, leads to incorrect entity merging (different compounds with same name) or missed merging (same compound with different names).</p>
+<h3 id="provenance-tracking">Provenance Tracking</h3>
+<p>Every piece of data records its source:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">SourceRecord</span><span class="p">:</span>
+    <span class="n">source_name</span><span class="p">:</span> <span class="n">DataSource</span>      <span class="c1"># e.g., &quot;chebi&quot;, &quot;pubchem&quot;</span>
+    <span class="n">source_id</span><span class="p">:</span> <span class="nb">str</span>               <span class="c1"># ID returned by that source</span>
+    <span class="n">source_query</span><span class="p">:</span> <span class="nb">str</span>            <span class="c1"># What we searched for</span>
+    <span class="n">source_timestamp</span><span class="p">:</span> <span class="n">datetime</span>   <span class="c1"># When retrieved</span>
+    <span class="n">source_fields</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>     <span class="c1"># Which fields came from this source</span>
+</code></pre></div>
+<p>This enables:
+- Audit trails for regulatory compliance
+- Debugging data quality issues
+- Updating stale data from specific sources</p>
+<p><strong>Contrast with legacy approaches</strong>: "Curated" data with no citations or provenance cannot be verified, updated, or trusted.</p>
+<h2 id="engineering-practices">Engineering Practices</h2>
+<h3 id="modern-python-toolchain">Modern Python Toolchain</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>uv</strong></td>
+<td>Dependency management</td>
+<td>Fast, deterministic, replaces pip/poetry/pipenv</td>
+</tr>
+<tr>
+<td><strong>ruff</strong></td>
+<td>Linting + formatting</td>
+<td>Single fast tool replaces flake8/black/isort</td>
+</tr>
+<tr>
+<td><strong>mypy</strong></td>
+<td>Type checking</td>
+<td>Catches errors before runtime</td>
+</tr>
+<tr>
+<td><strong>pytest</strong></td>
+<td>Testing</td>
+<td>Parametrize, fixtures, markers</td>
+</tr>
+<tr>
+<td><strong>pre-commit</strong></td>
+<td>Git hooks</td>
+<td>Enforce quality on every commit</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Contrast with legacy approaches</strong>: Using pip with loose requirements, no type checking, and manual style enforcement leads to "works on my machine" problems and inconsistent code quality.</p>
+<h3 id="test-separation">Test Separation</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Unit tests (fast, no network) - run by default</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_enriched_ingredient_creation</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test dataclass instantiation.&quot;&quot;&quot;</span>
+    <span class="n">ing</span> <span class="o">=</span> <span class="n">EnrichedIngredient</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;glucose&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">ing</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;glucose&quot;</span>
+
+<span class="c1"># Integration tests (slow, real APIs) - marked and skipped by default</span>
+<span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">integration</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">test_chebi_api_glucose</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Test real ChEBI API call.&quot;&quot;&quot;</span>
+    <span class="n">client</span> <span class="o">=</span> <span class="n">ChEBIClient</span><span class="p">()</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_compound</span><span class="p">(</span><span class="s2">&quot;CHEBI:17234&quot;</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;D-glucose&quot;</span>
+</code></pre></div>
+<p>Run unit tests: <code>uv run pytest</code> (default)
+Run integration tests: <code>uv run pytest -m integration</code></p>
+<p><strong>Contrast with legacy approaches</strong>: Mixing unit and integration tests causes slow CI, flaky tests from network issues, and developers avoiding running tests locally.</p>
+<h3 id="cli-design">CLI Design</h3>
+<p>CLIs are thin wrappers over library code:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-i&quot;</span><span class="p">,</span> <span class="s2">&quot;--input&quot;</span><span class="p">,</span> <span class="s2">&quot;input_file&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">exists</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-o&quot;</span><span class="p">,</span> <span class="s2">&quot;--output&quot;</span><span class="p">,</span> <span class="s2">&quot;output_file&quot;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="n">click</span><span class="o">.</span><span class="n">Path</span><span class="p">(),</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;-f&quot;</span><span class="p">,</span> <span class="s2">&quot;--format&quot;</span><span class="p">,</span> <span class="s2">&quot;input_format&quot;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s2">&quot;tsv&quot;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">enrich</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">input_format</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enrich ingredients from TSV file.&quot;&quot;&quot;</span>
+    <span class="c1"># CLI just handles I/O, delegates to library</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">load_data</span><span class="p">(</span><span class="n">input_file</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="n">input_format</span><span class="p">)</span>
+    <span class="n">enriched</span> <span class="o">=</span> <span class="n">enrich_ingredients</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>  <span class="c1"># Core logic is testable</span>
+    <span class="n">write_output</span><span class="p">(</span><span class="n">enriched</span><span class="p">,</span> <span class="n">output_file</span><span class="p">)</span>
+</code></pre></div>
+<p>Standard options follow <a href="https://clig.dev/">clig</a> conventions:
+- <code>-i/--input</code>, <code>-o/--output</code> (default stdout)
+- <code>-f/--format</code>, <code>-O/--output-format</code>
+- <code>-v/-vv</code> for verbosity</p>
+<p><strong>Contrast with legacy approaches</strong>: Putting business logic in CLI functions makes it untestable. Non-standard option names confuse users.</p>
+<h3 id="identifier-handling">Identifier Handling</h3>
+<p>All identifiers use CURIEs (Compact URIs) with proper prefix mapping:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">curies</span><span class="w"> </span><span class="kn">import</span> <span class="n">Converter</span>
+
+<span class="n">converter</span> <span class="o">=</span> <span class="n">Converter</span><span class="o">.</span><span class="n">from_prefix_map</span><span class="p">({</span>
+    <span class="s2">&quot;CHEBI&quot;</span><span class="p">:</span> <span class="s2">&quot;http://purl.obolibrary.org/obo/CHEBI_&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;CAS&quot;</span><span class="p">:</span> <span class="s2">&quot;http://identifiers.org/cas/&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;PUBCHEM.COMPOUND&quot;</span><span class="p">:</span> <span class="s2">&quot;http://identifiers.org/pubchem.compound/&quot;</span><span class="p">,</span>
+<span class="p">})</span>
+
+<span class="c1"># Expand: CHEBI:17234 -&gt; http://purl.obolibrary.org/obo/CHEBI_17234</span>
+<span class="c1"># Compress: http://purl.obolibrary.org/obo/CHEBI_17234 -&gt; CHEBI:17234</span>
+</code></pre></div>
+<p><strong>Contrast with legacy approaches</strong>:
+- Mixing URIs and CURIEs inconsistently
+- IDs with spaces or extra colons (invalid CURIEs)
+- Prefix matching instead of exact matching (CHEBI:17234 matching CHEBI:172340)</p>
+<h2 id="data-quality-patterns">Data Quality Patterns</h2>
+<h3 id="validation-before-storage">Validation Before Storage</h3>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">store_enriched_ingredient</span><span class="p">(</span><span class="n">ingredient</span><span class="p">:</span> <span class="n">EnrichedIngredient</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="c1"># Schema validation via Pydantic</span>
+    <span class="n">validated</span> <span class="o">=</span> <span class="n">EnrichedIngredientModel</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">ingredient</span><span class="p">)</span>
+
+    <span class="c1"># Business rule validation</span>
+    <span class="k">if</span> <span class="n">validated</span><span class="o">.</span><span class="n">chebi_id</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">validated</span><span class="o">.</span><span class="n">chebi_id</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;CHEBI:&quot;</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid ChEBI ID format: </span><span class="si">{</span><span class="n">validated</span><span class="o">.</span><span class="n">chebi_id</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">store</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">validated</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Contrast with legacy approaches</strong>: Storing whatever comes in and hoping downstream consumers can handle inconsistencies.</p>
+<h3 id="conflict-detection-and-resolution">Conflict Detection and Resolution</h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">DataConflict</span><span class="p">:</span>
+    <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span>              <span class="c1"># Which field has conflict</span>
+    <span class="n">primary_source</span><span class="p">:</span> <span class="n">DataSource</span>   <span class="c1"># Authoritative source</span>
+    <span class="n">primary_value</span><span class="p">:</span> <span class="nb">str</span>           <span class="c1"># Value from authoritative source</span>
+    <span class="n">conflicting_source</span><span class="p">:</span> <span class="n">DataSource</span>
+    <span class="n">conflicting_value</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">resolution</span><span class="p">:</span> <span class="n">ConflictResolution</span>  <span class="c1"># AUTHORITATIVE_WINS, MANUAL_REVIEW, etc.</span>
+</code></pre></div>
+<p>Conflicts are recorded, not silently resolved. This allows:
+- Review of potential data quality issues
+- Override of automatic resolution when needed
+- Audit trails for data decisions</p>
+<p><strong>Contrast with legacy approaches</strong>: Last-write-wins or first-write-wins with no record of what was overwritten.</p>
+<h3 id="exact-matching-for-identifiers">Exact Matching for Identifiers</h3>
+<p>When querying by identifier, use exact matching:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># CORRECT: Exact match</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_by_chebi_id</span><span class="p">(</span><span class="n">chebi_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Ingredient</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;chebi_id&quot;</span><span class="p">:</span> <span class="n">chebi_id</span><span class="p">})</span>
+
+<span class="c1"># WRONG: Prefix/substring match can return wrong entities</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_by_chebi_id_broken</span><span class="p">(</span><span class="n">chebi_id</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Ingredient</span><span class="p">]:</span>
+    <span class="c1"># This would match CHEBI:17234, CHEBI:172340, CHEBI:1723499...</span>
+    <span class="k">return</span> <span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">({</span><span class="s2">&quot;chebi_id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$regex&quot;</span><span class="p">:</span> <span class="n">chebi_id</span><span class="p">}})</span>
+</code></pre></div>
+<p><strong>Contrast with legacy approaches</strong>: Using regex or contains() for ID lookups leads to spurious matches (see <a href="https://github.com/CultureBotAI/CMM-AI/issues/52">CMM-AI#52</a> for a real example where CHEBI:17790 matched CHEBI:177907, CHEBI:177901, etc.).</p>
+<h2 id="ai-integration-guardrails">AI Integration Guardrails</h2>
+<h3 id="never-commit-unverified-ai-output">Never Commit Unverified AI Output</h3>
+<p>AI-generated content must be verified before committing:</p>
+<ul>
+<li>Publication DOIs: Verify they resolve</li>
+<li>Chemical identifiers: Verify against authoritative APIs</li>
+<li>Code: Run tests, check for hallucinated imports</li>
+</ul>
+<p><strong>Contrast with legacy approaches</strong>: Committing AI "curated" data without verification leads to hallucinated entries (see <a href="https://github.com/CultureBotAI/CMM-AI/issues/36">CMM-AI#36</a> for fabricated arXiv/bioRxiv URLs that were committed).</p>
+<h3 id="structured-prompts-with-schema-context">Structured Prompts with Schema Context</h3>
+<p>When using AI for data curation, provide schema context:</p>
+<div class="highlight"><pre><span></span><code><span class="n">prompt</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Extract ingredient data from this text. Return JSON matching this schema:</span>
+
+<span class="si">{</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">EnrichedIngredient</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">(),</span><span class="w"> </span><span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="si">}</span>
+
+<span class="s2">Text: </span><span class="si">{</span><span class="n">input_text</span><span class="si">}</span>
+<span class="s2">&quot;&quot;&quot;</span>
+</code></pre></div>
+<p><strong>Contrast with legacy approaches</strong>: Freeform prompts that produce inconsistent output structures.</p>
+<h3 id="citation-requirements">Citation Requirements</h3>
+<p>Any "curated" data must include citations:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CuratedIngredient</span><span class="p">:</span>
+    <span class="n">name</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">cas_rn</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">source_doi</span><span class="p">:</span> <span class="nb">str</span>       <span class="c1"># Required: citation for this data</span>
+    <span class="n">curator_notes</span><span class="p">:</span> <span class="nb">str</span>    <span class="c1"># Why this mapping was made</span>
+</code></pre></div>
+<p><strong>Contrast with legacy approaches</strong>: "Curated" data with no source attribution cannot be verified or updated.</p>
+<h2 id="documentation-standards">Documentation Standards</h2>
+<h3 id="diataxis-framework">Diataxis Framework</h3>
+<p>Documentation follows the <a href="https://diataxis.fr/">Diataxis framework</a>:</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tutorial</strong></td>
+<td>Learning-oriented</td>
+<td>"Getting started with ingredient enrichment"</td>
+</tr>
+<tr>
+<td><strong>How-to</strong></td>
+<td>Problem-oriented</td>
+<td>"How to add a new data source"</td>
+</tr>
+<tr>
+<td><strong>Reference</strong></td>
+<td>Information-oriented</td>
+<td>API documentation, schema reference</td>
+</tr>
+<tr>
+<td><strong>Explanation</strong></td>
+<td>Understanding-oriented</td>
+<td>This best practices document</td>
+</tr>
+</tbody>
+</table>
+<h3 id="examples-as-tests">Examples as Tests</h3>
+<p>Code examples in documentation should be tested:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">enrich_ingredient</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">EnrichedIngredient</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enrich an ingredient by name.</span>
+
+<span class="sd">    Example:</span>
+<span class="sd">        &gt;&gt;&gt; result = enrich_ingredient(&quot;glucose&quot;)</span>
+<span class="sd">        &gt;&gt;&gt; result.chebi_id</span>
+<span class="sd">        &#39;CHEBI:17234&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># Doctest runs as part of test suite</span>
+</code></pre></div>
+<h2 id="community-standards">Community Standards</h2>
+<h3 id="biolink-model-alignment">Biolink Model Alignment</h3>
+<p>All entities use <a href="https://biolink.github.io/biolink-model/">Biolink Model</a> categories:</p>
+<table>
+<thead>
+<tr>
+<th>Entity</th>
+<th>Biolink Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chemicals</td>
+<td><code>biolink:SmallMolecule</code></td>
+</tr>
+<tr>
+<td>Organisms</td>
+<td><code>biolink:OrganismTaxon</code></td>
+</tr>
+<tr>
+<td>Growth media</td>
+<td><code>biolink:ChemicalMixture</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="obo-foundry-ontologies">OBO Foundry Ontologies</h3>
+<p>Use OBO Foundry ontologies for semantic annotation:</p>
+<ul>
+<li><strong>ChEBI</strong>: Chemical entities</li>
+<li><strong>NCBITaxon</strong>: Organisms</li>
+<li><strong>ENVO</strong>: Environments</li>
+<li><strong>OBI</strong>: Assays and protocols</li>
+</ul>
+<h3 id="kgx-format-compliance">KGX Format Compliance</h3>
+<p>Knowledge graph exports follow <a href="https://github.com/biolink/kgx">KGX</a> format:</p>
+<ul>
+<li>Valid CURIEs for all identifiers</li>
+<li>Biolink categories and predicates</li>
+<li>Rich edge provenance (knowledge_source, primary_knowledge_source)</li>
+</ul>
+<p><strong>Contrast with legacy approaches</strong>: Custom formats that require format conversion, inconsistent CURIEs (spaces, extra colons), missing provenance (see <a href="https://github.com/Knowledge-Graph-Hub/kg-microbe/issues/430">kg-microbe#430</a> for examples of invalid CURIEs).</p>
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://github.com/turbomam/cmm-ai-automation/blob/main/SKILL.md">SKILL.md</a> - BBOP github-repo-skill guidelines</li>
+<li><a href="../architecture/">Architecture</a> - Technical architecture details</li>
+<li><a href="https://linkml.io/">LinkML</a> - Schema language documentation</li>
+<li><a href="https://biolink.github.io/biolink-model/">Biolink Model</a> - Standard categories and predicates</li>
+<li><a href="https://clig.dev/">clig</a> - CLI design guidelines</li>
+<li><a href="https://diataxis.fr/">Diataxis</a> - Documentation framework</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        
+
+<footer class="md-footer">
+  
+    <nav
+      class="md-footer__inner md-grid"
+      aria-label="footer.title"
+    >
+      
+        <a
+          href=".."
+          class="md-footer__link md-footer__link--prev"
+          rel="prev"
+        >
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Home
+            </div>
+          </div>
+        </a>
+      
+      
+        <a
+          href="../elements/"
+          class="md-footer__link md-footer__link--next"
+          rel="next"
+        >
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              Schema
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        with emoji by
+        <a href="https://github.com/twitter/twemoji" target="_blank" rel="noopener">
+          Twemoji
+        </a>
+      </div>
+      
+<div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "header.autohide", "navigation.expand", "navigation.instant", "navigation.instant.progress", "navigation.tracking", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../assets/pymdownx-extras/extra-loader-B5CKpNQx.js"></script>
+      
+    
+  </body>
+</html>
