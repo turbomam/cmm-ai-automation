@@ -79,9 +79,15 @@ prefixes:
   LMG:
     prefix_prefix: LMG
     prefix_reference: https://bccm.belspo.be/catalogues/lmg-strain-details?NUM=
-  bacdive.strain:
-    prefix_prefix: bacdive.strain
+  bacdive_strain:
+    prefix_prefix: bacdive_strain
     prefix_reference: https://bacdive.dsmz.de/strain/
+  GCA:
+    prefix_prefix: GCA
+    prefix_reference: http://identifiers.org/insdc.gca/
+  GCF:
+    prefix_prefix: GCF
+    prefix_reference: http://identifiers.org/insdc.gcf/
   METPO:
     prefix_prefix: METPO
     prefix_reference: http://purl.obolibrary.org/obo/METPO_
@@ -2273,7 +2279,8 @@ classes:
   Genome:
     name: Genome
     id_prefixes:
-    - cmm
+    - GCA
+    - GCF
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/Genome
     description: A genome assembly from NCBI GenBank/RefSeq or other sources. Represents
       a sequenced and assembled genome.
@@ -2302,7 +2309,7 @@ classes:
     name: Strain
     id_prefixes:
     - NCBITaxon
-    - bacdive.strain
+    - bacdive_strain
     - DSMZ
     - ATCC
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/Strain
@@ -2432,7 +2439,7 @@ classes:
     tree_root: true
 metamodel_version: 1.7.0
 source_file: cmm_ai_automation.yaml
-source_file_date: '2025-12-16T21:15:17'
-source_file_size: 35560
-generation_date: '2025-12-16T21:15:30'
+source_file_date: '2025-12-16T23:14:17'
+source_file_size: 35703
+generation_date: '2025-12-16T23:14:28'
 
