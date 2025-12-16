@@ -105,7 +105,7 @@ def score_name_quality(name: str) -> int:
         score -= 25
 
     # Bonus for capitalized first letter (proper name)
-    if name[0].isupper() and name[1:].islower():
+    if name and name[0].isupper() and name[1:].islower():
         score += 5
 
     return score

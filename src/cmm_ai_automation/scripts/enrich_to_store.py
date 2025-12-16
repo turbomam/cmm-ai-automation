@@ -297,8 +297,12 @@ def spider_enrich_ingredient(
                     synonyms = pubchem_client.get_synonyms(result.CID)
                     if isinstance(synonyms, list):
                         sources_data["pubchem_name"]["synonyms"] = synonyms
-                except Exception:
-                    pass  # Synonyms are optional; continue enrichment without them
+                except Exception as e:
+                    logger.debug(
+                        "Failed to fetch PubChem synonyms for CID %s: %s",
+                        getattr(result, "CID", "unknown"),
+                        e,
+                    )  # Synonyms are optional; continue enrichment
 
                 # Mark as queried
                 queried_ids.add(f"PUBCHEM.COMPOUND:{result.CID}")

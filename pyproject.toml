@@ -37,6 +37,7 @@ dependencies = [
   "deepdiff>=8.6.1",
   "urllib3>=2.6.0",
   "pyarrow>=17.0.0",
+  "filelock>=3.20.1",  # CVE-2025-68146 fix
 ]
 
 [dependency-groups]
@@ -84,9 +85,9 @@ testpaths = ["tests"]
 markers = [
     "integration: marks tests as integration tests (require network access)",
 ]
-# Skip integration tests by default (some APIs block CI IPs)
-# Run with: pytest -m integration --run-integration to include them
-addopts = "-m 'not integration'"
+# Run all tests including integration tests against public APIs
+# If specific tests fail in CI due to rate limiting, mark them selectively
+addopts = ""
 
 # Ref.: https://github.com/codespell-project/codespell
 [tool.codespell]
