@@ -632,6 +632,14 @@ for knowledge graph generation.</p>
 <td>A chemical entity enriched with data from multiple sources</td>
 </tr>
 <tr>
+<td><a href="Genome/">Genome</a></td>
+<td>A genome assembly from NCBI GenBank/RefSeq or other sources</td>
+</tr>
+<tr>
+<td><a href="GrowthPreference/">GrowthPreference</a></td>
+<td>Reified relationship: a strain's growth in a specific medium</td>
+</tr>
+<tr>
 <td><a href="IngredientComponent/">IngredientComponent</a></td>
 <td>Reified relationship: an ingredient as used in a mixture, with concentration ...</td>
 </tr>
@@ -663,6 +671,14 @@ for knowledge graph generation.</p>
 <td><a href="SourceRecord/">SourceRecord</a></td>
 <td>Tracks the provenance of data from a specific source</td>
 </tr>
+<tr>
+<td><a href="Strain/">Strain</a></td>
+<td>A microbial strain enriched with data from multiple sources</td>
+</tr>
+<tr>
+<td><a href="Taxon/">Taxon</a></td>
+<td>A taxonomic entity from NCBI Taxonomy</td>
+</tr>
 </tbody>
 </table>
 <h2 id="slots">Slots</h2>
@@ -675,16 +691,52 @@ for knowledge graph generation.</p>
 </thead>
 <tbody>
 <tr>
+<td><a href="annotation_url/">annotation_url</a></td>
+<td>URL to download genome annotation file (GFF format)</td>
+</tr>
+<tr>
 <td><a href="application_roles/">application_roles</a></td>
 <td>Application roles from ChEBI</td>
+</tr>
+<tr>
+<td><a href="assembly_level/">assembly_level</a></td>
+<td>Level of assembly completeness</td>
+</tr>
+<tr>
+<td><a href="assembly_name/">assembly_name</a></td>
+<td>Human-readable assembly name assigned by submitter</td>
+</tr>
+<tr>
+<td><a href="atcc_id/">atcc_id</a></td>
+<td>ATCC catalog number (ATCC is authoritative)</td>
+</tr>
+<tr>
+<td><a href="bacdive_id/">bacdive_id</a></td>
+<td>BacDive strain ID (BacDive is authoritative for strain metadata)</td>
+</tr>
+<tr>
+<td><a href="belongs_to_taxon/">belongs_to_taxon</a></td>
+<td>Links a strain to its taxonomic classification</td>
 </tr>
 <tr>
 <td><a href="biological_roles/">biological_roles</a></td>
 <td>Biological roles from ChEBI (ChEBI is authoritative)</td>
 </tr>
 <tr>
+<td><a href="biosafety_level/">biosafety_level</a></td>
+<td>Biosafety level (1-4)</td>
+</tr>
+<tr>
+<td><a href="carbon_source_used/">carbon_source_used</a></td>
+<td>The carbon source utilized for growth (e</td>
+</tr>
+<tr>
 <td><a href="cas_rn/">cas_rn</a></td>
 <td>CAS Registry Number</td>
+</tr>
+<tr>
+<td><a href="cell_shape/">cell_shape</a></td>
+<td>Cell morphology (e</td>
 </tr>
 <tr>
 <td><a href="charge/">charge</a></td>
@@ -701,6 +753,10 @@ for knowledge graph generation.</p>
 <tr>
 <td><a href="chemical_roles/">chemical_roles</a></td>
 <td>Chemical roles from ChEBI (ChEBI is authoritative)</td>
+</tr>
+<tr>
+<td><a href="cip_id/">cip_id</a></td>
+<td>CIP (Collection de l'Institut Pasteur) number</td>
 </tr>
 <tr>
 <td><a href="concentration_unit/">concentration_unit</a></td>
@@ -727,20 +783,76 @@ for knowledge graph generation.</p>
 <td>A human-readable description for a thing</td>
 </tr>
 <tr>
+<td><a href="does_not_grow_in_medium/">does_not_grow_in_medium</a></td>
+<td>Media in which this strain cannot grow (negative results)</td>
+</tr>
+<tr>
 <td><a href="drugbank_id/">drugbank_id</a></td>
 <td>DrugBank identifier</td>
+</tr>
+<tr>
+<td><a href="dsm_id/">dsm_id</a></td>
+<td>DSMZ strain number (DSMZ is authoritative)</td>
 </tr>
 <tr>
 <td><a href="field_name/">field_name</a></td>
 <td>Name of the field with conflicting values</td>
 </tr>
 <tr>
+<td><a href="ftp_path/">ftp_path</a></td>
+<td>Base FTP path for genome files at NCBI</td>
+</tr>
+<tr>
+<td><a href="genbank_accession/">genbank_accession</a></td>
+<td>GenBank assembly accession (GCA_NNNNNNNN</td>
+</tr>
+<tr>
+<td><a href="genome_accessions/">genome_accessions</a></td>
+<td>Genome assembly accessions (e</td>
+</tr>
+<tr>
+<td><a href="genomes/">genomes</a></td>
+<td>Collection of all genome assemblies</td>
+</tr>
+<tr>
+<td><a href="gram_stain/">gram_stain</a></td>
+<td>Gram staining result</td>
+</tr>
+<tr>
+<td><a href="grows/">grows</a></td>
+<td>True if strain grows in medium, false if it does not grow</td>
+</tr>
+<tr>
+<td><a href="grows_in_medium/">grows_in_medium</a></td>
+<td>Media in which this strain can grow</td>
+</tr>
+<tr>
+<td><a href="growth_preferences/">growth_preferences</a></td>
+<td>Collection of strain-medium growth relationships with properties</td>
+</tr>
+<tr>
+<td><a href="growth_rate/">growth_rate</a></td>
+<td>Qualitative growth rate in this medium</td>
+</tr>
+<tr>
+<td><a href="has_genome/">has_genome</a></td>
+<td>Links a strain or taxon to its genome assembly(ies)</td>
+</tr>
+<tr>
 <td><a href="has_ingredient_component/">has_ingredient_component</a></td>
 <td>Ingredients contained in this mixture with their concentrations</td>
 </tr>
 <tr>
+<td><a href="has_lanmodulin/">has_lanmodulin</a></td>
+<td>Whether strain has lanmodulin (lanM) gene for lanthanide binding</td>
+</tr>
+<tr>
 <td><a href="has_solution_component/">has_solution_component</a></td>
 <td>Solutions contained in this medium</td>
+</tr>
+<tr>
+<td><a href="has_xox_genes/">has_xox_genes</a></td>
+<td>Whether strain has XoxF, ExaF, or other lanthanide-dependent alcohol dehydrog...</td>
 </tr>
 <tr>
 <td><a href="id/">id</a></td>
@@ -755,6 +867,10 @@ for knowledge graph generation.</p>
 <td>InChIKey for structural identification</td>
 </tr>
 <tr>
+<td><a href="incubation_time/">incubation_time</a></td>
+<td>Duration of incubation (e</td>
+</tr>
+<tr>
 <td><a href="ingredient/">ingredient</a></td>
 <td>Reference to the ingredient entity</td>
 </tr>
@@ -763,12 +879,36 @@ for knowledge graph generation.</p>
 <td>Collection of all chemical ingredients in the database</td>
 </tr>
 <tr>
+<td><a href="isolation_country/">isolation_country</a></td>
+<td>Country where the strain was isolated</td>
+</tr>
+<tr>
+<td><a href="isolation_date/">isolation_date</a></td>
+<td>Date or year of isolation</td>
+</tr>
+<tr>
+<td><a href="isolation_source/">isolation_source</a></td>
+<td>Sample type or environment from which strain was isolated</td>
+</tr>
+<tr>
+<td><a href="jcm_id/">jcm_id</a></td>
+<td>JCM (Japan Collection of Microorganisms) number</td>
+</tr>
+<tr>
 <td><a href="kegg_id/">kegg_id</a></td>
 <td>KEGG Compound ID (e</td>
 </tr>
 <tr>
+<td><a href="kg_node_ids/">kg_node_ids</a></td>
+<td>Node IDs in external knowledge graphs (e</td>
+</tr>
+<tr>
 <td><a href="last_enriched/">last_enriched</a></td>
 <td>Timestamp of last enrichment run</td>
+</tr>
+<tr>
+<td><a href="lmg_id/">lmg_id</a></td>
+<td>LMG (Belgian Coordinated Collections of Microorganisms) number</td>
 </tr>
 <tr>
 <td><a href="media/">media</a></td>
@@ -795,16 +935,60 @@ for knowledge graph generation.</p>
 <td>Monoisotopic mass in Daltons</td>
 </tr>
 <tr>
+<td><a href="motility/">motility</a></td>
+<td>Whether the organism is motile</td>
+</tr>
+<tr>
 <td><a href="name/">name</a></td>
 <td>A human-readable name for a thing</td>
+</tr>
+<tr>
+<td><a href="nbrc_id/">nbrc_id</a></td>
+<td>NBRC (NITE Biological Resource Center, Japan) number</td>
+</tr>
+<tr>
+<td><a href="ncbi_taxon_id/">ncbi_taxon_id</a></td>
+<td>NCBITaxon ID at strain level when available</td>
+</tr>
+<tr>
+<td><a href="ncimb_id/">ncimb_id</a></td>
+<td>NCIMB (National Collection of Industrial, Food and Marine Bacteria) number</td>
 </tr>
 <tr>
 <td><a href="notes/">notes</a></td>
 <td>Free-text notes about this component</td>
 </tr>
 <tr>
+<td><a href="object_medium/">object_medium</a></td>
+<td>The medium that is the object of the growth relationship</td>
+</tr>
+<tr>
+<td><a href="optimal_ph/">optimal_ph</a></td>
+<td>Optimal pH for growth in this medium</td>
+</tr>
+<tr>
+<td><a href="optimal_temperature/">optimal_temperature</a></td>
+<td>Optimal growth temperature in degrees Celsius</td>
+</tr>
+<tr>
+<td><a href="oxygen_condition/">oxygen_condition</a></td>
+<td>Oxygen condition used for this growth observation</td>
+</tr>
+<tr>
+<td><a href="oxygen_tolerance/">oxygen_tolerance</a></td>
+<td>Oxygen requirement/tolerance category</td>
+</tr>
+<tr>
+<td><a href="parent_taxon_id/">parent_taxon_id</a></td>
+<td>Parent taxon in the NCBI Taxonomy hierarchy</td>
+</tr>
+<tr>
 <td><a href="ph/">ph</a></td>
 <td>Target pH of the medium</td>
+</tr>
+<tr>
+<td><a href="ph_range/">ph_range</a></td>
+<td>Growth pH range or optimum (e</td>
 </tr>
 <tr>
 <td><a href="primary_source/">primary_source</a></td>
@@ -819,8 +1003,16 @@ for knowledge graph generation.</p>
 <td>PubChem Compound ID</td>
 </tr>
 <tr>
+<td><a href="rank/">rank</a></td>
+<td>Taxonomic rank (species, strain, subspecies, etc</td>
+</tr>
+<tr>
 <td><a href="references/">references</a></td>
 <td>Literature references for this medium formulation</td>
+</tr>
+<tr>
+<td><a href="refseq_accession/">refseq_accession</a></td>
+<td>RefSeq assembly accession (GCF_NNNNNNNN</td>
 </tr>
 <tr>
 <td><a href="resolution/">resolution</a></td>
@@ -833,6 +1025,10 @@ for knowledge graph generation.</p>
 <tr>
 <td><a href="roles/">roles</a></td>
 <td>Functional roles of this ingredient in this specific mixture</td>
+</tr>
+<tr>
+<td><a href="scientific_name/">scientific_name</a></td>
+<td>Binomial scientific name (genus species)</td>
 </tr>
 <tr>
 <td><a href="smiles/">smiles</a></td>
@@ -875,8 +1071,24 @@ for knowledge graph generation.</p>
 <td>When this data was retrieved from the source</td>
 </tr>
 <tr>
+<td><a href="species_taxon_id/">species_taxon_id</a></td>
+<td>NCBITaxon ID at species level</td>
+</tr>
+<tr>
 <td><a href="sterilization_method/">sterilization_method</a></td>
 <td>How the medium is sterilized (e</td>
+</tr>
+<tr>
+<td><a href="strain_designation/">strain_designation</a></td>
+<td>Strain name or identifier (e</td>
+</tr>
+<tr>
+<td><a href="strains/">strains</a></td>
+<td>Collection of all microbial strains</td>
+</tr>
+<tr>
+<td><a href="subject_strain/">subject_strain</a></td>
+<td>The strain that is the subject of the growth relationship</td>
 </tr>
 <tr>
 <td><a href="synonyms/">synonyms</a></td>
@@ -885,6 +1097,18 @@ for knowledge graph generation.</p>
 <tr>
 <td><a href="target_organisms/">target_organisms</a></td>
 <td>Taxa or organism types this medium is designed for</td>
+</tr>
+<tr>
+<td><a href="taxa/">taxa</a></td>
+<td>Collection of all taxonomic entities</td>
+</tr>
+<tr>
+<td><a href="temperature_range/">temperature_range</a></td>
+<td>Growth temperature range or optimum (e</td>
+</tr>
+<tr>
+<td><a href="type_strain/">type_strain</a></td>
+<td>Whether this is the type strain for its species</td>
 </tr>
 <tr>
 <td><a href="volume_per_liter/">volume_per_liter</a></td>
@@ -922,6 +1146,10 @@ for knowledge graph generation.</p>
 </thead>
 <tbody>
 <tr>
+<td><a href="AssemblyLevel/">AssemblyLevel</a></td>
+<td>Level of genome assembly completeness</td>
+</tr>
+<tr>
 <td><a href="ConcentrationUnit/">ConcentrationUnit</a></td>
 <td>Units for concentration</td>
 </tr>
@@ -934,6 +1162,14 @@ for knowledge graph generation.</p>
 <td>Names of data sources used for enrichment</td>
 </tr>
 <tr>
+<td><a href="GramStain/">GramStain</a></td>
+<td>Gram staining classification</td>
+</tr>
+<tr>
+<td><a href="GrowthRate/">GrowthRate</a></td>
+<td>Qualitative growth rate categories</td>
+</tr>
+<tr>
 <td><a href="IngredientRole/">IngredientRole</a></td>
 <td>Functional role of an ingredient in a growth medium</td>
 </tr>
@@ -942,8 +1178,16 @@ for knowledge graph generation.</p>
 <td>Classification of growth media by composition</td>
 </tr>
 <tr>
+<td><a href="OxygenTolerance/">OxygenTolerance</a></td>
+<td>Oxygen requirement categories for microorganisms</td>
+</tr>
+<tr>
 <td><a href="SolutionType/">SolutionType</a></td>
 <td>Classification of stock solutions</td>
+</tr>
+<tr>
+<td><a href="TaxonomicRank/">TaxonomicRank</a></td>
+<td>NCBI Taxonomy ranks relevant to microbial classification</td>
 </tr>
 <tr>
 <td><a href="VolumeUnit/">VolumeUnit</a></td>
