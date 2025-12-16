@@ -1,5 +1,5 @@
 # Auto generated from cmm_ai_automation.yaml by pythongen.py version: 0.0.1
-# Generation date: 2025-12-11T09:58:01
+# Generation date: 2025-12-16T16:03:05
 # Schema: cmm-ai-automation
 #
 # id: https://w3id.org/turbomam/cmm-ai-automation
@@ -59,8 +59,8 @@ from rdflib import (
     URIRef
 )
 
-from linkml_runtime.linkml_model.types import Datetime, Float, Integer, String, Uriorcurie
-from linkml_runtime.utils.metamodelcore import URIorCURIE, XSDDateTime
+from linkml_runtime.linkml_model.types import Boolean, Datetime, Float, Integer, String, Uriorcurie
+from linkml_runtime.utils.metamodelcore import Bool, URIorCURIE, XSDDateTime
 
 metamodel_version = "1.7.0"
 version = None
@@ -69,16 +69,23 @@ version = None
 ATCC = CurieNamespace('ATCC', 'https://www.atcc.org/products/')
 CAS = CurieNamespace('CAS', 'http://identifiers.org/cas/')
 CHEBI = CurieNamespace('CHEBI', 'http://purl.obolibrary.org/obo/CHEBI_')
+CIP = CurieNamespace('CIP', 'https://catalogue-crbip.pasteur.fr/fiche.xhtml?crbip=')
 DRUGBANK = CurieNamespace('DRUGBANK', 'http://identifiers.org/drugbank/')
 DSMZ = CurieNamespace('DSMZ', 'https://www.dsmz.de/collection/catalogue/details/culture/DSM-')
 ENVO = CurieNamespace('ENVO', 'http://purl.obolibrary.org/obo/ENVO_')
+JCM = CurieNamespace('JCM', 'https://jcm.brc.riken.jp/cgi-bin/jcm/jcm_number?JCM=')
 KEGG_COMPOUND = CurieNamespace('KEGG_COMPOUND', 'http://identifiers.org/kegg.compound/')
+LMG = CurieNamespace('LMG', 'https://bccm.belspo.be/catalogues/lmg-strain-details?NUM=')
 MESH = CurieNamespace('MESH', 'http://identifiers.org/mesh/')
+METPO = CurieNamespace('METPO', 'http://purl.obolibrary.org/obo/METPO_')
+NBRC = CurieNamespace('NBRC', 'https://www.nite.go.jp/nbrc/catalogue/NBRCCatalogueDetailServlet?ID=NBRC&CAT=')
 NCBITAXON = CurieNamespace('NCBITaxon', 'http://purl.obolibrary.org/obo/NCBITaxon_')
+NCIMB = CurieNamespace('NCIMB', 'https://www.ncimb.com/product/NCIMB')
 OBI = CurieNamespace('OBI', 'http://purl.obolibrary.org/obo/OBI_')
 PUBCHEM_COMPOUND = CurieNamespace('PUBCHEM_COMPOUND', 'http://identifiers.org/pubchem.compound/')
 RO = CurieNamespace('RO', 'http://purl.obolibrary.org/obo/RO_')
 UO = CurieNamespace('UO', 'http://purl.obolibrary.org/obo/UO_')
+BACDIVE_STRAIN = CurieNamespace('bacdive_strain', 'https://bacdive.dsmz.de/strain/')
 BIOLINK = CurieNamespace('biolink', 'https://w3id.org/biolink/vocab/')
 CMM = CurieNamespace('cmm', 'https://w3id.org/turbomam/cmm-ai-automation/')
 LINKML = CurieNamespace('linkml', 'https://w3id.org/linkml/')
@@ -110,6 +117,18 @@ class GrowthMediumId(MixtureId):
 
 
 class EnrichedIngredientId(URIorCURIE):
+    pass
+
+
+class TaxonId(URIorCURIE):
+    pass
+
+
+class GenomeId(URIorCURIE):
+    pass
+
+
+class StrainId(URIorCURIE):
     pass
 
 
@@ -376,6 +395,81 @@ class SolutionComponent(YAMLRoot):
 
 
 @dataclass(repr=False)
+class GrowthPreference(YAMLRoot):
+    """
+    Reified relationship: a strain's growth in a specific medium. Captures edge properties like growth rate,
+    temperature, pH conditions. Predicate: METPO:2000517 (grows in) or METPO:2000518 (does not grow in).
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = CMM["GrowthPreference"]
+    class_class_curie: ClassVar[str] = "cmm:GrowthPreference"
+    class_name: ClassVar[str] = "GrowthPreference"
+    class_model_uri: ClassVar[URIRef] = CMM.GrowthPreference
+
+    subject_strain: Union[str, StrainId] = None
+    object_medium: Union[str, GrowthMediumId] = None
+    grows: Optional[Union[bool, Bool]] = None
+    growth_rate: Optional[Union[str, "GrowthRate"]] = None
+    optimal_temperature: Optional[float] = None
+    temperature_range: Optional[str] = None
+    optimal_ph: Optional[float] = None
+    ph_range: Optional[str] = None
+    carbon_source_used: Optional[str] = None
+    oxygen_condition: Optional[Union[str, "OxygenTolerance"]] = None
+    incubation_time: Optional[str] = None
+    notes: Optional[str] = None
+    source_records: Optional[Union[Union[dict, "SourceRecord"], list[Union[dict, "SourceRecord"]]]] = empty_list()
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.subject_strain):
+            self.MissingRequiredField("subject_strain")
+        if not isinstance(self.subject_strain, StrainId):
+            self.subject_strain = StrainId(self.subject_strain)
+
+        if self._is_empty(self.object_medium):
+            self.MissingRequiredField("object_medium")
+        if not isinstance(self.object_medium, GrowthMediumId):
+            self.object_medium = GrowthMediumId(self.object_medium)
+
+        if self.grows is not None and not isinstance(self.grows, Bool):
+            self.grows = Bool(self.grows)
+
+        if self.growth_rate is not None and not isinstance(self.growth_rate, GrowthRate):
+            self.growth_rate = GrowthRate(self.growth_rate)
+
+        if self.optimal_temperature is not None and not isinstance(self.optimal_temperature, float):
+            self.optimal_temperature = float(self.optimal_temperature)
+
+        if self.temperature_range is not None and not isinstance(self.temperature_range, str):
+            self.temperature_range = str(self.temperature_range)
+
+        if self.optimal_ph is not None and not isinstance(self.optimal_ph, float):
+            self.optimal_ph = float(self.optimal_ph)
+
+        if self.ph_range is not None and not isinstance(self.ph_range, str):
+            self.ph_range = str(self.ph_range)
+
+        if self.carbon_source_used is not None and not isinstance(self.carbon_source_used, str):
+            self.carbon_source_used = str(self.carbon_source_used)
+
+        if self.oxygen_condition is not None and not isinstance(self.oxygen_condition, OxygenTolerance):
+            self.oxygen_condition = OxygenTolerance(self.oxygen_condition)
+
+        if self.incubation_time is not None and not isinstance(self.incubation_time, str):
+            self.incubation_time = str(self.incubation_time)
+
+        if self.notes is not None and not isinstance(self.notes, str):
+            self.notes = str(self.notes)
+
+        if not isinstance(self.source_records, list):
+            self.source_records = [self.source_records] if self.source_records is not None else []
+        self.source_records = [v if isinstance(v, SourceRecord) else SourceRecord(**as_dict(v)) for v in self.source_records]
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
 class EnrichedIngredient(YAMLRoot):
     """
     A chemical entity enriched with data from multiple sources. Uses (inchikey, cas_rn) tuple as the primary key for
@@ -590,6 +684,353 @@ class DataConflict(YAMLRoot):
 
 
 @dataclass(repr=False)
+class Taxon(YAMLRoot):
+    """
+    A taxonomic entity from NCBI Taxonomy. Represents species or strain-level taxonomy entries. Used for linking
+    strains and genomes to their taxonomic classification.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = BIOLINK["OrganismTaxon"]
+    class_class_curie: ClassVar[str] = "biolink:OrganismTaxon"
+    class_name: ClassVar[str] = "Taxon"
+    class_model_uri: ClassVar[URIRef] = CMM.Taxon
+
+    id: Union[str, TaxonId] = None
+    name: Optional[str] = None
+    synonyms: Optional[Union[str, list[str]]] = empty_list()
+    description: Optional[str] = None
+    ncbi_taxon_id: Optional[Union[str, URIorCURIE]] = None
+    parent_taxon_id: Optional[Union[str, URIorCURIE]] = None
+    rank: Optional[Union[str, "TaxonomicRank"]] = None
+    scientific_name: Optional[str] = None
+    genome_accessions: Optional[Union[str, list[str]]] = empty_list()
+    has_xox_genes: Optional[Union[bool, Bool]] = None
+    has_lanmodulin: Optional[Union[bool, Bool]] = None
+    kg_node_ids: Optional[Union[str, list[str]]] = empty_list()
+    source_records: Optional[Union[Union[dict, SourceRecord], list[Union[dict, SourceRecord]]]] = empty_list()
+    last_enriched: Optional[Union[str, XSDDateTime]] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, TaxonId):
+            self.id = TaxonId(self.id)
+
+        if self.name is not None and not isinstance(self.name, str):
+            self.name = str(self.name)
+
+        if not isinstance(self.synonyms, list):
+            self.synonyms = [self.synonyms] if self.synonyms is not None else []
+        self.synonyms = [v if isinstance(v, str) else str(v) for v in self.synonyms]
+
+        if self.description is not None and not isinstance(self.description, str):
+            self.description = str(self.description)
+
+        if self.ncbi_taxon_id is not None and not isinstance(self.ncbi_taxon_id, URIorCURIE):
+            self.ncbi_taxon_id = URIorCURIE(self.ncbi_taxon_id)
+
+        if self.parent_taxon_id is not None and not isinstance(self.parent_taxon_id, URIorCURIE):
+            self.parent_taxon_id = URIorCURIE(self.parent_taxon_id)
+
+        if self.rank is not None and not isinstance(self.rank, TaxonomicRank):
+            self.rank = TaxonomicRank(self.rank)
+
+        if self.scientific_name is not None and not isinstance(self.scientific_name, str):
+            self.scientific_name = str(self.scientific_name)
+
+        if not isinstance(self.genome_accessions, list):
+            self.genome_accessions = [self.genome_accessions] if self.genome_accessions is not None else []
+        self.genome_accessions = [v if isinstance(v, str) else str(v) for v in self.genome_accessions]
+
+        if self.has_xox_genes is not None and not isinstance(self.has_xox_genes, Bool):
+            self.has_xox_genes = Bool(self.has_xox_genes)
+
+        if self.has_lanmodulin is not None and not isinstance(self.has_lanmodulin, Bool):
+            self.has_lanmodulin = Bool(self.has_lanmodulin)
+
+        if not isinstance(self.kg_node_ids, list):
+            self.kg_node_ids = [self.kg_node_ids] if self.kg_node_ids is not None else []
+        self.kg_node_ids = [v if isinstance(v, str) else str(v) for v in self.kg_node_ids]
+
+        if not isinstance(self.source_records, list):
+            self.source_records = [self.source_records] if self.source_records is not None else []
+        self.source_records = [v if isinstance(v, SourceRecord) else SourceRecord(**as_dict(v)) for v in self.source_records]
+
+        if self.last_enriched is not None and not isinstance(self.last_enriched, XSDDateTime):
+            self.last_enriched = XSDDateTime(self.last_enriched)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class Genome(YAMLRoot):
+    """
+    A genome assembly from NCBI GenBank/RefSeq or other sources. Represents a sequenced and assembled genome.
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = BIOLINK["Genome"]
+    class_class_curie: ClassVar[str] = "biolink:Genome"
+    class_name: ClassVar[str] = "Genome"
+    class_model_uri: ClassVar[URIRef] = CMM.Genome
+
+    id: Union[str, GenomeId] = None
+    name: Optional[str] = None
+    description: Optional[str] = None
+    genbank_accession: Optional[str] = None
+    refseq_accession: Optional[str] = None
+    assembly_name: Optional[str] = None
+    assembly_level: Optional[Union[str, "AssemblyLevel"]] = None
+    ncbi_taxon_id: Optional[Union[str, URIorCURIE]] = None
+    scientific_name: Optional[str] = None
+    annotation_url: Optional[str] = None
+    ftp_path: Optional[str] = None
+    has_xox_genes: Optional[Union[bool, Bool]] = None
+    has_lanmodulin: Optional[Union[bool, Bool]] = None
+    kg_node_ids: Optional[Union[str, list[str]]] = empty_list()
+    source_records: Optional[Union[Union[dict, SourceRecord], list[Union[dict, SourceRecord]]]] = empty_list()
+    last_enriched: Optional[Union[str, XSDDateTime]] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, GenomeId):
+            self.id = GenomeId(self.id)
+
+        if self.name is not None and not isinstance(self.name, str):
+            self.name = str(self.name)
+
+        if self.description is not None and not isinstance(self.description, str):
+            self.description = str(self.description)
+
+        if self.genbank_accession is not None and not isinstance(self.genbank_accession, str):
+            self.genbank_accession = str(self.genbank_accession)
+
+        if self.refseq_accession is not None and not isinstance(self.refseq_accession, str):
+            self.refseq_accession = str(self.refseq_accession)
+
+        if self.assembly_name is not None and not isinstance(self.assembly_name, str):
+            self.assembly_name = str(self.assembly_name)
+
+        if self.assembly_level is not None and not isinstance(self.assembly_level, AssemblyLevel):
+            self.assembly_level = AssemblyLevel(self.assembly_level)
+
+        if self.ncbi_taxon_id is not None and not isinstance(self.ncbi_taxon_id, URIorCURIE):
+            self.ncbi_taxon_id = URIorCURIE(self.ncbi_taxon_id)
+
+        if self.scientific_name is not None and not isinstance(self.scientific_name, str):
+            self.scientific_name = str(self.scientific_name)
+
+        if self.annotation_url is not None and not isinstance(self.annotation_url, str):
+            self.annotation_url = str(self.annotation_url)
+
+        if self.ftp_path is not None and not isinstance(self.ftp_path, str):
+            self.ftp_path = str(self.ftp_path)
+
+        if self.has_xox_genes is not None and not isinstance(self.has_xox_genes, Bool):
+            self.has_xox_genes = Bool(self.has_xox_genes)
+
+        if self.has_lanmodulin is not None and not isinstance(self.has_lanmodulin, Bool):
+            self.has_lanmodulin = Bool(self.has_lanmodulin)
+
+        if not isinstance(self.kg_node_ids, list):
+            self.kg_node_ids = [self.kg_node_ids] if self.kg_node_ids is not None else []
+        self.kg_node_ids = [v if isinstance(v, str) else str(v) for v in self.kg_node_ids]
+
+        if not isinstance(self.source_records, list):
+            self.source_records = [self.source_records] if self.source_records is not None else []
+        self.source_records = [v if isinstance(v, SourceRecord) else SourceRecord(**as_dict(v)) for v in self.source_records]
+
+        if self.last_enriched is not None and not isinstance(self.last_enriched, XSDDateTime):
+            self.last_enriched = XSDDateTime(self.last_enriched)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
+class Strain(YAMLRoot):
+    """
+    A microbial strain enriched with data from multiple sources. Uses NCBITaxon (strain-level) as the primary
+    identifier when available, with culture collection IDs as authoritative cross-references. Each culture collection
+    is authoritative for its own ID type: - DSMZ is authoritative for dsm_id - ATCC is authoritative for atcc_id -
+    BacDive is authoritative for bacdive_id and strain metadata - NCBI is authoritative for ncbi_taxon_id
+    """
+    _inherited_slots: ClassVar[list[str]] = []
+
+    class_class_uri: ClassVar[URIRef] = BIOLINK["OrganismalEntity"]
+    class_class_curie: ClassVar[str] = "biolink:OrganismalEntity"
+    class_name: ClassVar[str] = "Strain"
+    class_model_uri: ClassVar[URIRef] = CMM.Strain
+
+    id: Union[str, StrainId] = None
+    name: Optional[str] = None
+    synonyms: Optional[Union[str, list[str]]] = empty_list()
+    description: Optional[str] = None
+    ncbi_taxon_id: Optional[Union[str, URIorCURIE]] = None
+    species_taxon_id: Optional[Union[str, URIorCURIE]] = None
+    scientific_name: Optional[str] = None
+    strain_designation: Optional[str] = None
+    dsm_id: Optional[int] = None
+    atcc_id: Optional[str] = None
+    cip_id: Optional[str] = None
+    nbrc_id: Optional[int] = None
+    jcm_id: Optional[int] = None
+    ncimb_id: Optional[int] = None
+    lmg_id: Optional[int] = None
+    bacdive_id: Optional[int] = None
+    type_strain: Optional[Union[bool, Bool]] = None
+    biosafety_level: Optional[int] = None
+    isolation_source: Optional[str] = None
+    isolation_country: Optional[str] = None
+    isolation_date: Optional[str] = None
+    oxygen_tolerance: Optional[Union[str, "OxygenTolerance"]] = None
+    temperature_range: Optional[str] = None
+    ph_range: Optional[str] = None
+    gram_stain: Optional[Union[str, "GramStain"]] = None
+    cell_shape: Optional[str] = None
+    motility: Optional[Union[bool, Bool]] = None
+    genome_accessions: Optional[Union[str, list[str]]] = empty_list()
+    has_xox_genes: Optional[Union[bool, Bool]] = None
+    has_lanmodulin: Optional[Union[bool, Bool]] = None
+    belongs_to_taxon: Optional[Union[str, TaxonId]] = None
+    has_genome: Optional[Union[Union[str, GenomeId], list[Union[str, GenomeId]]]] = empty_list()
+    grows_in_medium: Optional[Union[Union[str, GrowthMediumId], list[Union[str, GrowthMediumId]]]] = empty_list()
+    does_not_grow_in_medium: Optional[Union[Union[str, GrowthMediumId], list[Union[str, GrowthMediumId]]]] = empty_list()
+    xrefs: Optional[Union[Union[dict, "CrossReference"], list[Union[dict, "CrossReference"]]]] = empty_list()
+    source_records: Optional[Union[Union[dict, SourceRecord], list[Union[dict, SourceRecord]]]] = empty_list()
+    conflicts: Optional[Union[Union[dict, DataConflict], list[Union[dict, DataConflict]]]] = empty_list()
+    last_enriched: Optional[Union[str, XSDDateTime]] = None
+
+    def __post_init__(self, *_: str, **kwargs: Any):
+        if self._is_empty(self.id):
+            self.MissingRequiredField("id")
+        if not isinstance(self.id, StrainId):
+            self.id = StrainId(self.id)
+
+        if self.name is not None and not isinstance(self.name, str):
+            self.name = str(self.name)
+
+        if not isinstance(self.synonyms, list):
+            self.synonyms = [self.synonyms] if self.synonyms is not None else []
+        self.synonyms = [v if isinstance(v, str) else str(v) for v in self.synonyms]
+
+        if self.description is not None and not isinstance(self.description, str):
+            self.description = str(self.description)
+
+        if self.ncbi_taxon_id is not None and not isinstance(self.ncbi_taxon_id, URIorCURIE):
+            self.ncbi_taxon_id = URIorCURIE(self.ncbi_taxon_id)
+
+        if self.species_taxon_id is not None and not isinstance(self.species_taxon_id, URIorCURIE):
+            self.species_taxon_id = URIorCURIE(self.species_taxon_id)
+
+        if self.scientific_name is not None and not isinstance(self.scientific_name, str):
+            self.scientific_name = str(self.scientific_name)
+
+        if self.strain_designation is not None and not isinstance(self.strain_designation, str):
+            self.strain_designation = str(self.strain_designation)
+
+        if self.dsm_id is not None and not isinstance(self.dsm_id, int):
+            self.dsm_id = int(self.dsm_id)
+
+        if self.atcc_id is not None and not isinstance(self.atcc_id, str):
+            self.atcc_id = str(self.atcc_id)
+
+        if self.cip_id is not None and not isinstance(self.cip_id, str):
+            self.cip_id = str(self.cip_id)
+
+        if self.nbrc_id is not None and not isinstance(self.nbrc_id, int):
+            self.nbrc_id = int(self.nbrc_id)
+
+        if self.jcm_id is not None and not isinstance(self.jcm_id, int):
+            self.jcm_id = int(self.jcm_id)
+
+        if self.ncimb_id is not None and not isinstance(self.ncimb_id, int):
+            self.ncimb_id = int(self.ncimb_id)
+
+        if self.lmg_id is not None and not isinstance(self.lmg_id, int):
+            self.lmg_id = int(self.lmg_id)
+
+        if self.bacdive_id is not None and not isinstance(self.bacdive_id, int):
+            self.bacdive_id = int(self.bacdive_id)
+
+        if self.type_strain is not None and not isinstance(self.type_strain, Bool):
+            self.type_strain = Bool(self.type_strain)
+
+        if self.biosafety_level is not None and not isinstance(self.biosafety_level, int):
+            self.biosafety_level = int(self.biosafety_level)
+
+        if self.isolation_source is not None and not isinstance(self.isolation_source, str):
+            self.isolation_source = str(self.isolation_source)
+
+        if self.isolation_country is not None and not isinstance(self.isolation_country, str):
+            self.isolation_country = str(self.isolation_country)
+
+        if self.isolation_date is not None and not isinstance(self.isolation_date, str):
+            self.isolation_date = str(self.isolation_date)
+
+        if self.oxygen_tolerance is not None and not isinstance(self.oxygen_tolerance, OxygenTolerance):
+            self.oxygen_tolerance = OxygenTolerance(self.oxygen_tolerance)
+
+        if self.temperature_range is not None and not isinstance(self.temperature_range, str):
+            self.temperature_range = str(self.temperature_range)
+
+        if self.ph_range is not None and not isinstance(self.ph_range, str):
+            self.ph_range = str(self.ph_range)
+
+        if self.gram_stain is not None and not isinstance(self.gram_stain, GramStain):
+            self.gram_stain = GramStain(self.gram_stain)
+
+        if self.cell_shape is not None and not isinstance(self.cell_shape, str):
+            self.cell_shape = str(self.cell_shape)
+
+        if self.motility is not None and not isinstance(self.motility, Bool):
+            self.motility = Bool(self.motility)
+
+        if not isinstance(self.genome_accessions, list):
+            self.genome_accessions = [self.genome_accessions] if self.genome_accessions is not None else []
+        self.genome_accessions = [v if isinstance(v, str) else str(v) for v in self.genome_accessions]
+
+        if self.has_xox_genes is not None and not isinstance(self.has_xox_genes, Bool):
+            self.has_xox_genes = Bool(self.has_xox_genes)
+
+        if self.has_lanmodulin is not None and not isinstance(self.has_lanmodulin, Bool):
+            self.has_lanmodulin = Bool(self.has_lanmodulin)
+
+        if self.belongs_to_taxon is not None and not isinstance(self.belongs_to_taxon, TaxonId):
+            self.belongs_to_taxon = TaxonId(self.belongs_to_taxon)
+
+        if not isinstance(self.has_genome, list):
+            self.has_genome = [self.has_genome] if self.has_genome is not None else []
+        self.has_genome = [v if isinstance(v, GenomeId) else GenomeId(v) for v in self.has_genome]
+
+        if not isinstance(self.grows_in_medium, list):
+            self.grows_in_medium = [self.grows_in_medium] if self.grows_in_medium is not None else []
+        self.grows_in_medium = [v if isinstance(v, GrowthMediumId) else GrowthMediumId(v) for v in self.grows_in_medium]
+
+        if not isinstance(self.does_not_grow_in_medium, list):
+            self.does_not_grow_in_medium = [self.does_not_grow_in_medium] if self.does_not_grow_in_medium is not None else []
+        self.does_not_grow_in_medium = [v if isinstance(v, GrowthMediumId) else GrowthMediumId(v) for v in self.does_not_grow_in_medium]
+
+        if not isinstance(self.xrefs, list):
+            self.xrefs = [self.xrefs] if self.xrefs is not None else []
+        self.xrefs = [v if isinstance(v, CrossReference) else CrossReference(**as_dict(v)) for v in self.xrefs]
+
+        if not isinstance(self.source_records, list):
+            self.source_records = [self.source_records] if self.source_records is not None else []
+        self.source_records = [v if isinstance(v, SourceRecord) else SourceRecord(**as_dict(v)) for v in self.source_records]
+
+        if not isinstance(self.conflicts, list):
+            self.conflicts = [self.conflicts] if self.conflicts is not None else []
+        self.conflicts = [v if isinstance(v, DataConflict) else DataConflict(**as_dict(v)) for v in self.conflicts]
+
+        if self.last_enriched is not None and not isinstance(self.last_enriched, XSDDateTime):
+            self.last_enriched = XSDDateTime(self.last_enriched)
+
+        super().__post_init__(**kwargs)
+
+
+@dataclass(repr=False)
 class CrossReference(YAMLRoot):
     """
     A cross-reference to an external database or identifier
@@ -637,6 +1078,10 @@ class CMMDatabase(YAMLRoot):
     ingredients: Optional[Union[dict[Union[str, IngredientId], Union[dict, Ingredient]], list[Union[dict, Ingredient]]]] = empty_dict()
     solutions: Optional[Union[dict[Union[str, SolutionId], Union[dict, Solution]], list[Union[dict, Solution]]]] = empty_dict()
     media: Optional[Union[dict[Union[str, GrowthMediumId], Union[dict, GrowthMedium]], list[Union[dict, GrowthMedium]]]] = empty_dict()
+    strains: Optional[Union[dict[Union[str, StrainId], Union[dict, Strain]], list[Union[dict, Strain]]]] = empty_dict()
+    taxa: Optional[Union[dict[Union[str, TaxonId], Union[dict, Taxon]], list[Union[dict, Taxon]]]] = empty_dict()
+    genomes: Optional[Union[dict[Union[str, GenomeId], Union[dict, Genome]], list[Union[dict, Genome]]]] = empty_dict()
+    growth_preferences: Optional[Union[Union[dict, GrowthPreference], list[Union[dict, GrowthPreference]]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
         self._normalize_inlined_as_list(slot_name="ingredients", slot_type=Ingredient, key_name="id", keyed=True)
@@ -644,6 +1089,16 @@ class CMMDatabase(YAMLRoot):
         self._normalize_inlined_as_list(slot_name="solutions", slot_type=Solution, key_name="id", keyed=True)
 
         self._normalize_inlined_as_list(slot_name="media", slot_type=GrowthMedium, key_name="id", keyed=True)
+
+        self._normalize_inlined_as_list(slot_name="strains", slot_type=Strain, key_name="id", keyed=True)
+
+        self._normalize_inlined_as_list(slot_name="taxa", slot_type=Taxon, key_name="id", keyed=True)
+
+        self._normalize_inlined_as_list(slot_name="genomes", slot_type=Genome, key_name="id", keyed=True)
+
+        if not isinstance(self.growth_preferences, list):
+            self.growth_preferences = [self.growth_preferences] if self.growth_preferences is not None else []
+        self.growth_preferences = [v if isinstance(v, GrowthPreference) else GrowthPreference(**as_dict(v)) for v in self.growth_preferences]
 
         super().__post_init__(**kwargs)
 
@@ -849,10 +1304,151 @@ class DataSource(EnumDefinitionImpl):
     kg_microbe = PermissibleValue(
         text="kg_microbe",
         description="KG-Microbe knowledge graph")
+    bacdive = PermissibleValue(
+        text="bacdive",
+        description="BacDive (authoritative for bacdive_id and strain metadata)")
+    ncbi_taxonomy = PermissibleValue(
+        text="ncbi_taxonomy",
+        description="NCBI Taxonomy (authoritative for ncbi_taxon_id)")
 
     _defn = EnumDefinition(
         name="DataSource",
         description="Names of data sources used for enrichment. Each source is authoritative for its own ID type.",
+    )
+
+class OxygenTolerance(EnumDefinitionImpl):
+    """
+    Oxygen requirement categories for microorganisms.
+    """
+    aerobe = PermissibleValue(
+        text="aerobe",
+        description="Requires oxygen for growth.")
+    anaerobe = PermissibleValue(
+        text="anaerobe",
+        description="Cannot tolerate oxygen; grows only anaerobically.")
+    facultative_anaerobe = PermissibleValue(
+        text="facultative_anaerobe",
+        description="Can grow with or without oxygen.")
+    microaerophile = PermissibleValue(
+        text="microaerophile",
+        description="Requires low oxygen concentrations.")
+    aerotolerant_anaerobe = PermissibleValue(
+        text="aerotolerant_anaerobe",
+        description="Anaerobic metabolism but tolerates oxygen.")
+
+    _defn = EnumDefinition(
+        name="OxygenTolerance",
+        description="Oxygen requirement categories for microorganisms.",
+    )
+
+class GramStain(EnumDefinitionImpl):
+    """
+    Gram staining classification.
+    """
+    positive = PermissibleValue(
+        text="positive",
+        description="Gram-positive (retains crystal violet).")
+    negative = PermissibleValue(
+        text="negative",
+        description="Gram-negative (does not retain crystal violet).")
+    variable = PermissibleValue(
+        text="variable",
+        description="Variable or indeterminate staining.")
+
+    _defn = EnumDefinition(
+        name="GramStain",
+        description="Gram staining classification.",
+    )
+
+class TaxonomicRank(EnumDefinitionImpl):
+    """
+    NCBI Taxonomy ranks relevant to microbial classification.
+    """
+    domain = PermissibleValue(
+        text="domain",
+        description="Highest rank (Bacteria, Archaea, Eukarya).")
+    phylum = PermissibleValue(
+        text="phylum",
+        description="Major evolutionary lineage.")
+    order = PermissibleValue(
+        text="order",
+        description="Taxonomic order.")
+    family = PermissibleValue(
+        text="family",
+        description="Taxonomic family.")
+    genus = PermissibleValue(
+        text="genus",
+        description="Taxonomic genus.")
+    species = PermissibleValue(
+        text="species",
+        description="Species level (binomial name).")
+    subspecies = PermissibleValue(
+        text="subspecies",
+        description="Subspecies or variety.")
+    strain = PermissibleValue(
+        text="strain",
+        description="Strain level (most specific for cultured isolates).")
+    no_rank = PermissibleValue(
+        text="no_rank",
+        description="NCBI entries without assigned rank (e.g., clades).")
+
+    _defn = EnumDefinition(
+        name="TaxonomicRank",
+        description="NCBI Taxonomy ranks relevant to microbial classification.",
+    )
+
+    @classmethod
+    def _addvals(cls):
+        setattr(cls, "class",
+            PermissibleValue(
+                text="class",
+                description="Taxonomic class."))
+
+class AssemblyLevel(EnumDefinitionImpl):
+    """
+    Level of genome assembly completeness.
+    """
+    complete_genome = PermissibleValue(
+        text="complete_genome",
+        description="Fully assembled, single contiguous sequence per replicon.")
+    chromosome = PermissibleValue(
+        text="chromosome",
+        description="Assembled to chromosome level with some gaps.")
+    scaffold = PermissibleValue(
+        text="scaffold",
+        description="Scaffolds assembled but not to chromosome level.")
+    contig = PermissibleValue(
+        text="contig",
+        description="Contigs only, not scaffolded.")
+
+    _defn = EnumDefinition(
+        name="AssemblyLevel",
+        description="Level of genome assembly completeness.",
+    )
+
+class GrowthRate(EnumDefinitionImpl):
+    """
+    Qualitative growth rate categories.
+    """
+    none = PermissibleValue(
+        text="none",
+        description="No growth observed.")
+    poor = PermissibleValue(
+        text="poor",
+        description="Minimal or slow growth.")
+    moderate = PermissibleValue(
+        text="moderate",
+        description="Moderate growth rate.")
+    good = PermissibleValue(
+        text="good",
+        description="Good/normal growth rate.")
+    excellent = PermissibleValue(
+        text="excellent",
+        description="Excellent/rapid growth.")
+
+    _defn = EnumDefinition(
+        name="GrowthRate",
+        description="Qualitative growth rate categories.",
     )
 
 # Slots
@@ -1029,6 +1625,152 @@ slots.resolution = Slot(uri=CMM.resolution, name="resolution", curie=CMM.curie('
 slots.resolution_notes = Slot(uri=CMM.resolution_notes, name="resolution_notes", curie=CMM.curie('resolution_notes'),
                    model_uri=CMM.resolution_notes, domain=None, range=Optional[str])
 
+slots.ncbi_taxon_id = Slot(uri=CMM.ncbi_taxon_id, name="ncbi_taxon_id", curie=CMM.curie('ncbi_taxon_id'),
+                   model_uri=CMM.ncbi_taxon_id, domain=None, range=Optional[Union[str, URIorCURIE]])
+
+slots.species_taxon_id = Slot(uri=CMM.species_taxon_id, name="species_taxon_id", curie=CMM.curie('species_taxon_id'),
+                   model_uri=CMM.species_taxon_id, domain=None, range=Optional[Union[str, URIorCURIE]])
+
+slots.scientific_name = Slot(uri=CMM.scientific_name, name="scientific_name", curie=CMM.curie('scientific_name'),
+                   model_uri=CMM.scientific_name, domain=None, range=Optional[str])
+
+slots.strain_designation = Slot(uri=CMM.strain_designation, name="strain_designation", curie=CMM.curie('strain_designation'),
+                   model_uri=CMM.strain_designation, domain=None, range=Optional[str])
+
+slots.dsm_id = Slot(uri=CMM.dsm_id, name="dsm_id", curie=CMM.curie('dsm_id'),
+                   model_uri=CMM.dsm_id, domain=None, range=Optional[int])
+
+slots.atcc_id = Slot(uri=CMM.atcc_id, name="atcc_id", curie=CMM.curie('atcc_id'),
+                   model_uri=CMM.atcc_id, domain=None, range=Optional[str])
+
+slots.cip_id = Slot(uri=CMM.cip_id, name="cip_id", curie=CMM.curie('cip_id'),
+                   model_uri=CMM.cip_id, domain=None, range=Optional[str])
+
+slots.nbrc_id = Slot(uri=CMM.nbrc_id, name="nbrc_id", curie=CMM.curie('nbrc_id'),
+                   model_uri=CMM.nbrc_id, domain=None, range=Optional[int])
+
+slots.jcm_id = Slot(uri=CMM.jcm_id, name="jcm_id", curie=CMM.curie('jcm_id'),
+                   model_uri=CMM.jcm_id, domain=None, range=Optional[int])
+
+slots.ncimb_id = Slot(uri=CMM.ncimb_id, name="ncimb_id", curie=CMM.curie('ncimb_id'),
+                   model_uri=CMM.ncimb_id, domain=None, range=Optional[int])
+
+slots.lmg_id = Slot(uri=CMM.lmg_id, name="lmg_id", curie=CMM.curie('lmg_id'),
+                   model_uri=CMM.lmg_id, domain=None, range=Optional[int])
+
+slots.bacdive_id = Slot(uri=CMM.bacdive_id, name="bacdive_id", curie=CMM.curie('bacdive_id'),
+                   model_uri=CMM.bacdive_id, domain=None, range=Optional[int])
+
+slots.type_strain = Slot(uri=CMM.type_strain, name="type_strain", curie=CMM.curie('type_strain'),
+                   model_uri=CMM.type_strain, domain=None, range=Optional[Union[bool, Bool]])
+
+slots.biosafety_level = Slot(uri=CMM.biosafety_level, name="biosafety_level", curie=CMM.curie('biosafety_level'),
+                   model_uri=CMM.biosafety_level, domain=None, range=Optional[int])
+
+slots.isolation_source = Slot(uri=CMM.isolation_source, name="isolation_source", curie=CMM.curie('isolation_source'),
+                   model_uri=CMM.isolation_source, domain=None, range=Optional[str])
+
+slots.isolation_country = Slot(uri=CMM.isolation_country, name="isolation_country", curie=CMM.curie('isolation_country'),
+                   model_uri=CMM.isolation_country, domain=None, range=Optional[str])
+
+slots.isolation_date = Slot(uri=CMM.isolation_date, name="isolation_date", curie=CMM.curie('isolation_date'),
+                   model_uri=CMM.isolation_date, domain=None, range=Optional[str])
+
+slots.oxygen_tolerance = Slot(uri=CMM.oxygen_tolerance, name="oxygen_tolerance", curie=CMM.curie('oxygen_tolerance'),
+                   model_uri=CMM.oxygen_tolerance, domain=None, range=Optional[Union[str, "OxygenTolerance"]])
+
+slots.temperature_range = Slot(uri=CMM.temperature_range, name="temperature_range", curie=CMM.curie('temperature_range'),
+                   model_uri=CMM.temperature_range, domain=None, range=Optional[str])
+
+slots.ph_range = Slot(uri=CMM.ph_range, name="ph_range", curie=CMM.curie('ph_range'),
+                   model_uri=CMM.ph_range, domain=None, range=Optional[str])
+
+slots.gram_stain = Slot(uri=CMM.gram_stain, name="gram_stain", curie=CMM.curie('gram_stain'),
+                   model_uri=CMM.gram_stain, domain=None, range=Optional[Union[str, "GramStain"]])
+
+slots.cell_shape = Slot(uri=CMM.cell_shape, name="cell_shape", curie=CMM.curie('cell_shape'),
+                   model_uri=CMM.cell_shape, domain=None, range=Optional[str])
+
+slots.motility = Slot(uri=CMM.motility, name="motility", curie=CMM.curie('motility'),
+                   model_uri=CMM.motility, domain=None, range=Optional[Union[bool, Bool]])
+
+slots.genome_accessions = Slot(uri=CMM.genome_accessions, name="genome_accessions", curie=CMM.curie('genome_accessions'),
+                   model_uri=CMM.genome_accessions, domain=None, range=Optional[Union[str, list[str]]])
+
+slots.has_xox_genes = Slot(uri=CMM.has_xox_genes, name="has_xox_genes", curie=CMM.curie('has_xox_genes'),
+                   model_uri=CMM.has_xox_genes, domain=None, range=Optional[Union[bool, Bool]])
+
+slots.has_lanmodulin = Slot(uri=CMM.has_lanmodulin, name="has_lanmodulin", curie=CMM.curie('has_lanmodulin'),
+                   model_uri=CMM.has_lanmodulin, domain=None, range=Optional[Union[bool, Bool]])
+
+slots.parent_taxon_id = Slot(uri=CMM.parent_taxon_id, name="parent_taxon_id", curie=CMM.curie('parent_taxon_id'),
+                   model_uri=CMM.parent_taxon_id, domain=None, range=Optional[Union[str, URIorCURIE]])
+
+slots.rank = Slot(uri=CMM.rank, name="rank", curie=CMM.curie('rank'),
+                   model_uri=CMM.rank, domain=None, range=Optional[Union[str, "TaxonomicRank"]])
+
+slots.kg_node_ids = Slot(uri=CMM.kg_node_ids, name="kg_node_ids", curie=CMM.curie('kg_node_ids'),
+                   model_uri=CMM.kg_node_ids, domain=None, range=Optional[Union[str, list[str]]])
+
+slots.genbank_accession = Slot(uri=CMM.genbank_accession, name="genbank_accession", curie=CMM.curie('genbank_accession'),
+                   model_uri=CMM.genbank_accession, domain=None, range=Optional[str],
+                   pattern=re.compile(r'^GCA_\d{9}\.\d+$'))
+
+slots.refseq_accession = Slot(uri=CMM.refseq_accession, name="refseq_accession", curie=CMM.curie('refseq_accession'),
+                   model_uri=CMM.refseq_accession, domain=None, range=Optional[str],
+                   pattern=re.compile(r'^GCF_\d{9}\.\d+$'))
+
+slots.assembly_name = Slot(uri=CMM.assembly_name, name="assembly_name", curie=CMM.curie('assembly_name'),
+                   model_uri=CMM.assembly_name, domain=None, range=Optional[str])
+
+slots.assembly_level = Slot(uri=CMM.assembly_level, name="assembly_level", curie=CMM.curie('assembly_level'),
+                   model_uri=CMM.assembly_level, domain=None, range=Optional[Union[str, "AssemblyLevel"]])
+
+slots.annotation_url = Slot(uri=CMM.annotation_url, name="annotation_url", curie=CMM.curie('annotation_url'),
+                   model_uri=CMM.annotation_url, domain=None, range=Optional[str])
+
+slots.ftp_path = Slot(uri=CMM.ftp_path, name="ftp_path", curie=CMM.curie('ftp_path'),
+                   model_uri=CMM.ftp_path, domain=None, range=Optional[str])
+
+slots.belongs_to_taxon = Slot(uri=RO['0002162'], name="belongs_to_taxon", curie=RO.curie('0002162'),
+                   model_uri=CMM.belongs_to_taxon, domain=None, range=Optional[Union[str, TaxonId]])
+
+slots.has_genome = Slot(uri=CMM.has_genome, name="has_genome", curie=CMM.curie('has_genome'),
+                   model_uri=CMM.has_genome, domain=None, range=Optional[Union[Union[str, GenomeId], list[Union[str, GenomeId]]]])
+
+slots.grows_in_medium = Slot(uri=METPO['2000517'], name="grows_in_medium", curie=METPO.curie('2000517'),
+                   model_uri=CMM.grows_in_medium, domain=None, range=Optional[Union[Union[str, GrowthMediumId], list[Union[str, GrowthMediumId]]]])
+
+slots.does_not_grow_in_medium = Slot(uri=METPO['2000518'], name="does_not_grow_in_medium", curie=METPO.curie('2000518'),
+                   model_uri=CMM.does_not_grow_in_medium, domain=None, range=Optional[Union[Union[str, GrowthMediumId], list[Union[str, GrowthMediumId]]]])
+
+slots.subject_strain = Slot(uri=CMM.subject_strain, name="subject_strain", curie=CMM.curie('subject_strain'),
+                   model_uri=CMM.subject_strain, domain=None, range=Optional[Union[str, StrainId]])
+
+slots.object_medium = Slot(uri=CMM.object_medium, name="object_medium", curie=CMM.curie('object_medium'),
+                   model_uri=CMM.object_medium, domain=None, range=Optional[Union[str, GrowthMediumId]])
+
+slots.grows = Slot(uri=CMM.grows, name="grows", curie=CMM.curie('grows'),
+                   model_uri=CMM.grows, domain=None, range=Optional[Union[bool, Bool]])
+
+slots.growth_rate = Slot(uri=CMM.growth_rate, name="growth_rate", curie=CMM.curie('growth_rate'),
+                   model_uri=CMM.growth_rate, domain=None, range=Optional[Union[str, "GrowthRate"]])
+
+slots.optimal_temperature = Slot(uri=CMM.optimal_temperature, name="optimal_temperature", curie=CMM.curie('optimal_temperature'),
+                   model_uri=CMM.optimal_temperature, domain=None, range=Optional[float])
+
+slots.optimal_ph = Slot(uri=CMM.optimal_ph, name="optimal_ph", curie=CMM.curie('optimal_ph'),
+                   model_uri=CMM.optimal_ph, domain=None, range=Optional[float])
+
+slots.carbon_source_used = Slot(uri=CMM.carbon_source_used, name="carbon_source_used", curie=CMM.curie('carbon_source_used'),
+                   model_uri=CMM.carbon_source_used, domain=None, range=Optional[str])
+
+slots.oxygen_condition = Slot(uri=CMM.oxygen_condition, name="oxygen_condition", curie=CMM.curie('oxygen_condition'),
+                   model_uri=CMM.oxygen_condition, domain=None, range=Optional[Union[str, "OxygenTolerance"]])
+
+slots.incubation_time = Slot(uri=CMM.incubation_time, name="incubation_time", curie=CMM.curie('incubation_time'),
+                   model_uri=CMM.incubation_time, domain=None, range=Optional[str])
+
 slots.cMMDatabase__ingredients = Slot(uri=CMM.ingredients, name="cMMDatabase__ingredients", curie=CMM.curie('ingredients'),
                    model_uri=CMM.cMMDatabase__ingredients, domain=None, range=Optional[Union[dict[Union[str, IngredientId], Union[dict, Ingredient]], list[Union[dict, Ingredient]]]])
 
@@ -1038,11 +1780,29 @@ slots.cMMDatabase__solutions = Slot(uri=CMM.solutions, name="cMMDatabase__soluti
 slots.cMMDatabase__media = Slot(uri=CMM.media, name="cMMDatabase__media", curie=CMM.curie('media'),
                    model_uri=CMM.cMMDatabase__media, domain=None, range=Optional[Union[dict[Union[str, GrowthMediumId], Union[dict, GrowthMedium]], list[Union[dict, GrowthMedium]]]])
 
+slots.cMMDatabase__strains = Slot(uri=CMM.strains, name="cMMDatabase__strains", curie=CMM.curie('strains'),
+                   model_uri=CMM.cMMDatabase__strains, domain=None, range=Optional[Union[dict[Union[str, StrainId], Union[dict, Strain]], list[Union[dict, Strain]]]])
+
+slots.cMMDatabase__taxa = Slot(uri=CMM.taxa, name="cMMDatabase__taxa", curie=CMM.curie('taxa'),
+                   model_uri=CMM.cMMDatabase__taxa, domain=None, range=Optional[Union[dict[Union[str, TaxonId], Union[dict, Taxon]], list[Union[dict, Taxon]]]])
+
+slots.cMMDatabase__genomes = Slot(uri=CMM.genomes, name="cMMDatabase__genomes", curie=CMM.curie('genomes'),
+                   model_uri=CMM.cMMDatabase__genomes, domain=None, range=Optional[Union[dict[Union[str, GenomeId], Union[dict, Genome]], list[Union[dict, Genome]]]])
+
+slots.cMMDatabase__growth_preferences = Slot(uri=CMM.growth_preferences, name="cMMDatabase__growth_preferences", curie=CMM.curie('growth_preferences'),
+                   model_uri=CMM.cMMDatabase__growth_preferences, domain=None, range=Optional[Union[Union[dict, GrowthPreference], list[Union[dict, GrowthPreference]]]])
+
 slots.IngredientComponent_ingredient = Slot(uri=CMM.ingredient, name="IngredientComponent_ingredient", curie=CMM.curie('ingredient'),
                    model_uri=CMM.IngredientComponent_ingredient, domain=IngredientComponent, range=Union[str, IngredientId])
 
 slots.SolutionComponent_solution = Slot(uri=CMM.solution, name="SolutionComponent_solution", curie=CMM.curie('solution'),
                    model_uri=CMM.SolutionComponent_solution, domain=SolutionComponent, range=Union[str, SolutionId])
+
+slots.GrowthPreference_subject_strain = Slot(uri=CMM.subject_strain, name="GrowthPreference_subject_strain", curie=CMM.curie('subject_strain'),
+                   model_uri=CMM.GrowthPreference_subject_strain, domain=GrowthPreference, range=Union[str, StrainId])
+
+slots.GrowthPreference_object_medium = Slot(uri=CMM.object_medium, name="GrowthPreference_object_medium", curie=CMM.curie('object_medium'),
+                   model_uri=CMM.GrowthPreference_object_medium, domain=GrowthPreference, range=Union[str, GrowthMediumId])
 
 slots.CrossReference_xref_type = Slot(uri=CMM.xref_type, name="CrossReference_xref_type", curie=CMM.curie('xref_type'),
                    model_uri=CMM.CrossReference_xref_type, domain=CrossReference, range=str)
