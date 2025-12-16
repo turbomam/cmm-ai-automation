@@ -1,5 +1,5 @@
 # Auto generated from cmm_ai_automation.yaml by pythongen.py version: 0.0.1
-# Generation date: 2025-12-16T16:03:05
+# Generation date: 2025-12-16T18:09:31
 # Schema: cmm-ai-automation
 #
 # id: https://w3id.org/turbomam/cmm-ai-automation
@@ -73,6 +73,8 @@ CIP = CurieNamespace('CIP', 'https://catalogue-crbip.pasteur.fr/fiche.xhtml?crbi
 DRUGBANK = CurieNamespace('DRUGBANK', 'http://identifiers.org/drugbank/')
 DSMZ = CurieNamespace('DSMZ', 'https://www.dsmz.de/collection/catalogue/details/culture/DSM-')
 ENVO = CurieNamespace('ENVO', 'http://purl.obolibrary.org/obo/ENVO_')
+GCA = CurieNamespace('GCA', 'http://identifiers.org/insdc.gca/')
+GCF = CurieNamespace('GCF', 'http://identifiers.org/insdc.gcf/')
 JCM = CurieNamespace('JCM', 'https://jcm.brc.riken.jp/cgi-bin/jcm/jcm_number?JCM=')
 KEGG_COMPOUND = CurieNamespace('KEGG_COMPOUND', 'http://identifiers.org/kegg.compound/')
 LMG = CurieNamespace('LMG', 'https://bccm.belspo.be/catalogues/lmg-strain-details?NUM=')

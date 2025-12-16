@@ -37,7 +37,10 @@ prefixes:
   NCIMB: https://www.ncimb.com/product/NCIMB
   LMG: https://bccm.belspo.be/catalogues/lmg-strain-details?NUM=
   # BacDive strain database
-  bacdive.strain: https://bacdive.dsmz.de/strain/
+  bacdive_strain: https://bacdive.dsmz.de/strain/
+  # NCBI Assembly accessions
+  GCA: http://identifiers.org/insdc.gca/
+  GCF: http://identifiers.org/insdc.gcf/
   # Ontology prefixes
   METPO: http://purl.obolibrary.org/obo/METPO_
 
@@ -304,7 +307,7 @@ classes:
       Represents a sequenced and assembled genome.
     class_uri: biolink:Genome
     slots:
-      - id  # GCA_NNNN or GCF_NNNN
+      - id  # GCA:GCA_NNNNNNNN.N or GCF:GCF_NNNNNNNN.N
       - name  # Assembly name
       - description
       # Assembly identifiers
@@ -327,7 +330,8 @@ classes:
       - source_records
       - last_enriched
     id_prefixes:
-      - cmm
+      - GCA
+      - GCF
 
   # ---------------------------------------------------------------------------
   # Microbial Strains
@@ -395,7 +399,7 @@ classes:
       - last_enriched
     id_prefixes:
       - NCBITaxon
-      - bacdive.strain
+      - bacdive_strain
       - DSMZ
       - ATCC
 

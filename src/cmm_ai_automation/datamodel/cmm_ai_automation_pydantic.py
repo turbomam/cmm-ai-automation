@@ -103,6 +103,10 @@ linkml_meta = LinkMLMeta({'default_prefix': 'cmm',
                            'prefix_reference': 'https://www.dsmz.de/collection/catalogue/details/culture/DSM-'},
                   'ENVO': {'prefix_prefix': 'ENVO',
                            'prefix_reference': 'http://purl.obolibrary.org/obo/ENVO_'},
+                  'GCA': {'prefix_prefix': 'GCA',
+                          'prefix_reference': 'http://identifiers.org/insdc.gca/'},
+                  'GCF': {'prefix_prefix': 'GCF',
+                          'prefix_reference': 'http://identifiers.org/insdc.gcf/'},
                   'JCM': {'prefix_prefix': 'JCM',
                           'prefix_reference': 'https://jcm.brc.riken.jp/cgi-bin/jcm/jcm_number?JCM='},
                   'KEGG.COMPOUND': {'prefix_prefix': 'KEGG.COMPOUND',
@@ -127,7 +131,7 @@ linkml_meta = LinkMLMeta({'default_prefix': 'cmm',
                          'prefix_reference': 'http://purl.obolibrary.org/obo/RO_'},
                   'UO': {'prefix_prefix': 'UO',
                          'prefix_reference': 'http://purl.obolibrary.org/obo/UO_'},
-                  'bacdive.strain': {'prefix_prefix': 'bacdive.strain',
+                  'bacdive_strain': {'prefix_prefix': 'bacdive_strain',
                                      'prefix_reference': 'https://bacdive.dsmz.de/strain/'},
                   'biolink': {'prefix_prefix': 'biolink',
                               'prefix_reference': 'https://w3id.org/biolink/vocab/'},
@@ -806,7 +810,7 @@ class Genome(ConfiguredBaseModel):
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'biolink:Genome',
          'from_schema': 'https://w3id.org/turbomam/cmm-ai-automation',
-         'id_prefixes': ['cmm']})
+         'id_prefixes': ['GCA', 'GCF']})
 
     id: str = Field(default=..., description="""A unique identifier for a thing""", json_schema_extra = { "linkml_meta": {'domain_of': ['NamedThing', 'EnrichedIngredient', 'Taxon', 'Genome', 'Strain'],
          'slot_uri': 'schema:identifier'} })
@@ -865,7 +869,7 @@ class Strain(ConfiguredBaseModel):
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'biolink:OrganismalEntity',
          'from_schema': 'https://w3id.org/turbomam/cmm-ai-automation',
-         'id_prefixes': ['NCBITaxon', 'bacdive.strain', 'DSMZ', 'ATCC']})
+         'id_prefixes': ['NCBITaxon', 'bacdive_strain', 'DSMZ', 'ATCC']})
 
     id: str = Field(default=..., description="""A unique identifier for a thing""", json_schema_extra = { "linkml_meta": {'domain_of': ['NamedThing', 'EnrichedIngredient', 'Taxon', 'Genome', 'Strain'],
          'slot_uri': 'schema:identifier'} })
