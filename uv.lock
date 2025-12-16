@@ -289,6 +289,24 @@ wheels = [
 ]
 
 [[package]]
+name = "bioregistry"
+version = "0.12.33"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+    { name = "curies" },
+    { name = "more-click" },
+    { name = "pydantic", extra = ["email"] },
+    { name = "pystow" },
+    { name = "requests" },
+    { name = "tqdm" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/e0/96/c3f2c10506d06dee53eb4f60b5ce5be0778964009b75980713679973e1b5/bioregistry-0.12.33.tar.gz", hash = "sha256:ca2ec4c2f8cab5630606d46a2f874e1ca04791c4dfbe73165b5d4c61dede0491", size = 6345666 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/81/b5/9e20ec9756afb8708455edaf4f9f1c5d35406b9a863dcf1d8282d44db1b5/bioregistry-0.12.33-py3-none-any.whl", hash = "sha256:15980670c35e1553197c11cba53eb8f807bb9b4908dc1545386a32316a032871", size = 5530693 },
+]
+
+[[package]]
 name = "bleach"
 version = "6.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -580,6 +598,7 @@ dependencies = [
     { name = "asteval" },
     { name = "bacdive" },
     { name = "beautifulsoup4" },
+    { name = "bioregistry" },
     { name = "chromadb" },
     { name = "click" },
     { name = "deepdiff" },
@@ -629,6 +648,7 @@ requires-dist = [
     { name = "asteval", specifier = ">=1.0.6" },
     { name = "bacdive", specifier = ">=1.0.0" },
     { name = "beautifulsoup4", specifier = ">=4.14.3" },
+    { name = "bioregistry", specifier = ">=0.12.33" },
     { name = "chromadb", specifier = ">=1.3.6" },
     { name = "click", specifier = ">=8.0.0" },
     { name = "deepdiff", specifier = ">=8.6.1" },
@@ -1079,6 +1099,19 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/88/3a/a61d9a1f319a186b05d14df17daea42fcddea63c213bcd61a929fb3a6796/editorconfig-0.17.1.tar.gz", hash = "sha256:23c08b00e8e08cc3adcddb825251c497478df1dada6aefeb01e626ad37303745", size = 14695 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/96/fd/a40c621ff207f3ce8e484aa0fc8ba4eb6e3ecf52e15b42ba764b457a9550/editorconfig-0.17.1-py3-none-any.whl", hash = "sha256:1eda9c2c0db8c16dbd50111b710572a5e6de934e39772de1959d41f64fc17c82", size = 16360 },
+]
+
+[[package]]
+name = "email-validator"
+version = "2.3.0"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "dnspython" },
+    { name = "idna" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/f5/22/900cb125c76b7aaa450ce02fd727f452243f2e91a61af068b40adba60ea9/email_validator-2.3.0.tar.gz", hash = "sha256:9fc05c37f2f6cf439ff414f8fc46d917929974a82244c20eb10231ba60c54426", size = 51238 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/de/15/545e2b6cf2e3be84bc1ed85613edd75b8aea69807a71c26f4ca6a9258e82/email_validator-2.3.0-py3-none-any.whl", hash = "sha256:80f13f623413e6b197ae73bb10bf4eb0908faf509ad8362c5edeb0be7fd450b4", size = 35604 },
 ]
 
 [[package]]
@@ -2700,6 +2733,18 @@ wheels = [
 ]
 
 [[package]]
+name = "more-click"
+version = "0.1.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "click" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/74/52/dc524f10307c472f3ee83ceef5cc3c3c1d987f9554c90cf34616bdcb2ca9/more_click-0.1.3.tar.gz", hash = "sha256:c170987d37334278169fe3b9b388f1fcd9fc96439579354fd7c537537a182128", size = 11793 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/21/c8/62a253fdb3f66529ed0d7f0e4703fdb44cc8745610f199e173550d8f85eb/more_click-0.1.3-py3-none-any.whl", hash = "sha256:12f0f3da94c84d39daaaec08e9503df8877f493812f8ebc3f0713081da48d282", size = 12052 },
+]
+
+[[package]]
 name = "mpmath"
 version = "1.3.0"
 source = { registry = "https://pypi.org/simple" }
@@ -3749,6 +3794,11 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/69/44/36f1a6e523abc58ae5f928898e4aca2e0ea509b5aa6f6f392a5d882be928/pydantic-2.12.5.tar.gz", hash = "sha256:4d351024c75c0f085a9febbb665ce8c0c6ec5d30e903bdb6394b7ede26aebb49", size = 821591 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5a/87/b70ad306ebb6f9b585f114d0ac2137d792b48be34d732d60e597c2f8465a/pydantic-2.12.5-py3-none-any.whl", hash = "sha256:e561593fccf61e8a20fc46dfc2dfe075b8be7d0188df33f221ad1f0139180f9d", size = 463580 },
+]
+
+[package.optional-dependencies]
+email = [
+    { name = "email-validator" },
 ]
 
 [[package]]
