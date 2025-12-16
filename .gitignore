@@ -165,3 +165,12 @@ output/
 
 # Large inferred schemas - regenerate locally as needed
 mediadive-schemas/
+
+# Generated output files - rebuild locally
+output/
+
+# DuckDB enrichment store - rebuild via enrich-to-store
+data/enrichment.duckdb
+
+# Session notes (between-session memory for AI assistants)
+SESSION_NOTES.md

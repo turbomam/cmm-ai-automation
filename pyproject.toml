@@ -33,6 +33,11 @@ dependencies = [
   "beautifulsoup4>=4.14.3",
   "bacdive>=1.0.0",
   "linkml>=1.9.5",
+  "asteval>=1.0.6",
+  "deepdiff>=8.6.1",
+  "urllib3>=2.6.0",
+  "pyarrow>=17.0.0",
+  "filelock>=3.20.1",  # CVE-2025-68146 fix
 ]
 
 [dependency-groups]
@@ -43,6 +48,7 @@ dev = [
     "mkdocs-pymdownx-material-extras>=2.5.6",
     "jupyter>=1.0.0",
     "mknotebooks>= 0.8.0",
+    "pip-audit>=2.10.0",
 ]
 qa = [
     "ruff>=0.8.0",
@@ -59,6 +65,7 @@ qa = [
 [project.scripts]
 download-sheets = "cmm_ai_automation.scripts.download_sheets:main"
 enrich-ingredients = "cmm_ai_automation.scripts.enrich_ingredients:main"
+enrich-to-store = "cmm_ai_automation.scripts.enrich_to_store:main"
 
 # See https://hatch.pypa.io/latest/config/build/#file-selection for how to
 # explicitly include files other than default into the build distributions.
@@ -77,10 +84,11 @@ fallback-version = "0.0.0"
 testpaths = ["tests"]
 markers = [
     "integration: marks tests as integration tests (require network access)",
+    "mediadive: marks tests that require MediaDive API (blocks GitHub Actions IPs)",
 ]
-# Skip integration tests by default (some APIs block CI IPs)
-# Run with: pytest -m integration --run-integration to include them
-addopts = "-m 'not integration'"
+# Run all tests except MediaDive (which blocks GitHub Actions IPs)
+# MediaDive tests can be run locally with: pytest -m mediadive
+addopts = "-m 'not mediadive'"
 
 # Ref.: https://github.com/codespell-project/codespell
 [tool.codespell]
@@ -209,6 +217,13 @@ exclude_lines = [
   "if __name__ == .__main__.:",
 ]
 # Target coverage for library code (excluding scripts)
-# Temporarily set to 30% while building out tests - see issue #29
-# TODO(#29): Raise to 60% once more tests are added
-fail_under = 30
+# Raised from 35% to 60% (2025-12-12) - see issue #28
+# Note: CI achieves ~62% without CAS API key, local achieves ~65% with it
+fail_under = 60
+
+# Ref.: https://bandit.readthedocs.io/
+[tool.bandit]
+exclude_dirs = ["tests", "project", "src/cmm_ai_automation/datamodel"]
+# Skip B110 (try-except-pass) - intentional for resilient API handling in scripts
+# Skip B405/B314 (XML) - parsing trusted API responses (NCBI Entrez)
+skips = ["B110", "B405", "B314"]

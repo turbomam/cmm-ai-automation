@@ -23,7 +23,7 @@ class TestMediaDiveClient:
         """Create a MediaDive client for testing."""
         return MediaDiveClient()
 
-    @pytest.mark.integration
+    @pytest.mark.mediadive
     def test_get_ingredient_peptone(self, client: MediaDiveClient) -> None:
         """Test looking up peptone (ingredient ID 1)."""
         result = client.get_ingredient(1)
@@ -35,7 +35,7 @@ class TestMediaDiveClient:
         assert result.is_complex is True
         assert "Tryptones" in result.synonyms or "Pepton" in result.synonyms
 
-    @pytest.mark.integration
+    @pytest.mark.mediadive
     def test_get_ingredient_casamino_acids(self, client: MediaDiveClient) -> None:
         """Test looking up casamino acids (ingredient ID 101)."""
         result = client.get_ingredient(101)
@@ -45,7 +45,7 @@ class TestMediaDiveClient:
         assert result.name == "Casamino acids"
         assert result.is_complex is True
 
-    @pytest.mark.integration
+    @pytest.mark.mediadive
     def test_get_ingredient_with_chebi(self, client: MediaDiveClient) -> None:
         """Test looking up Fe(III)-EDTA which has a ChEBI ID."""
         result = client.get_ingredient(952)
@@ -57,7 +57,7 @@ class TestMediaDiveClient:
         assert result.is_complex is False
         assert result.formula == "C10H12FeN2O8"
 
-    @pytest.mark.integration
+    @pytest.mark.mediadive
     def test_get_ingredient_not_found(self, client: MediaDiveClient) -> None:
         """Test looking up a nonexistent ingredient."""
         result = client.get_ingredient(999999)
@@ -65,7 +65,7 @@ class TestMediaDiveClient:
         assert isinstance(result, MediaDiveLookupError)
         assert result.error_code in ("NOT_FOUND", "404")
 
-    @pytest.mark.integration
+    @pytest.mark.mediadive
     def test_get_solution_sl6(self, client: MediaDiveClient) -> None:
         """Test looking up trace element solution SL-6."""
         result = client.get_solution(25)
@@ -82,7 +82,7 @@ class TestMediaDiveClient:
         assert first_item.amount == 0.1
         assert first_item.unit == "g"
 
-    @pytest.mark.integration
+    @pytest.mark.mediadive
     def test_get_solution_not_found(self, client: MediaDiveClient) -> None:
         """Test looking up a nonexistent solution."""
         result = client.get_solution(999999)
@@ -139,7 +139,7 @@ class TestMediaDiveCaching:
             assert "ingredient:1" in client2._cache
             assert client2._cache["ingredient:1"]["name"] == "Peptone"
 
-    @pytest.mark.integration
+    @pytest.mark.mediadive
     def test_cache_prevents_duplicate_requests(self) -> None:
         """Test that cached results are returned without API calls."""
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -180,7 +180,7 @@ class TestKnownIngredients:
         assert get_known_solution_id("trace element solution sl-10") == 3527
         assert get_known_solution_id("unknown solution") is None
 
-    @pytest.mark.integration
+    @pytest.mark.mediadive
     def test_search_ingredients_by_name_known(self) -> None:
         """Test searching for a known ingredient by name."""
         client = MediaDiveClient()

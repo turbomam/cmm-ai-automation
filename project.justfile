@@ -4,22 +4,53 @@
 # QA TARGETS
 # =============================================================================
 
-# Run comprehensive QA: all tests, pre-commit hooks, coverage report, smoke tests
-qa: test-all lint-all smoke-test-all
+# Run all QA checks (linting, tests, schema, docs, smoke tests) - nothing runs twice
+qa:
+  uv run pre-commit run --all-files --hook-stage manual
+  @echo "✓ Full QA complete"
 
-# Run all tests including integration tests with coverage
-test-all:
-  uv run pytest --cov --cov-report=term-missing --cov-report=html -v
+# Alias for CI (same as qa)
+ci: qa
 
-# Run all linting and QA checks
-lint-all:
+# Run only linting checks (fast, skips tests/docs/schema)
+lint-fast:
   uv run pre-commit run --all-files
-  uv run mypy src/cmm_ai_automation/
-  uv run linkml-lint --config .linkml-lint.yaml src/cmm_ai_automation/schema/
+
+# Run tests with verbose output and HTML coverage report
+test-verbose:
+  uv run pytest -m "" --cov --cov-report=term-missing --cov-report=html -v --durations=10
 
 # =============================================================================
 # FUNCTIONAL TARGETS - Data Pipeline Operations
 # =============================================================================
+
+# Clean enrichment outputs (DuckDB store, KGX files, intermediate files)
+# SAFE: Only removes generated files, not downloaded source data
+clean-enrichment:
+  rm -f data/enrichment.duckdb
+  rm -rf output/
+  @echo "✓ Cleaned enrichment outputs"
+
+# Clean everything including downloaded sheets (full reset)
+# WARNING: Will need to re-download from Google Sheets
+clean-all: clean-enrichment
+  rm -f data/private/*.tsv
+  @echo "✓ Cleaned all data (sheets will be re-downloaded)"
+
+# Full pipeline: download sheets → dedupe ingredients → enrich with spidering → export KGX
+# REQUIRES: Google Sheets API, PubChem, ChEBI, CAS, Node Norm APIs
+# NETWORK: yes, EXPENSIVE: many API calls
+# WRITES: data/private/*.tsv, output/ingredients_unique.tsv, data/enrichment.duckdb, output/kgx/
+ingredients-to-kgx:
+  @echo "Step 1: Downloading sheets from Google..."
+  uv run download-sheets
+  @echo "Step 2: Extracting unique ingredients..."
+  @mkdir -p output
+  cut -f2 data/private/media_ingredients.tsv | tail -n +2 | sort -u | awk 'BEGIN{print "ingredient_name"}{print}' > output/ingredients_unique.tsv
+  @echo "  Found $(wc -l < output/ingredients_unique.tsv | tr -d ' ') unique ingredients"
+  @echo "Step 3: Enriching with iterative spidering and exporting KGX..."
+  uv run enrich-to-store --input output/ingredients_unique.tsv --export-kgx --output output/kgx/ingredients --verbose
+  @echo "✓ Pipeline complete: output/kgx/ingredients_nodes.tsv"
 
 # Download all tabs from BER CMM Google Sheet as TSV files to data/private/
 # REQUIRES: Google Sheets API credentials, NETWORK: yes, WRITES: data/private/*.tsv
@@ -71,30 +102,22 @@ codify-strains input output chroma_path:
 enrich-strains input output:
   uv run python -m cmm_ai_automation.scripts.enrich_strains --input {{input}} --output {{output}}
 
-# =============================================================================
-# SMOKE TESTS - Verify CLI scripts can be imported and show help
-# =============================================================================
+# Multi-source enrichment pipeline: enriches ingredients and stores in DuckDB
+# REQUIRES: PubChem, ChEBI, CAS (optional), Node Normalization APIs, NETWORK: yes, WRITES: data/enrichment.duckdb
+enrich-to-store:
+  uv run enrich-to-store --input data/private/normalized/ingredients.tsv
 
-# Run all smoke tests (safe, fast, no network/API calls)
-smoke-test-all: smoke-test-download-sheets smoke-test-enrich-ingredients smoke-test-enrich-strains smoke-test-codify-strains smoke-test-build-ncbitaxon smoke-test-load-bacdive smoke-test-load-mediadive-details
+# Multi-source enrichment with KGX export (complete pipeline)
+# REQUIRES: Multiple APIs, NETWORK: yes, EXPENSIVE: many API calls, WRITES: DuckDB + KGX TSV files
+enrich-and-export-kgx:
+  uv run enrich-to-store --input data/private/normalized/ingredients.tsv --export-kgx --output output/kgx/ingredients
 
-smoke-test-download-sheets:
-  @uv run download-sheets --help > /dev/null
+# Multi-source enrichment with limit for testing (first N ingredients)
+# REQUIRES: Multiple APIs, NETWORK: yes, SAFE: limited scope, WRITES: DuckDB
+enrich-to-store-test n='5':
+  uv run enrich-to-store --input data/private/normalized/ingredients.tsv --limit {{n}} --verbose
 
-smoke-test-enrich-ingredients:
-  @uv run enrich-ingredients --help > /dev/null
-
-smoke-test-enrich-strains:
-  @uv run python -m cmm_ai_automation.scripts.enrich_strains --help > /dev/null
-
-smoke-test-codify-strains:
-  @uv run python -m cmm_ai_automation.scripts.codify_strains --help > /dev/null
-
-smoke-test-build-ncbitaxon:
-  @uv run python -m cmm_ai_automation.scripts.build_ncbitaxon_chromadb --help > /dev/null
-
-smoke-test-load-bacdive:
-  @uv run python -m cmm_ai_automation.scripts.load_bacdive_mongodb --help > /dev/null
-
-smoke-test-load-mediadive-details:
-  @uv run python -m cmm_ai_automation.scripts.load_mediadive_details --help > /dev/null
+# Export existing EnrichmentStore to KGX format (no API calls)
+# REQUIRES: data/enrichment.duckdb exists, SAFE: read-only on APIs, WRITES: output/kgx/*.tsv
+export-kgx:
+  uv run python -c "from cmm_ai_automation.store.enrichment_store import EnrichmentStore; from pathlib import Path; store = EnrichmentStore(); store.export_to_kgx(Path('output/kgx/ingredients')); print('✓ KGX export complete')"

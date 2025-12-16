@@ -12,6 +12,7 @@ import contextlib
 import json
 import logging
 import os
+import re
 import time
 from dataclasses import dataclass
 from typing import Any
@@ -26,6 +27,9 @@ BASE_URL = "https://commonchemistry.cas.org/api"
 
 # Rate limit delay (be conservative)
 DEFAULT_RATE_LIMIT_DELAY = 0.5
+
+# Regex pattern for HTML tags (CAS API returns formulas with <sub> tags)
+HTML_TAG_PATTERN = re.compile(r"<[^>]+>")
 
 
 @dataclass
@@ -250,7 +254,10 @@ class CASClient:
             )
 
         # Parse detail response
-        formula = data.get("molecularFormula")
+        # CAS API returns HTML-formatted formulas (e.g., "C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>")
+        # Strip HTML tags to get plain formula (e.g., "C6H12O6")
+        raw_formula = data.get("molecularFormula")
+        formula = HTML_TAG_PATTERN.sub("", raw_formula) if raw_formula else None
         is_mixture = formula == "Unspecified" or formula is None
 
         # Extract molecular mass
