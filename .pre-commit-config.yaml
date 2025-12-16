@@ -100,8 +100,8 @@ repos:
   - repo: local
     hooks:
       - id: pytest
-        name: pytest (tests with coverage)
-        entry: uv run pytest -m "" --cov --cov-report=term-missing -q
+        name: pytest (unit tests, excludes integration)
+        entry: uv run pytest -m "not integration" --cov --cov-report=term-missing -q
         language: system
         pass_filenames: false
         always_run: true
@@ -116,7 +116,7 @@ repos:
 
       - id: mkdocs-build
         name: mkdocs build (documentation)
-        entry: uv run mkdocs build --strict
+        entry: bash -c 'uv run gen-doc -d docs/elements src/cmm_ai_automation/schema/cmm_ai_automation.yaml && uv run mkdocs build --strict'
         language: system
         pass_filenames: false
         always_run: true

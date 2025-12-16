@@ -139,12 +139,13 @@ def select_display_name(record: dict[str, Any]) -> str:
         if isinstance(item, dict):
             sources.append(item)
         elif isinstance(item, str):
+            # Try to parse JSON strings (from DuckDB text storage)
             try:
                 parsed = json.loads(item)
                 if isinstance(parsed, dict):
                     sources.append(parsed)
             except (json.JSONDecodeError, TypeError):
-                pass
+                pass  # Skip malformed JSON strings; continue with valid sources
 
     # Extract query names from sources
     query_names = set()
@@ -386,7 +387,10 @@ class EnrichmentStore:
             merged["id"] = composite_key
             merged["last_enriched"] = datetime.now().isoformat()
             # Delete existing record (may have different key) and insert merged
-            # NOTE: This is not atomic - if insert fails, data is lost.
+            # NOTE: This is not atomic - if insert fails after delete, data is lost.
+            # linkml-store's DuckDB backend doesn't support transactions, so we log
+            # the merged data on failure for manual recovery. A future improvement
+            # could use a backup table or write-ahead log pattern.
             logger.debug(f"Updating ingredient {existing_key} -> {composite_key}: {merged}")
             try:
                 # Delete by the OLD key (existing_key), not the new composite_key

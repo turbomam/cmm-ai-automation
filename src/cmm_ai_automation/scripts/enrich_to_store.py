@@ -292,13 +292,13 @@ def spider_enrich_ingredient(
                 result = results[0]
                 sources_data["pubchem_name"] = pubchem_to_dict(result, name)
 
-                # Extract synonyms
+                # Extract synonyms (optional - continue without if fetch fails)
                 try:
                     synonyms = pubchem_client.get_synonyms(result.CID)
                     if isinstance(synonyms, list):
                         sources_data["pubchem_name"]["synonyms"] = synonyms
                 except Exception:
-                    pass
+                    pass  # Synonyms are optional; continue enrichment without them
 
                 # Mark as queried
                 queried_ids.add(f"PUBCHEM.COMPOUND:{result.CID}")
@@ -320,6 +320,7 @@ def spider_enrich_ingredient(
                     sources_data["chebi_name"] = chebi_to_dict(chebi_result, compound_dict)
                     queried_ids.add(chebi_result.chebi_id)
                 except Exception:
+                    # Compound details failed; use search result without full compound data
                     sources_data["chebi_name"] = chebi_to_dict(chebi_result, None)
                     queried_ids.add(chebi_result.chebi_id)
             else:
@@ -427,7 +428,7 @@ def spider_enrich_ingredient(
                         queried_ids.add(chebi_id)
                         successes += 1
                 except Exception:
-                    pass
+                    pass  # Skip failed IDs; continue spidering remaining identifiers
             click.echo(f"({successes} succeeded)")
 
         # Query PubChem CIDs
@@ -442,18 +443,18 @@ def spider_enrich_ingredient(
                     if isinstance(result, CompoundResult):
                         sources_data[f"pubchem_{cid}"] = pubchem_to_dict(result, name)
 
-                        # Get synonyms
+                        # Get synonyms (optional - continue without if fetch fails)
                         try:
                             synonyms = pubchem_client.get_synonyms(cid)
                             if isinstance(synonyms, list):
                                 sources_data[f"pubchem_{cid}"]["synonyms"] = synonyms
                         except Exception:
-                            pass
+                            pass  # Synonyms are optional; continue enrichment without them
 
                         queried_ids.add(pc_id)
                         successes += 1
                 except Exception:
-                    pass
+                    pass  # Skip failed IDs; continue spidering remaining identifiers
             click.echo(f"({successes} succeeded)")
 
         # Query CAS RNs
@@ -470,7 +471,7 @@ def spider_enrich_ingredient(
                         queried_ids.add(cas_id)
                         successes += 1
                 except Exception:
-                    pass
+                    pass  # Skip failed IDs; continue spidering remaining identifiers
             click.echo(f"({successes} succeeded)")
 
     if iteration >= max_iterations:
