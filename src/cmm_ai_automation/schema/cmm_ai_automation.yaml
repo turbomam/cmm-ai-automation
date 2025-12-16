@@ -31,6 +31,18 @@ prefixes:
   # Culture collection prefixes
   DSMZ: https://www.dsmz.de/collection/catalogue/details/culture/DSM-
   ATCC: https://www.atcc.org/products/
+  CIP: https://catalogue-crbip.pasteur.fr/fiche.xhtml?crbip=
+  NBRC: https://www.nite.go.jp/nbrc/catalogue/NBRCCatalogueDetailServlet?ID=NBRC&CAT=
+  JCM: https://jcm.brc.riken.jp/cgi-bin/jcm/jcm_number?JCM=
+  NCIMB: https://www.ncimb.com/product/NCIMB
+  LMG: https://bccm.belspo.be/catalogues/lmg-strain-details?NUM=
+  # BacDive strain database
+  bacdive_strain: https://bacdive.dsmz.de/strain/
+  # NCBI Assembly accessions
+  GCA: http://identifiers.org/insdc.gca/
+  GCF: http://identifiers.org/insdc.gcf/
+  # Ontology prefixes
+  METPO: http://purl.obolibrary.org/obo/METPO_
 
 default_prefix: cmm
 default_range: string
@@ -149,6 +161,35 @@ classes:
         required: true
 
   # ---------------------------------------------------------------------------
+  # Growth relationships (reified edges with properties)
+  # ---------------------------------------------------------------------------
+
+  GrowthPreference:
+    description: >-
+      Reified relationship: a strain's growth in a specific medium.
+      Captures edge properties like growth rate, temperature, pH conditions.
+      Predicate: METPO:2000517 (grows in) or METPO:2000518 (does not grow in).
+    slots:
+      - subject_strain  # The strain (subject of edge)
+      - object_medium   # The medium (object of edge)
+      - grows           # true = grows in, false = does not grow in
+      - growth_rate     # qualitative: poor, moderate, good, excellent
+      - optimal_temperature
+      - temperature_range
+      - optimal_ph
+      - ph_range
+      - carbon_source_used  # e.g., methanol, methylamine
+      - oxygen_condition
+      - incubation_time
+      - notes
+      - source_records
+    slot_usage:
+      subject_strain:
+        required: true
+      object_medium:
+        required: true
+
+  # ---------------------------------------------------------------------------
   # Enriched Ingredient (for multi-source data integration)
   # ---------------------------------------------------------------------------
 
@@ -228,6 +269,141 @@ classes:
       - resolution_notes
 
   # ---------------------------------------------------------------------------
+  # Taxa and Genomes
+  # ---------------------------------------------------------------------------
+
+  Taxon:
+    description: >-
+      A taxonomic entity from NCBI Taxonomy.
+      Represents species or strain-level taxonomy entries.
+      Used for linking strains and genomes to their taxonomic classification.
+    class_uri: biolink:OrganismTaxon
+    slots:
+      - id  # NCBITaxon:{taxon_id}
+      - name  # Scientific name (e.g., "Methylobacterium extorquens AM1")
+      - synonyms
+      - description
+      # Taxonomic hierarchy
+      - ncbi_taxon_id  # The NCBITaxon ID (self-reference for clarity)
+      - parent_taxon_id  # Parent taxon in hierarchy
+      - rank  # taxonomic rank (species, strain, subspecies)
+      - scientific_name  # Canonical binomial/trinomial
+      # Links
+      - genome_accessions  # Associated genome assemblies
+      # CMM-specific
+      - has_xox_genes
+      - has_lanmodulin
+      # KG integration
+      - kg_node_ids
+      # Provenance
+      - source_records
+      - last_enriched
+    id_prefixes:
+      - NCBITaxon
+
+  Genome:
+    description: >-
+      A genome assembly from NCBI GenBank/RefSeq or other sources.
+      Represents a sequenced and assembled genome.
+    class_uri: biolink:Genome
+    slots:
+      - id  # GCA:GCA_NNNNNNNN.N or GCF:GCF_NNNNNNNN.N
+      - name  # Assembly name
+      - description
+      # Assembly identifiers
+      - genbank_accession  # GCA_* accession
+      - refseq_accession  # GCF_* accession (if available)
+      - assembly_name
+      - assembly_level  # Complete, Chromosome, Scaffold, Contig
+      # Taxonomic link
+      - ncbi_taxon_id  # Taxon this genome belongs to
+      - scientific_name
+      # Data access
+      - annotation_url  # URL to download GFF annotations
+      - ftp_path  # Base FTP path for genome files
+      # CMM-specific annotations
+      - has_xox_genes
+      - has_lanmodulin
+      # KG integration
+      - kg_node_ids
+      # Provenance
+      - source_records
+      - last_enriched
+    id_prefixes:
+      - GCA
+      - GCF
+
+  # ---------------------------------------------------------------------------
+  # Microbial Strains
+  # ---------------------------------------------------------------------------
+
+  Strain:
+    description: >-
+      A microbial strain enriched with data from multiple sources.
+      Uses NCBITaxon (strain-level) as the primary identifier when available,
+      with culture collection IDs as authoritative cross-references.
+      Each culture collection is authoritative for its own ID type:
+      - DSMZ is authoritative for dsm_id
+      - ATCC is authoritative for atcc_id
+      - BacDive is authoritative for bacdive_id and strain metadata
+      - NCBI is authoritative for ncbi_taxon_id
+    class_uri: biolink:OrganismalEntity
+    slots:
+      - id  # Primary: NCBITaxon:{strain_taxon_id} or bacdive.strain:{id}
+      - name  # Full scientific name with strain designation
+      - synonyms
+      - description
+      # Taxonomic identity
+      - ncbi_taxon_id  # Strain-level NCBITaxon ID when available
+      - species_taxon_id  # Species-level NCBITaxon ID
+      - scientific_name  # Binomial name (genus species)
+      - strain_designation  # Strain name (e.g., AM1, KT2440, 2011)
+      # Culture collection IDs (each collection is authoritative for its own)
+      - dsm_id
+      - atcc_id
+      - cip_id
+      - nbrc_id
+      - jcm_id
+      - ncimb_id
+      - lmg_id
+      # BacDive (authoritative for strain metadata)
+      - bacdive_id
+      # Strain properties
+      - type_strain  # Is this the type strain for the species?
+      - biosafety_level
+      - isolation_source
+      - isolation_country
+      - isolation_date
+      # Phenotypic properties (from BacDive)
+      - oxygen_tolerance
+      - temperature_range
+      - ph_range
+      - gram_stain
+      - cell_shape
+      - motility
+      # Genomic links
+      - genome_accessions
+      # CMM-specific annotations
+      - has_xox_genes  # Has lanthanide-dependent alcohol dehydrogenase genes
+      - has_lanmodulin  # Has lanmodulin (lanM) gene
+      # Relationships
+      - belongs_to_taxon  # Link to Taxon
+      - has_genome  # Link to Genome(s)
+      - grows_in_medium  # Media where strain grows (METPO:2000517)
+      - does_not_grow_in_medium  # Media where strain doesn't grow (METPO:2000518)
+      # Cross-references from all sources
+      - xrefs
+      # Provenance tracking
+      - source_records
+      - conflicts
+      - last_enriched
+    id_prefixes:
+      - NCBITaxon
+      - bacdive_strain
+      - DSMZ
+      - ATCC
+
+  # ---------------------------------------------------------------------------
   # Cross-references
   # ---------------------------------------------------------------------------
 
@@ -264,6 +440,26 @@ classes:
       media:
         description: Collection of all growth medium recipes
         range: GrowthMedium
+        multivalued: true
+        inlined_as_list: true
+      strains:
+        description: Collection of all microbial strains
+        range: Strain
+        multivalued: true
+        inlined_as_list: true
+      taxa:
+        description: Collection of all taxonomic entities
+        range: Taxon
+        multivalued: true
+        inlined_as_list: true
+      genomes:
+        description: Collection of all genome assemblies
+        range: Genome
+        multivalued: true
+        inlined_as_list: true
+      growth_preferences:
+        description: Collection of strain-medium growth relationships with properties
+        range: GrowthPreference
         multivalued: true
         inlined_as_list: true
 
@@ -513,6 +709,291 @@ slots:
   resolution_notes:
     description: Notes about the conflict resolution
 
+  # ---------------------------------------------------------------------------
+  # Strain-specific slots
+  # ---------------------------------------------------------------------------
+
+  # Taxonomic identity slots
+  ncbi_taxon_id:
+    range: uriorcurie
+    description: >-
+      NCBITaxon ID at strain level when available.
+      NCBI is authoritative for this ID.
+    id_prefixes:
+      - NCBITaxon
+
+  species_taxon_id:
+    range: uriorcurie
+    description: >-
+      NCBITaxon ID at species level.
+      Links strain to its parent species.
+    id_prefixes:
+      - NCBITaxon
+
+  scientific_name:
+    description: >-
+      Binomial scientific name (genus species).
+      Does not include strain designation.
+
+  strain_designation:
+    description: >-
+      Strain name or identifier (e.g., AM1, KT2440, DSM 1337).
+      Combined with scientific_name gives full strain name.
+
+  # Culture collection ID slots (each authoritative for its own)
+  dsm_id:
+    range: integer
+    description: >-
+      DSMZ strain number (DSMZ is authoritative).
+      Use as DSM:{id} CURIE.
+
+  atcc_id:
+    description: >-
+      ATCC catalog number (ATCC is authoritative).
+      May include letters (e.g., BAA-1234).
+
+  cip_id:
+    description: >-
+      CIP (Collection de l'Institut Pasteur) number.
+
+  nbrc_id:
+    range: integer
+    description: >-
+      NBRC (NITE Biological Resource Center, Japan) number.
+
+  jcm_id:
+    range: integer
+    description: >-
+      JCM (Japan Collection of Microorganisms) number.
+
+  ncimb_id:
+    range: integer
+    description: >-
+      NCIMB (National Collection of Industrial, Food and Marine Bacteria) number.
+
+  lmg_id:
+    range: integer
+    description: >-
+      LMG (Belgian Coordinated Collections of Microorganisms) number.
+
+  bacdive_id:
+    range: integer
+    description: >-
+      BacDive strain ID (BacDive is authoritative for strain metadata).
+
+  # Strain property slots
+  type_strain:
+    range: boolean
+    description: >-
+      Whether this is the type strain for its species.
+      Type strains are reference specimens for species definitions.
+
+  biosafety_level:
+    range: integer
+    description: >-
+      Biosafety level (1-4). Most environmental bacteria are BSL-1.
+    minimum_value: 1
+    maximum_value: 4
+
+  isolation_source:
+    description: >-
+      Sample type or environment from which strain was isolated.
+      Examples: soil, rhizosphere, activated sludge, human gut.
+
+  isolation_country:
+    description: Country where the strain was isolated.
+
+  isolation_date:
+    description: Date or year of isolation.
+
+  # Phenotypic property slots
+  oxygen_tolerance:
+    range: OxygenTolerance
+    description: >-
+      Oxygen requirement/tolerance category.
+
+  temperature_range:
+    description: >-
+      Growth temperature range or optimum (e.g., "25-37°C", "mesophilic").
+
+  ph_range:
+    description: >-
+      Growth pH range or optimum (e.g., "6.5-8.0", "neutrophilic").
+
+  gram_stain:
+    range: GramStain
+    description: Gram staining result.
+
+  cell_shape:
+    description: >-
+      Cell morphology (e.g., rod, coccus, spiral).
+
+  motility:
+    range: boolean
+    description: Whether the organism is motile.
+
+  # Genomic slots
+  genome_accessions:
+    multivalued: true
+    description: >-
+      Genome assembly accessions (e.g., GCA_000005845.2).
+      Links to NCBI Assembly or other genome databases.
+
+  # CMM-specific annotation slots
+  has_xox_genes:
+    range: boolean
+    description: >-
+      Whether strain has XoxF, ExaF, or other lanthanide-dependent
+      alcohol dehydrogenase genes.
+
+  has_lanmodulin:
+    range: boolean
+    description: >-
+      Whether strain has lanmodulin (lanM) gene for lanthanide binding.
+
+  # ---------------------------------------------------------------------------
+  # Taxon-specific slots
+  # ---------------------------------------------------------------------------
+
+  parent_taxon_id:
+    range: uriorcurie
+    description: >-
+      Parent taxon in the NCBI Taxonomy hierarchy.
+      For strains, this is typically the species.
+    id_prefixes:
+      - NCBITaxon
+
+  rank:
+    range: TaxonomicRank
+    description: >-
+      Taxonomic rank (species, strain, subspecies, etc.)
+
+  kg_node_ids:
+    multivalued: true
+    description: >-
+      Node IDs in external knowledge graphs (e.g., kg-microbe).
+      Format: "NCBITaxon:12345|kg-microbe"
+
+  # ---------------------------------------------------------------------------
+  # Genome-specific slots
+  # ---------------------------------------------------------------------------
+
+  genbank_accession:
+    description: >-
+      GenBank assembly accession (GCA_NNNNNNNN.N format).
+      These are the primary genome assembly identifiers.
+    pattern: "^GCA_\\d{9}\\.\\d+$"
+
+  refseq_accession:
+    description: >-
+      RefSeq assembly accession (GCF_NNNNNNNN.N format).
+      Reference genomes have both GenBank and RefSeq accessions.
+    pattern: "^GCF_\\d{9}\\.\\d+$"
+
+  assembly_name:
+    description: >-
+      Human-readable assembly name assigned by submitter.
+
+  assembly_level:
+    range: AssemblyLevel
+    description: >-
+      Level of assembly completeness.
+
+  annotation_url:
+    description: >-
+      URL to download genome annotation file (GFF format).
+
+  ftp_path:
+    description: >-
+      Base FTP path for genome files at NCBI.
+
+  # ---------------------------------------------------------------------------
+  # Relationship slots
+  # ---------------------------------------------------------------------------
+
+  belongs_to_taxon:
+    range: Taxon
+    description: >-
+      Links a strain to its taxonomic classification.
+      Predicate: RO:0002162 (in taxon) or similar.
+    slot_uri: RO:0002162
+
+  has_genome:
+    range: Genome
+    multivalued: true
+    description: >-
+      Links a strain or taxon to its genome assembly(ies).
+      A strain/taxon may have multiple genome assemblies.
+
+  grows_in_medium:
+    range: GrowthMedium
+    multivalued: true
+    description: >-
+      Media in which this strain can grow.
+      Predicate: METPO:2000517 (grows in).
+    slot_uri: METPO:2000517
+
+  does_not_grow_in_medium:
+    range: GrowthMedium
+    multivalued: true
+    description: >-
+      Media in which this strain cannot grow (negative results).
+      Predicate: METPO:2000518 (does not grow in).
+    slot_uri: METPO:2000518
+
+  # ---------------------------------------------------------------------------
+  # GrowthPreference edge slots
+  # ---------------------------------------------------------------------------
+
+  subject_strain:
+    range: Strain
+    description: >-
+      The strain that is the subject of the growth relationship.
+
+  object_medium:
+    range: GrowthMedium
+    description: >-
+      The medium that is the object of the growth relationship.
+
+  grows:
+    range: boolean
+    description: >-
+      True if strain grows in medium, false if it does not grow.
+      Determines predicate: true → METPO:2000517, false → METPO:2000518.
+
+  growth_rate:
+    range: GrowthRate
+    description: >-
+      Qualitative growth rate in this medium.
+
+  optimal_temperature:
+    range: float
+    description: >-
+      Optimal growth temperature in degrees Celsius.
+    unit:
+      ucum_code: Cel
+
+  optimal_ph:
+    range: float
+    description: >-
+      Optimal pH for growth in this medium.
+    minimum_value: 0
+    maximum_value: 14
+
+  carbon_source_used:
+    description: >-
+      The carbon source utilized for growth (e.g., methanol, methylamine).
+      May differ from what's in the medium if multiple sources available.
+
+  oxygen_condition:
+    range: OxygenTolerance
+    description: >-
+      Oxygen condition used for this growth observation.
+
+  incubation_time:
+    description: >-
+      Duration of incubation (e.g., "48 hours", "7 days").
+
 # =============================================================================
 # ENUMS
 # =============================================================================
@@ -651,3 +1132,85 @@ enums:
         description: NCATS Translator NodeNormalization API (identifier bridging)
       kg_microbe:
         description: KG-Microbe knowledge graph
+      bacdive:
+        description: BacDive (authoritative for bacdive_id and strain metadata)
+      ncbi_taxonomy:
+        description: NCBI Taxonomy (authoritative for ncbi_taxon_id)
+
+  # ---------------------------------------------------------------------------
+  # Strain-related enums
+  # ---------------------------------------------------------------------------
+
+  OxygenTolerance:
+    description: Oxygen requirement categories for microorganisms.
+    permissible_values:
+      aerobe:
+        description: Requires oxygen for growth.
+      anaerobe:
+        description: Cannot tolerate oxygen; grows only anaerobically.
+      facultative_anaerobe:
+        description: Can grow with or without oxygen.
+      microaerophile:
+        description: Requires low oxygen concentrations.
+      aerotolerant_anaerobe:
+        description: Anaerobic metabolism but tolerates oxygen.
+
+  GramStain:
+    description: Gram staining classification.
+    permissible_values:
+      positive:
+        description: Gram-positive (retains crystal violet).
+      negative:
+        description: Gram-negative (does not retain crystal violet).
+      variable:
+        description: Variable or indeterminate staining.
+
+  TaxonomicRank:
+    description: NCBI Taxonomy ranks relevant to microbial classification.
+    permissible_values:
+      domain:
+        description: Highest rank (Bacteria, Archaea, Eukarya).
+      phylum:
+        description: Major evolutionary lineage.
+      class:
+        description: Taxonomic class.
+      order:
+        description: Taxonomic order.
+      family:
+        description: Taxonomic family.
+      genus:
+        description: Taxonomic genus.
+      species:
+        description: Species level (binomial name).
+      subspecies:
+        description: Subspecies or variety.
+      strain:
+        description: Strain level (most specific for cultured isolates).
+      no_rank:
+        description: NCBI entries without assigned rank (e.g., clades).
+
+  AssemblyLevel:
+    description: Level of genome assembly completeness.
+    permissible_values:
+      complete_genome:
+        description: Fully assembled, single contiguous sequence per replicon.
+      chromosome:
+        description: Assembled to chromosome level with some gaps.
+      scaffold:
+        description: Scaffolds assembled but not to chromosome level.
+      contig:
+        description: Contigs only, not scaffolded.
+
+  GrowthRate:
+    description: Qualitative growth rate categories.
+    permissible_values:
+      none:
+        description: No growth observed.
+      poor:
+        description: Minimal or slow growth.
+      moderate:
+        description: Moderate growth rate.
+      good:
+        description: Good/normal growth rate.
+      excellent:
+        description: Excellent/rapid growth.

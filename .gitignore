@@ -158,6 +158,10 @@ data/private/*
 # Generated/cached data - rebuild locally
 data/chroma_ncbitaxon/
 data/mediadive_*.json
+data/*.duckdb
+
+# Pipeline output - regenerate as needed
+output/
 
 # Large inferred schemas - regenerate locally as needed
 mediadive-schemas/
