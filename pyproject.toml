@@ -84,10 +84,11 @@ fallback-version = "0.0.0"
 testpaths = ["tests"]
 markers = [
     "integration: marks tests as integration tests (require network access)",
+    "mediadive: marks tests that require MediaDive API (blocks GitHub Actions IPs)",
 ]
-# Run all tests including integration tests against public APIs
-# If specific tests fail in CI due to rate limiting, mark them selectively
-addopts = ""
+# Run all tests except MediaDive (which blocks GitHub Actions IPs)
+# MediaDive tests can be run locally with: pytest -m mediadive
+addopts = "-m 'not mediadive'"
 
 # Ref.: https://github.com/codespell-project/codespell
 [tool.codespell]
