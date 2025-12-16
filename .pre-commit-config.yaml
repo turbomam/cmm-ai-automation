@@ -100,8 +100,8 @@ repos:
   - repo: local
     hooks:
       - id: pytest
-        name: pytest (unit tests, excludes integration)
-        entry: uv run pytest -m "not integration" --cov --cov-report=term-missing -q
+        name: pytest (all tests including integration)
+        entry: uv run pytest --cov --cov-report=term-missing -q
         language: system
         pass_filenames: false
         always_run: true
