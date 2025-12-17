@@ -347,7 +347,7 @@ classes:
       - ATCC is authoritative for atcc_id
       - BacDive is authoritative for bacdive_id and strain metadata
       - NCBI is authoritative for ncbi_taxon_id
-    class_uri: biolink:OrganismalEntity
+    class_uri: biolink:OrganismTaxon
     slots:
       - id  # Primary: NCBITaxon:{strain_taxon_id} or bacdive.strain:{id}
       - name  # Full scientific name with strain designation

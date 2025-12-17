@@ -54,7 +54,7 @@ DEFAULT_GROWTH_PREFS = PROJECT_ROOT / "data" / "private" / "growth_preferences.t
 DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "kgx" / "strains_nodes.tsv"
 
 # Biolink category for strains
-BIOLINK_CATEGORY = "biolink:OrganismalEntity"
+BIOLINK_CATEGORY = "biolink:OrganismTaxon"
 
 # Culture collection prefix mappings (input format -> bioregistry canonical)
 COLLECTION_PREFIX_MAP = {
@@ -703,6 +703,7 @@ def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
         "ncbi_taxon_id": None,
         "species": None,
         "strain_designation": None,
+        "type_strain": None,
         "culture_collection_ids": [],
         "synonyms": [],
     }
@@ -720,6 +721,10 @@ def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
     taxonomy = doc.get("Name and taxonomic classification", {})
     result["species"] = taxonomy.get("species")
     result["strain_designation"] = taxonomy.get("strain designation")
+    # Type strain: "yes" or "no" in BacDive
+    type_strain_str = taxonomy.get("type strain", "")
+    if type_strain_str:
+        result["type_strain"] = type_strain_str.lower() == "yes"
 
     # LPSN synonyms (homotypic/heterotypic)
     # Can be either a single object or array of objects per BacDive schema
@@ -841,6 +846,13 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
     for synonym in bacdive_data["synonyms"]:
         if synonym not in record.synonyms:
             record.synonyms.append(synonym)
+
+    # Infer rank from BacDive if not already set
+    # BacDive records are all strain-level cultures. If the NCBI rank is "species",
+    # the entity is still a strain culture even if it shares the species taxon ID.
+    # If no NCBI rank is set later, infer "species" from BacDive's species field.
+    if not record.rank and bacdive_data.get("species"):
+        record.rank = "species"
 
     return True
 
