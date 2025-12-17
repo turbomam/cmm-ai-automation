@@ -604,6 +604,8 @@ def _merge_records(target: StrainRecord, source: StrainRecord) -> None:
         target.bacdive_id = source.bacdive_id
     if not target.genome_accession and source.genome_accession:
         target.genome_accession = source.genome_accession
+    if not target.has_taxonomic_rank and source.has_taxonomic_rank:
+        target.has_taxonomic_rank = source.has_taxonomic_rank
 
     # Merge collection IDs
     for cc_id in source.culture_collection_ids:
@@ -614,6 +616,56 @@ def _merge_records(target: StrainRecord, source: StrainRecord) -> None:
     for syn in source.synonyms:
         if syn not in target.synonyms:
             target.synonyms.append(syn)
+
+    # Merge xrefs
+    for xref in source.xrefs:
+        if xref not in target.xrefs:
+            target.xrefs.append(xref)
+
+
+def deduplicate_by_canonical_id(records: list[StrainRecord]) -> list[StrainRecord]:
+    """Deduplicate records by their canonical ID after enrichment.
+
+    This runs after BacDive/NCBI enrichment when records may have acquired
+    new identifiers that reveal they are the same entity.
+
+    Args:
+        records: List of enriched strain records
+
+    Returns:
+        Deduplicated list with merged records
+    """
+    # Group by canonical ID
+    by_canonical: dict[str, list[StrainRecord]] = {}
+
+    for record in records:
+        # Compute canonical ID using the same logic as to_kgx_node
+        canonical_id = record._determine_canonical_id()
+        if canonical_id not in by_canonical:
+            by_canonical[canonical_id] = []
+        by_canonical[canonical_id].append(record)
+
+    # Merge duplicates
+    deduplicated: list[StrainRecord] = []
+    merged_count = 0
+
+    for _canonical_id, group in by_canonical.items():
+        if len(group) == 1:
+            deduplicated.append(group[0])
+        else:
+            # Merge all records in the group into the first one
+            target = group[0]
+            for source in group[1:]:
+                _merge_records(target, source)
+                merged_count += 1
+            deduplicated.append(target)
+
+    if merged_count > 0:
+        logger.info(
+            f"Post-enrichment dedup: merged {merged_count} duplicates, {len(records)} -> {len(deduplicated)} records"
+        )
+
+    return deduplicated
 
 
 # =============================================================================
@@ -1226,6 +1278,15 @@ def main(
         click.echo(f"  Enriched {enriched}/{with_taxon} strains with NCBI synonyms\n")
     else:
         click.echo("Phase 4: NCBI enrichment skipped (--no-ncbi)\n")
+
+    # Post-enrichment deduplication
+    click.echo("Phase 4b: Post-enrichment deduplication")
+    pre_dedup = len(consolidated)
+    consolidated = deduplicate_by_canonical_id(consolidated)
+    if len(consolidated) < pre_dedup:
+        click.echo(f"  Merged duplicates: {pre_dedup} -> {len(consolidated)} strains\n")
+    else:
+        click.echo("  No duplicates found\n")
 
     # Show sample query variants
     if verbose and consolidated:
