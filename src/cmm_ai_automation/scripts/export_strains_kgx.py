@@ -133,6 +133,7 @@ class NcbiTaxonData(TypedDict):
     misspellings: list[str]
     authority: list[str]
     rank: str
+    species_taxon_id: str  # Species-level ancestor from lineage
 
 
 def fetch_ncbi_synonyms(taxon_id: int | str) -> NcbiTaxonData:
@@ -152,6 +153,7 @@ def fetch_ncbi_synonyms(taxon_id: int | str) -> NcbiTaxonData:
         "misspellings": [],
         "authority": [],
         "rank": "",
+        "species_taxon_id": "",
     }
 
     try:
@@ -551,9 +553,12 @@ def consolidate_strains(all_records: list[StrainRecord]) -> list[StrainRecord]:
     """Consolidate duplicate strain records.
 
     Merges records that appear to refer to the same strain based on:
-    - Matching culture collection IDs
     - Matching NCBITaxon IDs
-    - Similar names
+    - Matching culture collection IDs
+    - Matching names (case-insensitive)
+
+    Uses both primary key lookup AND secondary name-based lookup to catch
+    cases where one sheet has an ID and another has the same entity by name only.
 
     Args:
         all_records: List of strain records from all sources
@@ -561,27 +566,60 @@ def consolidate_strains(all_records: list[StrainRecord]) -> list[StrainRecord]:
     Returns:
         Deduplicated list of consolidated records
     """
-    # For now, simple deduplication by NCBITaxon or primary collection ID
     consolidated: dict[str, StrainRecord] = {}
+    # Secondary index: name -> primary key (to find records by name even when they have IDs)
+    name_to_key: dict[str, str] = {}
 
     for record in all_records:
-        # Generate a key for deduplication
-        key = None
+        # Generate primary key for deduplication
+        primary_key = None
         if record.ncbi_taxon_id:
-            key = f"ncbi:{record.ncbi_taxon_id}"
+            primary_key = f"ncbi:{record.ncbi_taxon_id}"
         elif record.primary_collection_id:
-            key = f"cc:{record.primary_collection_id}"
+            primary_key = f"cc:{record.primary_collection_id}"
         elif record.name:
-            key = f"name:{record.name.lower()}"
+            primary_key = f"name:{record.name.lower()}"
         else:
-            key = f"row:{record.source_sheet}:{record.source_row}"
+            primary_key = f"row:{record.source_sheet}:{record.source_row}"
 
-        if key in consolidated:
+        # Also check if we can find this record by name (secondary lookup)
+        name_key = record.name.lower() if record.name else None
+        existing_key = None
+
+        # First try primary key match
+        if primary_key in consolidated:
+            existing_key = primary_key
+        # Then try secondary name lookup (catches mismatched ID vs name-only records)
+        elif name_key and name_key in name_to_key:
+            existing_key = name_to_key[name_key]
+            logger.debug(f"Found by name lookup: '{record.name}' matches existing record with key {existing_key}")
+
+        if existing_key:
             # Merge into existing record
-            existing = consolidated[key]
+            existing = consolidated[existing_key]
             _merge_records(existing, record)
+
+            # Check if incoming record's name points to a DIFFERENT record
+            # (e.g., strains.tsv created record by name, taxa_and_genomes.tsv has same name + ncbi_id
+            # pointing to different record - need to merge both)
+            if name_key and name_key in name_to_key and name_to_key[name_key] != existing_key:
+                other_key = name_to_key[name_key]
+                if other_key in consolidated:
+                    other_record = consolidated[other_key]
+                    logger.debug(f"Cross-merge: '{record.name}' links {other_key} to {existing_key}")
+                    _merge_records(existing, other_record)
+                    del consolidated[other_key]
+                    # Update name index to point to surviving record
+                    name_to_key[name_key] = existing_key
+
+            # Register incoming record's name in name index
+            if name_key and name_key not in name_to_key:
+                name_to_key[name_key] = existing_key
         else:
-            consolidated[key] = record
+            consolidated[primary_key] = record
+            # Register in name index
+            if name_key:
+                name_to_key[name_key] = primary_key
 
     result = list(consolidated.values())
     logger.info(f"Consolidated {len(all_records)} records into {len(result)} unique strains")
@@ -621,6 +659,40 @@ def _merge_records(target: StrainRecord, source: StrainRecord) -> None:
     for xref in source.xrefs:
         if xref not in target.xrefs:
             target.xrefs.append(xref)
+
+
+def infer_taxonomic_rank(records: list[StrainRecord]) -> int:
+    """Infer correct taxonomic rank based on entity characteristics.
+
+    NCBI often returns 'species' for strain-level cultures because many strains
+    share their species' taxon ID. We override this when we have evidence that
+    the entity is actually a strain:
+    - Has a strain_designation (e.g., "DSM 16371", "AM1")
+    - Has a bacdive_id (all BacDive entries are culture isolates = strains)
+
+    Args:
+        records: List of strain records to update
+
+    Returns:
+        Number of records whose rank was corrected to 'strain'
+    """
+    corrected = 0
+    for record in records:
+        # Evidence that this is a strain, not just a species
+        is_strain = bool(record.strain_designation) or bool(record.bacdive_id)
+
+        if is_strain and record.has_taxonomic_rank != "strain":
+            # Override NCBI's rank if we have strain-level evidence
+            if record.has_taxonomic_rank:
+                logger.debug(
+                    f"Correcting rank for {record.name}: "
+                    f"{record.has_taxonomic_rank} -> strain "
+                    f"(has {'strain_designation' if record.strain_designation else 'bacdive_id'})"
+                )
+            record.has_taxonomic_rank = "strain"
+            corrected += 1
+
+    return corrected
 
 
 def deduplicate_by_canonical_id(records: list[StrainRecord]) -> list[StrainRecord]:
@@ -1278,6 +1350,11 @@ def main(
         click.echo(f"  Enriched {enriched}/{with_taxon} strains with NCBI synonyms\n")
     else:
         click.echo("Phase 4: NCBI enrichment skipped (--no-ncbi)\n")
+
+    # Infer correct taxonomic rank based on strain evidence
+    click.echo("Phase 4a: Inferring taxonomic ranks")
+    rank_corrections = infer_taxonomic_rank(consolidated)
+    click.echo(f"  Corrected {rank_corrections} entities from species to strain\n")
 
     # Post-enrichment deduplication
     click.echo("Phase 4b: Post-enrichment deduplication")
