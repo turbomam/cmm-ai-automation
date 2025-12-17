@@ -609,6 +609,7 @@ def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
         "species": None,
         "strain_designation": None,
         "culture_collection_ids": [],
+        "synonyms": [],
     }
 
     # BacDive ID
@@ -624,6 +625,15 @@ def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
     taxonomy = doc.get("Name and taxonomic classification", {})
     result["species"] = taxonomy.get("species")
     result["strain_designation"] = taxonomy.get("strain designation")
+
+    # LPSN synonyms (homotypic/heterotypic)
+    lpsn = taxonomy.get("LPSN", {})
+    if isinstance(lpsn, dict):
+        lpsn_synonyms = lpsn.get("synonyms", [])
+        if isinstance(lpsn_synonyms, list):
+            for syn_entry in lpsn_synonyms:
+                if isinstance(syn_entry, dict) and "synonym" in syn_entry:
+                    result["synonyms"].append(syn_entry["synonym"])
 
     # Culture collection IDs from External links
     external = doc.get("External links", {})
@@ -726,6 +736,11 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
     for cc_id in bacdive_data["culture_collection_ids"]:
         if cc_id not in record.culture_collection_ids:
             record.culture_collection_ids.append(cc_id)
+
+    # Add LPSN synonyms (homotypic/heterotypic species name synonyms)
+    for synonym in bacdive_data["synonyms"]:
+        if synonym not in record.synonyms:
+            record.synonyms.append(synonym)
 
     return True
 
