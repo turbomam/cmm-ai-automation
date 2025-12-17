@@ -27,6 +27,7 @@ prefixes:
   UO: http://purl.obolibrary.org/obo/UO_
   RO: http://purl.obolibrary.org/obo/RO_
   NCBITaxon: http://purl.obolibrary.org/obo/NCBITaxon_
+  TAXRANK: http://purl.obolibrary.org/obo/TAXRANK_
   ENVO: http://purl.obolibrary.org/obo/ENVO_
   # Culture collection prefixes
   DSMZ: https://www.dsmz.de/collection/catalogue/details/culture/DSM-
@@ -286,7 +287,7 @@ classes:
       # Taxonomic hierarchy
       - ncbi_taxon_id  # The NCBITaxon ID (self-reference for clarity)
       - parent_taxon_id  # Parent taxon in hierarchy
-      - rank  # taxonomic rank (species, strain, subspecies)
+      - has_taxonomic_rank  # taxonomic rank (species, strain, subspecies)
       - scientific_name  # Canonical binomial/trinomial
       # Links
       - genome_accessions  # Associated genome assemblies
@@ -356,7 +357,7 @@ classes:
       # Taxonomic identity
       - ncbi_taxon_id  # Strain-level NCBITaxon ID when available
       - species_taxon_id  # Species-level NCBITaxon ID
-      - rank  # Taxonomic rank from NCBI (species, strain, subspecies, no rank)
+      - has_taxonomic_rank  # Taxonomic rank from NCBI (species, strain, subspecies, no rank)
       - scientific_name  # Binomial name (genus species)
       - strain_designation  # Strain name (e.g., AM1, KT2440, 2011)
       # Culture collection IDs (each collection is authoritative for its own)
@@ -864,10 +865,12 @@ slots:
     id_prefixes:
       - NCBITaxon
 
-  rank:
+  has_taxonomic_rank:
     range: TaxonomicRank
+    slot_uri: biolink:has_taxonomic_rank
     description: >-
       Taxonomic rank (species, strain, subspecies, etc.)
+      Aligns with biolink:has_taxonomic_rank.
 
   kg_node_ids:
     multivalued: true
@@ -1167,26 +1170,37 @@ enums:
         description: Variable or indeterminate staining.
 
   TaxonomicRank:
-    description: NCBI Taxonomy ranks relevant to microbial classification.
+    description: >-
+      NCBI Taxonomy ranks relevant to microbial classification.
+      Mapped to TAXRANK ontology (http://purl.obolibrary.org/obo/taxrank.owl).
     permissible_values:
       domain:
         description: Highest rank (Bacteria, Archaea, Eukarya).
+        meaning: TAXRANK:0000037
       phylum:
         description: Major evolutionary lineage.
+        meaning: TAXRANK:0000003
       class:
         description: Taxonomic class.
+        meaning: TAXRANK:0000002
       order:
         description: Taxonomic order.
+        meaning: TAXRANK:0000017
       family:
         description: Taxonomic family.
+        meaning: TAXRANK:0000004
       genus:
         description: Taxonomic genus.
+        meaning: TAXRANK:0000005
       species:
         description: Species level (binomial name).
+        meaning: TAXRANK:0000006
       subspecies:
         description: Subspecies or variety.
+        meaning: TAXRANK:0000023
       strain:
         description: Strain level (most specific for cultured isolates).
+        meaning: TAXRANK:0000060
       no_rank:
         description: NCBI entries without assigned rank (e.g., clades).
 

@@ -414,10 +414,17 @@ class TestFetchNcbiSynonyms:
         assert "includes" in result
         assert "misspellings" in result
         assert "authority" in result
+        assert "rank" in result
 
-        # All values should be lists
-        for key in result:
-            assert isinstance(result[key], list)
+        # List fields should be lists
+        assert isinstance(result["synonyms"], list)
+        assert isinstance(result["equivalent_names"], list)
+        assert isinstance(result["includes"], list)
+        assert isinstance(result["misspellings"], list)
+        assert isinstance(result["authority"], list)
+
+        # Rank should be a string
+        assert isinstance(result["rank"], str)
 
     def test_extracts_synonyms(self) -> None:
         """Test that synonyms are extracted from NCBI."""

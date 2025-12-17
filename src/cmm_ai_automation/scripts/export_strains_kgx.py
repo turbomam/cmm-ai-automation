@@ -52,9 +52,47 @@ DEFAULT_STRAINS = PROJECT_ROOT / "data" / "private" / "strains.tsv"
 DEFAULT_TAXA_GENOMES = PROJECT_ROOT / "data" / "private" / "taxa_and_genomes.tsv"
 DEFAULT_GROWTH_PREFS = PROJECT_ROOT / "data" / "private" / "growth_preferences.tsv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "kgx" / "strains_nodes.tsv"
+DEFAULT_EDGES_OUTPUT = PROJECT_ROOT / "output" / "kgx" / "strains_edges.tsv"
+DEFAULT_TAXRANK_OUTPUT = PROJECT_ROOT / "output" / "kgx" / "taxrank_nodes.tsv"
 
 # Biolink category for strains
 BIOLINK_CATEGORY = "biolink:OrganismTaxon"
+
+# Biolink predicate and category for taxonomic hierarchy edges
+SUBCLASS_OF_PREDICATE = "biolink:subclass_of"
+TAXON_ASSOCIATION_CATEGORY = "biolink:TaxonToTaxonAssociation"
+
+# NCBI rank string -> TAXRANK CURIE mapping
+# See: http://purl.obolibrary.org/obo/taxrank.owl
+RANK_TO_TAXRANK: dict[str, str] = {
+    "domain": "TAXRANK:0000037",
+    "superkingdom": "TAXRANK:0000037",  # NCBI uses superkingdom, maps to domain
+    "phylum": "TAXRANK:0000003",
+    "class": "TAXRANK:0000002",
+    "order": "TAXRANK:0000017",
+    "family": "TAXRANK:0000004",
+    "genus": "TAXRANK:0000005",
+    "species": "TAXRANK:0000006",
+    "subspecies": "TAXRANK:0000023",
+    "strain": "TAXRANK:0000060",
+    # "no rank" has no direct TAXRANK equivalent - leave as empty string
+}
+
+# TAXRANK CURIE -> label mapping (for creating TaxonomicRank nodes)
+TAXRANK_LABELS: dict[str, str] = {
+    "TAXRANK:0000037": "domain",
+    "TAXRANK:0000003": "phylum",
+    "TAXRANK:0000002": "class",
+    "TAXRANK:0000017": "order",
+    "TAXRANK:0000004": "family",
+    "TAXRANK:0000005": "genus",
+    "TAXRANK:0000006": "species",
+    "TAXRANK:0000023": "subspecies",
+    "TAXRANK:0000060": "strain",
+}
+
+# Biolink category for TaxonomicRank nodes
+TAXONOMIC_RANK_CATEGORY = "biolink:OntologyClass"
 
 # Culture collection prefix mappings (input format -> bioregistry canonical)
 COLLECTION_PREFIX_MAP = {
@@ -195,8 +233,8 @@ class StrainRecord:
     # Genome
     genome_accession: str | None = None  # GCA_* accession
 
-    # Taxonomic rank
-    rank: str | None = None  # e.g., species, strain, subspecies, no rank
+    # Taxonomic rank (Biolink-aligned)
+    has_taxonomic_rank: str | None = None  # e.g., species, strain, subspecies, no rank
 
     # Additional
     synonyms: list[str] = field(default_factory=list)
@@ -219,7 +257,7 @@ class StrainRecord:
             "name": display_name,
             "ncbi_taxon_id": self.ncbi_taxon_id or "",
             "species_taxon_id": self.species_taxon_id or "",
-            "rank": self.rank or "",
+            "has_taxonomic_rank": RANK_TO_TAXRANK.get(self.has_taxonomic_rank or "", ""),
             "strain_designation": self.strain_designation or "",
             "bacdive_id": f"bacdive:{self.bacdive_id}" if self.bacdive_id else "",
             "genome_accession": self.genome_accession or "",
@@ -851,8 +889,8 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
     # BacDive records are all strain-level cultures. If the NCBI rank is "species",
     # the entity is still a strain culture even if it shares the species taxon ID.
     # If no NCBI rank is set later, infer "species" from BacDive's species field.
-    if not record.rank and bacdive_data.get("species"):
-        record.rank = "species"
+    if not record.has_taxonomic_rank and bacdive_data.get("species"):
+        record.has_taxonomic_rank = "species"
 
     return True
 
@@ -901,8 +939,8 @@ def enrich_strains_with_ncbi(records: list[StrainRecord]) -> tuple[int, int]:
 
         # Set taxonomic rank if available
         ncbi_rank = ncbi_data.get("rank", "")
-        if isinstance(ncbi_rank, str) and ncbi_rank and not record.rank:
-            record.rank = ncbi_rank
+        if isinstance(ncbi_rank, str) and ncbi_rank and not record.has_taxonomic_rank:
+            record.has_taxonomic_rank = ncbi_rank
 
         # Add synonyms (heterotypic/homotypic from NCBI)
         added_any = False
@@ -950,7 +988,7 @@ def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
         "name",
         "ncbi_taxon_id",
         "species_taxon_id",
-        "rank",
+        "has_taxonomic_rank",
         "strain_designation",
         "bacdive_id",
         "genome_accession",
@@ -968,6 +1006,108 @@ def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
             writer.writerow(row)
 
     logger.info(f"Exported {len(records)} strain nodes to {output_path}")
+
+
+def export_kgx_edges(records: list[StrainRecord], output_path: Path) -> int:
+    """Export taxonomic hierarchy edges to KGX edges.tsv format.
+
+    Generates subclass_of edges connecting strains to their parent species taxon.
+    Only produces edges when a strain has both:
+    - An NCBI taxon ID (or other canonical ID)
+    - A species_taxon_id that differs from its primary ID
+
+    Args:
+        records: List of consolidated strain records
+        output_path: Path to output TSV file
+
+    Returns:
+        Number of edges exported
+    """
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    fieldnames = [
+        "id",
+        "subject",
+        "predicate",
+        "object",
+        "category",
+    ]
+
+    edge_count = 0
+    with output_path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter="\t")
+        writer.writeheader()
+
+        for record in records:
+            # Get the canonical ID for this strain
+            node = record.to_kgx_node()
+            subject_id = node["id"]
+
+            # Only create edge if we have a species taxon and it's different
+            if record.species_taxon_id:
+                species_curie = record.species_taxon_id
+                if not species_curie.startswith("NCBITaxon:"):
+                    species_curie = f"NCBITaxon:{species_curie}"
+
+                # Don't create self-loops
+                if species_curie != subject_id:
+                    edge_id = f"{subject_id}--{SUBCLASS_OF_PREDICATE}--{species_curie}"
+                    writer.writerow(
+                        {
+                            "id": edge_id,
+                            "subject": subject_id,
+                            "predicate": SUBCLASS_OF_PREDICATE,
+                            "object": species_curie,
+                            "category": TAXON_ASSOCIATION_CATEGORY,
+                        }
+                    )
+                    edge_count += 1
+
+    logger.info(f"Exported {edge_count} taxonomic hierarchy edges to {output_path}")
+    return edge_count
+
+
+def export_taxrank_nodes(records: list[StrainRecord], output_path: Path) -> int:
+    """Export TaxonomicRank nodes to provide CURIE→label mapping.
+
+    Creates nodes for each TAXRANK term used by the strain records,
+    enabling lookup of rank labels by CURIE in the knowledge graph.
+
+    Args:
+        records: List of strain records (to determine which ranks are used)
+        output_path: Path to output TSV file
+
+    Returns:
+        Number of rank nodes exported
+    """
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Collect unique ranks used
+    used_ranks: set[str] = set()
+    for record in records:
+        if record.has_taxonomic_rank:
+            taxrank_curie = RANK_TO_TAXRANK.get(record.has_taxonomic_rank, "")
+            if taxrank_curie:
+                used_ranks.add(taxrank_curie)
+
+    fieldnames = ["id", "category", "name"]
+
+    with output_path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter="\t")
+        writer.writeheader()
+
+        for taxrank_curie in sorted(used_ranks):
+            label = TAXRANK_LABELS.get(taxrank_curie, "")
+            writer.writerow(
+                {
+                    "id": taxrank_curie,
+                    "category": TAXONOMIC_RANK_CATEGORY,
+                    "name": label,
+                }
+            )
+
+    logger.info(f"Exported {len(used_ranks)} TaxonomicRank nodes to {output_path}")
+    return len(used_ranks)
 
 
 @click.command()
@@ -997,6 +1137,18 @@ def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
     help="Output KGX nodes TSV file",
 )
 @click.option(
+    "--edges-output",
+    type=click.Path(path_type=Path),
+    default=DEFAULT_EDGES_OUTPUT,
+    help="Output KGX edges TSV file (taxonomic hierarchy)",
+)
+@click.option(
+    "--taxrank-output",
+    type=click.Path(path_type=Path),
+    default=DEFAULT_TAXRANK_OUTPUT,
+    help="Output KGX nodes TSV file for TaxonomicRank terms (CURIE→label)",
+)
+@click.option(
     "--dry-run",
     is_flag=True,
     help="Parse and consolidate but don't write output",
@@ -1022,12 +1174,14 @@ def main(
     taxa_genomes_tsv: Path,
     growth_prefs_tsv: Path,
     output: Path,
+    edges_output: Path,
+    taxrank_output: Path,
     dry_run: bool,
     no_bacdive: bool,
     no_ncbi: bool,
     verbose: bool,
 ) -> None:
-    """Export strain data from all sheets to KGX nodes format."""
+    """Export strain data from all sheets to KGX nodes and edges format."""
     if verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
@@ -1088,14 +1242,20 @@ def main(
 
     # Export
     if dry_run:
-        click.echo("[DRY RUN] Would export to: {output}")
+        click.echo(f"[DRY RUN] Would export nodes to: {output}")
+        click.echo(f"[DRY RUN] Would export edges to: {edges_output}")
+        click.echo(f"[DRY RUN] Would export taxrank nodes to: {taxrank_output}")
         click.echo("\nSample output:")
         for record in consolidated[:5]:
             node = record.to_kgx_node()
             click.echo(f"  {node['id']}: {node['name']}")
     else:
-        click.echo(f"Phase 4: Exporting to {output}")
+        click.echo(f"Phase 5: Exporting to {output}")
         export_kgx_nodes(consolidated, output)
+        edge_count = export_kgx_edges(consolidated, edges_output)
+        click.echo(f"  Exported {edge_count} taxonomic hierarchy edges")
+        rank_count = export_taxrank_nodes(consolidated, taxrank_output)
+        click.echo(f"  Exported {rank_count} TaxonomicRank nodes")
         click.echo("\nDone!")
 
 
