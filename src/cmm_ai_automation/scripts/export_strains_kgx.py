@@ -521,6 +521,37 @@ def lookup_bacdive_by_dsm(collection: Collection[dict[str, Any]], dsm_number: in
     return result
 
 
+def lookup_bacdive_by_ncbi_taxon(collection: Collection[dict[str, Any]], taxon_id: int) -> dict[str, Any] | None:
+    """Look up a BacDive record by NCBITaxon ID.
+
+    Note: Multiple BacDive records may share the same NCBITaxon ID (different strains
+    of the same species). This returns the first match.
+
+    Args:
+        collection: MongoDB collection
+        taxon_id: NCBITaxon ID (e.g., 270351)
+
+    Returns:
+        BacDive document or None
+    """
+    result: dict[str, Any] | None = collection.find_one({"General.NCBI tax id.NCBI tax id": taxon_id})
+    return result
+
+
+def lookup_bacdive_by_species(collection: Collection[dict[str, Any]], species_name: str) -> dict[str, Any] | None:
+    """Look up a BacDive record by species name.
+
+    Args:
+        collection: MongoDB collection
+        species_name: Binomial species name (e.g., "Methylobacterium aquaticum")
+
+    Returns:
+        BacDive document or None
+    """
+    result: dict[str, Any] | None = collection.find_one({"Name and taxonomic classification.species": species_name})
+    return result
+
+
 def lookup_bacdive_by_culture_collection(
     collection: Collection[dict[str, Any]], search_id: str
 ) -> dict[str, Any] | None:
@@ -612,8 +643,10 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
 
     Attempts to find the strain in BacDive using multiple strategies:
     1. DSM number lookup (fastest, indexed)
-    2. Other culture collection ID lookup (requires scan)
-    3. Strain designation lookup
+    2. NCBITaxon ID lookup (indexed)
+    3. Other culture collection ID lookup (requires scan)
+    4. Species name lookup
+    5. Strain designation lookup
 
     Args:
         record: StrainRecord to enrich
@@ -624,7 +657,7 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
     """
     doc = None
 
-    # Strategy 1: Look up by DSM number
+    # Strategy 1: Look up by DSM number (indexed, fast)
     for cc_id in record.culture_collection_ids:
         match = re.match(r"(?:DSM|DSMZ)[:\s-]*(\d+)", cc_id, re.IGNORECASE)
         if match:
@@ -634,7 +667,17 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
                 logger.debug(f"Found BacDive by DSM {dsm_num}")
                 break
 
-    # Strategy 2: Look up by other culture collection ID
+    # Strategy 2: Look up by NCBITaxon ID (indexed, fast)
+    if not doc and record.ncbi_taxon_id:
+        try:
+            taxon_id = int(record.ncbi_taxon_id.replace("NCBITaxon:", ""))
+            doc = lookup_bacdive_by_ncbi_taxon(collection, taxon_id)
+            if doc:
+                logger.debug(f"Found BacDive by NCBITaxon {taxon_id}")
+        except (ValueError, AttributeError):
+            pass
+
+    # Strategy 3: Look up by other culture collection ID (slow, full scan)
     if not doc:
         for cc_id in record.culture_collection_ids:
             # Skip DSM (already tried)
@@ -649,7 +692,13 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
                     logger.debug(f"Found BacDive by culture collection {search_id}")
                     break
 
-    # Strategy 3: Look up by strain designation
+    # Strategy 4: Look up by species name
+    if not doc and record.scientific_name:
+        doc = lookup_bacdive_by_species(collection, record.scientific_name)
+        if doc:
+            logger.debug(f"Found BacDive by species {record.scientific_name}")
+
+    # Strategy 5: Look up by strain designation
     if not doc and record.strain_designation:
         doc = lookup_bacdive_by_strain_designation(collection, record.strain_designation)
         if doc:
