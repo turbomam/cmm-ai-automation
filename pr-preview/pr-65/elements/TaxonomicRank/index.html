@@ -501,7 +501,7 @@
 
 
 <h1 id="enum-taxonomicrank">Enum: TaxonomicRank</h1>
-<p><em>NCBI Taxonomy ranks relevant to microbial classification.</em></p>
+<p><em>NCBI Taxonomy ranks relevant to microbial classification. Mapped to TAXRANK ontology (http://purl.obolibrary.org/obo/taxrank.owl).</em></p>
 <p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/TaxonomicRank">cmm:TaxonomicRank</a></p>
 <h2 id="permissible-values">Permissible Values</h2>
 <table>
@@ -515,47 +515,47 @@
 <tbody>
 <tr>
 <td>domain</td>
-<td>None</td>
+<td>TAXRANK:0000037</td>
 <td>Highest rank (Bacteria, Archaea, Eukarya)</td>
 </tr>
 <tr>
 <td>phylum</td>
-<td>None</td>
+<td>TAXRANK:0000003</td>
 <td>Major evolutionary lineage</td>
 </tr>
 <tr>
 <td>class</td>
-<td>None</td>
+<td>TAXRANK:0000002</td>
 <td>Taxonomic class</td>
 </tr>
 <tr>
 <td>order</td>
-<td>None</td>
+<td>TAXRANK:0000017</td>
 <td>Taxonomic order</td>
 </tr>
 <tr>
 <td>family</td>
-<td>None</td>
+<td>TAXRANK:0000004</td>
 <td>Taxonomic family</td>
 </tr>
 <tr>
 <td>genus</td>
-<td>None</td>
+<td>TAXRANK:0000005</td>
 <td>Taxonomic genus</td>
 </tr>
 <tr>
 <td>species</td>
-<td>None</td>
+<td>TAXRANK:0000006</td>
 <td>Species level (binomial name)</td>
 </tr>
 <tr>
 <td>subspecies</td>
-<td>None</td>
+<td>TAXRANK:0000023</td>
 <td>Subspecies or variety</td>
 </tr>
 <tr>
 <td>strain</td>
-<td>None</td>
+<td>TAXRANK:0000060</td>
 <td>Strain level (most specific for cultured isolates)</td>
 </tr>
 <tr>
@@ -575,7 +575,7 @@
 </thead>
 <tbody>
 <tr>
-<td><a href="../rank/">rank</a></td>
+<td><a href="../has_taxonomic_rank/">has_taxonomic_rank</a></td>
 <td>Taxonomic rank (species, strain, subspecies, etc</td>
 </tr>
 </tbody>
@@ -588,37 +588,47 @@
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TaxonomicRank</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NCBI Taxonomy ranks relevant to microbial classification.</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NCBI Taxonomy ranks relevant to microbial classification. Mapped to TAXRANK</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">ontology (http://purl.obolibrary.org/obo/taxrank.owl).</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
 <span class="nt">permissible_values</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">domain</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">domain</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Highest rank (Bacteria, Archaea, Eukarya).</span>
+<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAXRANK:0000037</span>
 <span class="w">  </span><span class="nt">phylum</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phylum</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Major evolutionary lineage.</span>
+<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAXRANK:0000003</span>
 <span class="w">  </span><span class="nt">class</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">class</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxonomic class.</span>
+<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAXRANK:0000002</span>
 <span class="w">  </span><span class="nt">order</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">order</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxonomic order.</span>
+<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAXRANK:0000017</span>
 <span class="w">  </span><span class="nt">family</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">family</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxonomic family.</span>
+<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAXRANK:0000004</span>
 <span class="w">  </span><span class="nt">genus</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genus</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxonomic genus.</span>
+<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAXRANK:0000005</span>
 <span class="w">  </span><span class="nt">species</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">species</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Species level (binomial name).</span>
+<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAXRANK:0000006</span>
 <span class="w">  </span><span class="nt">subspecies</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subspecies</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Subspecies or variety.</span>
+<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAXRANK:0000023</span>
 <span class="w">  </span><span class="nt">strain</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strain</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain level (most specific for cultured isolates).</span>
+<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TAXRANK:0000060</span>
 <span class="w">  </span><span class="nt">no_rank</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">no_rank</span>
 <span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NCBI entries without assigned rank (e.g., clades).</span>

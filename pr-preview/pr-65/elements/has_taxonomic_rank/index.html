@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/rank/">
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/has_taxonomic_rank/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Slot: rank - cmm-ai-automation</title>
+        <title>Slot: has_taxonomic_rank - cmm-ai-automation</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#slot-rank" class="md-skip">
+        <a href="#slot-has_taxonomic_rank" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Slot: rank
+              Slot: has_taxonomic_rank
             
           </span>
         </div>
@@ -511,10 +511,10 @@
   
 
 
-<h1 id="slot-rank">Slot: rank</h1>
-<p><em>Taxonomic rank (species, strain, subspecies, etc.)</em></p>
-<p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/rank">cmm:rank</a>
-Alias: rank</p>
+<h1 id="slot-has_taxonomic_rank">Slot: has_taxonomic_rank</h1>
+<p><em>Taxonomic rank (species, strain, subspecies, etc.) Aligns with biolink:has_taxonomic_rank.</em></p>
+<p>URI: <a href="https://w3id.org/biolink/vocab/has_taxonomic_rank">biolink:has_taxonomic_rank</a>
+Alias: has_taxonomic_rank</p>
 <!-- no inheritance hierarchy -->
 
 <h2 id="applicable-classes">Applicable Classes</h2>
@@ -527,6 +527,11 @@ Alias: rank</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><a href="../Strain/">Strain</a></td>
+<td>A microbial strain enriched with data from multiple sources</td>
+<td>no</td>
+</tr>
 <tr>
 <td><a href="../Taxon/">Taxon</a></td>
 <td>A taxonomic entity from NCBI Taxonomy</td>
@@ -554,23 +559,25 @@ Alias: rank</p>
 <tbody>
 <tr>
 <td>self</td>
-<td>cmm:rank</td>
+<td>biolink:has_taxonomic_rank</td>
 </tr>
 <tr>
 <td>native</td>
-<td>cmm:rank</td>
+<td>cmm:has_taxonomic_rank</td>
 </tr>
 </tbody>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rank</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxonomic rank (species, strain, subspecies, etc.)</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_taxonomic_rank</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxonomic rank (species, strain, subspecies, etc.) Aligns with biolink:has_taxonomic_rank.</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">rank</span>
+<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biolink:has_taxonomic_rank</span>
+<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_taxonomic_rank</span>
 <span class="nt">domain_of</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
 <span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TaxonomicRank</span>
 </code></pre></div>
 </details>

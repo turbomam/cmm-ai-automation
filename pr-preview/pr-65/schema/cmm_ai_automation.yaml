@@ -55,6 +55,9 @@ prefixes:
   NCBITaxon:
     prefix_prefix: NCBITaxon
     prefix_reference: http://purl.obolibrary.org/obo/NCBITaxon_
+  TAXRANK:
+    prefix_prefix: TAXRANK
+    prefix_reference: http://purl.obolibrary.org/obo/TAXRANK_
   ENVO:
     prefix_prefix: ENVO
     prefix_reference: http://purl.obolibrary.org/obo/ENVO_
@@ -591,36 +594,46 @@ enums:
   TaxonomicRank:
     name: TaxonomicRank
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/TaxonomicRank
-    description: NCBI Taxonomy ranks relevant to microbial classification.
+    description: NCBI Taxonomy ranks relevant to microbial classification. Mapped
+      to TAXRANK ontology (http://purl.obolibrary.org/obo/taxrank.owl).
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
     permissible_values:
       domain:
         text: domain
         description: Highest rank (Bacteria, Archaea, Eukarya).
+        meaning: TAXRANK:0000037
       phylum:
         text: phylum
         description: Major evolutionary lineage.
+        meaning: TAXRANK:0000003
       class:
         text: class
         description: Taxonomic class.
+        meaning: TAXRANK:0000002
       order:
         text: order
         description: Taxonomic order.
+        meaning: TAXRANK:0000017
       family:
         text: family
         description: Taxonomic family.
+        meaning: TAXRANK:0000004
       genus:
         text: genus
         description: Taxonomic genus.
+        meaning: TAXRANK:0000005
       species:
         text: species
         description: Species level (binomial name).
+        meaning: TAXRANK:0000006
       subspecies:
         text: subspecies
         description: Subspecies or variety.
+        meaning: TAXRANK:0000023
       strain:
         text: strain
         description: Strain level (most specific for cultured isolates).
+        meaning: TAXRANK:0000060
       no_rank:
         text: no_rank
         description: NCBI entries without assigned rank (e.g., clades).
@@ -1597,15 +1610,18 @@ slots:
     domain_of:
     - Taxon
     range: uriorcurie
-  rank:
-    name: rank
-    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/rank
-    description: Taxonomic rank (species, strain, subspecies, etc.)
+  has_taxonomic_rank:
+    name: has_taxonomic_rank
+    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/has_taxonomic_rank
+    description: Taxonomic rank (species, strain, subspecies, etc.) Aligns with biolink:has_taxonomic_rank.
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
-    slot_uri: cmm:rank
-    owner: Taxon
+    mappings:
+    - biolink:has_taxonomic_rank
+    slot_uri: biolink:has_taxonomic_rank
+    owner: Strain
     domain_of:
     - Taxon
+    - Strain
     range: TaxonomicRank
   kg_node_ids:
     name: kg_node_ids
@@ -2267,7 +2283,7 @@ classes:
     - description
     - ncbi_taxon_id
     - parent_taxon_id
-    - rank
+    - has_taxonomic_rank
     - scientific_name
     - genome_accessions
     - has_xox_genes
@@ -2321,7 +2337,7 @@ classes:
       metadata - NCBI is authoritative for ncbi_taxon_id'
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
     mappings:
-    - biolink:OrganismalEntity
+    - biolink:OrganismTaxon
     slots:
     - id
     - name
@@ -2329,6 +2345,7 @@ classes:
     - description
     - ncbi_taxon_id
     - species_taxon_id
+    - has_taxonomic_rank
     - scientific_name
     - strain_designation
     - dsm_id
@@ -2361,7 +2378,7 @@ classes:
     - source_records
     - conflicts
     - last_enriched
-    class_uri: biolink:OrganismalEntity
+    class_uri: biolink:OrganismTaxon
   CrossReference:
     name: CrossReference
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/CrossReference
@@ -2439,7 +2456,7 @@ classes:
     tree_root: true
 metamodel_version: 1.7.0
 source_file: cmm_ai_automation.yaml
-source_file_date: '2025-12-17T17:44:08'
-source_file_size: 35703
-generation_date: '2025-12-17T17:44:20'
+source_file_date: '2025-12-17T19:04:58'
+source_file_size: 36345
+generation_date: '2025-12-17T19:05:10'
 
