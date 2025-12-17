@@ -356,6 +356,7 @@ classes:
       # Taxonomic identity
       - ncbi_taxon_id  # Strain-level NCBITaxon ID when available
       - species_taxon_id  # Species-level NCBITaxon ID
+      - rank  # Taxonomic rank from NCBI (species, strain, subspecies, no rank)
       - scientific_name  # Binomial name (genus species)
       - strain_designation  # Strain name (e.g., AM1, KT2440, 2011)
       # Culture collection IDs (each collection is authoritative for its own)

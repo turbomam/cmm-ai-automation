@@ -34,7 +34,7 @@ import re
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, TypedDict
 
 import bioregistry
 import click
@@ -86,22 +86,34 @@ NCBI_EFETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
 NCBI_REQUEST_TIMEOUT = 10  # seconds
 
 
-def fetch_ncbi_synonyms(taxon_id: int | str) -> dict[str, list[str]]:
-    """Fetch synonyms and related names from NCBI Taxonomy.
+class NcbiTaxonData(TypedDict):
+    """Type for NCBI Taxonomy data returned from efetch."""
+
+    synonyms: list[str]
+    equivalent_names: list[str]
+    includes: list[str]
+    misspellings: list[str]
+    authority: list[str]
+    rank: str
+
+
+def fetch_ncbi_synonyms(taxon_id: int | str) -> NcbiTaxonData:
+    """Fetch synonyms, related names, and rank from NCBI Taxonomy.
 
     Args:
         taxon_id: NCBI Taxonomy ID (integer or string)
 
     Returns:
-        Dict with keys: 'synonyms', 'equivalent_names', 'includes', 'misspellings', 'authority'
-        Each value is a list of name strings.
+        NcbiTaxonData with synonyms, equivalent_names, includes, misspellings, authority (lists)
+        and rank (string, e.g., 'species', 'strain', 'subspecies').
     """
-    result: dict[str, list[str]] = {
+    result: NcbiTaxonData = {
         "synonyms": [],
         "equivalent_names": [],
         "includes": [],
         "misspellings": [],
         "authority": [],
+        "rank": "",
     }
 
     try:
@@ -116,6 +128,11 @@ def fetch_ncbi_synonyms(taxon_id: int | str) -> dict[str, list[str]]:
         taxon = root.find(".//Taxon")
         if taxon is None:
             return result
+
+        # Extract taxonomic rank
+        rank_elem = taxon.find("Rank")
+        if rank_elem is not None and rank_elem.text:
+            result["rank"] = rank_elem.text
 
         other_names = taxon.find("OtherNames")
         if other_names is None:
@@ -178,6 +195,9 @@ class StrainRecord:
     # Genome
     genome_accession: str | None = None  # GCA_* accession
 
+    # Taxonomic rank
+    rank: str | None = None  # e.g., species, strain, subspecies, no rank
+
     # Additional
     synonyms: list[str] = field(default_factory=list)
     xrefs: list[str] = field(default_factory=list)
@@ -199,6 +219,7 @@ class StrainRecord:
             "name": display_name,
             "ncbi_taxon_id": self.ncbi_taxon_id or "",
             "species_taxon_id": self.species_taxon_id or "",
+            "rank": self.rank or "",
             "strain_designation": self.strain_designation or "",
             "bacdive_id": f"bacdive:{self.bacdive_id}" if self.bacdive_id else "",
             "genome_accession": self.genome_accession or "",
@@ -866,6 +887,11 @@ def enrich_strains_with_ncbi(records: list[StrainRecord]) -> tuple[int, int]:
 
         ncbi_data = fetch_ncbi_synonyms(taxon_id)
 
+        # Set taxonomic rank if available
+        ncbi_rank = ncbi_data.get("rank", "")
+        if isinstance(ncbi_rank, str) and ncbi_rank and not record.rank:
+            record.rank = ncbi_rank
+
         # Add synonyms (heterotypic/homotypic from NCBI)
         added_any = False
         for synonym in ncbi_data["synonyms"]:
@@ -912,6 +938,7 @@ def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
         "name",
         "ncbi_taxon_id",
         "species_taxon_id",
+        "rank",
         "strain_designation",
         "bacdive_id",
         "genome_accession",
