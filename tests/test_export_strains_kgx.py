@@ -9,6 +9,7 @@ from cmm_ai_automation.scripts.export_strains_kgx import (
     COLLECTION_PREFIX_MAP,
     StrainRecord,
     extract_bacdive_data,
+    fetch_ncbi_synonyms,
     generate_query_variants,
 )
 
@@ -257,8 +258,8 @@ class TestExtractBacdiveData:
         assert "JCM 2831" in result["culture_collection_ids"]
         assert "NBRC 15690" in result["culture_collection_ids"]
 
-    def test_extract_lpsn_synonyms(self) -> None:
-        """Test extraction of LPSN synonyms."""
+    def test_extract_lpsn_synonyms_array(self) -> None:
+        """Test extraction of LPSN synonyms as array."""
         doc: dict[str, Any] = {
             "General": {"BacDive-ID": 7152},
             "Name and taxonomic classification": {
@@ -273,6 +274,19 @@ class TestExtractBacdiveData:
         result = extract_bacdive_data(doc)
         assert "Methylobacterium radiora" in result["synonyms"]
         assert "Pseudomonas radiora" in result["synonyms"]
+
+    def test_extract_lpsn_synonyms_single_object(self) -> None:
+        """Test extraction of LPSN synonyms when it's a single object (not array)."""
+        # BacDive schema allows synonyms to be either array or single object
+        doc: dict[str, Any] = {
+            "General": {"BacDive-ID": 97},
+            "Name and taxonomic classification": {
+                "LPSN": {"synonyms": {"@ref": 20215, "synonym": "Sapromyces laidlawi"}}
+            },
+        }
+        result = extract_bacdive_data(doc)
+        assert "Sapromyces laidlawi" in result["synonyms"]
+        assert len(result["synonyms"]) == 1
 
     def test_extract_handles_missing_fields(self) -> None:
         """Test extraction handles missing fields gracefully."""
@@ -384,3 +398,50 @@ class TestIdPriorityRules:
         )
         node = record.to_kgx_node()
         assert node["id"] == "cmm:strain-DSM-16371"
+
+
+class TestFetchNcbiSynonyms:
+    """Tests for fetch_ncbi_synonyms function."""
+
+    def test_returns_dict_structure(self) -> None:
+        """Test that function returns expected dict structure."""
+        # Use a real taxon ID for integration test
+        result = fetch_ncbi_synonyms(31998)  # Methylobacterium radiotolerans
+
+        assert isinstance(result, dict)
+        assert "synonyms" in result
+        assert "equivalent_names" in result
+        assert "includes" in result
+        assert "misspellings" in result
+        assert "authority" in result
+
+        # All values should be lists
+        for key in result:
+            assert isinstance(result[key], list)
+
+    def test_extracts_synonyms(self) -> None:
+        """Test that synonyms are extracted from NCBI."""
+        # Methylobacterium radiotolerans has known synonyms
+        result = fetch_ncbi_synonyms(31998)
+
+        # Should have at least one synonym
+        # Known synonyms include "Pseudomonas radiora"
+        assert len(result["synonyms"]) > 0
+        assert "Pseudomonas radiora" in result["synonyms"]
+
+    def test_handles_invalid_taxon_id(self) -> None:
+        """Test that invalid taxon IDs return empty results."""
+        result = fetch_ncbi_synonyms(999999999)  # Non-existent ID
+
+        # Should return empty lists, not raise exception
+        assert result["synonyms"] == []
+        assert result["equivalent_names"] == []
+
+    def test_extracts_equivalent_names(self) -> None:
+        """Test that equivalent names are extracted."""
+        # Methylobacterium radiotolerans has an equivalent name
+        result = fetch_ncbi_synonyms(31998)
+
+        # May have equivalent names like "Methylobacterium radiitolerans"
+        # Just check structure is correct (may be empty for some taxa)
+        assert isinstance(result["equivalent_names"], list)

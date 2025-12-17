@@ -16,9 +16,13 @@ BacDive Enrichment:
 - Extracts BacDive ID, NCBITaxon ID, and culture collection cross-references
 - Fills in missing identifiers from BacDive's comprehensive database
 
+NCBI Entrez Enrichment:
+- Fetches synonyms from NCBI Taxonomy for strains with NCBITaxon IDs
+- Extracts formal synonyms, equivalent names, and common misspellings
+
 Usage:
     uv run python -m cmm_ai_automation.scripts.export_strains_kgx
-    uv run python -m cmm_ai_automation.scripts.export_strains_kgx --no-bacdive
+    uv run python -m cmm_ai_automation.scripts.export_strains_kgx --no-bacdive --no-ncbi
     uv run python -m cmm_ai_automation.scripts.export_strains_kgx --output output/kgx/strains_nodes.tsv
 """
 
@@ -27,12 +31,14 @@ from __future__ import annotations
 import csv
 import logging
 import re
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 import bioregistry
 import click
+import requests
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection
@@ -74,6 +80,74 @@ COLLECTION_PREFIX_MAP = {
 MONGODB_URI = "mongodb://localhost:27017"
 BACDIVE_DB = "bacdive"
 BACDIVE_COLLECTION = "strains"
+
+# NCBI Entrez settings
+NCBI_EFETCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi"
+NCBI_REQUEST_TIMEOUT = 10  # seconds
+
+
+def fetch_ncbi_synonyms(taxon_id: int | str) -> dict[str, list[str]]:
+    """Fetch synonyms and related names from NCBI Taxonomy.
+
+    Args:
+        taxon_id: NCBI Taxonomy ID (integer or string)
+
+    Returns:
+        Dict with keys: 'synonyms', 'equivalent_names', 'includes', 'misspellings', 'authority'
+        Each value is a list of name strings.
+    """
+    result: dict[str, list[str]] = {
+        "synonyms": [],
+        "equivalent_names": [],
+        "includes": [],
+        "misspellings": [],
+        "authority": [],
+    }
+
+    try:
+        response = requests.get(
+            NCBI_EFETCH_URL,
+            params={"db": "taxonomy", "id": str(taxon_id), "retmode": "xml"},
+            timeout=NCBI_REQUEST_TIMEOUT,
+        )
+        response.raise_for_status()
+
+        root = ET.fromstring(response.content)
+        taxon = root.find(".//Taxon")
+        if taxon is None:
+            return result
+
+        other_names = taxon.find("OtherNames")
+        if other_names is None:
+            return result
+
+        # Extract different name types
+        for synonym in other_names.findall("Synonym"):
+            if synonym.text:
+                result["synonyms"].append(synonym.text)
+
+        for equiv in other_names.findall("EquivalentName"):
+            if equiv.text:
+                result["equivalent_names"].append(equiv.text)
+
+        for includes in other_names.findall("Includes"):
+            if includes.text:
+                result["includes"].append(includes.text)
+
+        # Extract from Name elements with ClassCDE
+        for name_elem in other_names.findall("Name"):
+            class_cde = name_elem.find("ClassCDE")
+            disp_name = name_elem.find("DispName")
+            if class_cde is not None and disp_name is not None and disp_name.text:
+                if class_cde.text == "misspelling":
+                    result["misspellings"].append(disp_name.text)
+                elif class_cde.text == "authority":
+                    result["authority"].append(disp_name.text)
+
+    except (requests.RequestException, ET.ParseError) as e:
+        logger.debug(f"Failed to fetch NCBI synonyms for {taxon_id}: {e}")
+
+    return result
 
 
 @dataclass
@@ -627,13 +701,18 @@ def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
     result["strain_designation"] = taxonomy.get("strain designation")
 
     # LPSN synonyms (homotypic/heterotypic)
+    # Can be either a single object or array of objects per BacDive schema
     lpsn = taxonomy.get("LPSN", {})
     if isinstance(lpsn, dict):
-        lpsn_synonyms = lpsn.get("synonyms", [])
+        lpsn_synonyms = lpsn.get("synonyms")
         if isinstance(lpsn_synonyms, list):
+            # Array of synonym objects
             for syn_entry in lpsn_synonyms:
                 if isinstance(syn_entry, dict) and "synonym" in syn_entry:
                     result["synonyms"].append(syn_entry["synonym"])
+        elif isinstance(lpsn_synonyms, dict) and "synonym" in lpsn_synonyms:
+            # Single synonym object
+            result["synonyms"].append(lpsn_synonyms["synonym"])
 
     # Culture collection IDs from External links
     external = doc.get("External links", {})
@@ -763,6 +842,55 @@ def enrich_strains_with_bacdive(records: list[StrainRecord], collection: Collect
     return enriched, len(records)
 
 
+def enrich_strains_with_ncbi(records: list[StrainRecord]) -> tuple[int, int]:
+    """Enrich strain records with NCBI Taxonomy synonyms.
+
+    Fetches synonyms, equivalent names, and misspellings from NCBI Entrez
+    for strains that have NCBITaxon IDs.
+
+    Args:
+        records: List of strain records to enrich
+
+    Returns:
+        Tuple of (enriched_count, total_with_taxon_count)
+    """
+    enriched = 0
+    with_taxon = 0
+
+    for record in records:
+        if not record.ncbi_taxon_id:
+            continue
+
+        with_taxon += 1
+        taxon_id = record.ncbi_taxon_id.replace("NCBITaxon:", "")
+
+        ncbi_data = fetch_ncbi_synonyms(taxon_id)
+
+        # Add synonyms (heterotypic/homotypic from NCBI)
+        added_any = False
+        for synonym in ncbi_data["synonyms"]:
+            if synonym not in record.synonyms:
+                record.synonyms.append(synonym)
+                added_any = True
+
+        # Add equivalent names (spelling variants)
+        for equiv in ncbi_data["equivalent_names"]:
+            if equiv not in record.synonyms:
+                record.synonyms.append(equiv)
+                added_any = True
+
+        # Add misspellings (common errors that help with search)
+        for misspelling in ncbi_data["misspellings"]:
+            if misspelling not in record.synonyms:
+                record.synonyms.append(misspelling)
+                added_any = True
+
+        if added_any:
+            enriched += 1
+
+    return enriched, with_taxon
+
+
 def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
     """Export strain records to KGX nodes.tsv format.
 
@@ -834,6 +962,11 @@ def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
     help="Skip BacDive enrichment (faster, no MongoDB required)",
 )
 @click.option(
+    "--no-ncbi",
+    is_flag=True,
+    help="Skip NCBI Entrez synonym enrichment (faster, no network required)",
+)
+@click.option(
     "--verbose",
     "-v",
     is_flag=True,
@@ -846,6 +979,7 @@ def main(
     output: Path,
     dry_run: bool,
     no_bacdive: bool,
+    no_ncbi: bool,
     verbose: bool,
 ) -> None:
     """Export strain data from all sheets to KGX nodes format."""
@@ -885,6 +1019,14 @@ def main(
             click.echo("  Skipped: MongoDB not available\n")
     else:
         click.echo("Phase 3: BacDive enrichment skipped (--no-bacdive)\n")
+
+    # NCBI synonym enrichment
+    if not no_ncbi:
+        click.echo("Phase 4: Enriching with NCBI synonyms")
+        enriched, with_taxon = enrich_strains_with_ncbi(consolidated)
+        click.echo(f"  Enriched {enriched}/{with_taxon} strains with NCBI synonyms\n")
+    else:
+        click.echo("Phase 4: NCBI enrichment skipped (--no-ncbi)\n")
 
     # Show sample query variants
     if verbose and consolidated:
