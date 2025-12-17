@@ -885,6 +885,12 @@ def enrich_strains_with_ncbi(records: list[StrainRecord]) -> tuple[int, int]:
                 record.synonyms.append(misspelling)
                 added_any = True
 
+        # Add includes (merged taxa names)
+        for includes in ncbi_data["includes"]:
+            if includes not in record.synonyms:
+                record.synonyms.append(includes)
+                added_any = True
+
         if added_any:
             enriched += 1
 
