@@ -11,20 +11,31 @@ Primary identifier strategy:
 2. bacdive:{bacdive_id} - when no strain-level taxon, but in BacDive
 3. dsmz:DSM-{number} - fallback to culture collection
 
+BacDive Enrichment:
+- Looks up strains in local MongoDB (bacdive.strains collection)
+- Extracts BacDive ID, NCBITaxon ID, and culture collection cross-references
+- Fills in missing identifiers from BacDive's comprehensive database
+
 Usage:
     uv run python -m cmm_ai_automation.scripts.export_strains_kgx
-    uv run python -m cmm_ai_automation.scripts.export_strains_kgx --dry-run
+    uv run python -m cmm_ai_automation.scripts.export_strains_kgx --no-bacdive
     uv run python -m cmm_ai_automation.scripts.export_strains_kgx --output output/kgx/strains_nodes.tsv
 """
+
+from __future__ import annotations
 
 import csv
 import logging
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
+from typing import TYPE_CHECKING, Any
 
 import bioregistry
 import click
+
+if TYPE_CHECKING:
+    from pymongo.collection import Collection
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -52,7 +63,17 @@ COLLECTION_PREFIX_MAP = {
     "CCM": "ccm",
     "CECT": "cect",
     "IAM": "iam",
+    "IFO": "nbrc",  # IFO was merged into NBRC
+    "CCUG": "ccug",
+    "VKM": "vkm",
+    "BCRC": "bcrc",
+    "IMET": "imet",
 }
+
+# MongoDB connection settings for BacDive
+MONGODB_URI = "mongodb://localhost:27017"
+BACDIVE_DB = "bacdive"
+BACDIVE_COLLECTION = "strains"
 
 
 @dataclass
@@ -462,6 +483,222 @@ def _merge_records(target: StrainRecord, source: StrainRecord) -> None:
             target.synonyms.append(syn)
 
 
+# =============================================================================
+# BacDive Enrichment Functions
+# =============================================================================
+
+
+def get_bacdive_collection() -> Collection[dict[str, Any]] | None:
+    """Get MongoDB collection for BacDive strains.
+
+    Returns:
+        MongoDB collection or None if connection fails
+    """
+    try:
+        from pymongo import MongoClient
+        from pymongo.errors import ConnectionFailure
+
+        client: MongoClient[dict[str, Any]] = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
+        # Test connection
+        client.admin.command("ping")
+        return client[BACDIVE_DB][BACDIVE_COLLECTION]
+    except (ImportError, ConnectionFailure) as e:
+        logger.warning(f"Could not connect to BacDive MongoDB: {e}")
+        return None
+
+
+def lookup_bacdive_by_dsm(collection: Collection[dict[str, Any]], dsm_number: int) -> dict[str, Any] | None:
+    """Look up a BacDive record by DSM number.
+
+    Args:
+        collection: MongoDB collection
+        dsm_number: DSM number (e.g., 16371)
+
+    Returns:
+        BacDive document or None
+    """
+    result: dict[str, Any] | None = collection.find_one({"General.DSM-Number": dsm_number})
+    return result
+
+
+def lookup_bacdive_by_culture_collection(
+    collection: Collection[dict[str, Any]], search_id: str
+) -> dict[str, Any] | None:
+    """Look up a BacDive record by culture collection ID.
+
+    Searches the 'External links.culture collection no.' field which contains
+    comma-separated list of all culture collection IDs for a strain.
+
+    Args:
+        collection: MongoDB collection
+        search_id: Culture collection ID in format "PREFIX NUMBER" (e.g., "ATCC 43883")
+
+    Returns:
+        BacDive document or None
+    """
+    # Full collection scan - not efficient but necessary without text index
+    for doc in collection.find({}):
+        cc_field = doc.get("External links", {}).get("culture collection no.", "")
+        if cc_field and search_id in cc_field:
+            result: dict[str, Any] = doc
+            return result
+    return None
+
+
+def lookup_bacdive_by_strain_designation(
+    collection: Collection[dict[str, Any]], designation: str
+) -> dict[str, Any] | None:
+    """Look up a BacDive record by strain designation.
+
+    Args:
+        collection: MongoDB collection
+        designation: Strain designation (e.g., "PA1", "AM-1")
+
+    Returns:
+        BacDive document or None
+    """
+    result: dict[str, Any] | None = collection.find_one(
+        {"Name and taxonomic classification.strain designation": designation}
+    )
+    return result
+
+
+def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
+    """Extract relevant data from a BacDive document.
+
+    Args:
+        doc: BacDive MongoDB document
+
+    Returns:
+        Dict with extracted fields
+    """
+    result: dict[str, Any] = {
+        "bacdive_id": None,
+        "ncbi_taxon_id": None,
+        "species": None,
+        "strain_designation": None,
+        "culture_collection_ids": [],
+    }
+
+    # BacDive ID
+    general = doc.get("General", {})
+    result["bacdive_id"] = general.get("BacDive-ID") or doc.get("_id")
+
+    # NCBITaxon ID
+    ncbi_tax = general.get("NCBI tax id", {})
+    if isinstance(ncbi_tax, dict):
+        result["ncbi_taxon_id"] = ncbi_tax.get("NCBI tax id")
+
+    # Taxonomy info
+    taxonomy = doc.get("Name and taxonomic classification", {})
+    result["species"] = taxonomy.get("species")
+    result["strain_designation"] = taxonomy.get("strain designation")
+
+    # Culture collection IDs from External links
+    external = doc.get("External links", {})
+    cc_string = external.get("culture collection no.", "")
+    if cc_string:
+        # Parse comma-separated list: "DSM 1337, ATCC 43645, NCIMB 9399"
+        for cc_id in cc_string.split(","):
+            cc_id = cc_id.strip()
+            if cc_id:
+                result["culture_collection_ids"].append(cc_id)
+
+    return result
+
+
+def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict[str, Any]]) -> bool:
+    """Enrich a strain record with data from BacDive.
+
+    Attempts to find the strain in BacDive using multiple strategies:
+    1. DSM number lookup (fastest, indexed)
+    2. Other culture collection ID lookup (requires scan)
+    3. Strain designation lookup
+
+    Args:
+        record: StrainRecord to enrich
+        collection: BacDive MongoDB collection
+
+    Returns:
+        True if enrichment was successful
+    """
+    doc = None
+
+    # Strategy 1: Look up by DSM number
+    for cc_id in record.culture_collection_ids:
+        match = re.match(r"(?:DSM|DSMZ)[:\s-]*(\d+)", cc_id, re.IGNORECASE)
+        if match:
+            dsm_num = int(match.group(1))
+            doc = lookup_bacdive_by_dsm(collection, dsm_num)
+            if doc:
+                logger.debug(f"Found BacDive by DSM {dsm_num}")
+                break
+
+    # Strategy 2: Look up by other culture collection ID
+    if not doc:
+        for cc_id in record.culture_collection_ids:
+            # Skip DSM (already tried)
+            if cc_id.upper().startswith(("DSM", "DSMZ")):
+                continue
+            # Format for search: "ATCC 43883"
+            match = re.match(r"([A-Z]+)[:\s-]*(.+)", cc_id, re.IGNORECASE)
+            if match:
+                search_id = f"{match.group(1).upper()} {match.group(2)}"
+                doc = lookup_bacdive_by_culture_collection(collection, search_id)
+                if doc:
+                    logger.debug(f"Found BacDive by culture collection {search_id}")
+                    break
+
+    # Strategy 3: Look up by strain designation
+    if not doc and record.strain_designation:
+        doc = lookup_bacdive_by_strain_designation(collection, record.strain_designation)
+        if doc:
+            logger.debug(f"Found BacDive by strain designation {record.strain_designation}")
+
+    if not doc:
+        return False
+
+    # Extract and apply BacDive data
+    bacdive_data = extract_bacdive_data(doc)
+
+    # Apply BacDive ID
+    if not record.bacdive_id and bacdive_data["bacdive_id"]:
+        record.bacdive_id = str(bacdive_data["bacdive_id"])
+
+    # Apply NCBITaxon ID if missing
+    if not record.ncbi_taxon_id and bacdive_data["ncbi_taxon_id"]:
+        record.ncbi_taxon_id = str(bacdive_data["ncbi_taxon_id"])
+
+    # Apply strain designation if missing
+    if not record.strain_designation and bacdive_data["strain_designation"]:
+        record.strain_designation = bacdive_data["strain_designation"]
+
+    # Add all culture collection cross-references
+    for cc_id in bacdive_data["culture_collection_ids"]:
+        if cc_id not in record.culture_collection_ids:
+            record.culture_collection_ids.append(cc_id)
+
+    return True
+
+
+def enrich_strains_with_bacdive(records: list[StrainRecord], collection: Collection[dict[str, Any]]) -> tuple[int, int]:
+    """Enrich all strain records with BacDive data.
+
+    Args:
+        records: List of strain records to enrich
+        collection: BacDive MongoDB collection
+
+    Returns:
+        Tuple of (enriched_count, total_count)
+    """
+    enriched = 0
+    for record in records:
+        if enrich_strain_from_bacdive(record, collection):
+            enriched += 1
+
+    return enriched, len(records)
+
+
 def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
     """Export strain records to KGX nodes.tsv format.
 
@@ -528,6 +765,11 @@ def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
     help="Parse and consolidate but don't write output",
 )
 @click.option(
+    "--no-bacdive",
+    is_flag=True,
+    help="Skip BacDive enrichment (faster, no MongoDB required)",
+)
+@click.option(
     "--verbose",
     "-v",
     is_flag=True,
@@ -539,6 +781,7 @@ def main(
     growth_prefs_tsv: Path,
     output: Path,
     dry_run: bool,
+    no_bacdive: bool,
     verbose: bool,
 ) -> None:
     """Export strain data from all sheets to KGX nodes format."""
@@ -567,6 +810,18 @@ def main(
     consolidated = consolidate_strains(all_records)
     click.echo(f"  Unique strains: {len(consolidated)}\n")
 
+    # BacDive enrichment
+    if not no_bacdive:
+        click.echo("Phase 3: Enriching with BacDive")
+        bacdive_collection = get_bacdive_collection()
+        if bacdive_collection is not None:
+            enriched, total = enrich_strains_with_bacdive(consolidated, bacdive_collection)
+            click.echo(f"  Enriched {enriched}/{total} strains from BacDive\n")
+        else:
+            click.echo("  Skipped: MongoDB not available\n")
+    else:
+        click.echo("Phase 3: BacDive enrichment skipped (--no-bacdive)\n")
+
     # Show sample query variants
     if verbose and consolidated:
         sample = consolidated[0]
@@ -588,7 +843,7 @@ def main(
             node = record.to_kgx_node()
             click.echo(f"  {node['id']}: {node['name']}")
     else:
-        click.echo(f"Phase 3: Exporting to {output}")
+        click.echo(f"Phase 4: Exporting to {output}")
         export_kgx_nodes(consolidated, output)
         click.echo("\nDone!")
 
