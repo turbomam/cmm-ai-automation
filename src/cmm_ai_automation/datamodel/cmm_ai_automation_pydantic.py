@@ -123,12 +123,18 @@ linkml_meta = LinkMLMeta({'default_prefix': 'cmm',
                                 'prefix_reference': 'http://purl.obolibrary.org/obo/NCBITaxon_'},
                   'NCIMB': {'prefix_prefix': 'NCIMB',
                             'prefix_reference': 'https://www.ncimb.com/product/NCIMB'},
+                  'NCIT': {'prefix_prefix': 'NCIT',
+                           'prefix_reference': 'http://purl.obolibrary.org/obo/NCIT_'},
                   'OBI': {'prefix_prefix': 'OBI',
                           'prefix_reference': 'http://purl.obolibrary.org/obo/OBI_'},
+                  'PMID': {'prefix_prefix': 'PMID',
+                           'prefix_reference': 'http://identifiers.org/pubmed/'},
                   'PUBCHEM.COMPOUND': {'prefix_prefix': 'PUBCHEM.COMPOUND',
                                        'prefix_reference': 'http://identifiers.org/pubchem.compound/'},
                   'RO': {'prefix_prefix': 'RO',
                          'prefix_reference': 'http://purl.obolibrary.org/obo/RO_'},
+                  'TAXRANK': {'prefix_prefix': 'TAXRANK',
+                              'prefix_reference': 'http://purl.obolibrary.org/obo/TAXRANK_'},
                   'UO': {'prefix_prefix': 'UO',
                          'prefix_reference': 'http://purl.obolibrary.org/obo/UO_'},
                   'bacdive_strain': {'prefix_prefix': 'bacdive_strain',
@@ -137,10 +143,16 @@ linkml_meta = LinkMLMeta({'default_prefix': 'cmm',
                               'prefix_reference': 'https://w3id.org/biolink/vocab/'},
                   'cmm': {'prefix_prefix': 'cmm',
                           'prefix_reference': 'https://w3id.org/turbomam/cmm-ai-automation/'},
+                  'doi': {'prefix_prefix': 'doi',
+                          'prefix_reference': 'https://doi.org/'},
                   'linkml': {'prefix_prefix': 'linkml',
                              'prefix_reference': 'https://w3id.org/linkml/'},
+                  'mediadive.medium': {'prefix_prefix': 'mediadive.medium',
+                                       'prefix_reference': 'https://mediadive.dsmz.de/medium/'},
                   'schema': {'prefix_prefix': 'schema',
-                             'prefix_reference': 'http://schema.org/'}},
+                             'prefix_reference': 'http://schema.org/'},
+                  'togomedium': {'prefix_prefix': 'togomedium',
+                                 'prefix_reference': 'http://togomedium.org/medium/'}},
      'see_also': ['https://turbomam.github.io/cmm-ai-automation'],
      'source_file': 'src/cmm_ai_automation/schema/cmm_ai_automation.yaml',
      'title': 'CMM AI Automation Schema'} )
@@ -405,7 +417,7 @@ class GramStain(str, Enum):
 
 class TaxonomicRank(str, Enum):
     """
-    NCBI Taxonomy ranks relevant to microbial classification.
+    NCBI Taxonomy ranks relevant to microbial classification. Mapped to TAXRANK ontology (http://purl.obolibrary.org/obo/taxrank.owl).
     """
     domain = "domain"
     """
@@ -599,17 +611,29 @@ class Solution(Mixture):
 
 class GrowthMedium(Mixture):
     """
-    A complete formulation for cultivating microorganisms. Contains ingredients directly and/or pre-made solutions.
+    A complete formulation for cultivating microorganisms. Contains ingredients directly and/or pre-made solutions. Lab-specific or modified media should use derived_from to link to their parent medium and list modifications.
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'https://w3id.org/turbomam/cmm-ai-automation',
-         'id_prefixes': ['cmm', 'DSMZ', 'ATCC']})
+         'id_prefixes': ['cmm',
+                         'mediadive.medium',
+                         'togomedium',
+                         'DSMZ',
+                         'ATCC',
+                         'JCM'],
+         'slot_usage': {'source_reference': {'name': 'source_reference',
+                                             'required': True}}})
 
     medium_type: Optional[MediumType] = Field(default=None, description="""Classification of the medium""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthMedium']} })
     ph: Optional[float] = Field(default=None, description="""Target pH of the medium""", ge=0, le=14, json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthMedium']} })
     sterilization_method: Optional[str] = Field(default=None, description="""How the medium is sterilized (e.g., autoclave, filter)""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthMedium']} })
     has_solution_component: Optional[list[SolutionComponent]] = Field(default=[], description="""Solutions contained in this medium""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthMedium']} })
     target_organisms: Optional[list[str]] = Field(default=[], description="""Taxa or organism types this medium is designed for""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthMedium']} })
-    references: Optional[list[str]] = Field(default=[], description="""Literature references for this medium formulation""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthMedium']} })
+    source_reference: str = Field(default=..., description="""Authoritative reference for this medium formulation. Must be a resolvable CURIE from an allowed prefix. For database media: mediadive.medium:381, togomedium:M1871, DSMZ:576, ATCC:1306, JCM:M89 For literature-defined media: doi:10.1371/journal.pone.0062957, PMID:23658750""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthMedium']} })
+    derived_from: Optional[str] = Field(default=None, description="""Parent medium this formulation is based on. Used for lab-specific modifications of standard media. Creates a provenance chain back to database entries.""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthMedium']} })
+    modifications: Optional[list[str]] = Field(default=[], description="""List of modifications from the parent medium (derived_from). Each entry describes one change: added ingredient, removed ingredient, concentration change, or buffer substitution. Examples:
+  - \"Added PIPES buffer 30mM pH 6.8\"
+  - \"Replaced methanol with succinate 15mM\"
+  - \"Removed agar for liquid culture\"""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthMedium']} })
     has_ingredient_component: Optional[list[IngredientComponent]] = Field(default=[], description="""Ingredients contained in this mixture with their concentrations""", json_schema_extra = { "linkml_meta": {'domain_of': ['Mixture']} })
     id: str = Field(default=..., description="""A unique identifier for a thing""", json_schema_extra = { "linkml_meta": {'domain_of': ['NamedThing', 'EnrichedIngredient', 'Taxon', 'Genome', 'Strain'],
          'slot_uri': 'schema:identifier'} })
@@ -618,6 +642,19 @@ class GrowthMedium(Mixture):
     description: Optional[str] = Field(default=None, description="""A human-readable description for a thing""", json_schema_extra = { "linkml_meta": {'domain_of': ['NamedThing', 'EnrichedIngredient', 'Taxon', 'Genome', 'Strain'],
          'slot_uri': 'schema:description'} })
     synonyms: Optional[list[str]] = Field(default=[], description="""Alternative names for this entity""", json_schema_extra = { "linkml_meta": {'domain_of': ['NamedThing', 'EnrichedIngredient', 'Taxon', 'Strain']} })
+
+    @field_validator('source_reference')
+    def pattern_source_reference(cls, v):
+        pattern=re.compile(r"^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$")
+        if isinstance(v, list):
+            for element in v:
+                if isinstance(element, str) and not pattern.match(element):
+                    err_msg = f"Invalid source_reference format: {element}"
+                    raise ValueError(err_msg)
+        elif isinstance(v, str) and not pattern.match(v):
+            err_msg = f"Invalid source_reference format: {v}"
+            raise ValueError(err_msg)
+        return v
 
 
 class IngredientComponent(ConfiguredBaseModel):
@@ -649,7 +686,7 @@ class SolutionComponent(ConfiguredBaseModel):
 
 class GrowthPreference(ConfiguredBaseModel):
     """
-    Reified relationship: a strain's growth in a specific medium. Captures edge properties like growth rate, temperature, pH conditions. Predicate: METPO:2000517 (grows in) or METPO:2000518 (does not grow in).
+    Reified relationship: a strain's growth in a specific medium. Captures observation-specific properties like growth rate and temperature. Predicate: METPO:2000517 (grows in) or METPO:2000518 (does not grow in).
     """
     linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'from_schema': 'https://w3id.org/turbomam/cmm-ai-automation',
          'slot_usage': {'object_medium': {'name': 'object_medium', 'required': True},
@@ -659,12 +696,8 @@ class GrowthPreference(ConfiguredBaseModel):
     object_medium: str = Field(default=..., description="""The medium that is the object of the growth relationship.""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference']} })
     grows: Optional[bool] = Field(default=None, description="""True if strain grows in medium, false if it does not grow. Determines predicate: true → METPO:2000517, false → METPO:2000518.""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference']} })
     growth_rate: Optional[GrowthRate] = Field(default=None, description="""Qualitative growth rate in this medium.""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference']} })
-    optimal_temperature: Optional[float] = Field(default=None, description="""Optimal growth temperature in degrees Celsius.""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference'], 'unit': {'ucum_code': 'Cel'}} })
-    temperature_range: Optional[str] = Field(default=None, description="""Growth temperature range or optimum (e.g., \"25-37°C\", \"mesophilic\").""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference', 'Strain']} })
-    optimal_ph: Optional[float] = Field(default=None, description="""Optimal pH for growth in this medium.""", ge=0, le=14, json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference']} })
-    ph_range: Optional[str] = Field(default=None, description="""Growth pH range or optimum (e.g., \"6.5-8.0\", \"neutrophilic\").""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference', 'Strain']} })
-    carbon_source_used: Optional[str] = Field(default=None, description="""The carbon source utilized for growth (e.g., methanol, methylamine). May differ from what's in the medium if multiple sources available.""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference']} })
-    oxygen_condition: Optional[OxygenTolerance] = Field(default=None, description="""Oxygen condition used for this growth observation.""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference']} })
+    doubling_time: Optional[float] = Field(default=None, description="""Quantitative growth rate measured as doubling time in hours. Also known as generation time.""", ge=0, json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference'], 'unit': {'ucum_code': 'h'}} })
+    temperature: Optional[float] = Field(default=None, description="""Growth temperature in degrees Celsius for this observation.""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference'], 'unit': {'ucum_code': 'Cel'}} })
     incubation_time: Optional[str] = Field(default=None, description="""Duration of incubation (e.g., \"48 hours\", \"7 days\").""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference']} })
     notes: Optional[str] = Field(default=None, description="""Free-text notes about this component""", json_schema_extra = { "linkml_meta": {'domain_of': ['IngredientComponent', 'SolutionComponent', 'GrowthPreference']} })
     source_records: Optional[list[SourceRecord]] = Field(default=[], description="""Records tracking which source provided which data""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference',
@@ -790,7 +823,7 @@ class Taxon(ConfiguredBaseModel):
          'slot_uri': 'schema:description'} })
     ncbi_taxon_id: Optional[str] = Field(default=None, description="""NCBITaxon ID at strain level when available. NCBI is authoritative for this ID.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon', 'Genome', 'Strain'], 'id_prefixes': ['NCBITaxon']} })
     parent_taxon_id: Optional[str] = Field(default=None, description="""Parent taxon in the NCBI Taxonomy hierarchy. For strains, this is typically the species.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon'], 'id_prefixes': ['NCBITaxon']} })
-    rank: Optional[TaxonomicRank] = Field(default=None, description="""Taxonomic rank (species, strain, subspecies, etc.)""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon']} })
+    has_taxonomic_rank: Optional[TaxonomicRank] = Field(default=None, description="""Taxonomic rank (species, strain, subspecies, etc.) Aligns with biolink:has_taxonomic_rank.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon', 'Strain'], 'slot_uri': 'biolink:has_taxonomic_rank'} })
     scientific_name: Optional[str] = Field(default=None, description="""Binomial scientific name (genus species). Does not include strain designation.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon', 'Genome', 'Strain']} })
     genome_accessions: Optional[list[str]] = Field(default=[], description="""Genome assembly accessions (e.g., GCA_000005845.2). Links to NCBI Assembly or other genome databases.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon', 'Strain']} })
     has_xox_genes: Optional[bool] = Field(default=None, description="""Whether strain has XoxF, ExaF, or other lanthanide-dependent alcohol dehydrogenase genes.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon', 'Genome', 'Strain']} })
@@ -867,7 +900,7 @@ class Strain(ConfiguredBaseModel):
     """
     A microbial strain enriched with data from multiple sources. Uses NCBITaxon (strain-level) as the primary identifier when available, with culture collection IDs as authoritative cross-references. Each culture collection is authoritative for its own ID type: - DSMZ is authoritative for dsm_id - ATCC is authoritative for atcc_id - BacDive is authoritative for bacdive_id and strain metadata - NCBI is authoritative for ncbi_taxon_id
     """
-    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'biolink:OrganismalEntity',
+    linkml_meta: ClassVar[LinkMLMeta] = LinkMLMeta({'class_uri': 'biolink:OrganismTaxon',
          'from_schema': 'https://w3id.org/turbomam/cmm-ai-automation',
          'id_prefixes': ['NCBITaxon', 'bacdive_strain', 'DSMZ', 'ATCC']})
 
@@ -880,6 +913,7 @@ class Strain(ConfiguredBaseModel):
          'slot_uri': 'schema:description'} })
     ncbi_taxon_id: Optional[str] = Field(default=None, description="""NCBITaxon ID at strain level when available. NCBI is authoritative for this ID.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon', 'Genome', 'Strain'], 'id_prefixes': ['NCBITaxon']} })
     species_taxon_id: Optional[str] = Field(default=None, description="""NCBITaxon ID at species level. Links strain to its parent species.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain'], 'id_prefixes': ['NCBITaxon']} })
+    has_taxonomic_rank: Optional[TaxonomicRank] = Field(default=None, description="""Taxonomic rank (species, strain, subspecies, etc.) Aligns with biolink:has_taxonomic_rank.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon', 'Strain'], 'slot_uri': 'biolink:has_taxonomic_rank'} })
     scientific_name: Optional[str] = Field(default=None, description="""Binomial scientific name (genus species). Does not include strain designation.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Taxon', 'Genome', 'Strain']} })
     strain_designation: Optional[str] = Field(default=None, description="""Strain name or identifier (e.g., AM1, KT2440, DSM 1337). Combined with scientific_name gives full strain name.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })
     dsm_id: Optional[int] = Field(default=None, description="""DSMZ strain number (DSMZ is authoritative). Use as DSM:{id} CURIE.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })
@@ -896,8 +930,8 @@ class Strain(ConfiguredBaseModel):
     isolation_country: Optional[str] = Field(default=None, description="""Country where the strain was isolated.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })
     isolation_date: Optional[str] = Field(default=None, description="""Date or year of isolation.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })
     oxygen_tolerance: Optional[OxygenTolerance] = Field(default=None, description="""Oxygen requirement/tolerance category.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })
-    temperature_range: Optional[str] = Field(default=None, description="""Growth temperature range or optimum (e.g., \"25-37°C\", \"mesophilic\").""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference', 'Strain']} })
-    ph_range: Optional[str] = Field(default=None, description="""Growth pH range or optimum (e.g., \"6.5-8.0\", \"neutrophilic\").""", json_schema_extra = { "linkml_meta": {'domain_of': ['GrowthPreference', 'Strain']} })
+    temperature_range: Optional[str] = Field(default=None, description="""Growth temperature range or optimum (e.g., \"25-37°C\", \"mesophilic\").""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })
+    ph_range: Optional[str] = Field(default=None, description="""Growth pH range or optimum (e.g., \"6.5-8.0\", \"neutrophilic\").""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })
     gram_stain: Optional[GramStain] = Field(default=None, description="""Gram staining result.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })
     cell_shape: Optional[str] = Field(default=None, description="""Cell morphology (e.g., rod, coccus, spiral).""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })
     motility: Optional[bool] = Field(default=None, description="""Whether the organism is motile.""", json_schema_extra = { "linkml_meta": {'domain_of': ['Strain']} })

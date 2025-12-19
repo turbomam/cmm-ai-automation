@@ -54,6 +54,7 @@ nav:
   - Best Practices: best-practices.md
   - Schema: elements/index.md
   - Architecture: architecture.md
+  - TogoMedium: togomedium.md
   - About: about.md
 
 exclude_docs: |
