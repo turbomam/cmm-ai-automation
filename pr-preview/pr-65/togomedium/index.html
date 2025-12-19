@@ -1,0 +1,1185 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/togomedium/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>TogoMedium Integration for CMM - cmm-ai-automation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+
+      
+    
+<script src="../assets/pymdownx-extras/material-extra-theme-2ek1P7jT.js" type="text/javascript"></script>
+<script src="../assets/pymdownx-extras/material-extra-3rdparty-BUCF4rjN.js" type="text/javascript"></script>
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+    
+      <link rel="stylesheet" href="../assets/pymdownx-extras/extra-c6ab11540a.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#togomedium-integration-for-cmm" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+<header class="md-header" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="header.title"
+  >
+    <a
+      href="https://turbomam.github.io/cmm-ai-automation/"
+      title="cmm-ai-automation"
+      class="md-header__button md-logo"
+      aria-label="cmm-ai-automation"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            cmm-ai-automation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              TogoMedium Integration for CMM
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      <div class="md-header-nav__scheme md-header-nav__button md-source__icon md-icon">
+          <a
+            href="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+          </a>
+           <a
+            href="javascript:toggleScheme();"
+            title="Unknown scheme"
+            class="unknown-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.07 11.25-.9.92C13.45 12.89 13 13.5 13 15h-2v-.5c0-1.11.45-2.11 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2 2 0 0 0-2-2 2 2 0 0 0-2 2H8a4 4 0 0 1 4-4 4 4 0 0 1 4 4 3.2 3.2 0 0 1-.93 2.25M13 19h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg>
+          </a>
+      </div>
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="cmm-ai-automation" class="md-nav__button md-logo" aria-label="cmm-ai-automation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    cmm-ai-automation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relevance-to-cmm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relevance to CMM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Relevance to CMM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#media-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Media Coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#media-not-in-togomedium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Media NOT in TogoMedium
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#growth-medium-ontology-gmo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Growth Medium Ontology (GMO)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Growth Medium Ontology (GMO)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontology-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ontology Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-access-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Access Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Access Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rest-api-sparqlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API (SPARQList)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sparql-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPARQL Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-data-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Data Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Local Data Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chromadb-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ChromaDB Index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cached-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cached Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-not-cached-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's NOT Cached Locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-other-data-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with Other Data Sources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Other Data Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mediadive-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MediaDive Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kg-microbe-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kg-microbe Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-grounding-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Grounding Priority
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#full-rdf-dump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full RDF Dump
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingredient-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingredient Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="togomedium-integration-for-cmm">TogoMedium Integration for CMM</h1>
+<p>TogoMedium is a comprehensive knowledge base of microbial culture media maintained by DBCLS (Database Center for Life Science) in Japan. This document summarizes its relevance to the Critical Mineral Metabolism (CMM) project.</p>
+<h2 id="overview">Overview</h2>
+<ul>
+<li><strong>URL</strong>: https://togomedium.org/</li>
+<li><strong>SPARQL Endpoint</strong>: https://togomedium.org/sparql</li>
+<li><strong>REST API</strong>: https://togomedium.org/sparqlist/api/</li>
+<li><strong>Ontology</strong>: Growth Medium Ontology (GMO) - http://purl.jp/bio/10/gmo/</li>
+<li><strong>GitHub</strong>: https://github.com/dbcls/medium-db (source code only, no data dumps)</li>
+</ul>
+<h2 id="data-statistics">Data Statistics</h2>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th style="text-align: right;">Count</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>NCBI Taxon</td>
+<td style="text-align: right;">223,586</td>
+<td>Taxonomy entries</td>
+</tr>
+<tr>
+<td>SIO Organism</td>
+<td style="text-align: right;">81,130</td>
+<td>Organism/strain instances</td>
+</tr>
+<tr>
+<td>PROV Entity</td>
+<td style="text-align: right;">56,466</td>
+<td>Provenance records</td>
+</tr>
+<tr>
+<td>GMO Component</td>
+<td style="text-align: right;">50,202</td>
+<td>Ingredient definitions</td>
+</tr>
+<tr>
+<td>GMO Ingredient Usage</td>
+<td style="text-align: right;">31,541</td>
+<td>Ingredient-in-medium links</td>
+</tr>
+<tr>
+<td>GTDB Taxon</td>
+<td style="text-align: right;">18,385</td>
+<td>GTDB taxonomy</td>
+</tr>
+<tr>
+<td>GMO Comment</td>
+<td style="text-align: right;">9,607</td>
+<td>Recipe comments/notes</td>
+</tr>
+<tr>
+<td><strong>GMO Medium</strong></td>
+<td style="text-align: right;"><strong>2,917</strong></td>
+<td>Culture media</td>
+</tr>
+<tr>
+<td>Pathway</td>
+<td style="text-align: right;">425</td>
+<td>Metabolic pathways</td>
+</tr>
+</tbody>
+</table>
+<h2 id="data-sources">Data Sources</h2>
+<p>TogoMedium aggregates media from multiple biological resource centers:</p>
+<ul>
+<li><strong>JCM</strong> (RIKEN BioResource Center) - 1,376 media</li>
+<li><strong>NBRC</strong> (NITE Biological Resource Center) - 749 media</li>
+<li><strong>Manual collection</strong> - 709 media from research papers</li>
+</ul>
+<h2 id="relevance-to-cmm">Relevance to CMM</h2>
+<h3 id="media-coverage">Media Coverage</h3>
+<p>TogoMedium contains several media used in CMM methylotroph research:</p>
+<table>
+<thead>
+<tr>
+<th>CMM Media</th>
+<th>TogoMedium ID</th>
+<th>TogoMedium Name</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LB</td>
+<td>M2476, M443</td>
+<td>LB (Luria-Bertani) Medium/Agar</td>
+<td>Not in MediaDive</td>
+</tr>
+<tr>
+<td>NMS</td>
+<td>M1871</td>
+<td>Nitrate mineral salts medium (NMS)</td>
+<td>Complete medium (MediaDive only has stock)</td>
+</tr>
+<tr>
+<td>R2A</td>
+<td>M1376, M1235</td>
+<td>R2A Agar variants</td>
+<td>Also in MediaDive</td>
+</tr>
+<tr>
+<td>PYG</td>
+<td>M695</td>
+<td>PYG Medium</td>
+<td>Similar to MPYG</td>
+</tr>
+</tbody>
+</table>
+<h3 id="media-not-in-togomedium">Media NOT in TogoMedium</h3>
+<ul>
+<li>AMS (Ammonium mineral salts) - only in MediaDive as stock solution</li>
+<li>DSMZ:88 (SM medium for Paracoccus)</li>
+<li>ATCC:1306 (PIPES minimal with methanol)</li>
+<li>Hypho medium - unique to AM-1 lab</li>
+<li>MP medium (PIPES-buffered methylotroph minimal)</li>
+</ul>
+<h3 id="cross-references">Cross-References</h3>
+<p>TogoMedium provides links to external databases:</p>
+<ul>
+<li><strong>ChEBI</strong> - Chemical Entities of Biological Interest</li>
+<li><strong>PubChem</strong> - Chemical compound IDs</li>
+<li><strong>NCBI Taxonomy</strong> - 223K taxon links</li>
+<li><strong>GTDB</strong> - Genome Taxonomy Database (18K entries)</li>
+<li><strong>MediaDive</strong> - via <code>rdfs:seeAlso</code> to ingredient URLs</li>
+</ul>
+<h2 id="growth-medium-ontology-gmo">Growth Medium Ontology (GMO)</h2>
+<p>The GMO ontology defines the structure for media data:</p>
+<h3 id="key-classes">Key Classes</h3>
+<table>
+<thead>
+<tr>
+<th>Class ID</th>
+<th>Label</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GMO_000001</td>
+<td>Medium</td>
+<td>Culture medium</td>
+</tr>
+<tr>
+<td>GMO_000002</td>
+<td>Component</td>
+<td>Media ingredient</td>
+</tr>
+<tr>
+<td>GMO_000003</td>
+<td>Defined medium</td>
+<td>Chemically defined medium</td>
+</tr>
+<tr>
+<td>GMO_000004</td>
+<td>Undefined medium</td>
+<td>Complex medium</td>
+</tr>
+</tbody>
+</table>
+<h3 id="key-properties">Key Properties</h3>
+<ul>
+<li><code>gmo:has_component</code> - Links medium to ingredients</li>
+<li><code>gmo:has_role</code> - Ingredient role (carbon source, nitrogen source, etc.)</li>
+<li><code>gmo:has_property</code> - Ingredient properties (organic, inorganic, etc.)</li>
+</ul>
+<h3 id="ontology-files">Ontology Files</h3>
+<ul>
+<li><strong>BioPortal</strong>: https://bioportal.bioontology.org/ontologies/GMO</li>
+<li><strong>Local copy</strong>: <code>data/ontologies/gmo.owl</code> (614KB, version 0.24 Beta)</li>
+<li><strong>Last updated</strong>: August 28, 2024</li>
+</ul>
+<h2 id="data-access-methods">Data Access Methods</h2>
+<h3 id="rest-api-sparqlist">REST API (SPARQList)</h3>
+<p>Pre-built endpoints for common queries:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List all media (paginated)</span>
+curl<span class="w"> </span><span class="s2">&quot;https://togomedium.org/sparqlist/api/list_media?limit=100&amp;offset=0&quot;</span>
+
+<span class="c1"># Get medium details by ID</span>
+curl<span class="w"> </span><span class="s2">&quot;https://togomedium.org/sparqlist/api/gmdb_medium_by_gmid?gm_id=M443&quot;</span>
+
+<span class="c1"># List components</span>
+curl<span class="w"> </span><span class="s2">&quot;https://togomedium.org/sparqlist/api/list_components&quot;</span>
+
+<span class="c1"># List organisms</span>
+curl<span class="w"> </span><span class="s2">&quot;https://togomedium.org/sparqlist/api/list_organisms&quot;</span>
+</code></pre></div>
+<h3 id="sparql-queries">SPARQL Queries</h3>
+<p>Direct triplestore access for custom queries:</p>
+<div class="highlight"><pre><span></span><code><span class="c"># Count media by source</span>
+<span class="k">SELECT</span> <span class="nv">?source</span> <span class="p">(</span><span class="nf">COUNT</span><span class="p">(</span><span class="nv">?medium</span><span class="p">)</span> <span class="k">AS</span> <span class="nv">?count</span><span class="p">)</span> <span class="k">WHERE</span> <span class="p">{</span>
+  <span class="nv">?medium</span> <span class="k">a</span> <span class="nl">&lt;http://purl.jp/bio/10/gmo/GMO_000001&gt;</span> <span class="p">;</span>
+          <span class="nl">&lt;http://purl.org/dc/terms/identifier&gt;</span> <span class="nv">?id</span> <span class="p">.</span>
+  <span class="k">BIND</span><span class="p">(</span><span class="nf">STRBEFORE</span><span class="p">(</span><span class="nv">?id</span><span class="p">,</span> <span class="s">&quot;_&quot;</span><span class="p">)</span> <span class="k">AS</span> <span class="nv">?source</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="k">GROUP BY</span> <span class="nv">?source</span>
+<span class="k">ORDER BY</span> <span class="k">DESC</span><span class="p">(</span><span class="nv">?count</span><span class="p">)</span>
+
+<span class="c"># Find media containing specific ingredient</span>
+<span class="k">SELECT</span> <span class="nv">?medium</span> <span class="nv">?mediumName</span> <span class="k">WHERE</span> <span class="p">{</span>
+  <span class="nv">?medium</span> <span class="k">a</span> <span class="nl">&lt;http://purl.jp/bio/10/gmo/GMO_000001&gt;</span> <span class="p">;</span>
+          <span class="nn">rdfs</span><span class="p">:</span><span class="nt">label</span> <span class="nv">?mediumName</span> <span class="p">;</span>
+          <span class="nl">&lt;http://purl.jp/bio/10/gmo/has_component&gt;</span> <span class="nv">?usage</span> <span class="p">.</span>
+  <span class="nv">?usage</span> <span class="nl">&lt;http://purl.jp/bio/10/gmo/gmo_id&gt;</span> <span class="nv">?comp</span> <span class="p">.</span>
+  <span class="nv">?comp</span> <span class="nn">rdfs</span><span class="p">:</span><span class="nt">label</span> <span class="nv">?compName</span> <span class="p">.</span>
+  <span class="k">FILTER</span><span class="p">(</span><span class="nf">CONTAINS</span><span class="p">(</span><span class="nf">LCASE</span><span class="p">(</span><span class="nv">?compName</span><span class="p">),</span> <span class="s">&quot;methanol&quot;</span><span class="p">))</span>
+<span class="p">}</span>
+
+<span class="c"># Get cross-references for a medium</span>
+<span class="k">SELECT</span> <span class="nv">?medium</span> <span class="nv">?xref</span> <span class="k">WHERE</span> <span class="p">{</span>
+  <span class="nv">?medium</span> <span class="k">a</span> <span class="nl">&lt;http://purl.jp/bio/10/gmo/GMO_000001&gt;</span> <span class="p">;</span>
+          <span class="nn">rdfs</span><span class="p">:</span><span class="nt">seeAlso</span> <span class="nv">?xref</span> <span class="p">.</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="local-data-infrastructure">Local Data Infrastructure</h2>
+<h3 id="chromadb-index">ChromaDB Index</h3>
+<p>We maintain a local ChromaDB index for fuzzy/semantic search:</p>
+<ul>
+<li><strong>Location</strong>: <code>data/chroma_togomedium/</code></li>
+<li><strong>Collection</strong>: <code>togomedium_media</code></li>
+<li><strong>Documents</strong>: 2,917 media</li>
+<li><strong>Size</strong>: ~11MB</li>
+</ul>
+<p><strong>Indexer script</strong>: <code>src/cmm_ai_automation/scripts/index_togomedium_chromadb.py</code></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Run indexer</span>
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.index_togomedium_chromadb
+
+<span class="c1"># Run with tests</span>
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.index_togomedium_chromadb<span class="w"> </span>--test
+
+<span class="c1"># Force refresh from API</span>
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.index_togomedium_chromadb<span class="w"> </span>--refresh
+</code></pre></div>
+<h3 id="cached-data">Cached Data</h3>
+<ul>
+<li><strong>Location</strong>: <code>data/togomedium_cache/media_list.json</code></li>
+<li><strong>Content</strong>: Basic media info (ID, name, source)</li>
+<li><strong>Size</strong>: ~485KB</li>
+</ul>
+<h3 id="whats-not-cached-locally">What's NOT Cached Locally</h3>
+<p>The JSON cache only contains basic media info. Missing:</p>
+<ul>
+<li>Full ingredient lists with quantities</li>
+<li>Cross-references to ChEBI/PubChem</li>
+<li>Organism-media associations</li>
+<li>Recipe preparation steps</li>
+<li>pH values and other metadata</li>
+</ul>
+<p>A full RDF dump via SPARQL would be needed for complete local data.</p>
+<h2 id="integration-with-other-data-sources">Integration with Other Data Sources</h2>
+<h3 id="mediadive-comparison">MediaDive Comparison</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>MediaDive</th>
+<th>TogoMedium</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Media count</td>
+<td>5,842</td>
+<td>2,917</td>
+</tr>
+<tr>
+<td>Ingredient count</td>
+<td>1,234</td>
+<td>50,202</td>
+</tr>
+<tr>
+<td>Strain associations</td>
+<td>47,264</td>
+<td>81,130 organisms</td>
+</tr>
+<tr>
+<td>Has LB medium</td>
+<td>No</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Has NMS medium</td>
+<td>Stock only</td>
+<td>Complete</td>
+</tr>
+<tr>
+<td>API type</td>
+<td>MongoDB</td>
+<td>SPARQL + REST</td>
+</tr>
+<tr>
+<td>Data format</td>
+<td>JSON</td>
+<td>RDF</td>
+</tr>
+</tbody>
+</table>
+<h3 id="kg-microbe-integration">kg-microbe Integration</h3>
+<p>TogoMedium media IDs (e.g., M443) are distinct from kg-microbe medium IDs (e.g., J511). Cross-walking requires:</p>
+<ol>
+<li>Name-based matching via ChromaDB fuzzy search</li>
+<li>Ingredient composition comparison</li>
+<li>Manual curation for ambiguous cases</li>
+</ol>
+<h3 id="recommended-grounding-priority">Recommended Grounding Priority</h3>
+<ol>
+<li><strong>TogoMedium</strong> - For LB, NMS, standard media with good cross-references</li>
+<li><strong>MediaDive</strong> - For MPYG, R2A, and media with strain associations</li>
+<li><strong>kg-microbe</strong> - For existing graph integration (J511, etc.)</li>
+<li><strong>Manual definition</strong> - For lab-specific media (Hypho, MP, ATCC:1306)</li>
+</ol>
+<h2 id="future-work">Future Work</h2>
+<h3 id="full-rdf-dump">Full RDF Dump</h3>
+<p>Create a SPARQL-based dumper to extract:
+- All media with complete ingredient lists
+- Cross-references to external databases
+- Organism-media cultivation relationships</p>
+<h3 id="ingredient-alignment">Ingredient Alignment</h3>
+<p>Map TogoMedium GMO components to:
+- ChEBI ontology terms
+- PubChem CIDs
+- MediaDive ingredient IDs</p>
+<h3 id="graph-integration">Graph Integration</h3>
+<p>Add TogoMedium data to CMM knowledge graph:
+- <code>Medium</code> nodes with TogoMedium IDs
+- <code>hasIngredient</code> edges to chemical entities
+- <code>cultivatedIn</code> edges from organisms to media</p>
+<h2 id="references">References</h2>
+<ul>
+<li>TogoMedium: https://togomedium.org/</li>
+<li>TogoMedium About: https://togomedium.org/about/</li>
+<li>GMO on BioPortal: https://bioportal.bioontology.org/ontologies/GMO</li>
+<li>DBCLS: https://dbcls.rois.ac.jp/</li>
+<li>Growth Medium Ontology paper: (not yet published)</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        
+
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        with emoji by
+        <a href="https://github.com/twitter/twemoji" target="_blank" rel="noopener">
+          Twemoji
+        </a>
+      </div>
+      
+<div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "header.autohide", "navigation.expand", "navigation.instant", "navigation.instant.progress", "navigation.tracking", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../assets/pymdownx-extras/extra-loader-B5CKpNQx.js"></script>
+      
+    
+  </body>
+</html>

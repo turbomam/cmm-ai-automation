@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/carbon_source_used/">
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/temperature/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Slot: carbon_source_used - cmm-ai-automation</title>
+        <title>Slot: temperature - cmm-ai-automation</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#slot-carbon_source_used" class="md-skip">
+        <a href="#slot-temperature" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Slot: carbon_source_used
+              Slot: temperature
             
           </span>
         </div>
@@ -511,10 +511,10 @@
   
 
 
-<h1 id="slot-carbon_source_used">Slot: carbon_source_used</h1>
-<p><em>The carbon source utilized for growth (e.g., methanol, methylamine). May differ from what's in the medium if multiple sources available.</em></p>
-<p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/carbon_source_used">cmm:carbon_source_used</a>
-Alias: carbon_source_used</p>
+<h1 id="slot-temperature">Slot: temperature</h1>
+<p><em>Growth temperature in degrees Celsius for this observation.</em></p>
+<p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/temperature">cmm:temperature</a>
+Alias: temperature</p>
 <!-- no inheritance hierarchy -->
 
 <h2 id="applicable-classes">Applicable Classes</h2>
@@ -536,7 +536,7 @@ Alias: carbon_source_used</p>
 </table>
 <h2 id="properties">Properties</h2>
 <ul>
-<li>Range: <a href="../String/">String</a></li>
+<li>Range: <a href="../Float/">Float</a></li>
 </ul>
 <h2 id="identifier-and-mapping-information">Identifier and Mapping Information</h2>
 <h3 id="schema-source">Schema Source</h3>
@@ -554,25 +554,26 @@ Alias: carbon_source_used</p>
 <tbody>
 <tr>
 <td>self</td>
-<td>cmm:carbon_source_used</td>
+<td>cmm:temperature</td>
 </tr>
 <tr>
 <td>native</td>
-<td>cmm:carbon_source_used</td>
+<td>cmm:temperature</td>
 </tr>
 </tbody>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">carbon_source_used</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The carbon source utilized for growth (e.g., methanol, methylamine).</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">May differ from what&#39;s in the medium if multiple sources available.</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Growth temperature in degrees Celsius for this observation.</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">carbon_source_used</span>
+<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span>
 <span class="nt">domain_of</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
+<span class="nt">unit</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">ucum_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cel</span>
 </code></pre></div>
 </details>
 

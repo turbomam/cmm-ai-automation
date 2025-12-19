@@ -727,10 +727,6 @@ for knowledge graph generation.</p>
 <td>Biosafety level (1-4)</td>
 </tr>
 <tr>
-<td><a href="carbon_source_used/">carbon_source_used</a></td>
-<td>The carbon source utilized for growth (e</td>
-</tr>
-<tr>
 <td><a href="cas_rn/">cas_rn</a></td>
 <td>CAS Registry Number</td>
 </tr>
@@ -779,12 +775,20 @@ for knowledge graph generation.</p>
 <td>Recorded conflicts between data sources</td>
 </tr>
 <tr>
+<td><a href="derived_from/">derived_from</a></td>
+<td>Parent medium this formulation is based on</td>
+</tr>
+<tr>
 <td><a href="description/">description</a></td>
 <td>A human-readable description for a thing</td>
 </tr>
 <tr>
 <td><a href="does_not_grow_in_medium/">does_not_grow_in_medium</a></td>
 <td>Media in which this strain cannot grow (negative results)</td>
+</tr>
+<tr>
+<td><a href="doubling_time/">doubling_time</a></td>
+<td>Quantitative growth rate measured as doubling time in hours</td>
 </tr>
 <tr>
 <td><a href="drugbank_id/">drugbank_id</a></td>
@@ -931,6 +935,10 @@ for knowledge graph generation.</p>
 <td>MeSH identifier</td>
 </tr>
 <tr>
+<td><a href="modifications/">modifications</a></td>
+<td>List of modifications from the parent medium (derived_from)</td>
+</tr>
+<tr>
 <td><a href="molecular_mass/">molecular_mass</a></td>
 <td>Average molecular mass in Daltons</td>
 </tr>
@@ -967,18 +975,6 @@ for knowledge graph generation.</p>
 <td>The medium that is the object of the growth relationship</td>
 </tr>
 <tr>
-<td><a href="optimal_ph/">optimal_ph</a></td>
-<td>Optimal pH for growth in this medium</td>
-</tr>
-<tr>
-<td><a href="optimal_temperature/">optimal_temperature</a></td>
-<td>Optimal growth temperature in degrees Celsius</td>
-</tr>
-<tr>
-<td><a href="oxygen_condition/">oxygen_condition</a></td>
-<td>Oxygen condition used for this growth observation</td>
-</tr>
-<tr>
 <td><a href="oxygen_tolerance/">oxygen_tolerance</a></td>
 <td>Oxygen requirement/tolerance category</td>
 </tr>
@@ -1005,10 +1001,6 @@ for knowledge graph generation.</p>
 <tr>
 <td><a href="pubchem_cid/">pubchem_cid</a></td>
 <td>PubChem Compound ID</td>
-</tr>
-<tr>
-<td><a href="references/">references</a></td>
-<td>Literature references for this medium formulation</td>
 </tr>
 <tr>
 <td><a href="refseq_accession/">refseq_accession</a></td>
@@ -1067,6 +1059,10 @@ for knowledge graph generation.</p>
 <td>Records tracking which source provided which data</td>
 </tr>
 <tr>
+<td><a href="source_reference/">source_reference</a></td>
+<td>Authoritative reference for this medium formulation</td>
+</tr>
+<tr>
 <td><a href="source_timestamp/">source_timestamp</a></td>
 <td>When this data was retrieved from the source</td>
 </tr>
@@ -1101,6 +1097,10 @@ for knowledge graph generation.</p>
 <tr>
 <td><a href="taxa/">taxa</a></td>
 <td>Collection of all taxonomic entities</td>
+</tr>
+<tr>
+<td><a href="temperature/">temperature</a></td>
+<td>Growth temperature in degrees Celsius for this observation</td>
 </tr>
 <tr>
 <td><a href="temperature_range/">temperature_range</a></td>

@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/optimal_temperature/">
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/source_reference/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Slot: optimal_temperature - cmm-ai-automation</title>
+        <title>Slot: source_reference - cmm-ai-automation</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#slot-optimal_temperature" class="md-skip">
+        <a href="#slot-source_reference" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Slot: optimal_temperature
+              Slot: source_reference
             
           </span>
         </div>
@@ -511,10 +511,10 @@
   
 
 
-<h1 id="slot-optimal_temperature">Slot: optimal_temperature</h1>
-<p><em>Optimal growth temperature in degrees Celsius.</em></p>
-<p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/optimal_temperature">cmm:optimal_temperature</a>
-Alias: optimal_temperature</p>
+<h1 id="slot-source_reference">Slot: source_reference</h1>
+<p><em>Authoritative reference for this medium formulation. Must be a resolvable CURIE from an allowed prefix. For database media: mediadive.medium:381, togomedium:M1871, DSMZ:576, ATCC:1306, JCM:M89 For literature-defined media: doi:10.1371/journal.pone.0062957, PMID:23658750</em></p>
+<p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/source_reference">cmm:source_reference</a>
+Alias: source_reference</p>
 <!-- no inheritance hierarchy -->
 
 <h2 id="applicable-classes">Applicable Classes</h2>
@@ -528,15 +528,20 @@ Alias: optimal_temperature</p>
 </thead>
 <tbody>
 <tr>
-<td><a href="../GrowthPreference/">GrowthPreference</a></td>
-<td>Reified relationship: a strain's growth in a specific medium</td>
-<td>no</td>
+<td><a href="../GrowthMedium/">GrowthMedium</a></td>
+<td>A complete formulation for cultivating microorganisms</td>
+<td>yes</td>
 </tr>
 </tbody>
 </table>
 <h2 id="properties">Properties</h2>
 <ul>
-<li>Range: <a href="../Float/">Float</a></li>
+<li>
+<p>Range: <a href="../Uriorcurie/">Uriorcurie</a></p>
+</li>
+<li>
+<p>Regex pattern: <code>^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$</code></p>
+</li>
 </ul>
 <h2 id="identifier-and-mapping-information">Identifier and Mapping Information</h2>
 <h3 id="schema-source">Schema Source</h3>
@@ -554,26 +559,28 @@ Alias: optimal_temperature</p>
 <tbody>
 <tr>
 <td>self</td>
-<td>cmm:optimal_temperature</td>
+<td>cmm:source_reference</td>
 </tr>
 <tr>
 <td>native</td>
-<td>cmm:optimal_temperature</td>
+<td>cmm:source_reference</td>
 </tr>
 </tbody>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optimal_temperature</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Optimal growth temperature in degrees Celsius.</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_reference</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Authoritative</span><span class="nv"> </span><span class="s">reference</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">medium</span><span class="nv"> </span><span class="s">formulation.</span><span class="nv"> </span><span class="s">Must</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">resolvable</span>
+<span class="w">  </span><span class="s">CURIE</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">allowed</span><span class="nv"> </span><span class="s">prefix.</span><span class="nv"> </span><span class="s">For</span><span class="nv"> </span><span class="s">database</span><span class="nv"> </span><span class="s">media:</span><span class="nv"> </span><span class="s">mediadive.medium:381,</span><span class="nv"> </span><span class="s">togomedium:M1871,</span>
+<span class="w">  </span><span class="s">DSMZ:576,</span><span class="nv"> </span><span class="s">ATCC:1306,</span><span class="nv"> </span><span class="s">JCM:M89</span><span class="nv"> </span><span class="s">For</span><span class="nv"> </span><span class="s">literature-defined</span><span class="nv"> </span><span class="s">media:</span><span class="nv"> </span><span class="s">doi:10.1371/journal.pone.0062957,</span>
+<span class="w">  </span><span class="s">PMID:23658750&#39;</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">optimal_temperature</span>
+<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_reference</span>
 <span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
-<span class="nt">unit</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">ucum_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cel</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
+<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uriorcurie</span>
+<span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$</span>
 </code></pre></div>
 </details>
 

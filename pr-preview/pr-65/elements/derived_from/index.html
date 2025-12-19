@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/references/">
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/derived_from/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Slot: references - cmm-ai-automation</title>
+        <title>Slot: derived_from - cmm-ai-automation</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#slot-references" class="md-skip">
+        <a href="#slot-derived_from" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Slot: references
+              Slot: derived_from
             
           </span>
         </div>
@@ -511,10 +511,10 @@
   
 
 
-<h1 id="slot-references">Slot: references</h1>
-<p><em>Literature references for this medium formulation</em></p>
-<p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/references">cmm:references</a>
-Alias: references</p>
+<h1 id="slot-derived_from">Slot: derived_from</h1>
+<p><em>Parent medium this formulation is based on. Used for lab-specific modifications of standard media. Creates a provenance chain back to database entries.</em></p>
+<p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/derived_from">cmm:derived_from</a>
+Alias: derived_from</p>
 <!-- no inheritance hierarchy -->
 
 <h2 id="applicable-classes">Applicable Classes</h2>
@@ -536,12 +536,7 @@ Alias: references</p>
 </table>
 <h2 id="properties">Properties</h2>
 <ul>
-<li>
-<p>Range: <a href="../String/">String</a></p>
-</li>
-<li>
-<p>Multivalued: True</p>
-</li>
+<li>Range: <a href="../GrowthMedium/">GrowthMedium</a></li>
 </ul>
 <h2 id="identifier-and-mapping-information">Identifier and Mapping Information</h2>
 <h3 id="schema-source">Schema Source</h3>
@@ -559,25 +554,25 @@ Alias: references</p>
 <tbody>
 <tr>
 <td>self</td>
-<td>cmm:references</td>
+<td>cmm:derived_from</td>
 </tr>
 <tr>
 <td>native</td>
-<td>cmm:references</td>
+<td>cmm:derived_from</td>
 </tr>
 </tbody>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">references</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Literature references for this medium formulation</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">derived_from</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Parent medium this formulation is based on. Used for lab-specific modifications</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">of standard media. Creates a provenance chain back to database entries.</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">references</span>
+<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">derived_from</span>
 <span class="nt">domain_of</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
 </code></pre></div>
 </details>
 

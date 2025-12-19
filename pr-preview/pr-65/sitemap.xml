@@ -25,6 +25,10 @@
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>
+         <loc>https://turbomam.github.io/cmm-ai-automation/togomedium/</loc>
+         <lastmod>2025-12-19</lastmod>
+    </url>
+    <url>
          <loc>https://turbomam.github.io/cmm-ai-automation/elements/</loc>
          <lastmod>2025-12-19</lastmod>
     </url>
@@ -253,10 +257,6 @@
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>
-         <loc>https://turbomam.github.io/cmm-ai-automation/elements/carbon_source_used/</loc>
-         <lastmod>2025-12-19</lastmod>
-    </url>
-    <url>
          <loc>https://turbomam.github.io/cmm-ai-automation/elements/cas_rn/</loc>
          <lastmod>2025-12-19</lastmod>
     </url>
@@ -309,11 +309,19 @@
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>
+         <loc>https://turbomam.github.io/cmm-ai-automation/elements/derived_from/</loc>
+         <lastmod>2025-12-19</lastmod>
+    </url>
+    <url>
          <loc>https://turbomam.github.io/cmm-ai-automation/elements/description/</loc>
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>
          <loc>https://turbomam.github.io/cmm-ai-automation/elements/does_not_grow_in_medium/</loc>
+         <lastmod>2025-12-19</lastmod>
+    </url>
+    <url>
+         <loc>https://turbomam.github.io/cmm-ai-automation/elements/doubling_time/</loc>
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>
@@ -461,6 +469,10 @@
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>
+         <loc>https://turbomam.github.io/cmm-ai-automation/elements/modifications/</loc>
+         <lastmod>2025-12-19</lastmod>
+    </url>
+    <url>
          <loc>https://turbomam.github.io/cmm-ai-automation/elements/molecular_mass/</loc>
          <lastmod>2025-12-19</lastmod>
     </url>
@@ -497,18 +509,6 @@
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>
-         <loc>https://turbomam.github.io/cmm-ai-automation/elements/optimal_ph/</loc>
-         <lastmod>2025-12-19</lastmod>
-    </url>
-    <url>
-         <loc>https://turbomam.github.io/cmm-ai-automation/elements/optimal_temperature/</loc>
-         <lastmod>2025-12-19</lastmod>
-    </url>
-    <url>
-         <loc>https://turbomam.github.io/cmm-ai-automation/elements/oxygen_condition/</loc>
-         <lastmod>2025-12-19</lastmod>
-    </url>
-    <url>
          <loc>https://turbomam.github.io/cmm-ai-automation/elements/oxygen_tolerance/</loc>
          <lastmod>2025-12-19</lastmod>
     </url>
@@ -534,10 +534,6 @@
     </url>
     <url>
          <loc>https://turbomam.github.io/cmm-ai-automation/elements/pubchem_cid/</loc>
-         <lastmod>2025-12-19</lastmod>
-    </url>
-    <url>
-         <loc>https://turbomam.github.io/cmm-ai-automation/elements/references/</loc>
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>
@@ -597,6 +593,10 @@
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>
+         <loc>https://turbomam.github.io/cmm-ai-automation/elements/source_reference/</loc>
+         <lastmod>2025-12-19</lastmod>
+    </url>
+    <url>
          <loc>https://turbomam.github.io/cmm-ai-automation/elements/source_timestamp/</loc>
          <lastmod>2025-12-19</lastmod>
     </url>
@@ -630,6 +630,10 @@
     </url>
     <url>
          <loc>https://turbomam.github.io/cmm-ai-automation/elements/taxa/</loc>
+         <lastmod>2025-12-19</lastmod>
+    </url>
+    <url>
+         <loc>https://turbomam.github.io/cmm-ai-automation/elements/temperature/</loc>
          <lastmod>2025-12-19</lastmod>
     </url>
     <url>

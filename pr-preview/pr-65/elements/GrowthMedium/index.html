@@ -319,13 +319,24 @@
 <div class="md-content" data-md-component="content">
 <article class="md-content__inner md-typeset">
 <h1 id="class-growthmedium">Class: GrowthMedium</h1>
-<p><em>A complete formulation for cultivating microorganisms. Contains ingredients directly and/or pre-made solutions.</em></p>
+<p><em>A complete formulation for cultivating microorganisms. Contains ingredients directly and/or pre-made solutions. Lab-specific or modified media should use derived_from to link to their parent medium and list modifications.</em></p>
 <p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/GrowthMedium">cmm:GrowthMedium</a></p>
 <pre class="mermaid"><code> classDiagram
     class GrowthMedium
     click GrowthMedium href "../GrowthMedium/"
       Mixture &lt;|-- GrowthMedium
         click Mixture href "../Mixture/"
+
+      GrowthMedium : derived_from
+
+
+
+
+
+        GrowthMedium --&gt; "0..1" GrowthMedium : derived_from
+        click GrowthMedium href "../GrowthMedium/"
+
+
 
       GrowthMedium : description
 
@@ -364,11 +375,13 @@
 
 
 
+      GrowthMedium : modifications
+
       GrowthMedium : name
 
       GrowthMedium : ph
 
-      GrowthMedium : references
+      GrowthMedium : source_reference
 
       GrowthMedium : sterilization_method
 
@@ -429,9 +442,21 @@
 <td>direct</td>
 </tr>
 <tr>
-<td><a href="../references/">references</a></td>
+<td><a href="../source_reference/">source_reference</a></td>
+<td>1 <br/> <a href="../Uriorcurie/">Uriorcurie</a></td>
+<td>Authoritative reference for this medium formulation</td>
+<td>direct</td>
+</tr>
+<tr>
+<td><a href="../derived_from/">derived_from</a></td>
+<td>0..1 <br/> <a href="./">GrowthMedium</a></td>
+<td>Parent medium this formulation is based on</td>
+<td>direct</td>
+</tr>
+<tr>
+<td><a href="../modifications/">modifications</a></td>
 <td>* <br/> <a href="../String/">String</a></td>
-<td>Literature references for this medium formulation</td>
+<td>List of modifications from the parent medium (derived_from)</td>
 <td>direct</td>
 </tr>
 <tr>
@@ -478,6 +503,12 @@
 </thead>
 <tbody>
 <tr>
+<td><a href="./">GrowthMedium</a></td>
+<td><a href="../derived_from/">derived_from</a></td>
+<td>range</td>
+<td><a href="./">GrowthMedium</a></td>
+</tr>
+<tr>
 <td><a href="../GrowthPreference/">GrowthPreference</a></td>
 <td><a href="../object_medium/">object_medium</a></td>
 <td>range</td>
@@ -511,10 +542,19 @@
 <p>cmm</p>
 </li>
 <li>
+<p>mediadive.medium</p>
+</li>
+<li>
+<p>togomedium</p>
+</li>
+<li>
 <p>DSMZ</p>
 </li>
 <li>
 <p>ATCC</p>
+</li>
+<li>
+<p>JCM</p>
 </li>
 </ul>
 <h3 id="schema-source">Schema Source</h3>
@@ -547,10 +587,14 @@
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
 <span class="nt">id_prefixes</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmm</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mediadive.medium</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">togomedium</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DSMZ</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ATCC</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">JCM</span>
 <span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A complete formulation for cultivating microorganisms. Contains ingredients</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">directly and/or pre-made solutions.</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">directly and/or pre-made solutions. Lab-specific or modified media should use derived_from</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">to link to their parent medium and list modifications.</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
 <span class="nt">is_a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mixture</span>
 <span class="nt">slots</span><span class="p">:</span>
@@ -559,7 +603,13 @@
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sterilization_method</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_solution_component</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">target_organisms</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">references</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_reference</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">derived_from</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modifications</span>
+<span class="nt">slot_usage</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source_reference</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_reference</span>
+<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 </code></pre></div>
 </details>
 <h3 id="induced">Induced</h3>
@@ -567,12 +617,20 @@
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
 <span class="nt">id_prefixes</span><span class="p">:</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmm</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mediadive.medium</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">togomedium</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DSMZ</span>
 <span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ATCC</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">JCM</span>
 <span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A complete formulation for cultivating microorganisms. Contains ingredients</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">directly and/or pre-made solutions.</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">directly and/or pre-made solutions. Lab-specific or modified media should use derived_from</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">to link to their parent medium and list modifications.</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
 <span class="nt">is_a</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mixture</span>
+<span class="nt">slot_usage</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source_reference</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_reference</span>
+<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 <span class="nt">attributes</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">medium_type</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">medium_type</span>
@@ -630,12 +688,43 @@
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
 <span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
 <span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">references</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">references</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Literature references for this medium formulation</span>
+<span class="w">  </span><span class="nt">source_reference</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_reference</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Authoritative</span><span class="nv"> </span><span class="s">reference</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">medium</span><span class="nv"> </span><span class="s">formulation.</span><span class="nv"> </span><span class="s">Must</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">resolvable</span>
+<span class="w">      </span><span class="s">CURIE</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">allowed</span><span class="nv"> </span><span class="s">prefix.</span><span class="nv"> </span><span class="s">For</span><span class="nv"> </span><span class="s">database</span><span class="nv"> </span><span class="s">media:</span><span class="nv"> </span><span class="s">mediadive.medium:381,</span><span class="nv"> </span><span class="s">togomedium:M1871,</span>
+<span class="w">      </span><span class="s">DSMZ:576,</span><span class="nv"> </span><span class="s">ATCC:1306,</span><span class="nv"> </span><span class="s">JCM:M89</span><span class="nv"> </span><span class="s">For</span><span class="nv"> </span><span class="s">literature-defined</span><span class="nv"> </span><span class="s">media:</span><span class="nv"> </span><span class="s">doi:10.1371/journal.pone.0062957,</span>
+<span class="w">      </span><span class="s">PMID:23658750'</span>
 <span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
 <span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">references</span>
+<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_reference</span>
+<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
+<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
+<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uriorcurie</span>
+<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$</span>
+<span class="w">  </span><span class="nt">derived_from</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">derived_from</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Parent medium this formulation is based on. Used for lab-specific</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">modifications of standard media. Creates a provenance chain back to database</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">entries.</span>
+<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
+<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">derived_from</span>
+<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
+<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
+<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
+<span class="w">  </span><span class="nt">modifications</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modifications</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">"List</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">modifications</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">parent</span><span class="nv"> </span><span class="s">medium</span><span class="nv"> </span><span class="s">(derived_from).</span><span class="nv"> </span><span class="s">Each\</span>
+<span class="w">      </span><span class="s">\ entry</span><span class="nv"> </span><span class="s">describes</span><span class="nv"> </span><span class="s">one</span><span class="nv"> </span><span class="s">change:</span><span class="nv"> </span><span class="s">added</span><span class="nv"> </span><span class="s">ingredient,</span><span class="nv"> </span><span class="s">removed</span><span class="nv"> </span><span class="s">ingredient,</span><span class="nv"> </span><span class="s">concentration\</span>
+<span class="w">      </span><span class="s">\ change,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">buffer</span><span class="nv"> </span><span class="s">substitution.</span><span class="nv"> </span><span class="s">Examples:\n</span><span class="nv">  </span><span class="s">-</span><span class="nv"> </span><span class="s">\"Added</span><span class="nv"> </span><span class="s">PIPES</span><span class="nv"> </span><span class="s">buffer</span><span class="nv"> </span><span class="s">30mM</span><span class="nv"> </span><span class="s">pH\</span>
+<span class="w">      </span><span class="s">\ 6.8\"\n</span><span class="nv">  </span><span class="s">-</span><span class="nv"> </span><span class="s">\"Replaced</span><span class="nv"> </span><span class="s">methanol</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">succinate</span><span class="nv"> </span><span class="s">15mM\"\n</span><span class="nv">  </span><span class="s">-</span><span class="nv"> </span><span class="s">\"Removed</span><span class="nv"> </span><span class="s">agar</span><span class="nv"> </span><span class="s">for\</span>
+<span class="w">      </span><span class="s">\ liquid</span><span class="nv"> </span><span class="s">culture\""</span>
+<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
+<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modifications</span>
 <span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
 <span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
 <span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
