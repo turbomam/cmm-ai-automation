@@ -11,6 +11,10 @@
         <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/togomedium/">
       
       
+        <link rel="prev" href="../architecture/">
+      
+      
+        <link rel="next" href="../about/">
       
       
         
@@ -21,7 +25,7 @@
     
     
       
-        <title>TogoMedium Integration for CMM - cmm-ai-automation</title>
+        <title>TogoMedium - cmm-ai-automation</title>
       
     
     
@@ -116,7 +120,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              TogoMedium Integration for CMM
+              TogoMedium
             
           </span>
         </div>
@@ -361,6 +365,413 @@
   
 
       </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TogoMedium
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TogoMedium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Statistics
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Sources
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relevance-to-cmm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relevance to CMM
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Relevance to CMM">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#media-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Media Coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#media-not-in-togomedium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Media NOT in TogoMedium
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cross-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cross-References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#growth-medium-ontology-gmo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Growth Medium Ontology (GMO)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Growth Medium Ontology (GMO)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontology-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ontology Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-access-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Access Methods
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Access Methods">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#rest-api-sparqlist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        REST API (SPARQList)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sparql-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SPARQL Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#local-data-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Data Infrastructure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Local Data Infrastructure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#chromadb-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ChromaDB Index
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cached-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cached Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-not-cached-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's NOT Cached Locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#integration-with-other-data-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Integration with Other Data Sources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Integration with Other Data Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mediadive-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MediaDive Comparison
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kg-microbe-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kg-microbe Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-grounding-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Grounding Priority
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#future-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Work
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Future Work">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#full-rdf-dump" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full RDF Dump
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ingredient-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ingredient Alignment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#graph-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Graph Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
     </li>
   
 
@@ -1140,6 +1551,50 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
         
 
 <footer class="md-footer">
+  
+    <nav
+      class="md-footer__inner md-grid"
+      aria-label="footer.title"
+    >
+      
+        <a
+          href="../architecture/"
+          class="md-footer__link md-footer__link--prev"
+          rel="prev"
+        >
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Architecture
+            </div>
+          </div>
+        </a>
+      
+      
+        <a
+          href="../about/"
+          class="md-footer__link md-footer__link--next"
+          rel="next"
+        >
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              About
+            </div>
+          </div>
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+          </div>
+        </a>
+      
+    </nav>
   
   <div class="md-footer-meta md-typeset">
     <div class="md-footer-meta__inner md-grid">
