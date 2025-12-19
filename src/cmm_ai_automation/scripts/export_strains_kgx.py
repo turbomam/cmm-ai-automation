@@ -1192,13 +1192,13 @@ def lookup_bacdive_by_culture_collection(
     # Use regex query for efficient database-side filtering
     # The field contains comma-separated IDs like "DSM 1337, ATCC 43645, NCIMB 9399"
     # Match as complete token to avoid false positives (e.g., "DSM 1" matching "DSM 11")
-    # Use word boundaries or comma separators to ensure exact match
     escaped_id = re.escape(search_id)
     # Pattern: (start of string OR comma+whitespace) + ID + (comma OR end of string)
-    pattern = f"(^|,\\s*){escaped_id}(\\s*,|$)"
+    # Use raw string for readability
+    pattern = rf"(^|,\s*){escaped_id}(\s*,|$)"
     
     result: dict[str, Any] | None = collection.find_one(
-        {"External links.culture collection no.": {"$regex": pattern, "$options": "i"}}
+        {"External links.culture collection no.": {"$regex": pattern}}
     )
     return result
 
