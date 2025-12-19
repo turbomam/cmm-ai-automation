@@ -1194,8 +1194,8 @@ def lookup_bacdive_by_culture_collection(
     # Match as complete token to avoid false positives (e.g., "DSM 1" matching "DSM 11")
     # Use word boundaries or comma separators to ensure exact match
     escaped_id = re.escape(search_id)
-    # Pattern: (start of string OR comma+whitespace) + ID + (end of string OR comma)
-    pattern = f"(^|,\\s*){escaped_id}(\\s*,|\\s*$)"
+    # Pattern: (start of string OR comma+whitespace) + ID + (comma OR end of string)
+    pattern = f"(^|,\\s*){escaped_id}(\\s*,|$)"
     
     result: dict[str, Any] | None = collection.find_one(
         {"External links.culture collection no.": {"$regex": pattern, "$options": "i"}}
