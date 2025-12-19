@@ -1,5 +1,7 @@
 """Tests for strain reconciliation agent."""
 
+import os
+
 import pytest
 
 from cmm_ai_automation.reconcile.agent import (
@@ -107,6 +109,10 @@ def ensifer_bacdive_record() -> StrainCandidate:
 
 
 @pytest.mark.integration
+@pytest.mark.skipif(
+    not os.environ.get("OPENAI_API_KEY"),
+    reason="OPENAI_API_KEY not set; skipping OpenAI-dependent tests",
+)
 class TestStrainReconcilerIntegration:
     """Integration tests for StrainReconciler (requires API access)."""
 
