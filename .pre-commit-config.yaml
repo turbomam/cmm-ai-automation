@@ -62,7 +62,11 @@ repos:
         exclude: |
           (?x)^(
             project/.*|
-            src/cmm_ai_automation/datamodel/.*
+            src/cmm_ai_automation/datamodel/.*|
+            src/cmm_ai_automation/scripts/cache_ncbi_searches\.py|
+            src/cmm_ai_automation/scripts/extract_edge_patterns\.py|
+            src/cmm_ai_automation/scripts/analyze_kgx_patterns\.py|
+            src/cmm_ai_automation/scripts/index_.*\.py
           )$
 
   - repo: https://github.com/PyCQA/bandit
@@ -82,7 +86,8 @@ repos:
     hooks:
       - id: pip-audit
         name: pip-audit (vulnerability scanner)
-        entry: uv run pip-audit
+        # Ignore CVE-2025-53000 (nbconvert) - no fix available yet
+        entry: uv run pip-audit --ignore-vuln CVE-2025-53000
         language: system
         pass_filenames: false
         always_run: true

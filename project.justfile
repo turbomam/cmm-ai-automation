@@ -1,4 +1,5 @@
 ## Add your own just recipes here. This is imported by the main justfile.
+## Note: .env is loaded via `set dotenv-load` in main justfile
 
 # =============================================================================
 # QA TARGETS
@@ -23,6 +24,12 @@ test-verbose:
 # =============================================================================
 # FUNCTIONAL TARGETS - Data Pipeline Operations
 # =============================================================================
+
+# Clean KGX outputs only
+# SAFE: Only removes KGX files, keeps other outputs
+clean-kgx:
+  rm -rf output/kgx/
+  @echo "✓ Cleaned KGX outputs"
 
 # Clean enrichment outputs (DuckDB store, KGX files, intermediate files)
 # SAFE: Only removes generated files, not downloaded source data
@@ -121,3 +128,173 @@ enrich-to-store-test n='5':
 # REQUIRES: data/enrichment.duckdb exists, SAFE: read-only on APIs, WRITES: output/kgx/*.tsv
 export-kgx:
   uv run python -c "from cmm_ai_automation.store.enrichment_store import EnrichmentStore; from pathlib import Path; store = EnrichmentStore(); store.export_to_kgx(Path('output/kgx/ingredients')); print('✓ KGX export complete')"
+
+# =============================================================================
+# KGX TARGETS - Knowledge Graph Exchange Operations
+# =============================================================================
+
+# Export strains to KGX format
+# REQUIRES: data/private/strains.tsv, BacDive API, NCBI API, NETWORK: yes
+# WRITES: output/kgx/strains_nodes.tsv, output/kgx/strains_edges.tsv
+kgx-export-strains:
+  @mkdir -p output/kgx
+  uv run python -m cmm_ai_automation.scripts.export_strains_kgx
+  @echo "✓ Strains export complete"
+
+# Export growth preferences (strain-medium relationships) to KGX format
+# REQUIRES: output/kgx/strains_nodes.tsv (run kgx-export-strains first), data/private/growth_*.tsv
+# WRITES: output/kgx/growth_nodes.tsv, output/kgx/growth_edges.tsv
+kgx-export-growth:
+  @mkdir -p output/kgx
+  uv run python -m cmm_ai_automation.scripts.export_growth_kgx
+  @echo "✓ Growth export complete"
+
+# Export media-ingredient composition edges to KGX format
+# REQUIRES: data/private/media_ingredients.tsv
+# WRITES: output/kgx/media_ingredients_nodes.tsv, output/kgx/media_ingredients_edges.tsv
+kgx-export-media-ingredients:
+  @mkdir -p output/kgx
+  uv run python -m cmm_ai_automation.scripts.export_media_ingredients_kgx
+  @echo "✓ Media ingredients export complete"
+
+# Export all KGX files (strains, growth, media ingredients)
+# REQUIRES: All source data files, NETWORK: API calls for strains
+# WRITES: output/kgx/*.tsv
+kgx-export-all: kgx-export-strains kgx-export-growth kgx-export-media-ingredients
+  @echo "✓ All KGX exports complete"
+  @ls -la output/kgx/
+
+# Validate KGX files against Biolink Model
+# NOTE: Validation errors for METPO/CMM prefixes are expected until they are
+#       registered with Biolink. See GitHub issues:
+#       - biolink/biolink-model#1666 (METPO prefix)
+#       - biopragmatics/bioregistry#1794 (METPO in Bioregistry)
+#       - biopragmatics/bioregistry#1795 (CMM in Bioregistry)
+# WRITES: output/kgx/validation_report.json
+kgx-validate:
+  @echo "Validating KGX files (expected errors for unregistered METPO/CMM prefixes)..."
+  uv run kgx validate -i tsv output/kgx/growth_nodes.tsv output/kgx/growth_edges.tsv \
+    -o output/kgx/validation_report.json || true
+  @echo "✓ Validation complete - see output/kgx/validation_report.json"
+
+# Validate all KGX files
+kgx-validate-all:
+  @echo "Validating all KGX files..."
+  uv run kgx validate -i tsv \
+    output/kgx/strains_nodes.tsv output/kgx/strains_edges.tsv \
+    output/kgx/growth_nodes.tsv output/kgx/growth_edges.tsv \
+    -o output/kgx/validation_report.json || true
+  @echo "✓ Validation complete - see output/kgx/validation_report.json"
+
+# Transform KGX to N-Triples RDF format
+# REQUIRES: KGX files exist, WRITES: output/kgx/*.nt
+kgx-to-rdf:
+  uv run kgx transform \
+    -i tsv \
+    -o output/kgx/cmm_graph \
+    -f nt \
+    output/kgx/strains_nodes.tsv output/kgx/strains_edges.tsv \
+    output/kgx/growth_nodes.tsv output/kgx/growth_edges.tsv
+  @echo "✓ RDF export complete: output/kgx/cmm_graph.nt"
+
+# Transform KGX to JSONL format
+# REQUIRES: KGX files exist, WRITES: output/kgx/*.jsonl
+kgx-to-jsonl:
+  uv run kgx transform \
+    -i tsv \
+    -o output/kgx/cmm_graph \
+    -f jsonl \
+    output/kgx/strains_nodes.tsv output/kgx/strains_edges.tsv \
+    output/kgx/growth_nodes.tsv output/kgx/growth_edges.tsv
+  @echo "✓ JSONL export complete: output/kgx/cmm_graph_nodes.jsonl, cmm_graph_edges.jsonl"
+
+# Merge multiple KGX graphs into one
+# REQUIRES: KGX files exist, WRITES: output/kgx/merged_*
+kgx-merge:
+  uv run kgx merge \
+    -i tsv \
+    -o output/kgx/merged \
+    -f tsv \
+    output/kgx/strains_nodes.tsv output/kgx/strains_edges.tsv \
+    output/kgx/growth_nodes.tsv output/kgx/growth_edges.tsv
+  @echo "✓ Merge complete: output/kgx/merged_nodes.tsv, merged_edges.tsv"
+
+# Extract edge patterns from KGX files (unconstrained analysis)
+# Unlike `kgx graph-summary`, this works without Biolink prefix registration.
+# REQUIRES: KGX files exist, WRITES: output/kgx/edge_patterns.tsv
+kgx-analyze:
+  uv run python -m cmm_ai_automation.scripts.analyze_kgx_patterns output/kgx/ > output/kgx/edge_patterns.tsv
+  @echo "✓ Analysis complete - see output/kgx/edge_patterns.tsv"
+
+# =============================================================================
+# NEO4J TARGETS - Local Graph Database
+# =============================================================================
+
+# Start local Neo4j instance (Docker)
+# REQUIRES: Docker running, NETWORK: pulls neo4j image if needed
+# ACCESS: http://localhost:7474 (browser), bolt://localhost:7687 (driver)
+# CREDS: Set NEO4J_USER and NEO4J_PASSWORD in .env
+neo4j-start:
+  #!/usr/bin/env bash
+  set -a; source .env; set +a
+  echo "Starting Neo4j container..."
+  docker run -d --name cmm-neo4j \
+    -p 7474:7474 -p 7687:7687 \
+    -v cmm-neo4j-data:/data \
+    -e NEO4J_AUTH=${NEO4J_USER:-neo4j}/${NEO4J_PASSWORD:-neo4j} \
+    -e NEO4J_PLUGINS='["apoc"]' \
+    neo4j:5
+  echo "✓ Neo4j starting at http://localhost:7474"
+  echo "  Credentials from .env (NEO4J_USER/NEO4J_PASSWORD)"
+  echo "  Wait ~30s for startup, then run: just neo4j-upload"
+
+# Stop Neo4j container (preserves data)
+neo4j-stop:
+  docker stop cmm-neo4j || true
+  docker rm cmm-neo4j || true
+  @echo "✓ Neo4j stopped (data preserved in volume)"
+
+# Remove Neo4j data volume (full reset)
+neo4j-clean: neo4j-stop
+  docker volume rm cmm-neo4j-data || true
+  @echo "✓ Neo4j data volume removed"
+
+# Upload KGX files to local Neo4j
+# REQUIRES: Neo4j running (just neo4j-start), KGX files exist
+neo4j-upload:
+  #!/usr/bin/env bash
+  set -a; source .env; set +a
+  echo "Uploading KGX data to Neo4j..."
+  uv run kgx neo4j-upload \
+    -i tsv \
+    -l ${NEO4J_URI:-bolt://localhost:7687} \
+    -u ${NEO4J_USER:-neo4j} \
+    -p ${NEO4J_PASSWORD:-neo4j} \
+    output/kgx/strains_nodes.tsv output/kgx/strains_edges.tsv \
+    output/kgx/growth_nodes.tsv output/kgx/growth_edges.tsv \
+    output/kgx/media_ingredients_nodes.tsv output/kgx/media_ingredients_edges.tsv
+  echo "✓ Upload complete - browse at http://localhost:7474"
+
+# Check Neo4j status
+neo4j-status:
+  @docker ps --filter name=cmm-neo4j || echo "Neo4j not running"
+
+# Generate graph summary statistics (via kgx library)
+# NOTE: Output is degraded until METPO/CMM prefixes are registered with Biolink.
+#       Categories and predicates using METPO terms will show as "unknown".
+#       See GitHub issues: biolink/biolink-model#1666, biopragmatics/bioregistry#1794, #1795
+# REQUIRES: KGX files exist, WRITES: output/kgx/summary.yaml, output/kgx/meta-kg.json
+kgx-graph-summary:
+  @echo "Generating graph summary (degraded output until METPO/CMM prefixes registered)..."
+  uv run kgx graph-summary \
+    -i tsv \
+    -o output/kgx/summary.yaml \
+    output/kgx/strains_nodes.tsv output/kgx/strains_edges.tsv \
+    output/kgx/growth_nodes.tsv output/kgx/growth_edges.tsv
+  uv run kgx graph-summary \
+    -i tsv \
+    -o output/kgx/meta-kg.json \
+    --report-type meta-knowledge-graph \
+    output/kgx/strains_nodes.tsv output/kgx/strains_edges.tsv \
+    output/kgx/growth_nodes.tsv output/kgx/growth_edges.tsv
+  @echo "✓ Graph summary complete - see output/kgx/summary.yaml and meta-kg.json"

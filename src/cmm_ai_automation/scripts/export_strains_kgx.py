@@ -31,6 +31,7 @@ from __future__ import annotations
 import csv
 import logging
 import re
+import time
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -39,6 +40,7 @@ from typing import TYPE_CHECKING, Any, TypedDict
 import bioregistry
 import click
 import requests
+from dotenv import load_dotenv
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection
@@ -134,17 +136,294 @@ class NcbiTaxonData(TypedDict):
     authority: list[str]
     rank: str
     species_taxon_id: str  # Species-level ancestor from lineage
+    parent_taxon_id: str  # Immediate parent taxon from lineage
+
+
+class NcbiLinkout(TypedDict):
+    """External linkout from NCBI."""
+
+    provider: str  # e.g., "BacDive", "BioCyc"
+    url: str
+    name: str
+
+
+def fetch_ncbi_linkouts(taxon_ids: list[str], batch_size: int = 20) -> dict[str, list[NcbiLinkout]]:
+    """Fetch external linkouts from NCBI for multiple taxa.
+
+    Uses the elink API with cmd=llinkslib to get external database links
+    like BacDive, BioCyc, LPSN, etc.
+
+    Args:
+        taxon_ids: List of NCBI Taxonomy IDs
+        batch_size: Number of IDs per request (default 20, smaller for elink)
+
+    Returns:
+        Dictionary mapping taxon_id -> list of NcbiLinkout
+    """
+    results: dict[str, list[NcbiLinkout]] = {}
+    elink_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi"
+
+    for i in range(0, len(taxon_ids), batch_size):
+        batch = taxon_ids[i : i + batch_size]
+        ids_param = ",".join(batch)
+
+        try:
+            response = requests.get(
+                elink_url,
+                params={"dbfrom": "taxonomy", "id": ids_param, "cmd": "llinkslib"},
+                timeout=30,
+            )
+            response.raise_for_status()
+
+            root = ET.fromstring(response.content)
+
+            # Parse each IdUrlSet
+            for id_url_set in root.findall(".//IdUrlSet"):
+                id_elem = id_url_set.find("Id")
+                if id_elem is None or not id_elem.text:
+                    continue
+
+                taxid = id_elem.text
+                linkouts: list[NcbiLinkout] = []
+
+                for obj_url in id_url_set.findall("ObjUrl"):
+                    url_elem = obj_url.find("Url")
+                    name_elem = obj_url.find("LinkName")
+                    provider_elem = obj_url.find("Provider/Name")
+
+                    if url_elem is not None and url_elem.text:
+                        url = url_elem.text
+                        # Skip placeholder URLs
+                        if "&base.url;" in url:
+                            continue
+
+                        linkout: NcbiLinkout = {
+                            "provider": provider_elem.text or "" if provider_elem is not None else "",
+                            "url": url,
+                            "name": name_elem.text or "" if name_elem is not None else "",
+                        }
+                        linkouts.append(linkout)
+
+                results[taxid] = linkouts
+
+            # Rate limit between batches
+            if i + batch_size < len(taxon_ids):
+                time.sleep(0.5)
+
+        except (requests.RequestException, ET.ParseError) as e:
+            logger.warning(f"Failed to fetch NCBI linkouts batch starting at {i}: {e}")
+
+    return results
+
+
+def fetch_ncbi_entrez_links(taxon_ids: list[str], batch_size: int = 50) -> dict[str, dict[str, list[str]]]:
+    """Fetch Entrez links to other NCBI databases for multiple taxa.
+
+    Uses the elink API with cmd=acheck to find links to Assembly, BioProject, etc.
+
+    Args:
+        taxon_ids: List of NCBI Taxonomy IDs
+        batch_size: Number of IDs per request
+
+    Returns:
+        Dictionary mapping taxon_id -> {db_name: [linked_ids]}
+    """
+    results: dict[str, dict[str, list[str]]] = {}
+    elink_url = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/elink.fcgi"
+
+    # Databases we're interested in
+    target_dbs = {"assembly", "bioproject", "biosample", "nuccore", "genome"}
+
+    for i in range(0, len(taxon_ids), batch_size):
+        batch = taxon_ids[i : i + batch_size]
+
+        for taxid in batch:
+            if taxid in results:
+                continue
+
+            try:
+                response = requests.get(
+                    elink_url,
+                    params={"dbfrom": "taxonomy", "id": taxid, "cmd": "acheck"},
+                    timeout=15,
+                )
+                response.raise_for_status()
+
+                root = ET.fromstring(response.content)
+                links: dict[str, list[str]] = {}
+
+                for link_info in root.findall(".//LinkInfo"):
+                    db_to = link_info.find("DbTo")
+                    if db_to is not None and db_to.text in target_dbs and db_to.text not in links:
+                        links[db_to.text] = []
+
+                results[taxid] = links
+
+            except (requests.RequestException, ET.ParseError) as e:
+                logger.debug(f"Failed to fetch Entrez links for {taxid}: {e}")
+
+        # Rate limit between batches
+        if i + batch_size < len(taxon_ids):
+            time.sleep(0.3)
+
+    return results
+
+
+def extract_xrefs_from_linkouts(linkouts: list[NcbiLinkout]) -> list[str]:
+    """Extract structured xrefs from NCBI linkouts.
+
+    Parses URLs to extract database identifiers in CURIE format.
+
+    Args:
+        linkouts: List of NcbiLinkout from fetch_ncbi_linkouts
+
+    Returns:
+        List of xref CURIEs (e.g., "bacdive:13546", "biocyc:GCF_000346065")
+    """
+    xrefs: list[str] = []
+
+    for linkout in linkouts:
+        provider = linkout["provider"].lower()
+        url = linkout["url"]
+
+        # BacDive: https://bacdive.dsmz.de/strain/13546
+        if "bacdive" in provider or "bacdive.dsmz.de" in url:
+            match = re.search(r"/strain/(\d+)", url)
+            if match:
+                xrefs.append(f"bacdive:{match.group(1)}")
+
+        # BioCyc: http://biocyc.org/organism-summary?object=GCF_000346065
+        elif "biocyc" in provider:
+            match = re.search(r"object=(GCF_\d+)", url)
+            if match:
+                xrefs.append(f"biocyc:{match.group(1)}")
+            match = re.search(r"object=(\d+)", url)
+            if match:
+                xrefs.append(f"biocyc:taxon:{match.group(1)}")
+
+        # LPSN: List of Prokaryotic names with Standing in Nomenclature
+        elif "lpsn" in provider.lower() or "lpsn.dsmz.de" in url:
+            # Extract species name from URL
+            match = re.search(r"/species/([^/]+)", url)
+            if match:
+                xrefs.append(f"lpsn:{match.group(1)}")
+
+    return list(set(xrefs))  # Deduplicate
+
+
+def fetch_ncbi_batch(taxon_ids: list[str], batch_size: int = 50) -> dict[str, NcbiTaxonData]:
+    """Fetch NCBI Taxonomy data for multiple taxa in batch.
+
+    Args:
+        taxon_ids: List of NCBI Taxonomy IDs
+        batch_size: Number of IDs per request (default 50)
+
+    Returns:
+        Dictionary mapping taxon_id -> NcbiTaxonData
+    """
+    results: dict[str, NcbiTaxonData] = {}
+
+    # Process in batches
+    for i in range(0, len(taxon_ids), batch_size):
+        batch = taxon_ids[i : i + batch_size]
+        ids_param = ",".join(batch)
+
+        try:
+            response = requests.get(
+                NCBI_EFETCH_URL,
+                params={"db": "taxonomy", "id": ids_param, "retmode": "xml"},
+                timeout=30,  # Longer timeout for batch
+            )
+            response.raise_for_status()
+
+            root = ET.fromstring(response.content)
+
+            # Parse each Taxon element (direct children of TaxaSet)
+            for taxon in root.findall("Taxon"):
+                taxid_elem = taxon.find("TaxId")
+                if taxid_elem is None or not taxid_elem.text:
+                    continue
+
+                taxid = taxid_elem.text
+                data: NcbiTaxonData = {
+                    "synonyms": [],
+                    "equivalent_names": [],
+                    "includes": [],
+                    "misspellings": [],
+                    "authority": [],
+                    "rank": "",
+                    "species_taxon_id": "",
+                    "parent_taxon_id": "",
+                }
+
+                # Extract rank
+                rank_elem = taxon.find("Rank")
+                if rank_elem is not None and rank_elem.text:
+                    data["rank"] = rank_elem.text
+
+                # Extract parent taxon ID
+                parent_elem = taxon.find("ParentTaxId")
+                if parent_elem is not None and parent_elem.text:
+                    data["parent_taxon_id"] = parent_elem.text
+
+                # Extract species from lineage
+                lineage_ex = taxon.find("LineageEx")
+                if lineage_ex is not None:
+                    for ancestor in lineage_ex.findall("Taxon"):
+                        and_rank = ancestor.find("Rank")
+                        and_id = ancestor.find("TaxId")
+                        if and_rank is not None and and_rank.text == "species" and and_id is not None and and_id.text:
+                            data["species_taxon_id"] = and_id.text
+                            break
+
+                # If taxon is species level, use its own ID
+                if not data["species_taxon_id"] and data["rank"] == "species":
+                    data["species_taxon_id"] = taxid
+
+                # Extract synonyms from OtherNames
+                other_names = taxon.find("OtherNames")
+                if other_names is not None:
+                    for syn in other_names.findall("Synonym"):
+                        if syn.text:
+                            data["synonyms"].append(syn.text)
+                    for equiv in other_names.findall("EquivalentName"):
+                        if equiv.text:
+                            data["equivalent_names"].append(equiv.text)
+                    for incl in other_names.findall("Includes"):
+                        if incl.text:
+                            data["includes"].append(incl.text)
+                    for name_elem in other_names.findall("Name"):
+                        class_cde = name_elem.find("ClassCDE")
+                        disp_name = name_elem.find("DispName")
+                        if class_cde is not None and disp_name is not None and disp_name.text:
+                            if class_cde.text == "misspelling":
+                                data["misspellings"].append(disp_name.text)
+                            elif class_cde.text == "authority":
+                                data["authority"].append(disp_name.text)
+
+                results[taxid] = data
+
+            # Small delay between batches to be nice to NCBI
+            if i + batch_size < len(taxon_ids):
+                time.sleep(0.5)
+
+        except (requests.RequestException, ET.ParseError) as e:
+            logger.warning(f"Failed to fetch NCBI batch starting at {i}: {e}")
+
+    return results
 
 
 def fetch_ncbi_synonyms(taxon_id: int | str) -> NcbiTaxonData:
-    """Fetch synonyms, related names, and rank from NCBI Taxonomy.
+    """Fetch synonyms, related names, rank, and lineage from NCBI Taxonomy.
 
     Args:
         taxon_id: NCBI Taxonomy ID (integer or string)
 
     Returns:
-        NcbiTaxonData with synonyms, equivalent_names, includes, misspellings, authority (lists)
-        and rank (string, e.g., 'species', 'strain', 'subspecies').
+        NcbiTaxonData with synonyms, equivalent_names, includes, misspellings, authority (lists),
+        rank (string, e.g., 'species', 'strain', 'subspecies'),
+        species_taxon_id (species-level ancestor from lineage),
+        and parent_taxon_id (immediate parent in taxonomy).
     """
     result: NcbiTaxonData = {
         "synonyms": [],
@@ -154,6 +433,7 @@ def fetch_ncbi_synonyms(taxon_id: int | str) -> NcbiTaxonData:
         "authority": [],
         "rank": "",
         "species_taxon_id": "",
+        "parent_taxon_id": "",
     }
 
     try:
@@ -173,6 +453,32 @@ def fetch_ncbi_synonyms(taxon_id: int | str) -> NcbiTaxonData:
         rank_elem = taxon.find("Rank")
         if rank_elem is not None and rank_elem.text:
             result["rank"] = rank_elem.text
+
+        # Extract parent taxon ID
+        parent_id_elem = taxon.find("ParentTaxId")
+        if parent_id_elem is not None and parent_id_elem.text:
+            result["parent_taxon_id"] = parent_id_elem.text
+
+        # Extract species-level ancestor from LineageEx
+        # LineageEx contains all ancestors with their ranks
+        lineage_ex = taxon.find("LineageEx")
+        if lineage_ex is not None:
+            for ancestor in lineage_ex.findall("Taxon"):
+                ancestor_rank = ancestor.find("Rank")
+                ancestor_id = ancestor.find("TaxId")
+                if (
+                    ancestor_rank is not None
+                    and ancestor_rank.text == "species"
+                    and ancestor_id is not None
+                    and ancestor_id.text
+                ):
+                    result["species_taxon_id"] = ancestor_id.text
+                    break  # Take the first (most specific) species ancestor
+
+        # If taxon itself is at species level or below, use its own ID as species_taxon_id
+        # (unless we already found a species ancestor, which means this is subspecies/strain)
+        if not result["species_taxon_id"] and result["rank"] == "species":
+            result["species_taxon_id"] = str(taxon_id)
 
         other_names = taxon.find("OtherNames")
         if other_names is None:
@@ -224,6 +530,7 @@ class StrainRecord:
     # Taxonomic IDs
     ncbi_taxon_id: str | None = None  # NCBITaxon ID (species or strain level)
     species_taxon_id: str | None = None  # Species-level NCBITaxon
+    parent_taxon_id: str | None = None  # Immediate parent in taxonomy
 
     # Culture collection IDs
     culture_collection_ids: list[str] = field(default_factory=list)
@@ -259,6 +566,7 @@ class StrainRecord:
             "name": display_name,
             "ncbi_taxon_id": self.ncbi_taxon_id or "",
             "species_taxon_id": self.species_taxon_id or "",
+            "parent_taxon_id": self.parent_taxon_id or "",
             "has_taxonomic_rank": RANK_TO_TAXRANK.get(self.has_taxonomic_rank or "", ""),
             "strain_designation": self.strain_designation or "",
             "bacdive_id": f"bacdive:{self.bacdive_id}" if self.bacdive_id else "",
@@ -638,6 +946,8 @@ def _merge_records(target: StrainRecord, source: StrainRecord) -> None:
         target.ncbi_taxon_id = source.ncbi_taxon_id
     if not target.species_taxon_id and source.species_taxon_id:
         target.species_taxon_id = source.species_taxon_id
+    if not target.parent_taxon_id and source.parent_taxon_id:
+        target.parent_taxon_id = source.parent_taxon_id
     if not target.bacdive_id and source.bacdive_id:
         target.bacdive_id = source.bacdive_id
     if not target.genome_accession and source.genome_accession:
@@ -661,38 +971,93 @@ def _merge_records(target: StrainRecord, source: StrainRecord) -> None:
             target.xrefs.append(xref)
 
 
-def infer_taxonomic_rank(records: list[StrainRecord]) -> int:
-    """Infer correct taxonomic rank based on entity characteristics.
+def infer_species_from_bacdive(records: list[StrainRecord]) -> int:
+    """Use BacDive NCBI taxon ID as species_taxon_id for strains.
 
-    NCBI often returns 'species' for strain-level cultures because many strains
-    share their species' taxon ID. We override this when we have evidence that
-    the entity is actually a strain:
-    - Has a strain_designation (e.g., "DSM 16371", "AM1")
-    - Has a bacdive_id (all BacDive entries are culture isolates = strains)
+    BacDive typically provides species-level NCBI taxon IDs for strains.
+    If a record has a bacdive_id but no species_taxon_id, and is at strain rank,
+    use its ncbi_taxon_id as the species_taxon_id (since it came from BacDive).
 
     Args:
         records: List of strain records to update
 
     Returns:
-        Number of records whose rank was corrected to 'strain'
+        Number of records whose species_taxon_id was set from BacDive
     """
-    corrected = 0
+    inferred = 0
     for record in records:
-        # Evidence that this is a strain, not just a species
-        is_strain = bool(record.strain_designation) or bool(record.bacdive_id)
+        if (
+            record.bacdive_id
+            and record.ncbi_taxon_id
+            and not record.species_taxon_id
+            and record.has_taxonomic_rank == "strain"
+        ):
+            # BacDive NCBI taxon IDs are typically species-level
+            record.species_taxon_id = record.ncbi_taxon_id.replace("NCBITaxon:", "")
+            inferred += 1
+    return inferred
 
-        if is_strain and record.has_taxonomic_rank != "strain":
-            # Override NCBI's rank if we have strain-level evidence
-            if record.has_taxonomic_rank:
+
+def infer_species_from_self(records: list[StrainRecord]) -> int:
+    """Infer species_taxon_id for species-level records.
+
+    If a record is at species level (rank == 'species') and has an NCBI taxon ID
+    but no species_taxon_id, use its own taxon ID as the species_taxon_id.
+
+    This handles cases where NCBI LineageEx doesn't include the species
+    when the taxon itself IS the species.
+
+    Args:
+        records: List of strain records to update
+
+    Returns:
+        Number of records whose species_taxon_id was set
+    """
+    inferred = 0
+    for record in records:
+        if record.ncbi_taxon_id and not record.species_taxon_id and record.has_taxonomic_rank == "species":
+            record.species_taxon_id = record.ncbi_taxon_id.replace("NCBITaxon:", "")
+            inferred += 1
+    return inferred
+
+
+def infer_taxonomic_rank(records: list[StrainRecord]) -> int:
+    """Infer taxonomic rank for records that don't have NCBI rank data.
+
+    NCBI's rank is the authoritative source. We only infer a rank when:
+    - The record has no has_taxonomic_rank (no NCBI data)
+    - We have evidence it's a strain (strain_designation or bacdive_id)
+
+    If NCBI says it's a species, we trust that even if we have strain_designation.
+    The strain_designation in that case refers to a type strain of the species,
+    not a separate strain-level taxon.
+
+    Args:
+        records: List of strain records to update
+
+    Returns:
+        Number of records whose rank was inferred
+    """
+    inferred = 0
+    for record in records:
+        # Only infer rank if we don't already have one from NCBI
+        if not record.has_taxonomic_rank:
+            # Evidence that this is a strain, not just a species
+            is_strain = bool(record.strain_designation) or bool(record.bacdive_id)
+
+            if is_strain:
+                record.has_taxonomic_rank = "strain"
                 logger.debug(
-                    f"Correcting rank for {record.name}: "
-                    f"{record.has_taxonomic_rank} -> strain "
+                    f"Inferred rank for {record.name}: strain "
                     f"(has {'strain_designation' if record.strain_designation else 'bacdive_id'})"
                 )
-            record.has_taxonomic_rank = "strain"
-            corrected += 1
+            else:
+                # Default to species if no strain evidence
+                record.has_taxonomic_rank = "species"
+                logger.debug(f"Inferred rank for {record.name}: species (no strain evidence)")
+            inferred += 1
 
-    return corrected
+    return inferred
 
 
 def deduplicate_by_canonical_id(records: list[StrainRecord]) -> list[StrainRecord]:
@@ -1009,12 +1374,8 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
         if synonym not in record.synonyms:
             record.synonyms.append(synonym)
 
-    # Infer rank from BacDive if not already set
-    # BacDive records are all strain-level cultures. If the NCBI rank is "species",
-    # the entity is still a strain culture even if it shares the species taxon ID.
-    # If no NCBI rank is set later, infer "species" from BacDive's species field.
-    if not record.has_taxonomic_rank and bacdive_data.get("species"):
-        record.has_taxonomic_rank = "species"
+    # Don't infer rank from BacDive - NCBI is authoritative for rank.
+    # If NCBI data is unavailable, infer_taxonomic_rank() will handle it later.
 
     return True
 
@@ -1037,64 +1398,504 @@ def enrich_strains_with_bacdive(records: list[StrainRecord], collection: Collect
     return enriched, len(records)
 
 
-def enrich_strains_with_ncbi(records: list[StrainRecord]) -> tuple[int, int]:
-    """Enrich strain records with NCBI Taxonomy synonyms.
+def enrich_strains_with_ncbi(records: list[StrainRecord]) -> tuple[int, int, int, int, int]:
+    """Enrich strain records with NCBI Taxonomy data using batch API.
 
-    Fetches synonyms, equivalent names, and misspellings from NCBI Entrez
-    for strains that have NCBITaxon IDs.
+    Fetches synonyms, lineage (species/parent taxon), rank, and external linkouts
+    from NCBI Entrez for strains that have NCBITaxon IDs.
 
     Args:
         records: List of strain records to enrich
 
     Returns:
-        Tuple of (enriched_count, total_with_taxon_count)
+        Tuple of (synonym_enriched, species_enriched, parent_enriched, linkout_enriched, total_with_taxon)
     """
-    enriched = 0
-    with_taxon = 0
-
+    # Collect taxon IDs for batch fetch
+    taxon_id_to_records: dict[str, list[StrainRecord]] = {}
     for record in records:
-        if not record.ncbi_taxon_id:
-            continue
+        if record.ncbi_taxon_id:
+            taxid = record.ncbi_taxon_id.replace("NCBITaxon:", "")
+            if taxid not in taxon_id_to_records:
+                taxon_id_to_records[taxid] = []
+            taxon_id_to_records[taxid].append(record)
 
-        with_taxon += 1
-        taxon_id = record.ncbi_taxon_id.replace("NCBITaxon:", "")
+    taxon_ids = list(taxon_id_to_records.keys())
+    with_taxon = len(taxon_ids)
 
-        ncbi_data = fetch_ncbi_synonyms(taxon_id)
+    if not taxon_ids:
+        return 0, 0, 0, 0, 0
 
-        # Set taxonomic rank if available
-        ncbi_rank = ncbi_data.get("rank", "")
-        if isinstance(ncbi_rank, str) and ncbi_rank and not record.has_taxonomic_rank:
-            record.has_taxonomic_rank = ncbi_rank
+    # Batch fetch taxonomy data
+    logger.info(f"Fetching NCBI taxonomy data for {len(taxon_ids)} taxa in batches...")
+    ncbi_data_map = fetch_ncbi_batch(taxon_ids)
 
-        # Add synonyms (heterotypic/homotypic from NCBI)
-        added_any = False
-        for synonym in ncbi_data["synonyms"]:
-            if synonym not in record.synonyms:
-                record.synonyms.append(synonym)
-                added_any = True
+    # Batch fetch linkouts
+    logger.info(f"Fetching NCBI linkouts for {len(taxon_ids)} taxa...")
+    linkouts_map = fetch_ncbi_linkouts(taxon_ids)
 
-        # Add equivalent names (spelling variants)
-        for equiv in ncbi_data["equivalent_names"]:
-            if equiv not in record.synonyms:
-                record.synonyms.append(equiv)
-                added_any = True
+    # Apply enrichment
+    synonym_enriched = 0
+    species_enriched = 0
+    parent_enriched = 0
+    linkout_enriched = 0
 
-        # Add misspellings (common errors that help with search)
-        for misspelling in ncbi_data["misspellings"]:
-            if misspelling not in record.synonyms:
-                record.synonyms.append(misspelling)
-                added_any = True
+    for taxid, record_list in taxon_id_to_records.items():
+        ncbi_data = ncbi_data_map.get(taxid)
+        linkouts = linkouts_map.get(taxid, [])
 
-        # Add includes (merged taxa names)
-        for includes in ncbi_data["includes"]:
-            if includes not in record.synonyms:
-                record.synonyms.append(includes)
-                added_any = True
+        for record in record_list:
+            if ncbi_data:
+                # Set taxonomic rank - NCBI is authoritative, always overwrite
+                ncbi_rank = ncbi_data.get("rank", "")
+                if isinstance(ncbi_rank, str) and ncbi_rank:
+                    record.has_taxonomic_rank = ncbi_rank
 
-        if added_any:
-            enriched += 1
+                # Set species_taxon_id from lineage
+                if not record.species_taxon_id and ncbi_data["species_taxon_id"]:
+                    record.species_taxon_id = ncbi_data["species_taxon_id"]
+                    species_enriched += 1
 
-    return enriched, with_taxon
+                # Set parent_taxon_id from lineage
+                if not record.parent_taxon_id and ncbi_data["parent_taxon_id"]:
+                    record.parent_taxon_id = ncbi_data["parent_taxon_id"]
+                    parent_enriched += 1
+
+                # Add synonyms
+                added_syn = False
+                for synonym in ncbi_data["synonyms"]:
+                    if synonym not in record.synonyms:
+                        record.synonyms.append(synonym)
+                        added_syn = True
+                for equiv in ncbi_data["equivalent_names"]:
+                    if equiv not in record.synonyms:
+                        record.synonyms.append(equiv)
+                        added_syn = True
+                for misspelling in ncbi_data["misspellings"]:
+                    if misspelling not in record.synonyms:
+                        record.synonyms.append(misspelling)
+                        added_syn = True
+                for includes in ncbi_data["includes"]:
+                    if includes not in record.synonyms:
+                        record.synonyms.append(includes)
+                        added_syn = True
+                if added_syn:
+                    synonym_enriched += 1
+
+            # Extract xrefs from linkouts
+            if linkouts:
+                xrefs = extract_xrefs_from_linkouts(linkouts)
+                added_xref = False
+                for xref in xrefs:
+                    if xref not in record.xrefs:
+                        record.xrefs.append(xref)
+                        added_xref = True
+                    # Also extract BacDive ID if not set
+                    if xref.startswith("bacdive:") and not record.bacdive_id:
+                        record.bacdive_id = xref.replace("bacdive:", "")
+                if added_xref:
+                    linkout_enriched += 1
+
+    return synonym_enriched, species_enriched, parent_enriched, linkout_enriched, with_taxon
+
+
+@dataclass
+class EnrichmentStats:
+    """Statistics from an enrichment round."""
+
+    records_processed: int = 0
+    records_enriched: int = 0
+    new_ncbi_ids: int = 0
+    new_bacdive_ids: int = 0
+    new_species_ids: int = 0
+    new_parent_ids: int = 0
+    new_synonyms: int = 0
+    new_xrefs: int = 0
+
+    def __str__(self) -> str:
+        return (
+            f"processed={self.records_processed}, enriched={self.records_enriched}, "
+            f"ncbi+={self.new_ncbi_ids}, bacdive+={self.new_bacdive_ids}"
+        )
+
+
+class IterativeEnrichmentPipeline:
+    """Iterative enrichment pipeline for strain records.
+
+    Runs multiple rounds of enrichment, using results from each round
+    to discover new data sources for subsequent rounds.
+
+    Workflow:
+        Round 1: Parse input sheets, consolidate duplicates
+        Round 2: BacDive enrichment (first pass) - match by name
+        Round 3: NCBI enrichment - get lineage, synonyms, external linkouts
+        Round 4: BacDive enrichment (second pass) - use NCBI linkouts
+        Round 5: PydanticAI reconciliation for ambiguous matches (optional)
+        Round 6: Final consolidation and export
+    """
+
+    def __init__(
+        self,
+        strains_tsv: Path,
+        taxa_genomes_tsv: Path,
+        growth_prefs_tsv: Path,
+        bacdive_collection: Collection | None = None,
+        use_pydanticai: bool = False,
+        skip_ncbi: bool = False,
+        verbose: bool = False,
+    ):
+        self.strains_tsv = strains_tsv
+        self.taxa_genomes_tsv = taxa_genomes_tsv
+        self.growth_prefs_tsv = growth_prefs_tsv
+        self.bacdive_collection = bacdive_collection
+        self.use_pydanticai = use_pydanticai
+        self.skip_ncbi = skip_ncbi
+        self.verbose = verbose
+
+        self.records: list[StrainRecord] = []
+        self.round_stats: list[tuple[str, EnrichmentStats]] = []
+        self._discovered_bacdive_ids: set[str] = set()
+
+    def run(self) -> list[StrainRecord]:
+        """Execute the full iterative enrichment pipeline.
+
+        Returns:
+            List of fully enriched StrainRecord objects
+        """
+        click.echo("=== Iterative Strain Enrichment Pipeline ===\n")
+
+        # Round 1: Parse and consolidate
+        self._round_1_parse()
+
+        # Round 2: BacDive first pass
+        if self.bacdive_collection is not None:
+            self._round_2_bacdive_first_pass()
+
+        # Round 3: NCBI enrichment with linkouts
+        if not self.skip_ncbi:
+            self._round_3_ncbi_enrichment()
+        else:
+            click.echo("Round 3: NCBI enrichment skipped (--no-ncbi)\n")
+
+        # Round 4: BacDive second pass using NCBI linkouts
+        if self.bacdive_collection is not None and not self.skip_ncbi:
+            self._round_4_bacdive_from_linkouts()
+
+        # Round 5: PydanticAI reconciliation (optional)
+        if self.use_pydanticai:
+            self._round_5_pydanticai_reconciliation()
+
+        # Round 6: Final inference and deduplication
+        self._round_6_finalize()
+
+        # Print summary
+        self._print_pipeline_summary()
+
+        return self.records
+
+    def _round_1_parse(self) -> None:
+        """Round 1: Parse input sheets and consolidate duplicates."""
+        click.echo("Round 1: Parsing input sheets")
+        stats = EnrichmentStats()
+
+        all_records: list[StrainRecord] = []
+
+        records = parse_strains_tsv(self.strains_tsv)
+        all_records.extend(records)
+        click.echo(f"  - {self.strains_tsv.name}: {len(records)} records")
+
+        records = parse_taxa_and_genomes_tsv(self.taxa_genomes_tsv)
+        all_records.extend(records)
+        click.echo(f"  - {self.taxa_genomes_tsv.name}: {len(records)} records")
+
+        records = parse_growth_preferences_tsv(self.growth_prefs_tsv)
+        all_records.extend(records)
+        click.echo(f"  - {self.growth_prefs_tsv.name}: {len(records)} records")
+
+        stats.records_processed = len(all_records)
+
+        # Consolidate
+        self.records = consolidate_strains(all_records)
+        stats.records_enriched = len(self.records)
+
+        click.echo(f"  Consolidated: {stats.records_processed} -> {len(self.records)} unique strains\n")
+        self.round_stats.append(("Parse & Consolidate", stats))
+
+    def _round_2_bacdive_first_pass(self) -> None:
+        """Round 2: BacDive enrichment by name matching."""
+        assert self.bacdive_collection is not None, "BacDive collection required for Round 2"  # nosec B101
+        click.echo("Round 2: BacDive enrichment (first pass - name matching)")
+        stats = EnrichmentStats()
+
+        before_bacdive = sum(1 for r in self.records if r.bacdive_id)
+        before_ncbi = sum(1 for r in self.records if r.ncbi_taxon_id)
+
+        enriched, total = enrich_strains_with_bacdive(self.records, self.bacdive_collection)
+
+        stats.records_processed = total
+        stats.records_enriched = enriched
+        stats.new_bacdive_ids = sum(1 for r in self.records if r.bacdive_id) - before_bacdive
+        stats.new_ncbi_ids = sum(1 for r in self.records if r.ncbi_taxon_id) - before_ncbi
+
+        # Track discovered BacDive IDs
+        for r in self.records:
+            if r.bacdive_id:
+                self._discovered_bacdive_ids.add(r.bacdive_id)
+
+        click.echo(f"  Enriched: {enriched}/{total} strains")
+        click.echo(f"  New BacDive IDs: +{stats.new_bacdive_ids}")
+        click.echo(f"  New NCBI IDs: +{stats.new_ncbi_ids}\n")
+        self.round_stats.append(("BacDive (name match)", stats))
+
+    def _round_3_ncbi_enrichment(self) -> None:
+        """Round 3: NCBI batch enrichment with linkouts."""
+        click.echo("Round 3: NCBI Taxonomy enrichment (batch mode)")
+        stats = EnrichmentStats()
+
+        before_species = sum(1 for r in self.records if r.species_taxon_id)
+        before_parent = sum(1 for r in self.records if r.parent_taxon_id)
+        before_synonyms = sum(len(r.synonyms) for r in self.records)
+        before_xrefs = sum(len(r.xrefs) for r in self.records)
+
+        syn, species, parent, linkout, total = enrich_strains_with_ncbi(self.records)
+
+        stats.records_processed = total
+        stats.records_enriched = syn + species + parent + linkout
+        stats.new_species_ids = sum(1 for r in self.records if r.species_taxon_id) - before_species
+        stats.new_parent_ids = sum(1 for r in self.records if r.parent_taxon_id) - before_parent
+        stats.new_synonyms = sum(len(r.synonyms) for r in self.records) - before_synonyms
+        stats.new_xrefs = sum(len(r.xrefs) for r in self.records) - before_xrefs
+
+        # Track any new BacDive IDs discovered via linkouts
+        new_bacdive_from_linkouts = 0
+        for r in self.records:
+            if r.bacdive_id and r.bacdive_id not in self._discovered_bacdive_ids:
+                self._discovered_bacdive_ids.add(r.bacdive_id)
+                new_bacdive_from_linkouts += 1
+        stats.new_bacdive_ids = new_bacdive_from_linkouts
+
+        click.echo(f"  Processed: {total} taxa")
+        click.echo(f"  New species_taxon_id: +{stats.new_species_ids}")
+        click.echo(f"  New parent_taxon_id: +{stats.new_parent_ids}")
+        click.echo(f"  New synonyms: +{stats.new_synonyms}")
+        click.echo(f"  New xrefs (from linkouts): +{stats.new_xrefs}")
+        click.echo(f"  New BacDive IDs (from linkouts): +{stats.new_bacdive_ids}\n")
+        self.round_stats.append(("NCBI Taxonomy", stats))
+
+    def _round_4_bacdive_from_linkouts(self) -> None:
+        """Round 4: BacDive second pass using IDs from NCBI linkouts."""
+        click.echo("Round 4: BacDive enrichment (second pass - from NCBI linkouts)")
+        stats = EnrichmentStats()
+
+        # Find records that got BacDive IDs from linkouts but weren't enriched
+        records_needing_enrichment = [
+            r
+            for r in self.records
+            if r.bacdive_id and not r.xrefs  # Has BacDive ID but no xrefs yet
+        ]
+
+        if not records_needing_enrichment:
+            click.echo("  No new BacDive IDs to enrich\n")
+            self.round_stats.append(("BacDive (linkout)", stats))
+            return
+
+        before_xrefs = sum(len(r.xrefs) for r in self.records)
+
+        # Enrich these specific records by BacDive ID
+        enriched_count = 0
+        for record in records_needing_enrichment:
+            if self._enrich_single_by_bacdive_id(record):
+                enriched_count += 1
+
+        stats.records_processed = len(records_needing_enrichment)
+        stats.records_enriched = enriched_count
+        stats.new_xrefs = sum(len(r.xrefs) for r in self.records) - before_xrefs
+
+        click.echo(f"  Enriched: {enriched_count}/{len(records_needing_enrichment)} strains")
+        click.echo(f"  New xrefs: +{stats.new_xrefs}\n")
+        self.round_stats.append(("BacDive (linkout)", stats))
+
+    def _enrich_single_by_bacdive_id(self, record: StrainRecord) -> bool:
+        """Enrich a single record by its BacDive ID."""
+        if not record.bacdive_id or self.bacdive_collection is None:
+            return False
+
+        try:
+            bacdive_id = int(record.bacdive_id)
+        except ValueError:
+            return False
+
+        doc = self.bacdive_collection.find_one({"bacdive_id": bacdive_id})
+        if not doc:
+            return False
+
+        # Extract culture collection IDs
+        cc_ids = doc.get("culture_collection_ids", [])
+        for cc_id in cc_ids:
+            if cc_id not in record.culture_collection_ids:
+                record.culture_collection_ids.append(cc_id)
+            # Also add as xref (culture collection IDs are already in CURIE-like format)
+            if cc_id and cc_id not in record.xrefs:
+                record.xrefs.append(cc_id)
+
+        return True
+
+    def _round_5_pydanticai_reconciliation(self) -> None:
+        """Round 5: PydanticAI reconciliation for ambiguous matches."""
+        click.echo("Round 5: PydanticAI reconciliation")
+        stats = EnrichmentStats()
+
+        # Find candidates for reconciliation:
+        # - Records without BacDive ID (might have matches we missed)
+        # - Records with genus synonymy issues (Sinorhizobium/Ensifer)
+        candidates = [r for r in self.records if not r.bacdive_id]
+
+        if not candidates:
+            click.echo("  No candidates for LLM reconciliation\n")
+            self.round_stats.append(("PydanticAI", stats))
+            return
+
+        click.echo(f"  Found {len(candidates)} candidates for reconciliation")
+        click.echo("  (PydanticAI reconciliation not yet implemented - see issue #74)\n")
+
+        # TODO: Implement PydanticAI reconciliation
+        # 1. For each candidate, search BacDive by scientific name
+        # 2. Use StrainReconciler to compare candidates
+        # 3. If high-confidence match, add bacdive_id
+        # 4. Generate same_as edges for KGX clique merge
+
+        self.round_stats.append(("PydanticAI", stats))
+
+    def _round_6_finalize(self) -> None:
+        """Round 6: Final inference and deduplication."""
+        click.echo("Round 6: Finalizing")
+        stats = EnrichmentStats()
+
+        # Infer taxonomic ranks only for records without NCBI rank
+        rank_inferred = infer_taxonomic_rank(self.records)
+        click.echo(f"  Ranks inferred (no NCBI data): {rank_inferred}")
+
+        # Infer species from BacDive for strains
+        species_bacdive = infer_species_from_bacdive(self.records)
+        click.echo(f"  Species from BacDive: {species_bacdive}")
+
+        # Infer species from self for species-level records
+        species_self = infer_species_from_self(self.records)
+        click.echo(f"  Species from self: {species_self}")
+
+        # Final deduplication
+        pre_dedup = len(self.records)
+        self.records = deduplicate_by_canonical_id(self.records)
+
+        stats.records_processed = pre_dedup
+        stats.records_enriched = len(self.records)
+
+        if len(self.records) < pre_dedup:
+            click.echo(f"  Deduplication: {pre_dedup} -> {len(self.records)}")
+
+        click.echo()
+        self.round_stats.append(("Finalize", stats))
+
+    def _print_pipeline_summary(self) -> None:
+        """Print summary of all enrichment rounds."""
+        click.echo("=" * 60)
+        click.echo("PIPELINE SUMMARY")
+        click.echo("=" * 60)
+
+        for round_name, stats in self.round_stats:
+            click.echo(f"{round_name}: {stats}")
+
+        click.echo()
+        print_validation_summary(self.records)
+
+
+def compute_validation_summary(records: list[StrainRecord]) -> dict[str, dict[str, int | float]]:
+    """Compute field completeness statistics for validation.
+
+    Args:
+        records: List of strain records
+
+    Returns:
+        Dictionary with field names and their completeness counts
+    """
+    total = len(records)
+    summary: dict[str, dict[str, int | float]] = {}
+
+    # Define fields to check
+    fields = [
+        ("ncbi_taxon_id", lambda r: bool(r.ncbi_taxon_id)),
+        ("species_taxon_id", lambda r: bool(r.species_taxon_id)),
+        ("parent_taxon_id", lambda r: bool(r.parent_taxon_id)),
+        ("has_taxonomic_rank", lambda r: bool(r.has_taxonomic_rank)),
+        ("bacdive_id", lambda r: bool(r.bacdive_id)),
+        ("strain_designation", lambda r: bool(r.strain_designation)),
+        ("genome_accession", lambda r: bool(r.genome_accession)),
+        ("synonyms", lambda r: len(r.synonyms) > 0),
+        ("xrefs", lambda r: len(r.xrefs) > 0 or len(r.culture_collection_ids) > 0),
+    ]
+
+    for field_name, check_fn in fields:
+        present = sum(1 for r in records if check_fn(r))
+        summary[field_name] = {
+            "present": present,
+            "missing": total - present,
+            "total": total,
+            "percent": round(100 * present / total, 1) if total > 0 else 0,
+        }
+
+    return summary
+
+
+def print_validation_summary(records: list[StrainRecord]) -> None:
+    """Print a validation summary showing field completeness.
+
+    Args:
+        records: List of strain records
+    """
+    summary = compute_validation_summary(records)
+    total = len(records)
+
+    click.echo("=" * 60)
+    click.echo("DATA COMPLETENESS VALIDATION")
+    click.echo("=" * 60)
+    click.echo(f"Total records: {total}\n")
+
+    click.echo(f"{'Field':<20} {'Present':>8} {'Missing':>8} {'Percent':>8}")
+    click.echo("-" * 48)
+
+    for field_name, stats in summary.items():
+        pct = stats["percent"]
+        status = "OK" if pct == 100 else ("WARN" if pct >= 80 else "LOW")
+        click.echo(f"{field_name:<20} {stats['present']:>8} {stats['missing']:>8} {pct:>7.1f}%  [{status}]")
+
+    click.echo("-" * 48)
+
+    # Show records missing critical fields
+    missing_ncbi = [r for r in records if not r.ncbi_taxon_id]
+    missing_species = [r for r in records if not r.species_taxon_id]
+    missing_parent = [r for r in records if not r.parent_taxon_id]
+
+    if missing_ncbi:
+        click.echo(f"\nRecords missing ncbi_taxon_id ({len(missing_ncbi)}):")
+        for r in missing_ncbi[:5]:
+            click.echo(f"  - {r.name or r.strain_designation or 'Unknown'}")
+        if len(missing_ncbi) > 5:
+            click.echo(f"  ... and {len(missing_ncbi) - 5} more")
+
+    if missing_species:
+        click.echo(f"\nRecords missing species_taxon_id ({len(missing_species)}):")
+        for r in missing_species[:5]:
+            click.echo(f"  - {r.name or r.strain_designation or 'Unknown'} (ncbi: {r.ncbi_taxon_id or 'N/A'})")
+        if len(missing_species) > 5:
+            click.echo(f"  ... and {len(missing_species) - 5} more")
+
+    if missing_parent:
+        click.echo(f"\nRecords missing parent_taxon_id ({len(missing_parent)}):")
+        for r in missing_parent[:5]:
+            click.echo(f"  - {r.name or r.strain_designation or 'Unknown'} (ncbi: {r.ncbi_taxon_id or 'N/A'})")
+        if len(missing_parent) > 5:
+            click.echo(f"  ... and {len(missing_parent) - 5} more")
+
+    click.echo("=" * 60 + "\n")
 
 
 def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
@@ -1110,10 +1911,11 @@ def export_kgx_nodes(records: list[StrainRecord], output_path: Path) -> None:
         "id",
         "category",
         "name",
+        "strain_designation",
         "ncbi_taxon_id",
         "species_taxon_id",
+        "parent_taxon_id",
         "has_taxonomic_rank",
-        "strain_designation",
         "bacdive_id",
         "genome_accession",
         "xrefs",
@@ -1293,6 +2095,11 @@ def export_taxrank_nodes(records: list[StrainRecord], output_path: Path) -> int:
     is_flag=True,
     help="Enable verbose logging",
 )
+@click.option(
+    "--use-pydanticai",
+    is_flag=True,
+    help="Enable PydanticAI LLM reconciliation for ambiguous matches",
+)
 def main(
     strains_tsv: Path,
     taxa_genomes_tsv: Path,
@@ -1304,68 +2111,46 @@ def main(
     no_bacdive: bool,
     no_ncbi: bool,
     verbose: bool,
+    use_pydanticai: bool,
 ) -> None:
-    """Export strain data from all sheets to KGX nodes and edges format."""
+    """Export strain data from all sheets to KGX nodes and edges format.
+
+    Uses an iterative enrichment pipeline:
+        Round 1: Parse input sheets, consolidate duplicates
+        Round 2: BacDive enrichment (first pass) - match by name
+        Round 3: NCBI enrichment - get lineage, synonyms, external linkouts
+        Round 4: BacDive enrichment (second pass) - use NCBI linkouts
+        Round 5: PydanticAI reconciliation for ambiguous matches (optional)
+        Round 6: Final consolidation and export
+    """
+    # Load environment variables from .env file
+    load_dotenv()
+
     if verbose:
         logging.getLogger().setLevel(logging.DEBUG)
 
-    click.echo("=== Strain KGX Node Export ===\n")
-
-    # Parse all input sheets
-    click.echo("Phase 1: Parsing input sheets")
-    all_records: list[StrainRecord] = []
-
-    records = parse_strains_tsv(strains_tsv)
-    all_records.extend(records)
-
-    records = parse_taxa_and_genomes_tsv(taxa_genomes_tsv)
-    all_records.extend(records)
-
-    records = parse_growth_preferences_tsv(growth_prefs_tsv)
-    all_records.extend(records)
-
-    click.echo(f"  Total records from all sheets: {len(all_records)}\n")
-
-    # Consolidate duplicates
-    click.echo("Phase 2: Consolidating duplicates")
-    consolidated = consolidate_strains(all_records)
-    click.echo(f"  Unique strains: {len(consolidated)}\n")
-
-    # BacDive enrichment
+    # Get BacDive collection if not disabled
+    bacdive_collection = None
     if not no_bacdive:
-        click.echo("Phase 3: Enriching with BacDive")
         bacdive_collection = get_bacdive_collection()
-        if bacdive_collection is not None:
-            enriched, total = enrich_strains_with_bacdive(consolidated, bacdive_collection)
-            click.echo(f"  Enriched {enriched}/{total} strains from BacDive\n")
-        else:
-            click.echo("  Skipped: MongoDB not available\n")
-    else:
-        click.echo("Phase 3: BacDive enrichment skipped (--no-bacdive)\n")
+        if bacdive_collection is None:
+            click.echo("Warning: MongoDB not available, BacDive enrichment will be skipped\n")
 
-    # NCBI synonym enrichment
-    if not no_ncbi:
-        click.echo("Phase 4: Enriching with NCBI synonyms")
-        enriched, with_taxon = enrich_strains_with_ncbi(consolidated)
-        click.echo(f"  Enriched {enriched}/{with_taxon} strains with NCBI synonyms\n")
-    else:
-        click.echo("Phase 4: NCBI enrichment skipped (--no-ncbi)\n")
+    # Create and run the iterative enrichment pipeline
+    pipeline = IterativeEnrichmentPipeline(
+        strains_tsv=strains_tsv,
+        taxa_genomes_tsv=taxa_genomes_tsv,
+        growth_prefs_tsv=growth_prefs_tsv,
+        bacdive_collection=bacdive_collection,
+        use_pydanticai=use_pydanticai,
+        skip_ncbi=no_ncbi,
+        verbose=verbose,
+    )
 
-    # Infer correct taxonomic rank based on strain evidence
-    click.echo("Phase 4a: Inferring taxonomic ranks")
-    rank_corrections = infer_taxonomic_rank(consolidated)
-    click.echo(f"  Corrected {rank_corrections} entities from species to strain\n")
+    # Run the pipeline (includes NCBI enrichment with entrez links and external linkouts)
+    consolidated = pipeline.run()
 
-    # Post-enrichment deduplication
-    click.echo("Phase 4b: Post-enrichment deduplication")
-    pre_dedup = len(consolidated)
-    consolidated = deduplicate_by_canonical_id(consolidated)
-    if len(consolidated) < pre_dedup:
-        click.echo(f"  Merged duplicates: {pre_dedup} -> {len(consolidated)} strains\n")
-    else:
-        click.echo("  No duplicates found\n")
-
-    # Show sample query variants
+    # Show sample query variants in verbose mode
     if verbose and consolidated:
         sample = consolidated[0]
         queries = generate_query_variants(
@@ -1373,9 +2158,9 @@ def main(
             sample.strain_designation,
             sample.culture_collection_ids,
         )
-        click.echo(f"  Sample query variants for '{sample.name}':")
+        click.echo(f"Sample query variants for '{sample.name}':")
         for q in queries[:5]:
-            click.echo(f"    - {q}")
+            click.echo(f"  - {q}")
         click.echo()
 
     # Export
@@ -1388,7 +2173,7 @@ def main(
             node = record.to_kgx_node()
             click.echo(f"  {node['id']}: {node['name']}")
     else:
-        click.echo(f"Phase 5: Exporting to {output}")
+        click.echo(f"Exporting to {output}")
         export_kgx_nodes(consolidated, output)
         edge_count = export_kgx_edges(consolidated, edges_output)
         click.echo(f"  Exported {edge_count} taxonomic hierarchy edges")

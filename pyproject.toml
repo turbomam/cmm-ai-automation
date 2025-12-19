@@ -167,6 +167,11 @@ exclude = [
   "project/",
   "src/cmm_ai_automation/datamodel/cmm_ai_automation\\.py$",
   "src/cmm_ai_automation/datamodel/cmm_ai_automation_pydantic\\.py$",
+  # Utility scripts - type annotations to be added later
+  "src/cmm_ai_automation/scripts/cache_ncbi_searches\\.py$",
+  "src/cmm_ai_automation/scripts/extract_edge_patterns\\.py$",
+  "src/cmm_ai_automation/scripts/analyze_kgx_patterns\\.py$",
+  "src/cmm_ai_automation/scripts/index_.*\\.py$",
 ]
 
 [[tool.mypy.overrides]]
