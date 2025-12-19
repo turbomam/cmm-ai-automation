@@ -1189,13 +1189,13 @@ def lookup_bacdive_by_culture_collection(
     Returns:
         BacDive document or None
     """
-    # Full collection scan - not efficient but necessary without text index
-    for doc in collection.find({}):
-        cc_field = doc.get("External links", {}).get("culture collection no.", "")
-        if cc_field and search_id in cc_field:
-            result: dict[str, Any] = doc
-            return result
-    return None
+    # Use regex query for efficient database-side filtering
+    # The field contains comma-separated IDs like "DSM 1337, ATCC 43645, NCIMB 9399"
+    # We need to match search_id as a substring (maintaining original behavior)
+    result: dict[str, Any] | None = collection.find_one(
+        {"External links.culture collection no.": {"$regex": re.escape(search_id), "$options": "i"}}
+    )
+    return result
 
 
 def lookup_bacdive_by_strain_designation(
