@@ -18,6 +18,7 @@ media:
     medium_type: complex
     ph: 7.0
     sterilization_method: autoclave
+    source_reference: DSMZ:381
     target_organisms:
       - General bacteria
     has_ingredient_component:

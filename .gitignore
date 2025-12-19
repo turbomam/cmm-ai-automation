@@ -174,3 +174,13 @@ data/enrichment.duckdb
 
 # Session notes (between-session memory for AI assistants)
 SESSION_NOTES.md
+
+# ChromaDB vector stores (large, regenerate locally)
+data/chroma_*/
+data/*.tar.gz
+
+# LibreOffice lock files
+data/.~lock.*
+
+# Cache directories
+data/*_cache/

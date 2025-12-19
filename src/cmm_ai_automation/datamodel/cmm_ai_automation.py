@@ -1,5 +1,5 @@
 # Auto generated from cmm_ai_automation.yaml by pythongen.py version: 0.0.1
-# Generation date: 2025-12-16T18:09:31
+# Generation date: 2025-12-19T18:30:45
 # Schema: cmm-ai-automation
 #
 # id: https://w3id.org/turbomam/cmm-ai-automation
@@ -83,15 +83,21 @@ METPO = CurieNamespace('METPO', 'http://purl.obolibrary.org/obo/METPO_')
 NBRC = CurieNamespace('NBRC', 'https://www.nite.go.jp/nbrc/catalogue/NBRCCatalogueDetailServlet?ID=NBRC&CAT=')
 NCBITAXON = CurieNamespace('NCBITaxon', 'http://purl.obolibrary.org/obo/NCBITaxon_')
 NCIMB = CurieNamespace('NCIMB', 'https://www.ncimb.com/product/NCIMB')
+NCIT = CurieNamespace('NCIT', 'http://purl.obolibrary.org/obo/NCIT_')
 OBI = CurieNamespace('OBI', 'http://purl.obolibrary.org/obo/OBI_')
+PMID = CurieNamespace('PMID', 'http://identifiers.org/pubmed/')
 PUBCHEM_COMPOUND = CurieNamespace('PUBCHEM_COMPOUND', 'http://identifiers.org/pubchem.compound/')
 RO = CurieNamespace('RO', 'http://purl.obolibrary.org/obo/RO_')
+TAXRANK = CurieNamespace('TAXRANK', 'http://purl.obolibrary.org/obo/TAXRANK_')
 UO = CurieNamespace('UO', 'http://purl.obolibrary.org/obo/UO_')
 BACDIVE_STRAIN = CurieNamespace('bacdive_strain', 'https://bacdive.dsmz.de/strain/')
 BIOLINK = CurieNamespace('biolink', 'https://w3id.org/biolink/vocab/')
 CMM = CurieNamespace('cmm', 'https://w3id.org/turbomam/cmm-ai-automation/')
+DOI = CurieNamespace('doi', 'https://doi.org/')
 LINKML = CurieNamespace('linkml', 'https://w3id.org/linkml/')
+MEDIADIVE_MEDIUM = CurieNamespace('mediadive_medium', 'https://mediadive.dsmz.de/medium/')
 SCHEMA = CurieNamespace('schema', 'http://schema.org/')
+TOGOMEDIUM = CurieNamespace('togomedium', 'http://togomedium.org/medium/')
 DEFAULT_ = CMM
 
 
@@ -274,6 +280,7 @@ class Solution(Mixture):
 class GrowthMedium(Mixture):
     """
     A complete formulation for cultivating microorganisms. Contains ingredients directly and/or pre-made solutions.
+    Lab-specific or modified media should use derived_from to link to their parent medium and list modifications.
     """
     _inherited_slots: ClassVar[list[str]] = []
 
@@ -283,18 +290,25 @@ class GrowthMedium(Mixture):
     class_model_uri: ClassVar[URIRef] = CMM.GrowthMedium
 
     id: Union[str, GrowthMediumId] = None
+    source_reference: Union[str, URIorCURIE] = None
     medium_type: Optional[Union[str, "MediumType"]] = None
     ph: Optional[float] = None
     sterilization_method: Optional[str] = None
     has_solution_component: Optional[Union[Union[dict, "SolutionComponent"], list[Union[dict, "SolutionComponent"]]]] = empty_list()
     target_organisms: Optional[Union[str, list[str]]] = empty_list()
-    references: Optional[Union[str, list[str]]] = empty_list()
+    derived_from: Optional[Union[str, GrowthMediumId]] = None
+    modifications: Optional[Union[str, list[str]]] = empty_list()
 
     def __post_init__(self, *_: str, **kwargs: Any):
         if self._is_empty(self.id):
             self.MissingRequiredField("id")
         if not isinstance(self.id, GrowthMediumId):
             self.id = GrowthMediumId(self.id)
+
+        if self._is_empty(self.source_reference):
+            self.MissingRequiredField("source_reference")
+        if not isinstance(self.source_reference, URIorCURIE):
+            self.source_reference = URIorCURIE(self.source_reference)
 
         if self.medium_type is not None and not isinstance(self.medium_type, MediumType):
             self.medium_type = MediumType(self.medium_type)
@@ -313,9 +327,12 @@ class GrowthMedium(Mixture):
             self.target_organisms = [self.target_organisms] if self.target_organisms is not None else []
         self.target_organisms = [v if isinstance(v, str) else str(v) for v in self.target_organisms]
 
-        if not isinstance(self.references, list):
-            self.references = [self.references] if self.references is not None else []
-        self.references = [v if isinstance(v, str) else str(v) for v in self.references]
+        if self.derived_from is not None and not isinstance(self.derived_from, GrowthMediumId):
+            self.derived_from = GrowthMediumId(self.derived_from)
+
+        if not isinstance(self.modifications, list):
+            self.modifications = [self.modifications] if self.modifications is not None else []
+        self.modifications = [v if isinstance(v, str) else str(v) for v in self.modifications]
 
         super().__post_init__(**kwargs)
 
@@ -399,8 +416,8 @@ class SolutionComponent(YAMLRoot):
 @dataclass(repr=False)
 class GrowthPreference(YAMLRoot):
     """
-    Reified relationship: a strain's growth in a specific medium. Captures edge properties like growth rate,
-    temperature, pH conditions. Predicate: METPO:2000517 (grows in) or METPO:2000518 (does not grow in).
+    Reified relationship: a strain's growth in a specific medium. Captures observation-specific properties like growth
+    rate and temperature. Predicate: METPO:2000517 (grows in) or METPO:2000518 (does not grow in).
     """
     _inherited_slots: ClassVar[list[str]] = []
 
@@ -413,12 +430,8 @@ class GrowthPreference(YAMLRoot):
     object_medium: Union[str, GrowthMediumId] = None
     grows: Optional[Union[bool, Bool]] = None
     growth_rate: Optional[Union[str, "GrowthRate"]] = None
-    optimal_temperature: Optional[float] = None
-    temperature_range: Optional[str] = None
-    optimal_ph: Optional[float] = None
-    ph_range: Optional[str] = None
-    carbon_source_used: Optional[str] = None
-    oxygen_condition: Optional[Union[str, "OxygenTolerance"]] = None
+    doubling_time: Optional[float] = None
+    temperature: Optional[float] = None
     incubation_time: Optional[str] = None
     notes: Optional[str] = None
     source_records: Optional[Union[Union[dict, "SourceRecord"], list[Union[dict, "SourceRecord"]]]] = empty_list()
@@ -440,23 +453,11 @@ class GrowthPreference(YAMLRoot):
         if self.growth_rate is not None and not isinstance(self.growth_rate, GrowthRate):
             self.growth_rate = GrowthRate(self.growth_rate)
 
-        if self.optimal_temperature is not None and not isinstance(self.optimal_temperature, float):
-            self.optimal_temperature = float(self.optimal_temperature)
+        if self.doubling_time is not None and not isinstance(self.doubling_time, float):
+            self.doubling_time = float(self.doubling_time)
 
-        if self.temperature_range is not None and not isinstance(self.temperature_range, str):
-            self.temperature_range = str(self.temperature_range)
-
-        if self.optimal_ph is not None and not isinstance(self.optimal_ph, float):
-            self.optimal_ph = float(self.optimal_ph)
-
-        if self.ph_range is not None and not isinstance(self.ph_range, str):
-            self.ph_range = str(self.ph_range)
-
-        if self.carbon_source_used is not None and not isinstance(self.carbon_source_used, str):
-            self.carbon_source_used = str(self.carbon_source_used)
-
-        if self.oxygen_condition is not None and not isinstance(self.oxygen_condition, OxygenTolerance):
-            self.oxygen_condition = OxygenTolerance(self.oxygen_condition)
+        if self.temperature is not None and not isinstance(self.temperature, float):
+            self.temperature = float(self.temperature)
 
         if self.incubation_time is not None and not isinstance(self.incubation_time, str):
             self.incubation_time = str(self.incubation_time)
@@ -704,7 +705,7 @@ class Taxon(YAMLRoot):
     description: Optional[str] = None
     ncbi_taxon_id: Optional[Union[str, URIorCURIE]] = None
     parent_taxon_id: Optional[Union[str, URIorCURIE]] = None
-    rank: Optional[Union[str, "TaxonomicRank"]] = None
+    has_taxonomic_rank: Optional[Union[str, "TaxonomicRank"]] = None
     scientific_name: Optional[str] = None
     genome_accessions: Optional[Union[str, list[str]]] = empty_list()
     has_xox_genes: Optional[Union[bool, Bool]] = None
@@ -735,8 +736,8 @@ class Taxon(YAMLRoot):
         if self.parent_taxon_id is not None and not isinstance(self.parent_taxon_id, URIorCURIE):
             self.parent_taxon_id = URIorCURIE(self.parent_taxon_id)
 
-        if self.rank is not None and not isinstance(self.rank, TaxonomicRank):
-            self.rank = TaxonomicRank(self.rank)
+        if self.has_taxonomic_rank is not None and not isinstance(self.has_taxonomic_rank, TaxonomicRank):
+            self.has_taxonomic_rank = TaxonomicRank(self.has_taxonomic_rank)
 
         if self.scientific_name is not None and not isinstance(self.scientific_name, str):
             self.scientific_name = str(self.scientific_name)
@@ -860,8 +861,8 @@ class Strain(YAMLRoot):
     """
     _inherited_slots: ClassVar[list[str]] = []
 
-    class_class_uri: ClassVar[URIRef] = BIOLINK["OrganismalEntity"]
-    class_class_curie: ClassVar[str] = "biolink:OrganismalEntity"
+    class_class_uri: ClassVar[URIRef] = BIOLINK["OrganismTaxon"]
+    class_class_curie: ClassVar[str] = "biolink:OrganismTaxon"
     class_name: ClassVar[str] = "Strain"
     class_model_uri: ClassVar[URIRef] = CMM.Strain
 
@@ -871,6 +872,7 @@ class Strain(YAMLRoot):
     description: Optional[str] = None
     ncbi_taxon_id: Optional[Union[str, URIorCURIE]] = None
     species_taxon_id: Optional[Union[str, URIorCURIE]] = None
+    has_taxonomic_rank: Optional[Union[str, "TaxonomicRank"]] = None
     scientific_name: Optional[str] = None
     strain_designation: Optional[str] = None
     dsm_id: Optional[int] = None
@@ -925,6 +927,9 @@ class Strain(YAMLRoot):
 
         if self.species_taxon_id is not None and not isinstance(self.species_taxon_id, URIorCURIE):
             self.species_taxon_id = URIorCURIE(self.species_taxon_id)
+
+        if self.has_taxonomic_rank is not None and not isinstance(self.has_taxonomic_rank, TaxonomicRank):
+            self.has_taxonomic_rank = TaxonomicRank(self.has_taxonomic_rank)
 
         if self.scientific_name is not None and not isinstance(self.scientific_name, str):
             self.scientific_name = str(self.scientific_name)
@@ -1364,39 +1369,48 @@ class GramStain(EnumDefinitionImpl):
 
 class TaxonomicRank(EnumDefinitionImpl):
     """
-    NCBI Taxonomy ranks relevant to microbial classification.
+    NCBI Taxonomy ranks relevant to microbial classification. Mapped to TAXRANK ontology
+    (http://purl.obolibrary.org/obo/taxrank.owl).
     """
     domain = PermissibleValue(
         text="domain",
-        description="Highest rank (Bacteria, Archaea, Eukarya).")
+        description="Highest rank (Bacteria, Archaea, Eukarya).",
+        meaning=TAXRANK["0000037"])
     phylum = PermissibleValue(
         text="phylum",
-        description="Major evolutionary lineage.")
+        description="Major evolutionary lineage.",
+        meaning=TAXRANK["0000003"])
     order = PermissibleValue(
         text="order",
-        description="Taxonomic order.")
+        description="Taxonomic order.",
+        meaning=TAXRANK["0000017"])
     family = PermissibleValue(
         text="family",
-        description="Taxonomic family.")
+        description="Taxonomic family.",
+        meaning=TAXRANK["0000004"])
     genus = PermissibleValue(
         text="genus",
-        description="Taxonomic genus.")
+        description="Taxonomic genus.",
+        meaning=TAXRANK["0000005"])
     species = PermissibleValue(
         text="species",
-        description="Species level (binomial name).")
+        description="Species level (binomial name).",
+        meaning=TAXRANK["0000006"])
     subspecies = PermissibleValue(
         text="subspecies",
-        description="Subspecies or variety.")
+        description="Subspecies or variety.",
+        meaning=TAXRANK["0000023"])
     strain = PermissibleValue(
         text="strain",
-        description="Strain level (most specific for cultured isolates).")
+        description="Strain level (most specific for cultured isolates).",
+        meaning=TAXRANK["0000060"])
     no_rank = PermissibleValue(
         text="no_rank",
         description="NCBI entries without assigned rank (e.g., clades).")
 
     _defn = EnumDefinition(
         name="TaxonomicRank",
-        description="NCBI Taxonomy ranks relevant to microbial classification.",
+        description="""NCBI Taxonomy ranks relevant to microbial classification. Mapped to TAXRANK ontology (http://purl.obolibrary.org/obo/taxrank.owl).""",
     )
 
     @classmethod
@@ -1404,7 +1418,8 @@ class TaxonomicRank(EnumDefinitionImpl):
         setattr(cls, "class",
             PermissibleValue(
                 text="class",
-                description="Taxonomic class."))
+                description="Taxonomic class.",
+                meaning=TAXRANK["0000002"]))
 
 class AssemblyLevel(EnumDefinitionImpl):
     """
@@ -1540,8 +1555,15 @@ slots.sterilization_method = Slot(uri=CMM.sterilization_method, name="sterilizat
 slots.target_organisms = Slot(uri=CMM.target_organisms, name="target_organisms", curie=CMM.curie('target_organisms'),
                    model_uri=CMM.target_organisms, domain=None, range=Optional[Union[str, list[str]]])
 
-slots.references = Slot(uri=CMM.references, name="references", curie=CMM.curie('references'),
-                   model_uri=CMM.references, domain=None, range=Optional[Union[str, list[str]]])
+slots.source_reference = Slot(uri=CMM.source_reference, name="source_reference", curie=CMM.curie('source_reference'),
+                   model_uri=CMM.source_reference, domain=None, range=Optional[Union[str, URIorCURIE]],
+                   pattern=re.compile(r'^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$'))
+
+slots.derived_from = Slot(uri=CMM.derived_from, name="derived_from", curie=CMM.curie('derived_from'),
+                   model_uri=CMM.derived_from, domain=None, range=Optional[Union[str, GrowthMediumId]])
+
+slots.modifications = Slot(uri=CMM.modifications, name="modifications", curie=CMM.curie('modifications'),
+                   model_uri=CMM.modifications, domain=None, range=Optional[Union[str, list[str]]])
 
 slots.notes = Slot(uri=CMM.notes, name="notes", curie=CMM.curie('notes'),
                    model_uri=CMM.notes, domain=None, range=Optional[str])
@@ -1708,8 +1730,8 @@ slots.has_lanmodulin = Slot(uri=CMM.has_lanmodulin, name="has_lanmodulin", curie
 slots.parent_taxon_id = Slot(uri=CMM.parent_taxon_id, name="parent_taxon_id", curie=CMM.curie('parent_taxon_id'),
                    model_uri=CMM.parent_taxon_id, domain=None, range=Optional[Union[str, URIorCURIE]])
 
-slots.rank = Slot(uri=CMM.rank, name="rank", curie=CMM.curie('rank'),
-                   model_uri=CMM.rank, domain=None, range=Optional[Union[str, "TaxonomicRank"]])
+slots.has_taxonomic_rank = Slot(uri=BIOLINK.has_taxonomic_rank, name="has_taxonomic_rank", curie=BIOLINK.curie('has_taxonomic_rank'),
+                   model_uri=CMM.has_taxonomic_rank, domain=None, range=Optional[Union[str, "TaxonomicRank"]])
 
 slots.kg_node_ids = Slot(uri=CMM.kg_node_ids, name="kg_node_ids", curie=CMM.curie('kg_node_ids'),
                    model_uri=CMM.kg_node_ids, domain=None, range=Optional[Union[str, list[str]]])
@@ -1758,20 +1780,14 @@ slots.grows = Slot(uri=CMM.grows, name="grows", curie=CMM.curie('grows'),
 slots.growth_rate = Slot(uri=CMM.growth_rate, name="growth_rate", curie=CMM.curie('growth_rate'),
                    model_uri=CMM.growth_rate, domain=None, range=Optional[Union[str, "GrowthRate"]])
 
-slots.optimal_temperature = Slot(uri=CMM.optimal_temperature, name="optimal_temperature", curie=CMM.curie('optimal_temperature'),
-                   model_uri=CMM.optimal_temperature, domain=None, range=Optional[float])
-
-slots.optimal_ph = Slot(uri=CMM.optimal_ph, name="optimal_ph", curie=CMM.curie('optimal_ph'),
-                   model_uri=CMM.optimal_ph, domain=None, range=Optional[float])
-
-slots.carbon_source_used = Slot(uri=CMM.carbon_source_used, name="carbon_source_used", curie=CMM.curie('carbon_source_used'),
-                   model_uri=CMM.carbon_source_used, domain=None, range=Optional[str])
-
-slots.oxygen_condition = Slot(uri=CMM.oxygen_condition, name="oxygen_condition", curie=CMM.curie('oxygen_condition'),
-                   model_uri=CMM.oxygen_condition, domain=None, range=Optional[Union[str, "OxygenTolerance"]])
+slots.temperature = Slot(uri=CMM.temperature, name="temperature", curie=CMM.curie('temperature'),
+                   model_uri=CMM.temperature, domain=None, range=Optional[float])
 
 slots.incubation_time = Slot(uri=CMM.incubation_time, name="incubation_time", curie=CMM.curie('incubation_time'),
                    model_uri=CMM.incubation_time, domain=None, range=Optional[str])
+
+slots.doubling_time = Slot(uri=CMM.doubling_time, name="doubling_time", curie=CMM.curie('doubling_time'),
+                   model_uri=CMM.doubling_time, domain=None, range=Optional[float])
 
 slots.cMMDatabase__ingredients = Slot(uri=CMM.ingredients, name="cMMDatabase__ingredients", curie=CMM.curie('ingredients'),
                    model_uri=CMM.cMMDatabase__ingredients, domain=None, range=Optional[Union[dict[Union[str, IngredientId], Union[dict, Ingredient]], list[Union[dict, Ingredient]]]])
@@ -1793,6 +1809,10 @@ slots.cMMDatabase__genomes = Slot(uri=CMM.genomes, name="cMMDatabase__genomes", 
 
 slots.cMMDatabase__growth_preferences = Slot(uri=CMM.growth_preferences, name="cMMDatabase__growth_preferences", curie=CMM.curie('growth_preferences'),
                    model_uri=CMM.cMMDatabase__growth_preferences, domain=None, range=Optional[Union[Union[dict, GrowthPreference], list[Union[dict, GrowthPreference]]]])
+
+slots.GrowthMedium_source_reference = Slot(uri=CMM.source_reference, name="GrowthMedium_source_reference", curie=CMM.curie('source_reference'),
+                   model_uri=CMM.GrowthMedium_source_reference, domain=GrowthMedium, range=Union[str, URIorCURIE],
+                   pattern=re.compile(r'^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$'))
 
 slots.IngredientComponent_ingredient = Slot(uri=CMM.ingredient, name="IngredientComponent_ingredient", curie=CMM.curie('ingredient'),
                    model_uri=CMM.IngredientComponent_ingredient, domain=IngredientComponent, range=Union[str, IngredientId])
