@@ -295,6 +295,7 @@ def index_taxonomy(mongo_client: MongoClient, chroma_client, clear: bool = False
             chroma_client.delete_collection(collection_name)
             logger.info(f"Cleared existing collection '{collection_name}'")
         except Exception:
+            # Collection may not exist yet; proceed with indexing
             pass
 
     collection = chroma_client.get_or_create_collection(
@@ -369,6 +370,7 @@ def index_assemblies(mongo_client: MongoClient, chroma_client, clear: bool = Fal
             chroma_client.delete_collection(collection_name)
             logger.info(f"Cleared existing collection '{collection_name}'")
         except Exception:
+            # Collection may not exist yet; proceed with indexing
             pass
 
     collection = chroma_client.get_or_create_collection(

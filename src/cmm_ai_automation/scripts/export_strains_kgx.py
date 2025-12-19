@@ -1317,6 +1317,8 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
             if doc:
                 logger.debug(f"Found BacDive by NCBITaxon {taxon_id}")
         except (ValueError, AttributeError):
+            # Invalid or unexpectedly formatted NCBI taxon identifier; skip this strategy
+            # and continue with other enrichment strategies.
             pass
 
     # Strategy 3: Look up by other culture collection ID (slow, full scan)

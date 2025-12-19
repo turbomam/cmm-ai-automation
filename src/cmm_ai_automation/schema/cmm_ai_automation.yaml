@@ -26,6 +26,7 @@ prefixes:
   OBI: http://purl.obolibrary.org/obo/OBI_
   UO: http://purl.obolibrary.org/obo/UO_
   RO: http://purl.obolibrary.org/obo/RO_
+  NCIT: http://purl.obolibrary.org/obo/NCIT_
   NCBITaxon: http://purl.obolibrary.org/obo/NCBITaxon_
   TAXRANK: http://purl.obolibrary.org/obo/TAXRANK_
   ENVO: http://purl.obolibrary.org/obo/ENVO_
@@ -44,6 +45,12 @@ prefixes:
   GCF: http://identifiers.org/insdc.gcf/
   # Ontology prefixes
   METPO: http://purl.obolibrary.org/obo/METPO_
+  # Literature reference prefixes
+  doi: https://doi.org/
+  PMID: http://identifiers.org/pubmed/
+  # Media database prefixes
+  mediadive.medium: https://mediadive.dsmz.de/medium/
+  togomedium: http://togomedium.org/medium/
 
 default_prefix: cmm
 default_range: string
@@ -119,17 +126,27 @@ classes:
     description: >-
       A complete formulation for cultivating microorganisms.
       Contains ingredients directly and/or pre-made solutions.
+      Lab-specific or modified media should use derived_from to link
+      to their parent medium and list modifications.
     slots:
       - medium_type
       - ph
       - sterilization_method
       - has_solution_component
       - target_organisms
-      - references
+      - source_reference
+      - derived_from
+      - modifications
+    slot_usage:
+      source_reference:
+        required: true
     id_prefixes:
       - cmm
+      - mediadive.medium
+      - togomedium
       - DSMZ
       - ATCC
+      - JCM
 
   # ---------------------------------------------------------------------------
   # Composition relationships (reified)
@@ -168,19 +185,15 @@ classes:
   GrowthPreference:
     description: >-
       Reified relationship: a strain's growth in a specific medium.
-      Captures edge properties like growth rate, temperature, pH conditions.
+      Captures observation-specific properties like growth rate and temperature.
       Predicate: METPO:2000517 (grows in) or METPO:2000518 (does not grow in).
     slots:
       - subject_strain  # The strain (subject of edge)
       - object_medium   # The medium (object of edge)
       - grows           # true = grows in, false = does not grow in
       - growth_rate     # qualitative: poor, moderate, good, excellent
-      - optimal_temperature
-      - temperature_range
-      - optimal_ph
-      - ph_range
-      - carbon_source_used  # e.g., methanol, methylamine
-      - oxygen_condition
+      - doubling_time   # quantitative: hours
+      - temperature     # observation temperature (°C)
       - incubation_time
       - notes
       - source_records
@@ -596,9 +609,32 @@ slots:
     multivalued: true
     description: Taxa or organism types this medium is designed for
 
-  references:
+  source_reference:
+    range: uriorcurie
+    description: >-
+      Authoritative reference for this medium formulation.
+      Must be a resolvable CURIE from an allowed prefix.
+      For database media: mediadive.medium:381, togomedium:M1871, DSMZ:576, ATCC:1306, JCM:M89
+      For literature-defined media: doi:10.1371/journal.pone.0062957, PMID:23658750
+    pattern: "^(doi|PMID|mediadive\\.medium|togomedium|DSMZ|ATCC|JCM):\\S+$"
+
+  derived_from:
+    range: GrowthMedium
+    description: >-
+      Parent medium this formulation is based on.
+      Used for lab-specific modifications of standard media.
+      Creates a provenance chain back to database entries.
+
+  modifications:
     multivalued: true
-    description: Literature references for this medium formulation
+    description: >-
+      List of modifications from the parent medium (derived_from).
+      Each entry describes one change: added ingredient, removed ingredient,
+      concentration change, or buffer substitution.
+      Examples:
+        - "Added PIPES buffer 30mM pH 6.8"
+        - "Replaced methanol with succinate 15mM"
+        - "Removed agar for liquid culture"
 
   notes:
     description: Free-text notes about this component
@@ -970,33 +1006,25 @@ slots:
     description: >-
       Qualitative growth rate in this medium.
 
-  optimal_temperature:
+  temperature:
     range: float
     description: >-
-      Optimal growth temperature in degrees Celsius.
+      Growth temperature in degrees Celsius for this observation.
     unit:
       ucum_code: Cel
-
-  optimal_ph:
-    range: float
-    description: >-
-      Optimal pH for growth in this medium.
-    minimum_value: 0
-    maximum_value: 14
-
-  carbon_source_used:
-    description: >-
-      The carbon source utilized for growth (e.g., methanol, methylamine).
-      May differ from what's in the medium if multiple sources available.
-
-  oxygen_condition:
-    range: OxygenTolerance
-    description: >-
-      Oxygen condition used for this growth observation.
 
   incubation_time:
     description: >-
       Duration of incubation (e.g., "48 hours", "7 days").
+
+  doubling_time:
+    range: float
+    description: >-
+      Quantitative growth rate measured as doubling time in hours.
+      Also known as generation time.
+    unit:
+      ucum_code: h
+    minimum_value: 0
 
 # =============================================================================
 # ENUMS

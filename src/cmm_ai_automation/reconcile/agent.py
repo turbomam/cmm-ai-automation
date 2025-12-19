@@ -129,7 +129,7 @@ class StrainReconciler:
         """
         self.agent = Agent(
             model,
-            result_type=ReconciliationResult,
+            output_type=ReconciliationResult,
             system_prompt=RECONCILIATION_SYSTEM_PROMPT,
         )
 
@@ -159,7 +159,7 @@ Analyze the records and provide your assessment. Consider genus synonyms, strain
 variations, and NCBI taxonomy levels. Return your structured assessment.
 """
         result = await self.agent.run(prompt)
-        return result.data  # type: ignore[no-any-return]
+        return result.output  # type: ignore[no-any-return]
 
     def compare_strains_sync(
         self,

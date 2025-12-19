@@ -272,6 +272,7 @@ def index_bacdive_to_chromadb(
 
     if clear:
         logger.info(f"Clearing existing collection '{collection_name}'...")
+        # Collection may not exist yet; suppress exception and proceed
         with contextlib.suppress(Exception):
             chroma_client.delete_collection(collection_name)
 
