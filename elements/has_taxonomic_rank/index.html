@@ -8,7 +8,7 @@
       
       
       
-        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/chemical_formula/">
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/elements/has_taxonomic_rank/">
       
       
       
@@ -21,7 +21,7 @@
     
     
       
-        <title>Slot: chemical_formula - cmm-ai-automation</title>
+        <title>Slot: has_taxonomic_rank - cmm-ai-automation</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#slot-chemical_formula" class="md-skip">
+        <a href="#slot-has_taxonomic_rank" class="md-skip">
           Skip to content
         </a>
       
@@ -116,7 +116,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Slot: chemical_formula
+              Slot: has_taxonomic_rank
             
           </span>
         </div>
@@ -538,10 +538,10 @@
   
 
 
-<h1 id="slot-chemical_formula">Slot: chemical_formula</h1>
-<p><em>Chemical formula (e.g., NaCl, MgSO4·7H2O)</em></p>
-<p>URI: <a href="https://w3id.org/turbomam/cmm-ai-automation/chemical_formula">cmm:chemical_formula</a>
-Alias: chemical_formula</p>
+<h1 id="slot-has_taxonomic_rank">Slot: has_taxonomic_rank</h1>
+<p><em>Taxonomic rank (species, strain, subspecies, etc.) Aligns with biolink:has_taxonomic_rank.</em></p>
+<p>URI: <a href="https://w3id.org/biolink/vocab/has_taxonomic_rank">biolink:has_taxonomic_rank</a>
+Alias: has_taxonomic_rank</p>
 <!-- no inheritance hierarchy -->
 
 <h2 id="applicable-classes">Applicable Classes</h2>
@@ -555,20 +555,20 @@ Alias: chemical_formula</p>
 </thead>
 <tbody>
 <tr>
-<td><a href="../EnrichedIngredient/">EnrichedIngredient</a></td>
-<td>A chemical entity enriched with data from multiple sources</td>
+<td><a href="../Strain/">Strain</a></td>
+<td>A microbial strain enriched with data from multiple sources</td>
 <td>no</td>
 </tr>
 <tr>
-<td><a href="../Ingredient/">Ingredient</a></td>
-<td>A chemical entity that can be a component of solutions or media</td>
+<td><a href="../Taxon/">Taxon</a></td>
+<td>A taxonomic entity from NCBI Taxonomy</td>
 <td>no</td>
 </tr>
 </tbody>
 </table>
 <h2 id="properties">Properties</h2>
 <ul>
-<li>Range: <a href="../String/">String</a></li>
+<li>Range: <a href="../TaxonomicRank/">TaxonomicRank</a></li>
 </ul>
 <h2 id="identifier-and-mapping-information">Identifier and Mapping Information</h2>
 <h3 id="schema-source">Schema Source</h3>
@@ -586,25 +586,26 @@ Alias: chemical_formula</p>
 <tbody>
 <tr>
 <td>self</td>
-<td>cmm:chemical_formula</td>
+<td>biolink:has_taxonomic_rank</td>
 </tr>
 <tr>
 <td>native</td>
-<td>cmm:chemical_formula</td>
+<td>cmm:has_taxonomic_rank</td>
 </tr>
 </tbody>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chemical_formula</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chemical formula (e.g., NaCl, MgSO4·7H2O)</span>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_taxonomic_rank</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxonomic rank (species, strain, subspecies, etc.) Aligns with biolink:has_taxonomic_rank.</span>
 <span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
 <span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chemical_formula</span>
+<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biolink:has_taxonomic_rank</span>
+<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_taxonomic_rank</span>
 <span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingredient</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
+<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">TaxonomicRank</span>
 </code></pre></div>
 </details>
 

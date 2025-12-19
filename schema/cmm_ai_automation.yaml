@@ -52,9 +52,15 @@ prefixes:
   RO:
     prefix_prefix: RO
     prefix_reference: http://purl.obolibrary.org/obo/RO_
+  NCIT:
+    prefix_prefix: NCIT
+    prefix_reference: http://purl.obolibrary.org/obo/NCIT_
   NCBITaxon:
     prefix_prefix: NCBITaxon
     prefix_reference: http://purl.obolibrary.org/obo/NCBITaxon_
+  TAXRANK:
+    prefix_prefix: TAXRANK
+    prefix_reference: http://purl.obolibrary.org/obo/TAXRANK_
   ENVO:
     prefix_prefix: ENVO
     prefix_reference: http://purl.obolibrary.org/obo/ENVO_
@@ -91,6 +97,18 @@ prefixes:
   METPO:
     prefix_prefix: METPO
     prefix_reference: http://purl.obolibrary.org/obo/METPO_
+  doi:
+    prefix_prefix: doi
+    prefix_reference: https://doi.org/
+  PMID:
+    prefix_prefix: PMID
+    prefix_reference: http://identifiers.org/pubmed/
+  mediadive.medium:
+    prefix_prefix: mediadive.medium
+    prefix_reference: https://mediadive.dsmz.de/medium/
+  togomedium:
+    prefix_prefix: togomedium
+    prefix_reference: http://togomedium.org/medium/
 default_prefix: cmm
 default_range: string
 types:
@@ -591,36 +609,46 @@ enums:
   TaxonomicRank:
     name: TaxonomicRank
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/TaxonomicRank
-    description: NCBI Taxonomy ranks relevant to microbial classification.
+    description: NCBI Taxonomy ranks relevant to microbial classification. Mapped
+      to TAXRANK ontology (http://purl.obolibrary.org/obo/taxrank.owl).
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
     permissible_values:
       domain:
         text: domain
         description: Highest rank (Bacteria, Archaea, Eukarya).
+        meaning: TAXRANK:0000037
       phylum:
         text: phylum
         description: Major evolutionary lineage.
+        meaning: TAXRANK:0000003
       class:
         text: class
         description: Taxonomic class.
+        meaning: TAXRANK:0000002
       order:
         text: order
         description: Taxonomic order.
+        meaning: TAXRANK:0000017
       family:
         text: family
         description: Taxonomic family.
+        meaning: TAXRANK:0000004
       genus:
         text: genus
         description: Taxonomic genus.
+        meaning: TAXRANK:0000005
       species:
         text: species
         description: Species level (binomial name).
+        meaning: TAXRANK:0000006
       subspecies:
         text: subspecies
         description: Subspecies or variety.
+        meaning: TAXRANK:0000023
       strain:
         text: strain
         description: Strain level (most specific for cultured isolates).
+        meaning: TAXRANK:0000060
       no_rank:
         text: no_rank
         description: NCBI entries without assigned rank (e.g., clades).
@@ -983,12 +1011,42 @@ slots:
     - GrowthMedium
     range: string
     multivalued: true
-  references:
-    name: references
-    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/references
-    description: Literature references for this medium formulation
+  source_reference:
+    name: source_reference
+    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/source_reference
+    description: 'Authoritative reference for this medium formulation. Must be a resolvable
+      CURIE from an allowed prefix. For database media: mediadive.medium:381, togomedium:M1871,
+      DSMZ:576, ATCC:1306, JCM:M89 For literature-defined media: doi:10.1371/journal.pone.0062957,
+      PMID:23658750'
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
-    slot_uri: cmm:references
+    slot_uri: cmm:source_reference
+    owner: GrowthMedium
+    domain_of:
+    - GrowthMedium
+    range: uriorcurie
+    pattern: ^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$
+  derived_from:
+    name: derived_from
+    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/derived_from
+    description: Parent medium this formulation is based on. Used for lab-specific
+      modifications of standard media. Creates a provenance chain back to database
+      entries.
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    slot_uri: cmm:derived_from
+    owner: GrowthMedium
+    domain_of:
+    - GrowthMedium
+    range: GrowthMedium
+  modifications:
+    name: modifications
+    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/modifications
+    description: "List of modifications from the parent medium (derived_from). Each\
+      \ entry describes one change: added ingredient, removed ingredient, concentration\
+      \ change, or buffer substitution. Examples:\n  - \"Added PIPES buffer 30mM pH\
+      \ 6.8\"\n  - \"Replaced methanol with succinate 15mM\"\n  - \"Removed agar for\
+      \ liquid culture\""
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    slot_uri: cmm:modifications
     owner: GrowthMedium
     domain_of:
     - GrowthMedium
@@ -1502,7 +1560,6 @@ slots:
     slot_uri: cmm:temperature_range
     owner: Strain
     domain_of:
-    - GrowthPreference
     - Strain
     range: string
   ph_range:
@@ -1513,7 +1570,6 @@ slots:
     slot_uri: cmm:ph_range
     owner: Strain
     domain_of:
-    - GrowthPreference
     - Strain
     range: string
   gram_stain:
@@ -1597,15 +1653,18 @@ slots:
     domain_of:
     - Taxon
     range: uriorcurie
-  rank:
-    name: rank
-    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/rank
-    description: Taxonomic rank (species, strain, subspecies, etc.)
+  has_taxonomic_rank:
+    name: has_taxonomic_rank
+    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/has_taxonomic_rank
+    description: Taxonomic rank (species, strain, subspecies, etc.) Aligns with biolink:has_taxonomic_rank.
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
-    slot_uri: cmm:rank
-    owner: Taxon
+    mappings:
+    - biolink:has_taxonomic_rank
+    slot_uri: biolink:has_taxonomic_rank
+    owner: Strain
     domain_of:
     - Taxon
+    - Strain
     range: TaxonomicRank
   kg_node_ids:
     name: kg_node_ids
@@ -1778,51 +1837,18 @@ slots:
     domain_of:
     - GrowthPreference
     range: GrowthRate
-  optimal_temperature:
-    name: optimal_temperature
-    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/optimal_temperature
-    description: Optimal growth temperature in degrees Celsius.
+  temperature:
+    name: temperature
+    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/temperature
+    description: Growth temperature in degrees Celsius for this observation.
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
-    slot_uri: cmm:optimal_temperature
+    slot_uri: cmm:temperature
     owner: GrowthPreference
     domain_of:
     - GrowthPreference
     range: float
     unit:
       ucum_code: Cel
-  optimal_ph:
-    name: optimal_ph
-    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/optimal_ph
-    description: Optimal pH for growth in this medium.
-    from_schema: https://w3id.org/turbomam/cmm-ai-automation
-    slot_uri: cmm:optimal_ph
-    owner: GrowthPreference
-    domain_of:
-    - GrowthPreference
-    range: float
-    minimum_value: 0
-    maximum_value: 14
-  carbon_source_used:
-    name: carbon_source_used
-    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/carbon_source_used
-    description: The carbon source utilized for growth (e.g., methanol, methylamine).
-      May differ from what's in the medium if multiple sources available.
-    from_schema: https://w3id.org/turbomam/cmm-ai-automation
-    slot_uri: cmm:carbon_source_used
-    owner: GrowthPreference
-    domain_of:
-    - GrowthPreference
-    range: string
-  oxygen_condition:
-    name: oxygen_condition
-    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/oxygen_condition
-    description: Oxygen condition used for this growth observation.
-    from_schema: https://w3id.org/turbomam/cmm-ai-automation
-    slot_uri: cmm:oxygen_condition
-    owner: GrowthPreference
-    domain_of:
-    - GrowthPreference
-    range: OxygenTolerance
   incubation_time:
     name: incubation_time
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/incubation_time
@@ -1833,6 +1859,20 @@ slots:
     domain_of:
     - GrowthPreference
     range: string
+  doubling_time:
+    name: doubling_time
+    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/doubling_time
+    description: Quantitative growth rate measured as doubling time in hours. Also
+      known as generation time.
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    slot_uri: cmm:doubling_time
+    owner: GrowthPreference
+    domain_of:
+    - GrowthPreference
+    range: float
+    minimum_value: 0
+    unit:
+      ucum_code: h
   cMMDatabase__ingredients:
     name: cMMDatabase__ingredients
     description: Collection of all chemical ingredients in the database
@@ -1924,6 +1964,26 @@ slots:
     multivalued: true
     inlined: true
     inlined_as_list: true
+  GrowthMedium_source_reference:
+    name: GrowthMedium_source_reference
+    definition_uri: https://w3id.org/turbomam/cmm-ai-automation/source_reference
+    description: 'Authoritative reference for this medium formulation. Must be a resolvable
+      CURIE from an allowed prefix. For database media: mediadive.medium:381, togomedium:M1871,
+      DSMZ:576, ATCC:1306, JCM:M89 For literature-defined media: doi:10.1371/journal.pone.0062957,
+      PMID:23658750'
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    is_a: source_reference
+    domain: GrowthMedium
+    slot_uri: cmm:source_reference
+    alias: source_reference
+    owner: GrowthMedium
+    domain_of:
+    - GrowthMedium
+    is_usage_slot: true
+    usage_slot_name: source_reference
+    range: uriorcurie
+    required: true
+    pattern: ^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$
   IngredientComponent_ingredient:
     name: IngredientComponent_ingredient
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/ingredient
@@ -2094,11 +2154,15 @@ classes:
     name: GrowthMedium
     id_prefixes:
     - cmm
+    - mediadive.medium
+    - togomedium
     - DSMZ
     - ATCC
+    - JCM
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/GrowthMedium
     description: A complete formulation for cultivating microorganisms. Contains ingredients
-      directly and/or pre-made solutions.
+      directly and/or pre-made solutions. Lab-specific or modified media should use
+      derived_from to link to their parent medium and list modifications.
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
     is_a: Mixture
     slots:
@@ -2112,7 +2176,13 @@ classes:
     - sterilization_method
     - has_solution_component
     - target_organisms
-    - references
+    - GrowthMedium_source_reference
+    - derived_from
+    - modifications
+    slot_usage:
+      source_reference:
+        name: source_reference
+        required: true
     class_uri: cmm:GrowthMedium
   IngredientComponent:
     name: IngredientComponent
@@ -2150,20 +2220,16 @@ classes:
     name: GrowthPreference
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/GrowthPreference
     description: 'Reified relationship: a strain''s growth in a specific medium. Captures
-      edge properties like growth rate, temperature, pH conditions. Predicate: METPO:2000517
-      (grows in) or METPO:2000518 (does not grow in).'
+      observation-specific properties like growth rate and temperature. Predicate:
+      METPO:2000517 (grows in) or METPO:2000518 (does not grow in).'
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
     slots:
     - GrowthPreference_subject_strain
     - GrowthPreference_object_medium
     - grows
     - growth_rate
-    - optimal_temperature
-    - temperature_range
-    - optimal_ph
-    - ph_range
-    - carbon_source_used
-    - oxygen_condition
+    - doubling_time
+    - temperature
     - incubation_time
     - notes
     - source_records
@@ -2267,7 +2333,7 @@ classes:
     - description
     - ncbi_taxon_id
     - parent_taxon_id
-    - rank
+    - has_taxonomic_rank
     - scientific_name
     - genome_accessions
     - has_xox_genes
@@ -2321,7 +2387,7 @@ classes:
       metadata - NCBI is authoritative for ncbi_taxon_id'
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
     mappings:
-    - biolink:OrganismalEntity
+    - biolink:OrganismTaxon
     slots:
     - id
     - name
@@ -2329,6 +2395,7 @@ classes:
     - description
     - ncbi_taxon_id
     - species_taxon_id
+    - has_taxonomic_rank
     - scientific_name
     - strain_designation
     - dsm_id
@@ -2361,7 +2428,7 @@ classes:
     - source_records
     - conflicts
     - last_enriched
-    class_uri: biolink:OrganismalEntity
+    class_uri: biolink:OrganismTaxon
   CrossReference:
     name: CrossReference
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/CrossReference
@@ -2439,7 +2506,7 @@ classes:
     tree_root: true
 metamodel_version: 1.7.0
 source_file: cmm_ai_automation.yaml
-source_file_date: '2025-12-16T23:33:29'
-source_file_size: 35703
-generation_date: '2025-12-16T23:36:25'
+source_file_date: '2025-12-19T23:51:17'
+source_file_size: 37565
+generation_date: '2025-12-19T23:54:20'
 
