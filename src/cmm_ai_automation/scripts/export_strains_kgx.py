@@ -1182,6 +1182,11 @@ def lookup_bacdive_by_culture_collection(
     Searches the 'External links.culture collection no.' field which contains
     comma-separated list of all culture collection IDs for a strain.
 
+    Uses a MongoDB regex query for server-side filtering instead of client-side
+    iteration, reducing network overhead. The pattern matches complete tokens
+    in comma-separated lists, preventing false positives (e.g., "DSM 1"
+    matching "DSM 11").
+
     Args:
         collection: MongoDB collection
         search_id: Culture collection ID in format "PREFIX NUMBER" (e.g., "ATCC 43883")
@@ -1189,13 +1194,12 @@ def lookup_bacdive_by_culture_collection(
     Returns:
         BacDive document or None
     """
-    # Full collection scan - not efficient but necessary without text index
-    for doc in collection.find({}):
-        cc_field = doc.get("External links", {}).get("culture collection no.", "")
-        if cc_field and search_id in cc_field:
-            result: dict[str, Any] = doc
-            return result
-    return None
+    # Escape search_id to prevent regex injection
+    escaped_id = re.escape(search_id)
+    # Match complete token: start/comma before, comma/end after
+    pattern = rf"(^|,\s*){escaped_id}(\s*,|$)"
+    result: dict[str, Any] | None = collection.find_one({"External links.culture collection no.": {"$regex": pattern}})
+    return result
 
 
 def lookup_bacdive_by_strain_designation(
