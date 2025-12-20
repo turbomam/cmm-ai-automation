@@ -91,20 +91,77 @@ CHEBI, GO, ENVO, OBI, NCBITaxon, MIxS, RHEA, BAO
 
 ## Quick Start
 
+### Prerequisites
+
+- Python 3.11+
+- [uv](https://docs.astral.sh/uv/) (Python package manager)
+- [just](https://github.com/casey/just/) (command runner)
+- [Docker](https://www.docker.com/) (for Neo4j)
+- [MongoDB](https://www.mongodb.com/) (local or remote)
+
+### Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/turbomam/cmm-ai-automation.git
 cd cmm-ai-automation
 
-# Install dependencies with uv
+# Install dependencies
 uv sync
 
-# Set up Google Sheets credentials (service account)
-export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
+# Install pre-commit hooks
+uv run pre-commit install
 
-# Or place credentials in default location
-# ~/.config/gspread/service_account.json
+# Verify installation
+just --list
 ```
+
+### Environment Setup
+
+Create a `.env` file with required credentials:
+
+```bash
+# .env
+# Google Sheets (service account JSON path)
+GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
+
+# Neo4j (local Docker instance)
+NEO4J_URI=bolt://localhost:7687
+NEO4J_USER=neo4j
+NEO4J_PASSWORD=your-password
+
+# Optional: BacDive API credentials
+BACDIVE_EMAIL=your@email.com
+BACDIVE_PASSWORD=your-password
+
+# Optional: CAS API key
+CAS_API_KEY=your-cas-key
+```
+
+### Run the Data Pipeline
+
+```bash
+# 1. Start infrastructure
+just neo4j-start              # Start Neo4j in Docker
+# Ensure MongoDB is running (mongod or via Docker)
+
+# 2. Load source data
+just load-mediadive           # Load MediaDive base data (~10 sec)
+just load-mediadive-details   # Fetch detailed data (~3-4 hours)
+
+# 3. Export to KGX format
+just mediadive-kgx-clean-export
+
+# 4. Load into Neo4j
+just neo4j-upload-kgx         # Uses kgx tool (proper list handling)
+# OR
+just neo4j-upload-custom      # Custom loader (custom labels)
+
+# 5. Browse results
+open http://localhost:7474    # Neo4j Browser
+```
+
+See [docs/pipeline.md](docs/pipeline.md) for detailed pipeline documentation.
 
 ## Google Sheets Usage
 

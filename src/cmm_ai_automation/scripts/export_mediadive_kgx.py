@@ -103,6 +103,10 @@ def export_mediadive(mongodb_uri: str, output_path: Path) -> dict:
     for doc in db.strains.find():
         strain_id = f"mediadive.strain:{doc['id']}"
 
+        # Build xref for BacDive ID if present
+        bacdive_id = doc.get("bacdive_id")
+        xrefs = [f"bacdive.strain:{bacdive_id}"] if bacdive_id else None
+
         # Add strain node
         graph.add_node(
             strain_id,
@@ -110,6 +114,7 @@ def export_mediadive(mongodb_uri: str, output_path: Path) -> dict:
             category=[STRAIN_CATEGORY],
             provided_by=[PROVIDED_BY],
             culture_collection_id=doc.get("ccno"),
+            xref=xrefs,
         )
         counts["strains"] += 1
 
@@ -139,7 +144,7 @@ def export_mediadive(mongodb_uri: str, output_path: Path) -> dict:
     for doc in db.ingredient_details.find():
         node_id = f"mediadive.ingredient:{doc['id']}"
 
-        # Build xrefs list
+        # Build xrefs list from all available identifiers
         xrefs = []
         if doc.get("ChEBI"):
             xrefs.append(f"CHEBI:{doc['ChEBI']}")
@@ -149,6 +154,15 @@ def export_mediadive(mongodb_uri: str, output_path: Path) -> dict:
             xrefs.append(f"CAS:{doc['CAS-RN']}")
         if doc.get("KEGG-Compound"):
             xrefs.append(f"KEGG.COMPOUND:{doc['KEGG-Compound']}")
+        if doc.get("BRENDA-Ligand"):
+            xrefs.append(f"BRENDA:{doc['BRENDA-Ligand']}")
+        if doc.get("MetaCyc"):
+            xrefs.append(f"MetaCyc:{doc['MetaCyc']}")
+        if doc.get("ZVG"):
+            xrefs.append(f"ZVG:{doc['ZVG']}")
+
+        # Build synonyms list
+        synonyms = doc.get("synonyms", [])
 
         graph.add_node(
             node_id,
@@ -156,8 +170,10 @@ def export_mediadive(mongodb_uri: str, output_path: Path) -> dict:
             category=[INGREDIENT_CATEGORY],
             provided_by=[PROVIDED_BY],
             xref=xrefs if xrefs else None,
+            synonym=synonyms if synonyms else None,
             chemical_formula=doc.get("formula"),
             molecular_mass=doc.get("mass"),
+            density=doc.get("density"),
             is_complex_mixture=doc.get("complex_compound", False),
         )
         counts["ingredients"] += 1
@@ -169,12 +185,18 @@ def export_mediadive(mongodb_uri: str, output_path: Path) -> dict:
     for doc in db.solution_details.find():
         solution_id = f"mediadive.solution:{doc['id']}"
 
+        # Serialize steps and equipment as pipe-delimited if present
+        steps = doc.get("steps", [])
+        equipment = doc.get("equipment", [])
+
         graph.add_node(
             solution_id,
             name=doc.get("name"),
             category=[SOLUTION_CATEGORY],
             provided_by=[PROVIDED_BY],
             volume_ml=doc.get("volume"),
+            preparation_steps=steps if steps else None,
+            equipment=equipment if equipment else None,
         )
         counts["solutions"] += 1
 

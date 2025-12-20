@@ -308,10 +308,28 @@ neo4j-clean: neo4j-stop
 neo4j-clear:
   uv run python -m cmm_ai_automation.scripts.neo4j_clear
 
-# Upload KGX files to local Neo4j using native LOAD CSV (fast)
-# REQUIRES: Neo4j running (just neo4j-start), KGX files exist
-neo4j-upload:
+# Upload MediaDive KGX to Neo4j using custom loader
+# PROS: Custom labels (GrowthMedium, Strain, Ingredient, Solution)
+# CONS: List properties stored as pipe-delimited strings
+# REQUIRES: Neo4j running, MediaDive KGX files exist
+neo4j-upload-custom:
   uv run python -m cmm_ai_automation.scripts.neo4j_load
+
+# Upload MediaDive KGX to Neo4j using kgx neo4j-upload
+# PROS: Proper list handling (xref, synonym as arrays)
+# CONS: Generic Node labels only
+# REQUIRES: Neo4j running, MediaDive KGX files exist
+neo4j-upload-kgx:
+  #!/usr/bin/env bash
+  set -a; source .env; set +a
+  echo "Uploading MediaDive KGX to Neo4j via kgx..."
+  uv run kgx neo4j-upload \
+    -i tsv \
+    -l ${NEO4J_URI:-bolt://localhost:7687} \
+    -u ${NEO4J_USER:-neo4j} \
+    -p ${NEO4J_PASSWORD:-neo4j} \
+    output/kgx/mediadive_nodes.tsv output/kgx/mediadive_edges.tsv
+  echo "✓ Upload complete - browse at http://localhost:7474"
 
 # Check Neo4j status
 neo4j-status:
