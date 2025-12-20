@@ -1,648 +1,288 @@
 #!/usr/bin/env python3
 """Export MediaDive data to KGX format.
 
-Creates KGX-formatted files for MediaDive entities and relationships:
+Exports all MediaDive entities to KGX-formatted TSV files:
 
-Nodes:
+Nodes (all prefixed with mediadive.*):
+- mediadive.medium:{id} - Growth media (METPO:1004005)
+- mediadive.strain:{id} - Microbial strains (biolink:OrganismTaxon)
 - mediadive.ingredient:{id} - Chemical ingredients (biolink:ChemicalEntity)
 - mediadive.solution:{id} - Stock solutions (biolink:ChemicalMixture)
-- mediadive.medium:{id} - Growth media (METPO:1004005)
 
 Edges:
-- medium -[RO:0001019 contains]-> ingredient (with concentration)
-- medium -[RO:0001019 contains]-> solution (with volume)
-- solution -[RO:0001019 contains]-> ingredient (with concentration)
-- strain -[METPO:2000517 grows_in]-> medium (from medium_strains)
-- mediadive.ingredient -[biolink:same_as]-> CHEBI:* (where mapped)
+- strain -[METPO:2000517 grows_in]-> medium
+- medium -[RO:0001019 contains]-> ingredient (from medium_compositions - flattened)
+- solution -[RO:0001019 contains]-> ingredient (from solution_details)
 
-Uses KGX Transformer and Sink classes for proper serialization.
-Integrates with LinkML schema via aligned dataclass fields.
+Note: medium -> solution edges are intentionally omitted due to complex nested
+structure (up to 5 levels deep, 42% of solutions reference other solutions).
+The flattened medium_compositions provides accurate composition without the ~8%
+error rate from hierarchical reconstruction. See GitHub issue #111 for details.
 
-Usage:
-    uv run python -m cmm_ai_automation.scripts.export_mediadive_kgx
-    uv run python -m cmm_ai_automation.scripts.export_mediadive_kgx --format jsonl
-    uv run python -m cmm_ai_automation.scripts.export_mediadive_kgx --dry-run
+Uses KGX NxGraph for idiomatic graph construction and export.
 """
 
-from __future__ import annotations
-
 import logging
-from dataclasses import dataclass
 from pathlib import Path
-from typing import Any, Literal
 
 import click
-from kgx.sink import JsonlSink, TsvSink
+from kgx.graph.nx_graph import NxGraph
+from kgx.sink import TsvSink
 from kgx.transformer import Transformer
-
-from cmm_ai_automation.clients.mediadive_mongodb import (
-    MediaDiveMongoClient,
-    MediaDiveMongoIngredient,
-    MediaDiveMongoMedium,
-    MediaDiveMongoRecipeItem,
-    MediaDiveMongoSolution,
-    MediaDiveMongoStrainGrowth,
-)
+from pymongo import MongoClient
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-# Paths
+# Output paths
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 OUTPUT_DIR = PROJECT_ROOT / "output" / "kgx"
 
-# =============================================================================
-# Biolink/METPO categories and predicates
-# =============================================================================
-
-# Node categories (from Biolink Model and METPO)
-INGREDIENT_CATEGORY = "biolink:ChemicalEntity"
-INGREDIENT_CATEGORY_LABEL = "chemical entity"
-SOLUTION_CATEGORY = "biolink:ChemicalMixture"
-SOLUTION_CATEGORY_LABEL = "chemical mixture"
+# Categories
 MEDIUM_CATEGORY = "METPO:1004005"
-MEDIUM_CATEGORY_LABEL = "growth medium"
+STRAIN_CATEGORY = "biolink:OrganismTaxon"
+INGREDIENT_CATEGORY = "biolink:ChemicalEntity"
+SOLUTION_CATEGORY = "biolink:ChemicalMixture"
 
-# Edge predicates
-CONTAINS_PREDICATE = "RO:0001019"  # contains
-CONTAINS_LABEL = "contains"
-GROWS_IN_PREDICATE = "METPO:2000517"
-GROWS_IN_LABEL = "grows in medium"
-SAME_AS_PREDICATE = "biolink:same_as"
-SAME_AS_LABEL = "same as"
+# Predicates
+GROWS_IN = "METPO:2000517"
+CONTAINS = "RO:0001019"
 
-# Provenance metadata (Biolink enum values)
-KNOWLEDGE_LEVEL = "knowledge_assertion"
-AGENT_TYPE = "manual_agent"
+# Provenance
 PROVIDED_BY = "mediadive"
 
 
-# =============================================================================
-# KGX Node/Edge dataclasses
-# =============================================================================
-
-
-@dataclass
-class IngredientNode:
-    """KGX node for a MediaDive ingredient.
-
-    Aligns with LinkML Ingredient class.
-    """
-
-    id: str  # mediadive.ingredient:{id}
-    name: str
-    category: str = INGREDIENT_CATEGORY
-    category_label: str = INGREDIENT_CATEGORY_LABEL
-    # Chemical identifiers (xrefs)
-    chebi_id: str | None = None
-    pubchem_cid: int | None = None
-    cas_rn: str | None = None
-    kegg_id: str | None = None
-    # Properties
-    formula: str | None = None
-    mass: float | None = None
-    is_complex: bool = False
-
-    def to_kgx_node(self) -> dict[str, Any]:
-        """Convert to KGX node dict for use with KGX Sink.write_node()."""
-        node: dict[str, Any] = {
-            "id": self.id,
-            "category": [self.category],
-            "category_label": [self.category_label],
-            "name": self.name,
-            "provided_by": [PROVIDED_BY],
-        }
-        # Add xrefs as pipe-separated list
-        xrefs = []
-        if self.chebi_id:
-            xrefs.append(f"CHEBI:{self.chebi_id}")
-        if self.pubchem_cid:
-            xrefs.append(f"PUBCHEM.COMPOUND:{self.pubchem_cid}")
-        if self.cas_rn:
-            xrefs.append(f"CAS:{self.cas_rn}")
-        if self.kegg_id:
-            xrefs.append(f"KEGG.COMPOUND:{self.kegg_id}")
-        if xrefs:
-            node["xref"] = xrefs
-
-        if self.formula:
-            node["chemical_formula"] = self.formula
-        if self.mass:
-            node["molecular_mass"] = self.mass
-        if self.is_complex:
-            node["is_complex_mixture"] = True
-
-        return node
-
-
-@dataclass
-class SolutionNode:
-    """KGX node for a MediaDive solution.
-
-    Aligns with LinkML Solution class.
-    """
-
-    id: str  # mediadive.solution:{id}
-    name: str
-    category: str = SOLUTION_CATEGORY
-    category_label: str = SOLUTION_CATEGORY_LABEL
-    volume: float | None = None
-
-    def to_kgx_node(self) -> dict[str, Any]:
-        """Convert to KGX node dict."""
-        node: dict[str, Any] = {
-            "id": self.id,
-            "category": [self.category],
-            "category_label": [self.category_label],
-            "name": self.name,
-            "provided_by": [PROVIDED_BY],
-        }
-        if self.volume:
-            node["volume_ml"] = self.volume
-        return node
-
-
-@dataclass
-class MediumNode:
-    """KGX node for a MediaDive growth medium.
-
-    Aligns with LinkML GrowthMedium class.
-    """
-
-    id: str  # mediadive.medium:{id}
-    name: str
-    category: str = MEDIUM_CATEGORY
-    category_label: str = MEDIUM_CATEGORY_LABEL
-    # Properties from LinkML GrowthMedium
-    medium_type: str | None = None  # complex or defined
-    min_ph: float | None = None
-    max_ph: float | None = None
-    source: str | None = None
-    source_reference: str | None = None  # URL to source
-
-    def to_kgx_node(self) -> dict[str, Any]:
-        """Convert to KGX node dict."""
-        node: dict[str, Any] = {
-            "id": self.id,
-            "category": [self.category],
-            "category_label": [self.category_label],
-            "name": self.name,
-            "provided_by": [PROVIDED_BY],
-        }
-        if self.medium_type:
-            node["medium_type"] = self.medium_type
-        if self.min_ph is not None:
-            node["min_ph"] = self.min_ph
-        if self.max_ph is not None:
-            node["max_ph"] = self.max_ph
-        if self.source:
-            node["source"] = self.source
-        if self.source_reference:
-            node["source_reference"] = self.source_reference
-        return node
-
-
-@dataclass
-class CompositionEdge:
-    """Edge representing composition (contains) relationship.
-
-    Used for:
-    - medium contains ingredient
-    - medium contains solution
-    - solution contains ingredient
-    """
-
-    subject: str  # Medium or solution CURIE
-    object: str  # Ingredient or solution CURIE
-    predicate: str = CONTAINS_PREDICATE
-    predicate_label: str = CONTAINS_LABEL
-    # Edge properties (from LinkML IngredientComponent/SolutionComponent)
-    concentration_value: float | None = None
-    concentration_unit: str | None = None
-    optional: bool = False
-
-    def to_kgx_edge(self) -> dict[str, Any]:
-        """Convert to KGX edge dict."""
-        edge: dict[str, Any] = {
-            "subject": self.subject,
-            "predicate": self.predicate,
-            "relation_label": self.predicate_label,
-            "object": self.object,
-            "knowledge_level": KNOWLEDGE_LEVEL,
-            "agent_type": AGENT_TYPE,
-        }
-        if self.concentration_value is not None and self.concentration_unit:
-            edge["concentration"] = f"{self.concentration_value} {self.concentration_unit}"
-        if self.optional:
-            edge["optional"] = True
-        return edge
-
-
-@dataclass
-class GrowthEdge:
-    """Edge representing strain grows in medium.
-
-    Aligns with LinkML GrowthPreference class.
-    """
-
-    subject: str  # Strain CURIE (bacdive.strain:*)
-    object: str  # Medium CURIE (mediadive.medium:*)
-    predicate: str = GROWS_IN_PREDICATE
-    predicate_label: str = GROWS_IN_LABEL
-    # Strain metadata for provenance
-    species: str | None = None
-    ccno: str | None = None  # Culture collection number
-
-    def to_kgx_edge(self) -> dict[str, Any]:
-        """Convert to KGX edge dict."""
-        edge: dict[str, Any] = {
-            "subject": self.subject,
-            "predicate": self.predicate,
-            "relation_label": self.predicate_label,
-            "object": self.object,
-            "knowledge_level": KNOWLEDGE_LEVEL,
-            "agent_type": AGENT_TYPE,
-        }
-        if self.species:
-            edge["species"] = self.species
-        if self.ccno:
-            edge["culture_collection_id"] = self.ccno
-        return edge
-
-
-@dataclass
-class SameAsEdge:
-    """Edge representing identity mapping between databases.
-
-    Used to link MediaDive ingredients to ChEBI/PubChem.
-    """
-
-    subject: str  # mediadive.ingredient:*
-    object: str  # CHEBI:* or PUBCHEM.COMPOUND:*
-    predicate: str = SAME_AS_PREDICATE
-    predicate_label: str = SAME_AS_LABEL
-
-    def to_kgx_edge(self) -> dict[str, Any]:
-        """Convert to KGX edge dict."""
-        return {
-            "subject": self.subject,
-            "predicate": self.predicate,
-            "relation_label": self.predicate_label,
-            "object": self.object,
-            "knowledge_level": KNOWLEDGE_LEVEL,
-            "agent_type": AGENT_TYPE,
-        }
-
-
-# =============================================================================
-# Export result containers
-# =============================================================================
-
-
-@dataclass
-class ExportResult:
-    """Container for export statistics."""
-
-    ingredient_nodes: int = 0
-    solution_nodes: int = 0
-    medium_nodes: int = 0
-    composition_edges: int = 0
-    growth_edges: int = 0
-    same_as_edges: int = 0
-
-    def total_nodes(self) -> int:
-        return self.ingredient_nodes + self.solution_nodes + self.medium_nodes
-
-    def total_edges(self) -> int:
-        return self.composition_edges + self.growth_edges + self.same_as_edges
-
-
-# =============================================================================
-# Conversion functions
-# =============================================================================
-
-
-def ingredient_to_node(ingredient: MediaDiveMongoIngredient) -> IngredientNode:
-    """Convert MediaDive ingredient to KGX node."""
-    return IngredientNode(
-        id=f"mediadive.ingredient:{ingredient.id}",
-        name=ingredient.name,
-        chebi_id=str(ingredient.chebi) if ingredient.chebi else None,
-        pubchem_cid=ingredient.pubchem,
-        cas_rn=ingredient.cas_rn,
-        kegg_id=ingredient.kegg,
-        formula=ingredient.formula,
-        mass=ingredient.mass,
-        is_complex=ingredient.is_complex,
-    )
-
-
-def solution_to_node(solution: MediaDiveMongoSolution) -> SolutionNode:
-    """Convert MediaDive solution to KGX node."""
-    return SolutionNode(
-        id=f"mediadive.solution:{solution.id}",
-        name=solution.name,
-        volume=solution.volume,
-    )
-
-
-def medium_to_node(medium: MediaDiveMongoMedium) -> MediumNode:
-    """Convert MediaDive medium to KGX node."""
-    medium_type = "complex" if medium.complex_medium else "defined"
-
-    return MediumNode(
-        id=f"mediadive.medium:{medium.id}",
-        name=medium.name,
-        medium_type=medium_type,
-        min_ph=medium.min_ph,
-        max_ph=medium.max_ph,
-        source=medium.source,
-        source_reference=medium.link,
-    )
-
-
-def recipe_item_to_edge(
-    parent_curie: str,
-    item: MediaDiveMongoRecipeItem,
-) -> CompositionEdge | None:
-    """Convert recipe item to composition edge.
-
-    Args:
-        parent_curie: CURIE of the containing medium or solution
-        item: Recipe item data
-
-    Returns:
-        CompositionEdge or None if no valid target
-    """
-    # Determine the object (ingredient or solution)
-    if item.solution_id:
-        object_curie = f"mediadive.solution:{item.solution_id}"
-    elif item.compound_id:
-        object_curie = f"mediadive.ingredient:{item.compound_id}"
-    else:
-        # No valid target ID
-        return None
-
-    # Determine concentration
-    concentration_value = item.g_l or item.mmol_l or item.amount
-    concentration_unit = None
-    if item.g_l:
-        concentration_unit = "g/L"
-    elif item.mmol_l:
-        concentration_unit = "mmol/L"
-    elif item.amount and item.unit:
-        concentration_unit = item.unit
-
-    return CompositionEdge(
-        subject=parent_curie,
-        object=object_curie,
-        concentration_value=concentration_value,
-        concentration_unit=concentration_unit,
-        optional=item.optional,
-    )
-
-
-def strain_growth_to_edge(
-    medium_id: int,
-    strain: MediaDiveMongoStrainGrowth,
-) -> GrowthEdge | None:
-    """Convert strain growth record to grows_in edge.
-
-    Args:
-        medium_id: MediaDive medium ID
-        strain: Strain growth data
-
-    Returns:
-        GrowthEdge or None if strain doesn't grow or no BacDive ID
-    """
-    # Only create edge if strain grows and has BacDive ID
-    if not strain.growth:
-        return None
-    if not strain.bacdive_id:
-        return None
-
-    return GrowthEdge(
-        subject=f"bacdive.strain:{strain.bacdive_id}",
-        object=f"mediadive.medium:{medium_id}",
-        species=strain.species,
-        ccno=strain.ccno,
-    )
-
-
-def ingredient_to_same_as_edges(ingredient: MediaDiveMongoIngredient) -> list[SameAsEdge]:
-    """Create same_as edges for ingredient xrefs.
-
-    Args:
-        ingredient: MediaDive ingredient with potential xrefs
-
-    Returns:
-        List of SameAsEdge objects
-    """
-    edges = []
-    subject = f"mediadive.ingredient:{ingredient.id}"
-
-    # ChEBI is highest priority for chemical identity
-    if ingredient.chebi:
-        edges.append(SameAsEdge(subject=subject, object=f"CHEBI:{ingredient.chebi}"))
-
-    # PubChem as secondary
-    if ingredient.pubchem:
-        edges.append(SameAsEdge(subject=subject, object=f"PUBCHEM.COMPOUND:{ingredient.pubchem}"))
-
-    return edges
-
-
-# =============================================================================
-# Main export functions
-# =============================================================================
-
-
-def export_all(
-    client: MediaDiveMongoClient,
-    output_path: Path,
-    output_format: Literal["tsv", "jsonl"] = "tsv",
-    include_same_as: bool = True,
-) -> ExportResult:
+def export_mediadive(mongodb_uri: str, output_path: Path) -> dict:
     """Export all MediaDive data to KGX format.
 
     Args:
-        client: MediaDive MongoDB client
+        mongodb_uri: MongoDB connection URI
         output_path: Base path for output files
-        output_format: Output format (tsv or jsonl)
-        include_same_as: Whether to include same_as edges for xrefs
 
     Returns:
-        ExportResult with counts
+        Dict with counts of nodes and edges by type
     """
-    result = ExportResult()
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    client = MongoClient(mongodb_uri)
+    db = client["mediadive"]
 
-    # Create KGX transformer and sink
-    transformer = Transformer()
+    # Create KGX graph
+    graph = NxGraph()
 
-    node_props = {
-        "id",
-        "category",
-        "category_label",
-        "name",
-        "provided_by",
-        "xref",
-        "chemical_formula",
-        "molecular_mass",
-        "is_complex_mixture",
-        "volume_ml",
-        "medium_type",
-        "min_ph",
-        "max_ph",
-        "source",
-        "source_reference",
+    counts = {
+        "media": 0,
+        "strains": 0,
+        "ingredients": 0,
+        "solutions": 0,
+        "grows_in_edges": 0,
+        "contains_edges": 0,
     }
-    edge_props = {
-        "subject",
-        "predicate",
-        "relation_label",
-        "object",
-        "knowledge_level",
-        "agent_type",
-        "concentration",
-        "optional",
-        "species",
-        "culture_collection_id",
-    }
-
-    if output_format == "jsonl":
-        sink = JsonlSink(owner=transformer, filename=str(output_path))
-    else:
-        sink = TsvSink(
-            owner=transformer,
-            filename=str(output_path),
-            format="tsv",
-            node_properties=node_props,
-            edge_properties=edge_props,
-        )
-
-    # --- Export Ingredients ---
-    logger.info("Exporting ingredients...")
-    ingredients = client.get_all_ingredients()
-    ingredient_ids: set[int] = set()
-
-    for ing in ingredients:
-        ing_node = ingredient_to_node(ing)
-        sink.write_node(ing_node.to_kgx_node())
-        result.ingredient_nodes += 1
-        ingredient_ids.add(ing.id)
-
-        # Same-as edges for xrefs
-        if include_same_as:
-            for same_as_edge in ingredient_to_same_as_edges(ing):
-                sink.write_edge(same_as_edge.to_kgx_edge())
-                result.same_as_edges += 1
-
-    logger.info(f"  Exported {result.ingredient_nodes} ingredient nodes")
-    logger.info(f"  Created {result.same_as_edges} same_as edges")
-
-    # --- Export Solutions ---
-    logger.info("Exporting solutions...")
-    solutions = client.get_all_solution_details()
-    solution_ids: set[int] = set()
-
-    for sol in solutions:
-        sol_node = solution_to_node(sol)
-        sink.write_node(sol_node.to_kgx_node())
-        result.solution_nodes += 1
-        solution_ids.add(sol.id)
-
-        # Composition edges for solution ingredients
-        for item_data in sol.recipe:
-            item = client._parse_recipe_item(item_data)
-            comp_edge = recipe_item_to_edge(f"mediadive.solution:{sol.id}", item)
-            if comp_edge:
-                sink.write_edge(comp_edge.to_kgx_edge())
-                result.composition_edges += 1
-
-    logger.info(f"  Exported {result.solution_nodes} solution nodes")
 
     # --- Export Media ---
     logger.info("Exporting media...")
-    media = client.get_all_media()
+    for doc in db.media_details.find():
+        medium = doc.get("medium", {})
+        node_id = f"mediadive.medium:{doc['_id']}"
+        graph.add_node(
+            node_id,
+            name=medium.get("name"),
+            category=[MEDIUM_CATEGORY],
+            provided_by=[PROVIDED_BY],
+            medium_type="complex" if medium.get("complex_medium") else "defined",
+            min_ph=medium.get("min_pH"),
+            max_ph=medium.get("max_pH"),
+            source=medium.get("source"),
+            source_reference=medium.get("link"),
+            reference=medium.get("reference"),
+        )
+        counts["media"] += 1
 
-    for med in media:
-        med_node = medium_to_node(med)
-        sink.write_node(med_node.to_kgx_node())
-        result.medium_nodes += 1
+    logger.info(f"  Exported {counts['media']} media")
 
-    logger.info(f"  Exported {result.medium_nodes} medium nodes")
+    # --- Export Strains and Growth Edges ---
+    logger.info("Exporting strains...")
+    for doc in db.strains.find():
+        strain_id = f"mediadive.strain:{doc['id']}"
 
-    # --- Export Strain-Medium Growth Relationships ---
-    logger.info("Exporting strain-medium growth edges...")
-    medium_strain_data = client.get_all_medium_strain_relationships()
+        # Add strain node
+        graph.add_node(
+            strain_id,
+            name=doc.get("species"),
+            category=[STRAIN_CATEGORY],
+            provided_by=[PROVIDED_BY],
+            culture_collection_id=doc.get("ccno"),
+        )
+        counts["strains"] += 1
 
-    for medium_id, strains in medium_strain_data:
-        for strain in strains:
-            growth_edge = strain_growth_to_edge(medium_id, strain)
-            if growth_edge:
-                sink.write_edge(growth_edge.to_kgx_edge())
-                result.growth_edges += 1
+        # Add growth edges for each medium this strain grows on
+        for growth in doc.get("media", []):
+            medium_id = growth.get("medium_id")
+            if medium_id and growth.get("growth"):
+                # medium_id can be int or string like "J22"
+                medium_curie = f"mediadive.medium:{medium_id}"
+                edge_key = f"{strain_id}-grows_in-{medium_curie}"
+                graph.add_edge(
+                    strain_id,
+                    medium_curie,
+                    edge_key,
+                    predicate=GROWS_IN,
+                    relation_label="grows in medium",
+                    knowledge_level="knowledge_assertion",
+                    agent_type="manual_agent",
+                )
+                counts["grows_in_edges"] += 1
 
-    logger.info(f"  Created {result.growth_edges} grows_in edges")
-    logger.info(f"  Created {result.composition_edges} composition edges")
+    logger.info(f"  Exported {counts['strains']} strains")
+    logger.info(f"  Created {counts['grows_in_edges']} grows_in edges")
 
-    # Finalize
+    # --- Export Ingredients ---
+    logger.info("Exporting ingredients...")
+    for doc in db.ingredient_details.find():
+        node_id = f"mediadive.ingredient:{doc['id']}"
+
+        # Build xrefs list
+        xrefs = []
+        if doc.get("ChEBI"):
+            xrefs.append(f"CHEBI:{doc['ChEBI']}")
+        if doc.get("PubChem"):
+            xrefs.append(f"PUBCHEM.COMPOUND:{doc['PubChem']}")
+        if doc.get("CAS-RN"):
+            xrefs.append(f"CAS:{doc['CAS-RN']}")
+        if doc.get("KEGG-Compound"):
+            xrefs.append(f"KEGG.COMPOUND:{doc['KEGG-Compound']}")
+
+        graph.add_node(
+            node_id,
+            name=doc.get("name"),
+            category=[INGREDIENT_CATEGORY],
+            provided_by=[PROVIDED_BY],
+            xref=xrefs if xrefs else None,
+            chemical_formula=doc.get("formula"),
+            molecular_mass=doc.get("mass"),
+            is_complex_mixture=doc.get("complex_compound", False),
+        )
+        counts["ingredients"] += 1
+
+    logger.info(f"  Exported {counts['ingredients']} ingredients")
+
+    # --- Export Solutions and their composition ---
+    logger.info("Exporting solutions...")
+    for doc in db.solution_details.find():
+        solution_id = f"mediadive.solution:{doc['id']}"
+
+        graph.add_node(
+            solution_id,
+            name=doc.get("name"),
+            category=[SOLUTION_CATEGORY],
+            provided_by=[PROVIDED_BY],
+            volume_ml=doc.get("volume"),
+        )
+        counts["solutions"] += 1
+
+        # Add composition edges for solution ingredients
+        for item in doc.get("recipe", []):
+            ingredient_id = item.get("id")
+            if ingredient_id:
+                ingredient_curie = f"mediadive.ingredient:{ingredient_id}"
+                edge_key = f"{solution_id}-contains-{ingredient_curie}"
+
+                # Build concentration string
+                concentration = None
+                if item.get("g_l"):
+                    concentration = f"{item['g_l']} g/L"
+                elif item.get("mmol_l"):
+                    concentration = f"{item['mmol_l']} mmol/L"
+
+                graph.add_edge(
+                    solution_id,
+                    ingredient_curie,
+                    edge_key,
+                    predicate=CONTAINS,
+                    relation_label="contains",
+                    knowledge_level="knowledge_assertion",
+                    agent_type="manual_agent",
+                    concentration=concentration,
+                    optional=bool(item.get("optional")),
+                )
+                counts["contains_edges"] += 1
+
+    logger.info(f"  Exported {counts['solutions']} solutions")
+
+    # --- Export Medium Compositions ---
+    logger.info("Exporting medium compositions...")
+    for doc in db.medium_compositions.find():
+        medium_id = doc["_id"]
+        medium_curie = f"mediadive.medium:{medium_id}"
+
+        for item in doc.get("data", []):
+            ingredient_id = item.get("id")
+            if ingredient_id:
+                ingredient_curie = f"mediadive.ingredient:{ingredient_id}"
+                edge_key = f"{medium_curie}-contains-{ingredient_curie}"
+
+                concentration = None
+                if item.get("g_l"):
+                    concentration = f"{item['g_l']} g/L"
+                elif item.get("mmol_l"):
+                    concentration = f"{item['mmol_l']} mmol/L"
+
+                graph.add_edge(
+                    medium_curie,
+                    ingredient_curie,
+                    edge_key,
+                    predicate=CONTAINS,
+                    relation_label="contains",
+                    knowledge_level="knowledge_assertion",
+                    agent_type="manual_agent",
+                    concentration=concentration,
+                    optional=bool(item.get("optional")),
+                )
+                counts["contains_edges"] += 1
+
+    logger.info(f"  Total contains edges: {counts['contains_edges']}")
+
+    client.close()
+
+    # Write to TSV using KGX sink
+    logger.info(f"Writing to {output_path}...")
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+
+    # Collect all property names from the graph
+    node_properties = set()
+    for _, node_data in graph.nodes():
+        node_properties.update(node_data.keys())
+    node_properties.add("id")  # Always include id
+
+    edge_properties = set()
+    for _, _, edge_data in graph.edges():
+        edge_properties.update(edge_data.keys())
+    edge_properties.update(["subject", "object"])  # Always include subject/object
+
+    transformer = Transformer()
+    sink = TsvSink(
+        owner=transformer,
+        filename=str(output_path),
+        format="tsv",
+        node_properties=list(node_properties),
+        edge_properties=list(edge_properties),
+    )
+
+    # Write all nodes
+    for node_id, node_data in graph.nodes():
+        # Clean up None values
+        clean_data = {k: v for k, v in node_data.items() if v is not None}
+        clean_data["id"] = node_id
+        sink.write_node(clean_data)
+
+    # Write all edges
+    for subject, obj, edge_data in graph.edges():
+        clean_data = {k: v for k, v in edge_data.items() if v is not None}
+        clean_data["subject"] = subject
+        clean_data["object"] = obj
+        sink.write_edge(clean_data)
+
     sink.finalize()
 
-    return result
-
-
-def dry_run_export(client: MediaDiveMongoClient) -> ExportResult:
-    """Perform a dry run to gather statistics without writing files.
-
-    Args:
-        client: MediaDive MongoDB client
-
-    Returns:
-        ExportResult with counts
-    """
-    result = ExportResult()
-
-    # Count ingredients
-    ingredients = client.get_all_ingredients()
-    result.ingredient_nodes = len(ingredients)
-
-    same_as_count = 0
-    for ing in ingredients:
-        if ing.chebi:
-            same_as_count += 1
-        if ing.pubchem:
-            same_as_count += 1
-    result.same_as_edges = same_as_count
-
-    # Count solutions
-    solutions = client.get_all_solution_details()
-    result.solution_nodes = len(solutions)
-
-    # Count composition edges from solutions
-    for sol in solutions:
-        for item in sol.recipe:
-            if item.get("compound_id") or item.get("solution_id"):
-                result.composition_edges += 1
-
-    # Count media
-    media = client.get_all_media()
-    result.medium_nodes = len(media)
-
-    # Count growth edges
-    medium_strains = client.get_all_medium_strain_relationships()
-    for _medium_id, strains in medium_strains:
-        for strain in strains:
-            if strain.growth and strain.bacdive_id:
-                result.growth_edges += 1
-
-    return result
-
-
-# =============================================================================
-# CLI
-# =============================================================================
+    return counts
 
 
 @click.command()
@@ -651,125 +291,36 @@ def dry_run_export(client: MediaDiveMongoClient) -> ExportResult:
     "-o",
     type=click.Path(path_type=Path),
     default=OUTPUT_DIR / "mediadive",
-    help="Output base path (KGX creates _nodes and _edges files)",
-)
-@click.option(
-    "--format",
-    "-f",
-    "output_format",
-    type=click.Choice(["tsv", "jsonl"]),
-    default="tsv",
-    help="Output format",
-)
-@click.option(
-    "--no-same-as",
-    is_flag=True,
-    help="Skip same_as edges for ingredient xrefs",
-)
-@click.option(
-    "--dry-run",
-    is_flag=True,
-    help="Parse data and show statistics without writing files",
+    help="Output base path",
 )
 @click.option(
     "--mongodb-uri",
     default="mongodb://localhost:27017",
     help="MongoDB connection URI",
 )
-@click.option(
-    "--verbose",
-    "-v",
-    is_flag=True,
-    help="Enable verbose logging",
-)
-def main(
-    output: Path,
-    output_format: Literal["tsv", "jsonl"],
-    no_same_as: bool,
-    dry_run: bool,
-    mongodb_uri: str,
-    verbose: bool,
-) -> None:
-    """Export MediaDive data to KGX format.
-
-    Exports ingredients, solutions, and media as nodes, with composition
-    and growth relationship edges.
-
-    Requires MediaDive data loaded in MongoDB (run load_mediadive_mongodb.py first).
-    """
-    if verbose:
-        logging.getLogger().setLevel(logging.DEBUG)
-
+def main(output: Path, mongodb_uri: str) -> None:
+    """Export MediaDive data to KGX format."""
     click.echo("=" * 60)
     click.echo("Export MediaDive to KGX")
     click.echo("=" * 60)
-    click.echo()
 
-    # Connect to MongoDB
-    client = MediaDiveMongoClient(mongodb_uri=mongodb_uri)
-
-    # Check data availability
-    ingredient_count = client.get_ingredient_count()
-    solution_count = client.get_solution_count()
-    medium_count = client.get_medium_count()
-
-    click.echo("MongoDB data:")
-    click.echo(f"  Ingredients: {ingredient_count}")
-    click.echo(f"  Solutions:   {solution_count}")
-    click.echo(f"  Media:       {medium_count}")
-    click.echo()
-
-    if ingredient_count == 0 and solution_count == 0 and medium_count == 0:
-        click.echo("ERROR: No data found in MongoDB. Run load_mediadive_mongodb.py first.", err=True)
-        client.close()
-        raise click.Abort()
-
-    if dry_run:
-        click.echo("Performing dry run...")
-        result = dry_run_export(client)
-    else:
-        click.echo(f"Exporting to {output}...")
-        result = export_all(
-            client,
-            output,
-            output_format,
-            include_same_as=not no_same_as,
-        )
-
-    client.close()
-
-    # Summary
-    click.echo()
-    click.echo("=" * 60)
-    click.echo("Summary")
-    click.echo("=" * 60)
-    click.echo()
-    click.echo("Nodes:")
-    click.echo(f"  Ingredients:   {result.ingredient_nodes} (mediadive.ingredient:*)")
-    click.echo(f"  Solutions:     {result.solution_nodes} (mediadive.solution:*)")
-    click.echo(f"  Media:         {result.medium_nodes} (mediadive.medium:*)")
-    click.echo(f"  Total:         {result.total_nodes()}")
-    click.echo()
-    click.echo("Edges:")
-    click.echo(f"  Composition:   {result.composition_edges} (RO:0001019 contains)")
-    click.echo(f"  Growth:        {result.growth_edges} (METPO:2000517 grows_in)")
-    click.echo(f"  Same-as:       {result.same_as_edges} (biolink:same_as)")
-    click.echo(f"  Total:         {result.total_edges()}")
-    click.echo()
-
-    if dry_run:
-        click.echo("[DRY RUN] No files written.")
-    else:
-        ext = "jsonl" if output_format == "jsonl" else "tsv"
-        click.echo("Output files:")
-        click.echo(f"  {output}_nodes.{ext}")
-        click.echo(f"  {output}_edges.{ext}")
-        click.echo()
-        click.echo("To validate:")
-        click.echo(f"  kgx validate {output}_nodes.{ext} {output}_edges.{ext}")
+    counts = export_mediadive(mongodb_uri, output)
 
     click.echo()
-    click.echo("Done!")
+    click.echo("Summary:")
+    click.echo(f"  Media:       {counts['media']:,}")
+    click.echo(f"  Strains:     {counts['strains']:,}")
+    click.echo(f"  Ingredients: {counts['ingredients']:,}")
+    click.echo(f"  Solutions:   {counts['solutions']:,}")
+    click.echo(
+        f"  Total nodes: {sum([counts['media'], counts['strains'], counts['ingredients'], counts['solutions']]):,}"
+    )
+    click.echo()
+    click.echo(f"  grows_in edges:  {counts['grows_in_edges']:,}")
+    click.echo(f"  contains edges:  {counts['contains_edges']:,}")
+    click.echo(f"  Total edges:     {counts['grows_in_edges'] + counts['contains_edges']:,}")
+    click.echo()
+    click.echo(f"Output: {output}_nodes.tsv, {output}_edges.tsv")
 
 
 if __name__ == "__main__":

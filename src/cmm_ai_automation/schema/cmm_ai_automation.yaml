@@ -554,7 +554,12 @@ slots:
     range: SolutionComponent
     multivalued: true
     inlined_as_list: true
-    description: Solutions contained in this medium
+    description: >-
+      Solutions contained in this medium.
+      Note: Not populated for MediaDive data due to complex nested structure
+      (up to 5 levels deep, 42% of solutions reference other solutions).
+      MediaDive composition uses has_ingredient_component with flattened
+      ingredients from medium_compositions instead. See GitHub issue #111.
 
   ingredient:
     range: Ingredient
