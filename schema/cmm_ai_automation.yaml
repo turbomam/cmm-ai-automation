@@ -106,6 +106,12 @@ prefixes:
   mediadive.medium:
     prefix_prefix: mediadive.medium
     prefix_reference: https://mediadive.dsmz.de/medium/
+  mediadive.solution:
+    prefix_prefix: mediadive.solution
+    prefix_reference: https://mediadive.dsmz.de/solution/
+  mediadive.ingredient:
+    prefix_prefix: mediadive.ingredient
+    prefix_reference: https://mediadive.dsmz.de/ingredient/
   togomedium:
     prefix_prefix: togomedium
     prefix_reference: http://togomedium.org/medium/
@@ -876,7 +882,11 @@ slots:
   has_solution_component:
     name: has_solution_component
     definition_uri: https://w3id.org/turbomam/cmm-ai-automation/has_solution_component
-    description: Solutions contained in this medium
+    description: 'Solutions contained in this medium. Note: Not populated for MediaDive
+      data due to complex nested structure (up to 5 levels deep, 42% of solutions
+      reference other solutions). MediaDive composition uses has_ingredient_component
+      with flattened ingredients from medium_compositions instead. See GitHub issue
+      #111.'
     from_schema: https://w3id.org/turbomam/cmm-ai-automation
     slot_uri: cmm:has_solution_component
     owner: GrowthMedium
@@ -2506,7 +2516,7 @@ classes:
     tree_root: true
 metamodel_version: 1.7.0
 source_file: cmm_ai_automation.yaml
-source_file_date: '2026-01-05T14:50:54'
-source_file_size: 37565
-generation_date: '2026-01-05T14:51:06'
+source_file_date: '2026-01-05T15:09:16'
+source_file_size: 37993
+generation_date: '2026-01-05T15:12:16'
 
