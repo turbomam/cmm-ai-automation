@@ -13,8 +13,11 @@ from pathlib import Path
 
 CURIE_PATTERN = re.compile(r"^([^:]+):(.+)$")
 
+# Type alias for edge patterns
+EdgePattern = tuple[str, str, str, str, str, str]
 
-def extract_prefix(curie: str) -> str:
+
+def extract_prefix(curie: str | None) -> str:
     """Extract prefix from CURIE."""
     if not curie:
         return "(empty)"
@@ -24,11 +27,10 @@ def extract_prefix(curie: str) -> str:
     return "(invalid)"
 
 
-def analyze_edges(edges_file: Path, nodes_file: Path, source: str) -> list:
+def analyze_edges(edges_file: Path, nodes_file: Path, source: str) -> Counter[EdgePattern]:
     """Analyze edges and return patterns."""
-
     # Build node category lookup
-    node_categories = {}
+    node_categories: dict[str, str] = {}
     with nodes_file.open() as f:
         reader = csv.DictReader(f, delimiter="\t")
         for row in reader:
@@ -38,7 +40,7 @@ def analyze_edges(edges_file: Path, nodes_file: Path, source: str) -> list:
                 node_categories[node_id] = category if category else "(empty)"
 
     # Extract patterns from edges
-    patterns = Counter()
+    patterns: Counter[EdgePattern] = Counter()
     with edges_file.open() as f:
         reader = csv.DictReader(f, delimiter="\t")
         for row in reader:
@@ -58,14 +60,14 @@ def analyze_edges(edges_file: Path, nodes_file: Path, source: str) -> list:
     return patterns
 
 
-def main():
+def main() -> None:
     """Main function to analyze all sources."""
     if len(sys.argv) < 2:
         print("Usage: python extract_edge_patterns.py <transformed_data_dir>", file=sys.stderr)
         sys.exit(1)
 
     transformed_dir = Path(sys.argv[1])
-    all_patterns = Counter()
+    all_patterns: Counter[EdgePattern] = Counter()
 
     # Find all source directories
     for source_dir in transformed_dir.iterdir():

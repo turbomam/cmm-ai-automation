@@ -27,7 +27,7 @@ PREDICATE_TO_TYPE = {
 }
 
 
-def category_to_label(category: str) -> str:
+def category_to_label(category: str | None) -> str:
     """Convert biolink/ontology category to Neo4j label."""
     if not category or not category.strip():
         return "Unknown"
