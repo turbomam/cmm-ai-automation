@@ -15,8 +15,11 @@ from pathlib import Path
 
 CURIE_PATTERN = re.compile(r"^([^:]+):(.+)$")
 
+# Type alias for edge patterns
+EdgePattern = tuple[str, str, str, str, str, str]
 
-def extract_prefix(curie: str) -> str:
+
+def extract_prefix(curie: str | None) -> str:
     """Extract prefix from CURIE."""
     if not curie:
         return "(empty)"
@@ -40,9 +43,9 @@ def load_node_categories(nodes_files: list[Path]) -> dict:
     return node_categories
 
 
-def analyze_edges(edges_file: Path, node_categories: dict, source: str) -> Counter:
+def analyze_edges(edges_file: Path, node_categories: dict[str, str], source: str) -> Counter[EdgePattern]:
     """Analyze edges and return patterns."""
-    patterns = Counter()
+    patterns: Counter[EdgePattern] = Counter()
     with edges_file.open() as f:
         reader = csv.DictReader(f, delimiter="\t")
         for row in reader:
@@ -62,7 +65,7 @@ def analyze_edges(edges_file: Path, node_categories: dict, source: str) -> Count
     return patterns
 
 
-def main():
+def main() -> None:
     """Main function to analyze KGX files."""
     if len(sys.argv) < 2:
         print("Usage: python analyze_kgx_patterns.py <kgx_dir>", file=sys.stderr)
@@ -89,7 +92,7 @@ def main():
     node_categories = load_node_categories(nodes_files)
 
     # Analyze all edge files
-    all_patterns = Counter()
+    all_patterns: Counter[EdgePattern] = Counter()
     for edges_file in edges_files:
         source = edges_file.stem.replace("_edges", "")
         patterns = analyze_edges(edges_file, node_categories, source)

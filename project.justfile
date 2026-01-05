@@ -79,8 +79,22 @@ enrich-ingredients input output:
 enrich-ingredients-with-cas input output:
   uv run enrich-ingredients --input {{input}} --output {{output}}
 
-# Load MediaDive data (media, solutions, ingredients) into MongoDB
+# Backup MediaDive MongoDB to data/mongodb_backups/{date}/
+# SAFE: read-only, creates timestamped backup
+mediadive-backup:
+  mongodump --db mediadive --out data/mongodb_backups/$(date +%Y%m%d)
+  @echo "✓ Backup saved to data/mongodb_backups/$(date +%Y%m%d)/mediadive/"
+
+# Restore MediaDive MongoDB from a backup
+# DESTRUCTIVE: drops and recreates all collections
+# Usage: just mediadive-restore 20251219
+mediadive-restore date:
+  mongorestore --db mediadive --drop data/mongodb_backups/{{date}}/mediadive/
+  @echo "✓ Restored from data/mongodb_backups/{{date}}/mediadive/"
+
+# Load MediaDive base data (media, solutions, ingredients) into MongoDB
 # REQUIRES: MongoDB running on localhost:27017, NETWORK: yes, DESTRUCTIVE: drops/recreates collections
+# TIME: ~10 seconds (3 bulk API calls)
 load-mediadive:
   uv run python -m cmm_ai_automation.scripts.load_mediadive_mongodb
 
@@ -89,10 +103,40 @@ load-mediadive:
 load-bacdive:
   uv run python -m cmm_ai_automation.scripts.load_bacdive_mongodb
 
-# Fetch detailed MediaDive data into MongoDB
-# REQUIRES: MongoDB with mediadive.media collection, NETWORK: yes, EXPENSIVE: fetches details for all media
+# Fetch detailed MediaDive data into MongoDB (media, solutions, ingredients, strains)
+# REQUIRES: MongoDB with mediadive.media collection, NETWORK: yes, DESTRUCTIVE: drops/recreates detail collections
+# TIME: 3-4+ hours (~64,000 API calls; 0.1s rate limit + API latency)
 load-mediadive-details:
   uv run python -m cmm_ai_automation.scripts.load_mediadive_details
+
+# Merge reference field from media into media_details.medium.reference
+# REQUIRES: Both media and media_details collections populated
+# Run this before dropping the media collection
+mediadive-merge-references:
+  mongosh mediadive --eval 'let n=0; db.media.find({reference: {$ne: null}}).forEach(doc => { if(db.media_details.updateOne({_id: doc.id}, {$set: {"medium.reference": doc.reference}}).modifiedCount) n++; }); print("Merged", n, "references")'
+
+# Merge bacdive_id from medium_strains into strains collection
+# REQUIRES: Both medium_strains and strains collections populated
+# Run this before dropping medium_strains
+mediadive-merge-bacdive-ids:
+  mongosh mediadive --eval 'const m = {}; db.medium_strains.find().forEach(doc => doc.strains.forEach(s => { if (s.bacdive_id) m[s.id] = s.bacdive_id; })); let u = 0; Object.entries(m).forEach(([id, bid]) => { if (db.strains.updateOne({_id: parseInt(id)}, {$set: {bacdive_id: bid}}).modifiedCount) u++; }); print("Merged", u, "bacdive_ids into strains")'
+
+# Drop redundant MediaDive collections (ingredients, media, solutions, medium_strains)
+# Runs merge targets first to preserve unique data
+mediadive-drop-redundant: mediadive-merge-references mediadive-merge-bacdive-ids
+  mongosh mediadive --eval 'db.ingredients.drop(); db.solutions.drop(); db.media.drop(); db.medium_strains.drop(); print("Dropped: ingredients, solutions, media, medium_strains")'
+
+# Export MediaDive data to KGX format
+# REQUIRES: MediaDive MongoDB populated, WRITES: output/kgx/mediadive_nodes.tsv, output/kgx/mediadive_edges.tsv
+mediadive-kgx-export:
+  uv run python -m cmm_ai_automation.scripts.export_mediadive_kgx
+  @echo "✓ Exported MediaDive to KGX"
+
+# Clean and re-export MediaDive KGX files
+mediadive-kgx-clean-export:
+  rm -f output/kgx/mediadive_nodes.tsv output/kgx/mediadive_edges.tsv
+  uv run python -m cmm_ai_automation.scripts.export_mediadive_kgx
+  @echo "✓ Cleaned and re-exported MediaDive to KGX"
 
 # Build NCBITaxon ChromaDB for semantic search
 # REQUIRES: NCBITaxon OWL file, OpenAI API key, EXPENSIVE: OpenAI embeddings, WRITES: ChromaDB
@@ -259,20 +303,32 @@ neo4j-clean: neo4j-stop
   docker volume rm cmm-neo4j-data || true
   @echo "✓ Neo4j data volume removed"
 
-# Upload KGX files to local Neo4j
-# REQUIRES: Neo4j running (just neo4j-start), KGX files exist
-neo4j-upload:
+# Clear Neo4j database
+# REQUIRES: Neo4j running
+neo4j-clear:
+  uv run python -m cmm_ai_automation.scripts.neo4j_clear
+
+# Upload MediaDive KGX to Neo4j using custom loader
+# PROS: Custom labels (GrowthMedium, Strain, Ingredient, Solution)
+# CONS: List properties stored as pipe-delimited strings
+# REQUIRES: Neo4j running, MediaDive KGX files exist
+neo4j-upload-custom:
+  uv run python -m cmm_ai_automation.scripts.neo4j_load
+
+# Upload MediaDive KGX to Neo4j using kgx neo4j-upload
+# PROS: Proper list handling (xref, synonym as arrays)
+# CONS: Generic Node labels only
+# REQUIRES: Neo4j running, MediaDive KGX files exist
+neo4j-upload-kgx:
   #!/usr/bin/env bash
   set -a; source .env; set +a
-  echo "Uploading KGX data to Neo4j..."
+  echo "Uploading MediaDive KGX to Neo4j via kgx..."
   uv run kgx neo4j-upload \
     -i tsv \
     -l ${NEO4J_URI:-bolt://localhost:7687} \
     -u ${NEO4J_USER:-neo4j} \
     -p ${NEO4J_PASSWORD:-neo4j} \
-    output/kgx/strains_nodes.tsv output/kgx/strains_edges.tsv \
-    output/kgx/growth_nodes.tsv output/kgx/growth_edges.tsv \
-    output/kgx/media_ingredients_nodes.tsv output/kgx/media_ingredients_edges.tsv
+    output/kgx/mediadive_nodes.tsv output/kgx/mediadive_edges.tsv
   echo "✓ Upload complete - browse at http://localhost:7474"
 
 # Check Neo4j status
