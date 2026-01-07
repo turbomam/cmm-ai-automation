@@ -10,7 +10,7 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Any, cast
 
-from cmm_ai_automation.transform.kgx import KGXEdge, KGXNode, normalize_curie, split_list_field
+from cmm_ai_automation.transform.kgx import KGXEdge, KGXNode, normalize_curie
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection
@@ -178,7 +178,7 @@ def extract_scientific_name(doc: dict[str, Any]) -> str | None:
     >>> extract_scientific_name({})
     """
     taxonomy = doc.get("Name and taxonomic classification", {})
-    return taxonomy.get("species")
+    return cast("str | None", taxonomy.get("species"))
 
 
 def extract_type_strain(doc: dict[str, Any]) -> str | None:
@@ -217,7 +217,7 @@ def extract_type_strain(doc: dict[str, Any]) -> str | None:
     if isinstance(type_strain, bool):
         return "yes" if type_strain else "no"
 
-    return cast("str | None", type_strain)
+    return cast("str", str(type_strain).lower())
 
 
 def extract_culture_collection_ids(doc: dict[str, Any]) -> set[str]:

@@ -174,7 +174,7 @@ class TestFlattenResults:
 
     def test_flatten_single_result(self) -> None:
         """Test flattening single result tuple."""
-        results = [
+        results: list[tuple[list[KGXNode], list[KGXEdge]]] = [
             (
                 [KGXNode(id="bacdive:1", category=["biolink:OrganismTaxon"])],
                 [
@@ -239,7 +239,7 @@ class TestFlattenResults:
 
     def test_flatten_with_empty_tuples(self) -> None:
         """Test flattening with empty node/edge lists."""
-        results = [
+        results: list[tuple[list[KGXNode], list[KGXEdge]]] = [
             ([], []),
             (
                 [KGXNode(id="bacdive:1", category=["biolink:OrganismTaxon"])],

@@ -7,12 +7,13 @@ for field validators that verify data integrity in sheets.
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from dataclasses import field as dc_field
 from enum import Enum
 from typing import Any
 
 
-class Severity(str, Enum):
+class Severity(Enum):
     """Severity levels for validation issues."""
 
     ERROR = "error"  # Data is definitely wrong
@@ -20,7 +21,7 @@ class Severity(str, Enum):
     INFO = "info"  # Informational finding
 
 
-class IssueType(str, Enum):
+class IssueType(Enum):
     """Types of validation issues."""
 
     # ID validation
@@ -45,21 +46,7 @@ class IssueType(str, Enum):
 
 @dataclass
 class ValidationIssue:
-    """A single validation issue found in a sheet.
-
-    Attributes:
-        sheet: Name of the sheet file (e.g., "strains.tsv")
-        row: Row number in the sheet (1-indexed, header is row 1)
-        field: Column name where the issue was found
-        issue_type: Category of the issue
-        severity: How serious the issue is
-        value: The problematic value (if applicable)
-        expected: What we expected to find (if applicable)
-        actual: What we found from authoritative source (if applicable)
-        message: Human-readable description of the issue
-        suggestion: Suggested fix (if applicable)
-        context: Additional context (other field values, lookup results)
-    """
+    """A single validation issue found in a sheet."""
 
     sheet: str
     row: int
@@ -71,32 +58,25 @@ class ValidationIssue:
     expected: str | None = None
     actual: str | None = None
     suggestion: str | None = None
-    context: dict[str, Any] = field(default_factory=dict)
+    context: dict[str, Any] = dc_field(default_factory=dict)
 
     def __str__(self) -> str:
         """Format issue for display."""
         loc = f"{self.sheet}:{self.row}"
-        sev = self.severity.upper()
-        return f"[{sev}] {loc} [{self.issue_type.value}] {self.field}: {self.message}"
+        sev_str = self.severity.value.upper()
+        type_str = self.issue_type.value
+        return f"[{sev_str}] {loc} [{type_str}] {self.field}: {self.message}"
 
 
 @dataclass
 class ValidationReport:
-    """Aggregated validation results for one or more sheets.
+    """Aggregated validation results for one or more sheets."""
 
-    Attributes:
-        sheets_checked: List of sheet names that were validated
-        rows_checked: Total number of data rows checked
-        issues: List of all validation issues found
-        stats: Counts by issue type
-        lookup_cache: Cached lookup results for performance
-    """
-
-    sheets_checked: list[str] = field(default_factory=list)
+    sheets_checked: list[str] = dc_field(default_factory=list)
     rows_checked: int = 0
-    issues: list[ValidationIssue] = field(default_factory=list)
-    stats: dict[str, int] = field(default_factory=dict)
-    lookup_cache: dict[str, Any] = field(default_factory=dict)
+    issues: list[ValidationIssue] = dc_field(default_factory=list)
+    stats: dict[str, int] = dc_field(default_factory=dict)
+    lookup_cache: dict[str, Any] = dc_field(default_factory=dict)
 
     def add_issue(self, issue: ValidationIssue) -> None:
         """Add an issue and update stats."""
@@ -141,15 +121,7 @@ class ValidationReport:
 
 
 class FieldValidator(ABC):
-    """Abstract base class for field validators.
-
-    Validators check individual field values against authoritative sources
-    and return a list of any issues found.
-
-    Subclasses must implement:
-        - validate(): Check a value and return issues
-        - name: Property returning the validator's name
-    """
+    """Abstract base class for field validators."""
 
     @abstractmethod
     def validate(
@@ -160,18 +132,7 @@ class FieldValidator(ABC):
         row: int,
         field: str,
     ) -> list[ValidationIssue]:
-        """Validate a single field value.
-
-        Args:
-            value: The field value to validate
-            context: Dict containing other field values from the same row
-            sheet: Name of the sheet being validated
-            row: Row number (1-indexed)
-            field: Column name
-
-        Returns:
-            List of ValidationIssue objects (empty if valid)
-        """
+        """Validate a single field value."""
 
     @property
     @abstractmethod
@@ -180,17 +141,10 @@ class FieldValidator(ABC):
 
 
 class ListValidator(FieldValidator):
-    """Base class for validators that handle semicolon-separated lists.
-
-    Subclasses should implement validate_item() instead of validate().
-    """
+    """Base class for validators that handle semicolon-separated lists."""
 
     def __init__(self, separator: str = ";"):
-        """Initialize with list separator.
-
-        Args:
-            separator: Character(s) used to separate list items
-        """
+        """Initialize with list separator."""
         self.separator = separator
 
     def parse_list(self, value: str) -> list[str]:
@@ -226,15 +180,4 @@ class ListValidator(FieldValidator):
         row: int,
         field: str,
     ) -> list[ValidationIssue]:
-        """Validate a single item from the list.
-
-        Args:
-            item: Single item from the list
-            context: Dict containing other field values from the same row
-            sheet: Name of the sheet being validated
-            row: Row number (1-indexed)
-            field: Column name
-
-        Returns:
-            List of ValidationIssue objects (empty if valid)
-        """
+        """Validate a single item from the list."""
