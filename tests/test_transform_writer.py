@@ -51,7 +51,8 @@ class TestDeduplicateNodes:
 
         assert len(result) == 1
         assert result[0].id == "NCBITaxon:408"
-        assert sorted(result[0].provided_by) == ["infores:bacdive", "infores:ncbi"]
+        provided = result[0].provided_by or []
+        assert sorted(provided) == ["infores:bacdive", "infores:ncbi"]
 
     def test_list_fields_combined(self) -> None:
         """Test that list fields from duplicates are combined."""
@@ -71,10 +72,11 @@ class TestDeduplicateNodes:
 
         assert len(result) == 1
         # Should have 3 unique xrefs (ATCC not duplicated)
-        assert len(result[0].xref) == 3
-        assert "DSM:1337" in result[0].xref
-        assert "ATCC:43645" in result[0].xref
-        assert "JCM:2802" in result[0].xref
+        xref = result[0].xref or []
+        assert len(xref) == 3
+        assert "DSM:1337" in xref
+        assert "ATCC:43645" in xref
+        assert "JCM:2802" in xref
 
     def test_missing_fields_added(self) -> None:
         """Test that missing fields from one node are added."""
@@ -194,7 +196,7 @@ class TestFlattenResults:
 
     def test_flatten_multiple_results(self) -> None:
         """Test flattening multiple result tuples."""
-        results = [
+        results: list[tuple[list[KGXNode], list[KGXEdge]]] = [
             (
                 [KGXNode(id="bacdive:1", category=["biolink:OrganismTaxon"])],
                 [

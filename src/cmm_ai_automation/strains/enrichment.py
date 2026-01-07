@@ -67,13 +67,13 @@ def generate_query_variants(
                 queries.append(f"{scientific_name} {prefix} {local_id}")
 
     # Deduplicate while preserving order
-        seen_queries: set[str] = set()
-        unique_queries: list[str] = []
-        for q in queries:
-            if q and q not in seen_queries:
-                seen_queries.add(q)
-                unique_queries.append(q)
-        return unique_queries
+    seen_queries: set[str] = set()
+    unique_queries: list[str] = []
+    for q in queries:
+        if q and q not in seen_queries:
+            seen_queries.add(q)
+            unique_queries.append(q)
+    return unique_queries
 
 
 def enrich_strains_with_ncbi(records: list[StrainRecord]) -> tuple[int, int, int, int, int]:
@@ -413,7 +413,7 @@ class IterativeEnrichmentPipeline:
         doc = self.bacdive_collection.find_one({"General.BacDive-ID": bacdive_id})
         if not doc:
             doc = self.bacdive_collection.find_one({"_id": bacdive_id})
-        
+
         if not doc:
             return False
 
@@ -493,7 +493,7 @@ class IterativeEnrichmentPipeline:
 
     def _print_pipeline_summary(self) -> None:
         """Print summary of all enrichment rounds."""
-        print_validation_summary(self.final_records)
+        print_validation_summary(self.records)
 
 
 def compute_validation_summary(records: list[StrainRecord]) -> dict[str, dict[str, int | float]]:

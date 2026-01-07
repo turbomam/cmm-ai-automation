@@ -8,7 +8,7 @@ and transform it into KGX format.
 from __future__ import annotations
 
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 from cmm_ai_automation.transform.kgx import KGXEdge, KGXNode, normalize_curie, split_list_field
 
@@ -144,7 +144,7 @@ def extract_ncbi_taxon_ids(doc: dict[str, Any]) -> tuple[set[str], set[str]]:
                 else:
                     # Default to species if no level specified
                     species_ids.add(tax_id_str)
-        elif isinstance(entry, (int, str)):
+        elif isinstance(entry, int | str):
             # Scalar case - assume species level
             species_ids.add(str(entry))
 
@@ -216,10 +216,8 @@ def extract_type_strain(doc: dict[str, Any]) -> str | None:
     # Handle boolean or string
     if isinstance(type_strain, bool):
         return "yes" if type_strain else "no"
-    elif isinstance(type_strain, str):
-        return type_strain.lower()
 
-    return None
+    return cast("str | None", type_strain)
 
 
 def extract_culture_collection_ids(doc: dict[str, Any]) -> set[str]:

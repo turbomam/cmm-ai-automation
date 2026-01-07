@@ -41,8 +41,8 @@ class TestKGXNode:
         )
         assert node.id == "bacdive:7142"
         assert node.name == "Methylorubrum extorquens DSM 1337"
-        assert len(node.xref) == 2
-        assert len(node.synonym) == 2
+        assert node.xref is not None and len(node.xref) == 2
+        assert node.synonym is not None and len(node.synonym) == 2
 
     def test_custom_properties_allowed(self) -> None:
         """Test that custom properties are allowed (KGX lenient design)."""

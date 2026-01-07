@@ -25,7 +25,7 @@ To determine if "ATCC Medium 1306" is equivalent to "Nitrate Mineral Salts (NMS)
 | :--- | :--- | :--- | :--- |
 | **MgSO4 . 7H2O** | 1.0 g | 1 g | ✅ |
 | **CaCl2 . 6H2O** | 0.20 g | 0.2 g | ✅ |
-| **KNO3** | 1.0 g | 1 g | ✅ |
+| **KNOW3** | 1.0 g | 1 g | ✅ |
 | **KH2PO4** | 0.272 g | 0.272 g | ✅ |
 | **Na2HPO4 . 12H2O** | 0.717 g | 0.717 g | ✅ |
 | **Trace Elements** | 0.5 ml | 0.5 ml | ✅ |

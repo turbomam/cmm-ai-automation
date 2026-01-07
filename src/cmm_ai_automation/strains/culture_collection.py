@@ -95,7 +95,7 @@ def search_by_dsm_number(collection: Collection[dict[str, Any]], dsm_number: int
         >>> doc['General']['DSM-Number']
         1337
     """
-    return cast(dict[str, Any] | None, collection.find_one({"General.DSM-Number": dsm_number}))
+    return cast("dict[str, Any] | None", collection.find_one({"General.DSM-Number": dsm_number}))
 
 
 def search_by_culture_collection_aggregation(
@@ -371,7 +371,7 @@ def reconcile_culture_collection_id(
 
     # Extract metadata if found
     if result["found"] and result["document"]:
-        doc = result["document"]
+        doc = cast("dict[str, Any]", result["document"])
 
         # BacDive ID
         result["bacdive_id"] = doc.get("General", {}).get("BacDive-ID")
@@ -379,9 +379,6 @@ def reconcile_culture_collection_id(
         # DSM Number
         result["dsm_number"] = doc.get("General", {}).get("DSM-Number")
 
-    doc = collection.find_one({"_id": bacdive_id})
-
-    if doc:
         # Species and designation
         taxonomy = doc.get("Name and taxonomic classification", {})
         result["species"] = taxonomy.get("species")

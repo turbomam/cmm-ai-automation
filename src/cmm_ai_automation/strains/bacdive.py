@@ -70,7 +70,7 @@ def lookup_bacdive_by_ncbi_taxon(collection: Collection[dict[str, Any]], taxon_i
         BacDive document or None
     """
     result = collection.find_one({"General.NCBI tax id.NCBI tax id": taxon_id})
-    return cast(dict[str, Any] | None, result)
+    return cast("dict[str, Any] | None", result)
 
 
 def lookup_bacdive_by_species(collection: Collection[dict[str, Any]], species_name: str) -> dict[str, Any] | None:
@@ -84,7 +84,7 @@ def lookup_bacdive_by_species(collection: Collection[dict[str, Any]], species_na
         BacDive document or None
     """
     result = collection.find_one({"Name and taxonomic classification.species": species_name})
-    return cast(dict[str, Any] | None, result)
+    return cast("dict[str, Any] | None", result)
 
 
 def search_species_with_synonyms(collection: Collection[dict[str, Any]], species_name: str) -> dict[str, Any] | None:
@@ -124,20 +124,20 @@ def search_species_with_synonyms(collection: Collection[dict[str, Any]], species
     doc = collection.find_one({"Name and taxonomic classification.species": species_name})
     if doc:
         logger.debug(f"Found '{species_name}' by current species name")
-        return cast(dict[str, Any], doc)
+        return cast("dict[str, Any]", doc)
 
     # Strategy 2: Match on LPSN species name (may differ from main species field)
     doc = collection.find_one({"Name and taxonomic classification.LPSN.species": species_name})
     if doc:
         logger.debug(f"Found '{species_name}' by LPSN species name")
-        return cast(dict[str, Any], doc)
+        return cast("dict[str, Any]", doc)
 
     # Strategy 3: Search in synonyms (for renamed species)
     doc = collection.find_one({"Name and taxonomic classification.LPSN.synonyms.synonym": species_name})
     if doc:
         current_name = doc.get("Name and taxonomic classification", {}).get("species", "Unknown")
         logger.debug(f"Found '{species_name}' as synonym of current name '{current_name}'")
-        return cast(dict[str, Any], doc)
+        return cast("dict[str, Any]", doc)
 
     logger.debug(f"Species not found: '{species_name}'")
     return None

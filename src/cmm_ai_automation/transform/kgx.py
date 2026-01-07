@@ -14,7 +14,6 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
-
 # Type aliases for clarity
 CURIE = str
 BiolinkCategory = str
@@ -80,18 +79,12 @@ class KGXNode(BaseModel):
     # Common optional fields
     name: str | None = Field(None, description="Human-readable name")
     description: str | None = Field(None, description="Human-readable description")
-    provided_by: list[str] | None = Field(
-        None, description="Information resources that provided this node"
-    )
+    provided_by: list[str] | None = Field(None, description="Information resources that provided this node")
     xref: list[CURIE] | None = Field(None, description="Cross-references as CURIEs")
     synonym: list[str] | None = Field(None, description="Alternative names")
     iri: str | None = Field(None, description="IRI form of identifier")
-    in_taxon: list[CURIE] | None = Field(
-        None, description="Taxonomic classification CURIEs"
-    )
-    in_taxon_label: str | None = Field(
-        None, description="Human-readable taxon name"
-    )
+    in_taxon: list[CURIE] | None = Field(None, description="Taxonomic classification CURIEs")
+    in_taxon_label: str | None = Field(None, description="Human-readable taxon name")
 
     # Allow additional fields (KGX lenient design)
     model_config = {"extra": "allow"}
@@ -134,31 +127,17 @@ class KGXEdge(BaseModel):
 
     # Required fields
     subject: CURIE = Field(..., description="ID of source node")
-    predicate: BiolinkPredicate = Field(
-        ..., description="Biolink predicate from related_to hierarchy"
-    )
+    predicate: BiolinkPredicate = Field(..., description="Biolink predicate from related_to hierarchy")
     object: CURIE = Field(..., description="ID of target node")
-    knowledge_level: KnowledgeLevel = Field(
-        ..., description="Level of knowledge representation"
-    )
-    agent_type: AgentType = Field(
-        ..., description="Type of autonomous agent that generated this edge"
-    )
+    knowledge_level: KnowledgeLevel = Field(..., description="Level of knowledge representation")
+    agent_type: AgentType = Field(..., description="Type of autonomous agent that generated this edge")
 
     # Optional but recommended
     id: str | None = Field(None, description="Unique edge identifier")
-    category: list[BiolinkCategory] | None = Field(
-        None, description="Biolink association categories"
-    )
-    primary_knowledge_source: list[str] | None = Field(
-        None, description="Most upstream knowledge source"
-    )
-    aggregator_knowledge_source: list[str] | None = Field(
-        None, description="Intermediate knowledge sources"
-    )
-    publications: list[CURIE] | None = Field(
-        None, description="Supporting publications"
-    )
+    category: list[BiolinkCategory] | None = Field(None, description="Biolink association categories")
+    primary_knowledge_source: list[str] | None = Field(None, description="Most upstream knowledge source")
+    aggregator_knowledge_source: list[str] | None = Field(None, description="Intermediate knowledge sources")
+    publications: list[CURIE] | None = Field(None, description="Supporting publications")
 
     # Allow additional fields (KGX lenient design)
     model_config = {"extra": "allow"}
@@ -308,8 +287,7 @@ def transform_strain_row(row: dict[str, str]) -> tuple[list[KGXNode], list[KGXEd
 
     # Get species taxonomy (prefer fresh_lookup over sub_or_mpj)
     species_taxon = (
-        row.get("ncbi_species_taxon_fresh_lookup", "").strip()
-        or row.get("species_taxon_id_sub_or_mpj", "").strip()
+        row.get("ncbi_species_taxon_fresh_lookup", "").strip() or row.get("species_taxon_id_sub_or_mpj", "").strip()
     )
 
     # Parse culture collection IDs for xref
@@ -342,17 +320,11 @@ def transform_strain_row(row: dict[str, str]) -> tuple[list[KGXNode], list[KGXEd
         strain_node_data["synonym"] = synonyms
 
     # Add custom properties (KGX allows non-Biolink properties)
-    type_strain = (
-        row.get("type_strain_fresh_lookup", "").strip()
-        or row.get("type_strain_sub_or_mpj", "").strip()
-    )
+    type_strain = row.get("type_strain_fresh_lookup", "").strip() or row.get("type_strain_sub_or_mpj", "").strip()
     if type_strain:
         strain_node_data["type_strain"] = type_strain
 
-    biosafety = (
-        row.get("biosafety_level_fresh_lookup", "").strip()
-        or row.get("biosafety_level_sub_or_mpj", "").strip()
-    )
+    biosafety = row.get("biosafety_level_fresh_lookup", "").strip() or row.get("biosafety_level_sub_or_mpj", "").strip()
     if biosafety:
         strain_node_data["biosafety_level"] = biosafety
 

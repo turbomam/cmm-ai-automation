@@ -12,7 +12,7 @@ All clients should inherit from HTTPClientBase to reduce boilerplate.
 import logging
 import time
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, Generic, TypeVar
 
 import requests
 
@@ -30,7 +30,7 @@ class ClientError:
 
     Attributes:
         query: The query that was attempted
-        error_code: Error code (e.g., "HTTP_ERROR", "NOT_FOUND", "PARSE_ERROR")
+        error_code: Error code (e.g., \"HTTP_ERROR\", \"NOT_FOUND\", \"PARSE_ERROR\")
         error_message: Human-readable error message
         status_code: HTTP status code if available
     """
@@ -40,8 +40,6 @@ class ClientError:
     error_message: str
     status_code: int | None = None
 
-
-from typing import Generic, TypeVar
 
 T = TypeVar("T")
 

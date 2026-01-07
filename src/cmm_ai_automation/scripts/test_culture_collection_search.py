@@ -9,6 +9,8 @@ Usage:
 
 from __future__ import annotations
 
+from typing import Any
+
 import click
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
@@ -29,20 +31,20 @@ TEST_IDS = [
 ]
 
 
-def get_bacdive_collection():
+def get_bacdive_collection() -> Any:
     """Connect to BacDive MongoDB."""
     try:
-        client = MongoClient("mongodb://localhost:27017", serverSelectionTimeoutMS=2000)
+        client: MongoClient = MongoClient("mongodb://localhost:27017", serverSelectionTimeoutMS=2000)
         client.admin.command("ping")
         return client["bacdive"]["strains"]
     except ConnectionFailure as e:
         click.echo(f"ERROR: Could not connect to MongoDB: {e}", err=True)
-        raise SystemExit(1)
+        raise SystemExit(1) from e
 
 
-def print_reconciliation_result(result: dict):
+def print_reconciliation_result(result: dict[str, Any]) -> None:
     """Pretty-print reconciliation result."""
-    cc_id = result["input_id"]
+    cc_id = str(result["input_id"])
 
     if result["found"]:
         click.secho(f"✓ {cc_id:20} → FOUND", fg="green")
@@ -85,10 +87,19 @@ def print_reconciliation_result(result: dict):
     is_flag=True,
     help="Show full document",
 )
-def main() -> None:
+def main(single_id: str | None, test_all: bool, verbose: bool) -> None:
     """Test culture collection search functionality."""
     # Connect to MongoDB
     try:
+        from cmm_ai_automation.strains.bacdive import get_bacdive_collection
+
+        collection = get_bacdive_collection()
+        if collection is None:
+            click.echo("ERROR: Could not connect to MongoDB", err=True)
+            raise SystemExit(1)
+    except Exception as e:
+        click.echo(f"ERROR: {e}", err=True)
+        raise SystemExit(1) from e
 
     if single_id:
         # Search for single ID

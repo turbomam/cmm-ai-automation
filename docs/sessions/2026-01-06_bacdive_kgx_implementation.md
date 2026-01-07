@@ -62,7 +62,7 @@ Chose JSON Lines (`.jsonl`) over TSV because:
 - Deterministic IDs: SHA256 hash of subject|predicate|object
 
 ### 4. Heterogeneous Path Handling
-**User directive:** "we ahve to be really careful about those paths and shapes"
+**User directive:** "we have to be really careful about those paths and shapes"
 
 BacDive JSON has inconsistent structures - same path can return dict, list, or scalar.
 
@@ -79,7 +79,7 @@ Applied to:
 - Alternative names/synonyms
 
 ### 5. Comma-Separated Field Handling
-**User directive:** "are you sure there aren't any comma seperated lists in the strain designations?"
+**User directive:** "are you sure there aren't any comma separated lists in the strain designations?"
 
 Verified with MongoDB queries:
 - Culture collections: `"DSM 1337, ATCC 43645, JCM 2802"`
@@ -202,7 +202,7 @@ Default location: `output/kgx/`
 
 ### 2. "Examples" vs Core Component
 - **Initial mistake:** Created `examples/transform_bacdive_to_kgx.py`
-- **Correction:** "why is that and 'examples' script?! ... 'examples' is at odds with the fac tthat thsi could be a core component"
+- **Correction:** "why is that and 'examples' script?! ... 'examples' is at odds with the fac that this could be a core component"
 - **Fix:** Created proper CLI script + justfile target
 
 ### 3. Documentation Location
@@ -217,7 +217,7 @@ Default location: `output/kgx/`
 
 ### 5. Comma-Separated Values
 - **Initial assumption:** Strain designation was single string
-- **Correction:** "are you sure there aren't any comma seperated lists in the strain designations?"
+- **Correction:** "are you sure there aren't any comma separated lists in the strain designations?"
 - **Fix:** MongoDB query revealed examples, split on comma
 
 ### 6. Random Sampling

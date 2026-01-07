@@ -11,9 +11,8 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from cmm_ai_automation.strains.ncbi import NcbiTaxonData
 from cmm_ai_automation.validation.base import (
     FieldValidator,
     IssueType,
@@ -21,6 +20,9 @@ from cmm_ai_automation.validation.base import (
     Severity,
     ValidationIssue,
 )
+
+if TYPE_CHECKING:
+    from cmm_ai_automation.strains.ncbi import NcbiTaxonData
 
 logger = logging.getLogger(__name__)
 

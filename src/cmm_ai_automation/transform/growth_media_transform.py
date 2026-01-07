@@ -15,9 +15,9 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import Any, Dict, List, Optional, Union, cast
+from typing import Any, cast
 
-from cmm_ai_automation.transform.kgx import CURIE, KGXNode
+from cmm_ai_automation.transform.kgx import KGXNode
 
 logger = logging.getLogger(__name__)
 
@@ -25,8 +25,6 @@ logger = logging.getLogger(__name__)
 def fix_mojibake(text: str) -> str:
     """
     Fix MacRoman <-> UTF-8 encoding artifacts.
-
-    Example: 'K‚ÇÇHPO‚ÇÑ¬∑3H‚ÇÇO' -> 'K₂HPO₄·3H₂O'  # noqa: RUF002
 
     Parameters
     ----------
@@ -40,16 +38,13 @@ def fix_mojibake(text: str) -> str:
 
     Examples
     --------
-    >>> fix_mojibake("K‚ÇÇHPO‚ÇÑ¬∑3H‚ÇÇO")  # noqa: RUF002
-    'K₂HPO₄·3H₂O'
     >>> fix_mojibake("normal text")
     'normal text'
     """
     if not text:
         return ""
     try:
-        # The specific pattern observed (‚ÇÇ for ₂) implies  # noqa: RUF003
-        # UTF-8 bytes interpreted as MacRoman.
+        # The specific pattern observed implies UTF-8 bytes interpreted as MacRoman.
         return text.encode("mac_roman").decode("utf-8")
     except (UnicodeEncodeError, UnicodeDecodeError):
         # If it fails, return original
@@ -114,7 +109,7 @@ class MediaGrounder:
         self.togo_threshold = togo_threshold
         self.dive_threshold = dive_threshold
 
-    def check_mediadive_mongo(self, media_id: str | int) -> dict | None:
+    def check_mediadive_mongo(self, media_id: str | int) -> dict[str, Any] | None:
         """Verify if a MediaDive ID exists in MongoDB."""
         if self.mongo_db is None or not media_id:
             return None
@@ -122,18 +117,19 @@ class MediaGrounder:
         # Clean the ID
         clean_id = str(media_id).replace("medium:", "").replace("mediadive:", "").strip()
 
-                # Try integer lookup
-                if clean_id.isdigit():
-                    doc = self.mongo_db.media_details.find_one({"_id": int(clean_id)})
-                    if doc:
-                        return cast(Dict[str, Any], doc)
-                
-                # Try string lookup (e.g. "1a")
-                doc = self.mongo_db.media_details.find_one({"_id": clean_id})
-                if doc:
-                    return cast(Dict[str, Any], doc)
-                    
-                return None
+        # Try integer lookup
+        if clean_id.isdigit():
+            doc = self.mongo_db.media_details.find_one({"_id": int(clean_id)})
+            if doc:
+                return cast("dict[str, Any]", doc)
+
+        # Try string lookup (e.g. "1a")
+        doc = self.mongo_db.media_details.find_one({"_id": clean_id})
+        if doc:
+            return cast("dict[str, Any]", doc)
+
+        return None
+
     def ground(self, name: str, provided_id: str | None = None) -> dict[str, Any]:
         """
         Attempt to ground a medium.
@@ -146,7 +142,6 @@ class MediaGrounder:
         name_lower = name.lower().strip()
 
         # 0. Check Local Registry (Stable BER-CMM-MEDIUM IDs)
-        # Try exact name match
         for reg_name, reg_entry in self.local_registry.items():
             if name_lower == reg_name.lower().strip():
                 return {
@@ -158,7 +153,6 @@ class MediaGrounder:
                 }
 
         # Normalize name for mapping lookup (e.g. "LB medium (Luria-Bertani)" -> "lb")
-        # Split on space, hyphen, or parenthesis
         name_normalized = re.split(r"[\s\(\-]", name_lower)[0]
         # Also try "dsmz:88" style if name contains numbers
         name_with_number = re.sub(r"\s+", ":", name_lower) if ":" not in name_lower else name_lower
@@ -169,23 +163,23 @@ class MediaGrounder:
             for m_key, m in self.manual_mappings.items():
                 if (key == m_key or key.startswith(m_key + ":")) and m.get("confidence", 0) > 0:
                     # If source is DOI, we use a local ID but attach the DOI
-                        if m["source"] == "doi":
-                            local_id = f"BER-CMM-MEDIUM:{normalize_medium_id(name)}"
-                            return {
-                                "id": local_id,
-                                "source": "local",
-                                "confidence": m.get("confidence", 1.0),
-                                "method": f"manual_mapping_ref ({m_key})",
-                                "meta": {"name": name, "doi": m["id"]},
-                            }
-
+                    if m["source"] == "doi":
+                        local_id = f"BER-CMM-MEDIUM:{normalize_medium_id(name)}"
                         return {
-                            "id": f"{m['source']}:{m['id']}" if ":" not in m["id"] else m["id"],
-                            "source": m["source"],
+                            "id": local_id,
+                            "source": "local",
                             "confidence": m.get("confidence", 1.0),
-                            "method": f"manual_mapping ({m_key})",
-                            "meta": {"name": name},
+                            "method": f"manual_mapping_ref ({m_key})",
+                            "meta": {"name": name, "doi": m["id"]},
                         }
+
+                    return {
+                        "id": f"{m['source']}:{m['id']}" if ":" not in m["id"] else m["id"],
+                        "source": m["source"],
+                        "confidence": m.get("confidence", 1.0),
+                        "method": f"manual_mapping ({m_key})",
+                        "meta": {"name": name},
+                    }
 
         # 2. Verify Provided ID
         if provided_id and provided_id.strip() not in ["-", ""]:
@@ -283,12 +277,12 @@ def parse_publications(row: dict[str, str], meta: dict[str, Any]) -> list[str]:
     if raw_refs:
         # Split by comma or semicolon
         ref_parts = re.split(r"[,;]", raw_refs)
-                for ref in ref_parts:
-                    ref = ref.strip()
-                    if not ref:
-                        continue
-                    
-                    # Check for DOI patterns
+        for ref in ref_parts:
+            ref = ref.strip()
+            if not ref:
+                continue
+
+            # Check for DOI patterns
             doi_match = re.search(r"10\.\d{4,9}/[-._;()/:A-Z0-9]+", ref, re.I)
             if doi_match:
                 pubs.add(f"doi:{doi_match.group(0)}")

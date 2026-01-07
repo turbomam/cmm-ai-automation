@@ -25,7 +25,7 @@ The comparison revealed a total mismatch in identity, chemistry, and target orga
 ## Diagnosis
 The CMM spreadsheet entry `DSMZ:88` is **incorrect**.
 *   The acronym "SM" likely stands for "Succinate Medium" or "Standard Medium" in the lab's context.
-*   It was likely mis-mapped to DSMZ 88 because DSMZ 88 is the first result for "SM" (Sulfolobus Medium) in some searches, or due to a simple data entry error (perhaps DSMZ 576 "Nutrient Agar" or similar was intended?).
+*   It was likely mismapped to DSMZ 88 because DSMZ 88 is the first result for "SM" (Sulfolobus Medium) in some searches, or due to a simple data entry error (perhaps DSMZ 576 "Nutrient Agar" or similar was intended?).
 
 ## Action Taken
 1.  **Grounding:** The medium has been grounded to a stable local identifier: `BER-CMM-MEDIUM:0000006`.

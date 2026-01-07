@@ -126,10 +126,7 @@ def main(
     # Validate mutually exclusive options
     exclusive_count = sum([bool(limit), bool(sample), bool(ids)])
     if exclusive_count > 1:
-        logger.error(
-            "Options --limit, --sample, and --ids are mutually exclusive. "
-            "Please specify only one."
-        )
+        logger.error("Options --limit, --sample, and --ids are mutually exclusive. Please specify only one.")
         return
 
     # Connect to MongoDB
@@ -137,10 +134,7 @@ def main(
     collection = get_bacdive_collection()
 
     if collection is None:
-        logger.error(
-            "Failed to connect to MongoDB. "
-            "Check MONGODB_URI environment variable."
-        )
+        logger.error("Failed to connect to MongoDB. Check MONGODB_URI environment variable.")
         return
 
     # Query strains
@@ -171,10 +165,7 @@ def main(
     logger.info("Transforming to KGX...")
     all_nodes, all_edges = flatten_results(results)
 
-    logger.info(
-        f"Generated {len(all_nodes)} nodes and {len(all_edges)} edges "
-        f"(before deduplication)"
-    )
+    logger.info(f"Generated {len(all_nodes)} nodes and {len(all_edges)} edges (before deduplication)")
 
     # Write to JSON Lines
     logger.info(f"Writing to {output / basename}_*.jsonl")

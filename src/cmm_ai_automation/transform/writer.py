@@ -100,9 +100,7 @@ def deduplicate_nodes(nodes: list[KGXNode]) -> list[KGXNode]:
 
     deduplicated = [KGXNode(**node_dict) for node_dict in node_map.values()]
 
-    logger.info(
-        f"Deduplicated {len(nodes)} nodes to {len(deduplicated)} unique nodes"
-    )
+    logger.info(f"Deduplicated {len(nodes)} nodes to {len(deduplicated)} unique nodes")
 
     return deduplicated
 

@@ -19,16 +19,12 @@ from cmm_ai_automation.transform.writer import (
 )
 
 __all__ = [
-    # File writers
-    "deduplicate_nodes",
-    "flatten_results",
-    # Data models
     "KGXEdge",
     "KGXNode",
-    # Utilities
+    "deduplicate_nodes",
+    "flatten_results",
     "normalize_curie",
     "query_all_strains",
-    # MongoDB sources
     "query_bacdive_by_ids",
     "query_random_sample",
     "split_list_field",
