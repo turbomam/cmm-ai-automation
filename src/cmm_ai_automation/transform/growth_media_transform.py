@@ -319,9 +319,17 @@ def transform_media_row(row: dict[str, str], grounder: MediaGrounder) -> tuple[K
     # Ground
     result = grounder.ground(name, provided_id)
 
+    # Use Numeric ID from placeholder URI if it exists and we are local
+    final_id = result["id"]
+    if result["source"] == "local":
+        placeholder_uri = row.get("placeholder URI", "")
+        match = re.search(r"/media/(\d{7})", placeholder_uri)
+        if match:
+            final_id = f"BER-CMM-MEDIUM:{match.group(1)}"
+
     # Create Node
     node_data = {
-        "id": result["id"],
+        "id": final_id,
         "category": ["biolink:ChemicalMixture"],
         "name": name,
         "provided_by": ["infores:cmm-ai-automation"],
@@ -389,7 +397,7 @@ def transform_media_row(row: dict[str, str], grounder: MediaGrounder) -> tuple[K
     hybrid_row = row.copy()
     hybrid_row.update(
         {
-            "grounded_id": result["id"],
+            "grounded_id": final_id,
             "grounded_source": result["source"],
             "grounded_name": result["meta"].get("name", ""),
             "grounded_confidence": f"{result['confidence']:.2f}",
