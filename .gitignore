@@ -181,6 +181,7 @@ data/*.tar.gz
 
 # LibreOffice lock files
 data/.~lock.*
+.~lock.*
 
 # Cache directories
 data/*_cache/

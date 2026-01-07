@@ -218,6 +218,7 @@ def search_culture_collection(
                 logger.debug(f"Found {cc_id} via General.DSM-Number field")
                 return doc
         except ValueError:
+            # DSM number is not a valid integer - will try other search methods
             logger.warning(f"Invalid DSM number: {number}")
 
     # Strategy 2: Search in culture collection string (with word boundaries)

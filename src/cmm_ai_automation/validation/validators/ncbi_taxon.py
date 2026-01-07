@@ -307,13 +307,8 @@ class NCBITaxonListValidator(ListValidator):
 
                 # A taxon is "related" if:
                 # 1. Its species_taxon_id matches expected, OR
-                # 2. It IS the expected species (rank=species and id matches), OR
-                # 3. The expected is in this taxon's lineage
-                is_related = (
-                    this_species == expected_species_id
-                    or taxon_id == expected_species_id
-                    or (data.get("rank") == "species" and taxon_id == expected_species_id)
-                )
+                # 2. It IS the expected species (rank=species and id matches)
+                is_related = this_species == expected_species_id or taxon_id == expected_species_id
 
                 if not is_related and this_species:
                     # This is a BOGUS cross-reference - completely unrelated organism
