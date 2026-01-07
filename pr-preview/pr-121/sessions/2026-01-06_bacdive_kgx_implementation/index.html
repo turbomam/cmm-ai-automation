@@ -1092,7 +1092,7 @@
 - Provenance: <code>knowledge_level</code>, <code>agent_type</code>, <code>primary_knowledge_source</code>
 - Deterministic IDs: SHA256 hash of subject|predicate|object</p>
 <h3 id="4-heterogeneous-path-handling">4. Heterogeneous Path Handling</h3>
-<p><strong>User directive:</strong> "we ahve to be really careful about those paths and shapes"</p>
+<p><strong>User directive:</strong> "we have to be really careful about those paths and shapes"</p>
 <p>BacDive JSON has inconsistent structures - same path can return dict, list, or scalar.</p>
 <p><strong>Solution:</strong> <code>safe_get_list()</code> pattern
 <div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">safe_get_list</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">|</span> <span class="n">Any</span><span class="p">,</span> <span class="o">*</span><span class="n">keys</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Any</span><span class="p">]:</span>
@@ -1104,7 +1104,7 @@
 - Genome sequences (object 44% / array 56%)
 - Alternative names/synonyms</p>
 <h3 id="5-comma-separated-field-handling">5. Comma-Separated Field Handling</h3>
-<p><strong>User directive:</strong> "are you sure there aren't any comma seperated lists in the strain designations?"</p>
+<p><strong>User directive:</strong> "are you sure there aren't any comma separated lists in the strain designations?"</p>
 <p>Verified with MongoDB queries:
 - Culture collections: <code>"DSM 1337, ATCC 43645, JCM 2802"</code>
 - Strain designations: <code>"PG 8, PG8"</code>, <code>"Blackley strain G2, BU 335"</code></p>
@@ -1195,7 +1195,7 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 <h3 id="2-examples-vs-core-component">2. "Examples" vs Core Component</h3>
 <ul>
 <li><strong>Initial mistake:</strong> Created <code>examples/transform_bacdive_to_kgx.py</code></li>
-<li><strong>Correction:</strong> "why is that and 'examples' script?! ... 'examples' is at odds with the fac tthat thsi could be a core component"</li>
+<li><strong>Correction:</strong> "why is that and 'examples' script?! ... 'examples' is at odds with the fac that this could be a core component"</li>
 <li><strong>Fix:</strong> Created proper CLI script + justfile target</li>
 </ul>
 <h3 id="3-documentation-location">3. Documentation Location</h3>
@@ -1213,7 +1213,7 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 <h3 id="5-comma-separated-values">5. Comma-Separated Values</h3>
 <ul>
 <li><strong>Initial assumption:</strong> Strain designation was single string</li>
-<li><strong>Correction:</strong> "are you sure there aren't any comma seperated lists in the strain designations?"</li>
+<li><strong>Correction:</strong> "are you sure there aren't any comma separated lists in the strain designations?"</li>
 <li><strong>Fix:</strong> MongoDB query revealed examples, split on comma</li>
 </ul>
 <h3 id="6-random-sampling">6. Random Sampling</h3>
