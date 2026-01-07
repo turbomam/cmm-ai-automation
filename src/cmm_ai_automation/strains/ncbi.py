@@ -202,10 +202,15 @@ def fetch_ncbi_batch(taxon_ids: list[str], batch_size: int = 50) -> dict[str, Nc
                 lineage_ex = taxon.find("LineageEx")
                 if lineage_ex is not None:
                     for ancestor in lineage_ex.findall("Taxon"):
-                        and_rank = ancestor.find("Rank")
-                        and_id = ancestor.find("TaxId")
-                        if and_rank is not None and and_rank.text == "species" and and_id is not None and and_id.text:
-                            data["species_taxon_id"] = and_id.text
+                        ancestor_rank = ancestor.find("Rank")
+                        ancestor_id = ancestor.find("TaxId")
+                        if (
+                            ancestor_rank is not None
+                            and ancestor_rank.text == "species"
+                            and ancestor_id is not None
+                            and ancestor_id.text
+                        ):
+                            data["species_taxon_id"] = ancestor_id.text
                             break
 
                 # If taxon is species level, use its own ID

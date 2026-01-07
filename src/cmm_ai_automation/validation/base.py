@@ -76,7 +76,7 @@ class ValidationIssue:
     def __str__(self) -> str:
         """Format issue for display."""
         loc = f"{self.sheet}:{self.row}"
-        sev = self.severity.value.upper()
+        sev = str(self.severity.value).upper()
         return f"[{sev}] {loc} [{self.issue_type.value}] {self.field}: {self.message}"
 
 

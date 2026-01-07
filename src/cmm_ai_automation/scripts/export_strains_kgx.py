@@ -39,9 +39,9 @@ from cmm_ai_automation.strains import (
     export_kgx_edges,
     export_kgx_nodes,
     export_taxrank_nodes,
+    generate_query_variants,
     get_bacdive_collection,
 )
-from cmm_ai_automation.strains.enrichment import generate_query_variants
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)

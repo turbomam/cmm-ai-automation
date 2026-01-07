@@ -3,8 +3,6 @@
 import json
 import tempfile
 
-import pytest
-
 from cmm_ai_automation.transform import (
     flatten_results,
     transform_bacdive_doc,
@@ -15,7 +13,7 @@ from cmm_ai_automation.transform import (
 class TestBacDivePipeline:
     """Integration tests for BacDive → KGX → JSON Lines pipeline."""
 
-    def test_single_document_pipeline(self):
+    def test_single_document_pipeline(self) -> None:
         """Test complete pipeline with single BacDive document."""
         # Input: BacDive MongoDB document
         bacdive_doc = {
@@ -27,12 +25,8 @@ class TestBacDivePipeline:
                 "species": "Methylorubrum extorquens",
                 "type strain": "yes",
             },
-            "External links": {
-                "culture collection no.": "DSM 1337, ATCC 43645"
-            },
-            "Safety information": {
-                "risk assessment": {"biosafety level": "1"}
-            },
+            "External links": {"culture collection no.": "DSM 1337, ATCC 43645"},
+            "Safety information": {"risk assessment": {"biosafety level": "1"}},
         }
 
         # Step 1: Transform BacDive doc to KGX
@@ -48,9 +42,7 @@ class TestBacDivePipeline:
 
         # Step 2: Write to JSON Lines
         with tempfile.TemporaryDirectory() as tmpdir:
-            nodes_file, edges_file = write_kgx_jsonl(
-                nodes, edges, tmpdir, "cmm_strains"
-            )
+            nodes_file, edges_file = write_kgx_jsonl(nodes, edges, tmpdir, "cmm_strains")
 
             # Verify files created
             assert nodes_file.exists()
@@ -78,7 +70,7 @@ class TestBacDivePipeline:
                 assert edge_data["predicate"] == "biolink:in_taxon"
                 assert edge_data["object"] == "NCBITaxon:408"
 
-    def test_multiple_documents_pipeline(self):
+    def test_multiple_documents_pipeline(self) -> None:
         """Test pipeline with multiple BacDive documents."""
         # Input: Multiple BacDive documents
         docs = [
@@ -87,18 +79,14 @@ class TestBacDivePipeline:
                     "BacDive-ID": 7142,
                     "NCBI tax id": {"NCBI tax id": 408, "Matching level": "species"},
                 },
-                "Name and taxonomic classification": {
-                    "species": "Methylorubrum extorquens"
-                },
+                "Name and taxonomic classification": {"species": "Methylorubrum extorquens"},
             },
             {
                 "General": {
                     "BacDive-ID": 7143,
                     "NCBI tax id": {"NCBI tax id": 408, "Matching level": "species"},
                 },
-                "Name and taxonomic classification": {
-                    "species": "Methylorubrum extorquens"
-                },
+                "Name and taxonomic classification": {"species": "Methylorubrum extorquens"},
             },
         ]
 
@@ -118,9 +106,7 @@ class TestBacDivePipeline:
 
         # Step 3: Write to files (with deduplication)
         with tempfile.TemporaryDirectory() as tmpdir:
-            nodes_file, edges_file = write_kgx_jsonl(
-                all_nodes, all_edges, tmpdir, "cmm_strains", deduplicate=True
-            )
+            nodes_file, edges_file = write_kgx_jsonl(all_nodes, all_edges, tmpdir, "cmm_strains", deduplicate=True)
 
             # Verify deduplication happened
             with nodes_file.open() as f:
@@ -145,14 +131,10 @@ class TestBacDivePipeline:
                     assert "id" in edge_data
                     assert edge_data["id"].startswith("edge_")
 
-    def test_empty_document_handling(self):
+    def test_empty_document_handling(self) -> None:
         """Test pipeline handles documents without required fields."""
         # Document missing BacDive-ID
-        bad_doc = {
-            "Name and taxonomic classification": {
-                "species": "Methylorubrum extorquens"
-            }
-        }
+        bad_doc = {"Name and taxonomic classification": {"species": "Methylorubrum extorquens"}}
 
         nodes, edges = transform_bacdive_doc(bad_doc)
 
@@ -160,7 +142,7 @@ class TestBacDivePipeline:
         assert len(nodes) == 0
         assert len(edges) == 0
 
-    def test_full_pipeline_preserves_all_data(self):
+    def test_full_pipeline_preserves_all_data(self) -> None:
         """Test that full pipeline preserves all data fields."""
         doc = {
             "General": {
@@ -178,26 +160,17 @@ class TestBacDivePipeline:
                     ]
                 },
             },
-            "External links": {
-                "culture collection no.": "DSM 1337, ATCC 43645, JCM 2802"
-            },
-            "Safety information": {
-                "risk assessment": {"biosafety level": "1"}
-            },
+            "External links": {"culture collection no.": "DSM 1337, ATCC 43645, JCM 2802"},
+            "Safety information": {"risk assessment": {"biosafety level": "1"}},
             "Sequence information": {
-                "Genome sequences": [
-                    {"accession": "GCA_000022685.1"},
-                    {"accession": "408.23", "database": "patric"}
-                ]
+                "Genome sequences": [{"accession": "GCA_000022685.1"}, {"accession": "408.23", "database": "patric"}]
             },
         }
 
         nodes, edges = transform_bacdive_doc(doc)
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            nodes_file, _ = write_kgx_jsonl(
-                nodes, edges, tmpdir, "test"
-            )
+            nodes_file, _ = write_kgx_jsonl(nodes, edges, tmpdir, "test")
 
             with nodes_file.open() as f:
                 strain_line = f.readline()
@@ -222,7 +195,7 @@ class TestBacDivePipeline:
 class TestEdgeToEdgePipeline:
     """Test that edges maintain proper provenance through pipeline."""
 
-    def test_edge_provenance_preserved(self):
+    def test_edge_provenance_preserved(self) -> None:
         """Test that edge provenance fields are preserved in output."""
         doc = {
             "General": {
@@ -234,9 +207,7 @@ class TestEdgeToEdgePipeline:
         nodes, edges = transform_bacdive_doc(doc)
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            _, edges_file = write_kgx_jsonl(
-                nodes, edges, tmpdir, "test"
-            )
+            _, edges_file = write_kgx_jsonl(nodes, edges, tmpdir, "test")
 
             with edges_file.open() as f:
                 edge_data = json.loads(f.readline())

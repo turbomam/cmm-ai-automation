@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection
@@ -95,7 +95,7 @@ def search_by_dsm_number(collection: Collection[dict[str, Any]], dsm_number: int
         >>> doc['General']['DSM-Number']
         1337
     """
-    return collection.find_one({"General.DSM-Number": dsm_number})
+    return cast(dict[str, Any] | None, collection.find_one({"General.DSM-Number": dsm_number}))
 
 
 def search_by_culture_collection_aggregation(
@@ -135,11 +135,7 @@ def search_by_culture_collection_aggregation(
 
     pipeline = [
         # First, filter to documents with External links
-        {
-            "$match": {
-                "External links": {"$exists": True}
-            }
-        },
+        {"$match": {"External links": {"$exists": True}}},
         # Extract the "culture collection no." field using $getField
         # (necessary because field name contains a period)
         {
@@ -226,9 +222,7 @@ def search_culture_collection(
 
     # Strategy 2: Search in culture collection string (with word boundaries)
     search_string = format_for_bacdive_search(prefix, number)
-    doc = search_by_culture_collection_aggregation(
-        collection, search_string, use_word_boundaries=True
-    )
+    doc = search_by_culture_collection_aggregation(collection, search_string, use_word_boundaries=True)
 
     if doc:
         logger.debug(f"Found {cc_id} via culture collection field")
@@ -369,9 +363,7 @@ def reconcile_culture_collection_id(
     # Try culture collection search if not found
     if not result["found"]:
         search_string = format_for_bacdive_search(prefix, number)
-        doc = search_by_culture_collection_aggregation(
-            collection, search_string, use_word_boundaries=True
-        )
+        doc = search_by_culture_collection_aggregation(collection, search_string, use_word_boundaries=True)
         if doc:
             result["found"] = True
             result["document"] = doc
@@ -387,6 +379,9 @@ def reconcile_culture_collection_id(
         # DSM Number
         result["dsm_number"] = doc.get("General", {}).get("DSM-Number")
 
+    doc = collection.find_one({"_id": bacdive_id})
+
+    if doc:
         # Species and designation
         taxonomy = doc.get("Name and taxonomic classification", {})
         result["species"] = taxonomy.get("species")

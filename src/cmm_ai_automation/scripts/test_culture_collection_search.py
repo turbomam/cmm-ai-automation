@@ -16,7 +16,6 @@ from pymongo.errors import ConnectionFailure
 from cmm_ai_automation.strains.culture_collection import (
     batch_search_culture_collections,
     reconcile_culture_collection_id,
-    search_culture_collection,
 )
 
 # Test IDs from strains.tsv
@@ -86,9 +85,10 @@ def print_reconciliation_result(result: dict):
     is_flag=True,
     help="Show full document",
 )
-def main(single_id: str | None, test_all: bool, verbose: bool):
+def main() -> None:
     """Test culture collection search functionality."""
-    collection = get_bacdive_collection()
+    # Connect to MongoDB
+    try:
 
     if single_id:
         # Search for single ID
@@ -121,10 +121,7 @@ def main(single_id: str | None, test_all: bool, verbose: bool):
                 found_count += 1
 
         click.echo("=" * 80)
-        click.echo(
-            f"Summary: {found_count}/{len(TEST_IDS)} found "
-            f"({len(TEST_IDS) - found_count} not found)"
-        )
+        click.echo(f"Summary: {found_count}/{len(TEST_IDS)} found ({len(TEST_IDS) - found_count} not found)")
         click.echo("=" * 80)
 
     else:

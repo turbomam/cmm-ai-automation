@@ -17,10 +17,12 @@ import csv
 import logging
 from pathlib import Path
 
-import click
+from typing import Any
+
 import chromadb
-from pymongo import MongoClient
+import click
 from dotenv import load_dotenv
+from pymongo import MongoClient
 
 from cmm_ai_automation.transform.growth_media_transform import (
     MediaGrounder,
@@ -50,7 +52,7 @@ MONGODB_URI = "mongodb://localhost:27017/"
 
 def load_manual_mappings(mapping_file: Path) -> dict[str, dict]:
     """Load manual grounding mappings from TSV."""
-    mappings = {}
+    mappings: dict[str, dict] = {}
     if not mapping_file.exists():
         logger.warning(f"Mapping file not found: {mapping_file}")
         return mappings
@@ -61,7 +63,7 @@ def load_manual_mappings(mapping_file: Path) -> dict[str, dict]:
             sheet_medium = row.get("sheet_medium", "").strip().lower()
             if not sheet_medium:
                 continue
-                
+
             mappings[sheet_medium] = {
                 "source": row.get("target_system", "").strip(),
                 "id": row.get("target_id", "").strip(),
@@ -72,7 +74,7 @@ def load_manual_mappings(mapping_file: Path) -> dict[str, dict]:
     return mappings
 
 
-def get_chroma_collection(path: Path, name: str):
+def get_chroma_collection(path: Path, name: str) -> Any:
     """Get ChromaDB collection if it exists."""
     if not path.exists():
         return None
@@ -112,24 +114,24 @@ def main(
     basename: str,
 ) -> None:
     """Export grounded media nodes from TSV to KGX and Hybrid TSV."""
-    logger.info(f"=== Grounded Media → KGX Export ===")
+    logger.info("=== Grounded Media → KGX Export ===")
     logger.info(f"Input: {input}")
 
     # Initialize resources
     logger.info("Connecting to MongoDB...")
     mongo_client = MongoClient(MONGODB_URI)
     mediadive_db = mongo_client["mediadive"]
-    
+
     logger.info("Loading ChromaDB indices...")
     togo_col = get_chroma_collection(CHROMA_TOGOMEDIUM, "togomedium_media")
     dive_col = get_chroma_collection(CHROMA_MEDIADIVE, "mediadive_media")
-    
+
     logger.info("Loading manual mappings...")
     mappings = load_manual_mappings(MAPPINGS_FILE)
 
     # Initialize Grounder (No local registry file anymore)
     grounder = MediaGrounder(
-        local_registry={}, # Empty registry
+        local_registry={},  # Empty registry
         manual_mappings=mappings,
         mongo_db=mediadive_db,
         togo_collection=togo_col,
@@ -147,23 +149,23 @@ def main(
         f.seek(0)
         dialect = csv.Sniffer().sniff(sample)
         if dialect.delimiter not in ["\t", ","]:
-             dialect.delimiter = "\t"
-             
+            dialect.delimiter = "\t"
+
         reader = csv.DictReader(f, dialect=dialect)
-        
+
         for row in reader:
             stats["total"] += 1
             original_name = row.get("media_name", "").strip()
-            
+
             try:
                 node, hybrid_row = transform_media_row(row, grounder)
-                
+
                 if node.name != original_name:
                     stats["mojibake_fixed"] += 1
-                
+
                 all_nodes.append(node)
                 hybrid_rows.append(hybrid_row)
-                
+
             except Exception as e:
                 logger.warning(f"Failed to process row {stats['total']} ({original_name}): {e}")
 
@@ -173,7 +175,7 @@ def main(
     logger.info(f"Writing KGX output to {output}...")
     nodes_file, _ = write_kgx_jsonl(
         all_nodes,
-        [], # No edges for now
+        [],  # No edges for now
         output,
         basename,
         deduplicate=True,
@@ -182,7 +184,7 @@ def main(
     # Write Hybrid TSV
     hybrid_file = output / f"{basename}_hybrid.tsv"
     logger.info(f"Writing hybrid TSV to {hybrid_file}...")
-    
+
     if hybrid_rows:
         fieldnames = hybrid_rows[0].keys()
         with hybrid_file.open("w", newline="", encoding="utf-8") as f:

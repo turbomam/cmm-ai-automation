@@ -41,8 +41,13 @@ class ClientError:
     status_code: int | None = None
 
 
+from typing import Generic, TypeVar
+
+T = TypeVar("T")
+
+
 @dataclass
-class ClientResult[T]:
+class ClientResult(Generic[T]):
     """Successful result wrapper.
 
     Attributes:

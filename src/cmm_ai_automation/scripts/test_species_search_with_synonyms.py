@@ -37,7 +37,7 @@ TEST_CASES = [
     is_flag=True,
     help="Show detailed information",
 )
-def main(species: str | None, verbose: bool):
+def main(species: str | None, verbose: bool) -> None:
     """Test species search with synonym handling."""
     collection = get_bacdive_collection()
     if collection is None:
@@ -54,10 +54,10 @@ def main(species: str | None, verbose: bool):
         doc = search_species_with_synonyms(collection, species)
 
         if doc:
-            click.secho(f"✓ FOUND", fg="green")
+            click.secho("✓ FOUND", fg="green")
             print_species_info(doc, verbose)
         else:
-            click.secho(f"✗ NOT FOUND", fg="red")
+            click.secho("✗ NOT FOUND", fg="red")
 
     else:
         # Run test cases
@@ -74,9 +74,7 @@ def main(species: str | None, verbose: bool):
 
             if doc:
                 found_count += 1
-                current_name = doc.get("Name and taxonomic classification", {}).get(
-                    "species", "Unknown"
-                )
+                current_name = doc.get("Name and taxonomic classification", {}).get("species", "Unknown")
 
                 is_synonym = search_name != current_name
                 status_icon = "✓"
@@ -86,15 +84,13 @@ def main(species: str | None, verbose: bool):
                     status_icon = "⚠"
                     status_color = "yellow"
 
-                click.secho(
-                    f"{status_icon} {search_name:40} → FOUND", fg=status_color
-                )
+                click.secho(f"{status_icon} {search_name:40} → FOUND", fg=status_color)
                 click.echo(f"  Current name:     {current_name}")
 
                 if is_synonym:
-                    click.echo(f"  Match type:       synonym")
+                    click.echo("  Match type:       synonym")
                 else:
-                    click.echo(f"  Match type:       current name")
+                    click.echo("  Match type:       current name")
 
                 bacdive_id = doc.get("General", {}).get("BacDive-ID")
                 dsm_number = doc.get("General", {}).get("DSM-Number", "N/A")
@@ -104,9 +100,7 @@ def main(species: str | None, verbose: bool):
                 if verbose:
                     # Show all synonyms
                     synonyms = []
-                    lpsn = doc.get("Name and taxonomic classification", {}).get(
-                        "LPSN", {}
-                    )
+                    lpsn = doc.get("Name and taxonomic classification", {}).get("LPSN", {})
                     syn_list = lpsn.get("synonyms", [])
                     if isinstance(syn_list, list):
                         for syn_entry in syn_list:
@@ -123,10 +117,7 @@ def main(species: str | None, verbose: bool):
                 click.echo()
 
         click.echo("=" * 80)
-        click.echo(
-            f"Summary: {found_count}/{len(TEST_CASES)} found "
-            f"({len(failed)} not found)"
-        )
+        click.echo(f"Summary: {found_count}/{len(TEST_CASES)} found ({len(failed)} not found)")
         click.echo("=" * 80)
 
         if failed:
@@ -136,7 +127,7 @@ def main(species: str | None, verbose: bool):
                 click.echo(f"  - {name}")
 
 
-def print_species_info(doc: dict, verbose: bool = False):
+def print_species_info(doc: dict, verbose: bool = False) -> None:
     """Print information about a species."""
     taxonomy = doc.get("Name and taxonomic classification", {})
     general = doc.get("General", {})

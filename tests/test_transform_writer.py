@@ -4,8 +4,6 @@ import json
 import tempfile
 from pathlib import Path
 
-import pytest
-
 from cmm_ai_automation.transform.kgx import KGXEdge, KGXNode
 from cmm_ai_automation.transform.writer import (
     deduplicate_nodes,
@@ -18,7 +16,7 @@ from cmm_ai_automation.transform.writer import (
 class TestDeduplicateNodes:
     """Tests for deduplicate_nodes function."""
 
-    def test_no_duplicates(self):
+    def test_no_duplicates(self) -> None:
         """Test that unique nodes are preserved."""
         nodes = [
             KGXNode(
@@ -33,7 +31,7 @@ class TestDeduplicateNodes:
         result = deduplicate_nodes(nodes)
         assert len(result) == 2
 
-    def test_duplicate_nodes_merged(self):
+    def test_duplicate_nodes_merged(self) -> None:
         """Test that duplicate nodes are merged."""
         nodes = [
             KGXNode(
@@ -55,7 +53,7 @@ class TestDeduplicateNodes:
         assert result[0].id == "NCBITaxon:408"
         assert sorted(result[0].provided_by) == ["infores:bacdive", "infores:ncbi"]
 
-    def test_list_fields_combined(self):
+    def test_list_fields_combined(self) -> None:
         """Test that list fields from duplicates are combined."""
         nodes = [
             KGXNode(
@@ -78,7 +76,7 @@ class TestDeduplicateNodes:
         assert "ATCC:43645" in result[0].xref
         assert "JCM:2802" in result[0].xref
 
-    def test_missing_fields_added(self):
+    def test_missing_fields_added(self) -> None:
         """Test that missing fields from one node are added."""
         nodes = [
             KGXNode(
@@ -98,7 +96,7 @@ class TestDeduplicateNodes:
         assert result[0].name == "Strain 1"
         assert result[0].description == "A bacterial strain"
 
-    def test_empty_list(self):
+    def test_empty_list(self) -> None:
         """Test deduplication with empty list."""
         result = deduplicate_nodes([])
         assert result == []
@@ -107,7 +105,7 @@ class TestDeduplicateNodes:
 class TestGenerateEdgeId:
     """Tests for generate_edge_id function."""
 
-    def test_generates_deterministic_id(self):
+    def test_generates_deterministic_id(self) -> None:
         """Test that same edge generates same ID."""
         edge1 = KGXEdge(
             subject="bacdive:7142",
@@ -130,7 +128,7 @@ class TestGenerateEdgeId:
         assert id1 == id2
         assert id1.startswith("edge_")
 
-    def test_different_edges_different_ids(self):
+    def test_different_edges_different_ids(self) -> None:
         """Test that different edges generate different IDs."""
         edge1 = KGXEdge(
             subject="bacdive:7142",
@@ -152,7 +150,7 @@ class TestGenerateEdgeId:
 
         assert id1 != id2
 
-    def test_id_format(self):
+    def test_id_format(self) -> None:
         """Test that generated ID has expected format."""
         edge = KGXEdge(
             subject="bacdive:7142",
@@ -172,7 +170,7 @@ class TestGenerateEdgeId:
 class TestFlattenResults:
     """Tests for flatten_results function."""
 
-    def test_flatten_single_result(self):
+    def test_flatten_single_result(self) -> None:
         """Test flattening single result tuple."""
         results = [
             (
@@ -194,7 +192,7 @@ class TestFlattenResults:
         assert len(nodes) == 1
         assert len(edges) == 1
 
-    def test_flatten_multiple_results(self):
+    def test_flatten_multiple_results(self) -> None:
         """Test flattening multiple result tuples."""
         results = [
             (
@@ -230,14 +228,14 @@ class TestFlattenResults:
         assert nodes[0].id == "bacdive:1"
         assert nodes[1].id == "bacdive:2"
 
-    def test_flatten_empty_results(self):
+    def test_flatten_empty_results(self) -> None:
         """Test flattening with no results."""
         nodes, edges = flatten_results([])
 
         assert len(nodes) == 0
         assert len(edges) == 0
 
-    def test_flatten_with_empty_tuples(self):
+    def test_flatten_with_empty_tuples(self) -> None:
         """Test flattening with empty node/edge lists."""
         results = [
             ([], []),
@@ -256,7 +254,7 @@ class TestFlattenResults:
 class TestWriteKgxJsonl:
     """Tests for write_kgx_jsonl function."""
 
-    def test_write_basic_files(self):
+    def test_write_basic_files(self) -> None:
         """Test writing basic nodes and edges to JSON Lines."""
         nodes = [
             KGXNode(
@@ -276,9 +274,7 @@ class TestWriteKgxJsonl:
         ]
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            nodes_file, edges_file = write_kgx_jsonl(
-                nodes, edges, tmpdir, "test"
-            )
+            nodes_file, edges_file = write_kgx_jsonl(nodes, edges, tmpdir, "test")
 
             assert nodes_file.exists()
             assert edges_file.exists()
@@ -300,7 +296,7 @@ class TestWriteKgxJsonl:
                 assert edge_data["subject"] == "bacdive:7142"
                 assert edge_data["predicate"] == "biolink:in_taxon"
 
-    def test_write_with_deduplication(self):
+    def test_write_with_deduplication(self) -> None:
         """Test that nodes are deduplicated by default."""
         nodes = [
             KGXNode(
@@ -316,9 +312,7 @@ class TestWriteKgxJsonl:
         ]
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            nodes_file, _ = write_kgx_jsonl(
-                nodes, [], tmpdir, "test", deduplicate=True
-            )
+            nodes_file, _ = write_kgx_jsonl(nodes, [], tmpdir, "test", deduplicate=True)
 
             with nodes_file.open() as f:
                 lines = f.readlines()
@@ -328,7 +322,7 @@ class TestWriteKgxJsonl:
                 # Should have both provided_by values
                 assert len(node_data["provided_by"]) == 2
 
-    def test_write_without_deduplication(self):
+    def test_write_without_deduplication(self) -> None:
         """Test writing without deduplication."""
         nodes = [
             KGXNode(
@@ -344,16 +338,14 @@ class TestWriteKgxJsonl:
         ]
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            nodes_file, _ = write_kgx_jsonl(
-                nodes, [], tmpdir, "test", deduplicate=False
-            )
+            nodes_file, _ = write_kgx_jsonl(nodes, [], tmpdir, "test", deduplicate=False)
 
             with nodes_file.open() as f:
                 lines = f.readlines()
                 # Should have 2 nodes without deduplication
                 assert len(lines) == 2
 
-    def test_write_with_edge_id_generation(self):
+    def test_write_with_edge_id_generation(self) -> None:
         """Test that edge IDs are generated by default."""
         edges = [
             KGXEdge(
@@ -366,9 +358,7 @@ class TestWriteKgxJsonl:
         ]
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            _, edges_file = write_kgx_jsonl(
-                [], edges, tmpdir, "test", generate_ids=True
-            )
+            _, edges_file = write_kgx_jsonl([], edges, tmpdir, "test", generate_ids=True)
 
             with edges_file.open() as f:
                 lines = f.readlines()
@@ -376,7 +366,7 @@ class TestWriteKgxJsonl:
                 assert "id" in edge_data
                 assert edge_data["id"].startswith("edge_")
 
-    def test_write_without_edge_id_generation(self):
+    def test_write_without_edge_id_generation(self) -> None:
         """Test writing without edge ID generation."""
         edges = [
             KGXEdge(
@@ -389,9 +379,7 @@ class TestWriteKgxJsonl:
         ]
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            _, edges_file = write_kgx_jsonl(
-                [], edges, tmpdir, "test", generate_ids=False
-            )
+            _, edges_file = write_kgx_jsonl([], edges, tmpdir, "test", generate_ids=False)
 
             with edges_file.open() as f:
                 lines = f.readlines()
@@ -399,20 +387,18 @@ class TestWriteKgxJsonl:
                 # Should not have ID field
                 assert "id" not in edge_data
 
-    def test_write_creates_directory(self):
+    def test_write_creates_directory(self) -> None:
         """Test that output directory is created if it doesn't exist."""
         with tempfile.TemporaryDirectory() as tmpdir:
             output_dir = Path(tmpdir) / "nested" / "output"
-            nodes = [
-                KGXNode(id="bacdive:1", category=["biolink:OrganismTaxon"])
-            ]
+            nodes = [KGXNode(id="bacdive:1", category=["biolink:OrganismTaxon"])]
 
             nodes_file, _ = write_kgx_jsonl(nodes, [], output_dir, "test")
 
             assert output_dir.exists()
             assert nodes_file.parent == output_dir
 
-    def test_write_multiple_nodes_and_edges(self):
+    def test_write_multiple_nodes_and_edges(self) -> None:
         """Test writing multiple nodes and edges."""
         nodes = [
             KGXNode(id="bacdive:1", category=["biolink:OrganismTaxon"]),
@@ -437,9 +423,7 @@ class TestWriteKgxJsonl:
         ]
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            nodes_file, edges_file = write_kgx_jsonl(
-                nodes, edges, tmpdir, "test"
-            )
+            nodes_file, edges_file = write_kgx_jsonl(nodes, edges, tmpdir, "test")
 
             with nodes_file.open() as f:
                 assert len(f.readlines()) == 3
@@ -447,7 +431,7 @@ class TestWriteKgxJsonl:
             with edges_file.open() as f:
                 assert len(f.readlines()) == 2
 
-    def test_json_format_preserves_all_fields(self):
+    def test_json_format_preserves_all_fields(self) -> None:
         """Test that JSON Lines format preserves all node/edge fields."""
         nodes = [
             KGXNode(

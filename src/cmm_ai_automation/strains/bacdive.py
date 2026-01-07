@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import logging
 import re
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection
@@ -69,8 +69,8 @@ def lookup_bacdive_by_ncbi_taxon(collection: Collection[dict[str, Any]], taxon_i
     Returns:
         BacDive document or None
     """
-    result: dict[str, Any] | None = collection.find_one({"General.NCBI tax id.NCBI tax id": taxon_id})
-    return result
+    result = collection.find_one({"General.NCBI tax id.NCBI tax id": taxon_id})
+    return cast(dict[str, Any] | None, result)
 
 
 def lookup_bacdive_by_species(collection: Collection[dict[str, Any]], species_name: str) -> dict[str, Any] | None:
@@ -83,13 +83,11 @@ def lookup_bacdive_by_species(collection: Collection[dict[str, Any]], species_na
     Returns:
         BacDive document or None
     """
-    result: dict[str, Any] | None = collection.find_one({"Name and taxonomic classification.species": species_name})
-    return result
+    result = collection.find_one({"Name and taxonomic classification.species": species_name})
+    return cast(dict[str, Any] | None, result)
 
 
-def search_species_with_synonyms(
-    collection: Collection[dict[str, Any]], species_name: str
-) -> dict[str, Any] | None:
+def search_species_with_synonyms(collection: Collection[dict[str, Any]], species_name: str) -> dict[str, Any] | None:
     """Search for a species by name, checking both current name and synonyms.
 
     This function handles taxonomic reclassifications where a species name
@@ -126,20 +124,20 @@ def search_species_with_synonyms(
     doc = collection.find_one({"Name and taxonomic classification.species": species_name})
     if doc:
         logger.debug(f"Found '{species_name}' by current species name")
-        return doc
+        return cast(dict[str, Any], doc)
 
     # Strategy 2: Match on LPSN species name (may differ from main species field)
     doc = collection.find_one({"Name and taxonomic classification.LPSN.species": species_name})
     if doc:
         logger.debug(f"Found '{species_name}' by LPSN species name")
-        return doc
+        return cast(dict[str, Any], doc)
 
     # Strategy 3: Search in synonyms (for renamed species)
     doc = collection.find_one({"Name and taxonomic classification.LPSN.synonyms.synonym": species_name})
     if doc:
         current_name = doc.get("Name and taxonomic classification", {}).get("species", "Unknown")
         logger.debug(f"Found '{species_name}' as synonym of current name '{current_name}'")
-        return doc
+        return cast(dict[str, Any], doc)
 
     logger.debug(f"Species not found: '{species_name}'")
     return None
@@ -287,13 +285,15 @@ def enrich_strain_from_bacdive(record: StrainRecord, collection: Collection[dict
     # Strategy 2: Look up by NCBITaxon ID (indexed, fast)
     if not doc and record.ncbi_taxon_id:
         try:
-            taxon_id = int(record.ncbi_taxon_id.replace("NCBITaxon:", ""))
+            # We know it's not None due to the check above, but mypy might not.
+            # Explicitly casting to str ensures .replace() is safe.
+            taxon_raw = str(record.ncbi_taxon_id)
+            taxon_id = int(taxon_raw.replace("NCBITaxon:", ""))
             doc = lookup_bacdive_by_ncbi_taxon(collection, taxon_id)
             if doc:
                 logger.debug(f"Found BacDive by NCBITaxon {taxon_id}")
-        except (ValueError, AttributeError):
-            # Invalid or unexpectedly formatted NCBI taxon identifier; skip this strategy
-            # and continue with other enrichment strategies.
+        except ValueError:
+            # Invalid format (not an integer); skip this strategy
             pass
 
     # Strategy 3: Look up by other culture collection ID (slow, full scan)

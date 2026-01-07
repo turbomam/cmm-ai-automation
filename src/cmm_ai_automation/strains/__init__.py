@@ -1,15 +1,16 @@
 """Strain data processing subpackage.
 
-This subpackage provides modular components for processing strain data:
-- models: Domain models (StrainRecord)
-- parsing: TSV parsing for strain data
-- inference: Taxonomic rank inference
-- consolidation: Deduplication and merging
-- ncbi: NCBI Entrez API functions
-- bacdive: BacDive MongoDB lookup functions
-- culture_collection: Culture collection ID search and reconciliation
-- enrichment: Enrichment pipeline orchestration
-- export: KGX node/edge generation
+This subpackage provides modular components for processing strain data.
+
+Submodules:
+    - models: Domain models (StrainRecord)
+    - parsing: TSV parsing for strain data
+    - inference: Taxonomic rank inference
+    - consolidation: Deduplication and merging
+    - ncbi: NCBI Entrez API functions
+    - bacdive: BacDive MongoDB lookup functions
+    - enrichment: Enrichment pipeline orchestration
+    - export: KGX node/edge generation
 """
 
 from cmm_ai_automation.strains.bacdive import (
@@ -18,21 +19,22 @@ from cmm_ai_automation.strains.bacdive import (
     get_bacdive_collection,
     search_species_with_synonyms,
 )
+from cmm_ai_automation.strains.consolidation import (
+    consolidate_strains,
+    deduplicate_by_canonical_id,
+    merge_records,
+)
 from cmm_ai_automation.strains.culture_collection import (
     batch_search_culture_collections,
     parse_culture_collection_id,
     reconcile_culture_collection_id,
     search_culture_collection,
 )
-from cmm_ai_automation.strains.consolidation import (
-    consolidate_strains,
-    deduplicate_by_canonical_id,
-    merge_records,
-)
 from cmm_ai_automation.strains.enrichment import (
     EnrichmentStats,
     IterativeEnrichmentPipeline,
     enrich_strains_with_ncbi,
+    generate_query_variants,
 )
 from cmm_ai_automation.strains.export import (
     export_kgx_edges,
@@ -67,6 +69,7 @@ __all__ = [
     "export_kgx_nodes",
     "export_taxrank_nodes",
     "get_bacdive_collection",
+    "generate_query_variants",
     "infer_species_from_bacdive",
     "infer_species_from_self",
     "infer_taxonomic_rank",

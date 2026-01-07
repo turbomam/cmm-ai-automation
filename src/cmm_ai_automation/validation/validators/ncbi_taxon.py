@@ -13,6 +13,7 @@ import logging
 import re
 from typing import Any
 
+from cmm_ai_automation.strains.ncbi import NcbiTaxonData
 from cmm_ai_automation.validation.base import (
     FieldValidator,
     IssueType,
@@ -82,18 +83,17 @@ class NCBITaxonValidator(FieldValidator):
         """
         self.check_rank = check_rank
         self.name_field = name_field
-        self._cache: dict[str, dict[str, Any]] = {}
+        self._cache: dict[str, NcbiTaxonData] = {}
 
     @property
     def name(self) -> str:
         return "ncbi_taxon"
 
-    def _fetch_taxon_data(self, taxon_id: str) -> dict[str, Any] | None:
+    def _fetch_taxon_data(self, taxon_id: str) -> NcbiTaxonData | None:
         """Fetch taxon data from NCBI, with caching.
 
         Returns:
-            Dict with keys: rank, species_taxon_id, parent_taxon_id, synonyms
-            or None if fetch failed
+            NcbiTaxonData or None if fetch failed
         """
         if taxon_id in self._cache:
             return self._cache[taxon_id]
@@ -228,13 +228,13 @@ class NCBITaxonListValidator(ListValidator):
         """
         super().__init__(separator=separator)
         self.species_field = species_field
-        self._cache: dict[str, dict[str, Any]] = {}
+        self._cache: dict[str, NcbiTaxonData] = {}
 
     @property
     def name(self) -> str:
         return "ncbi_taxon_list"
 
-    def _fetch_taxon_data(self, taxon_id: str) -> dict[str, Any] | None:
+    def _fetch_taxon_data(self, taxon_id: str) -> NcbiTaxonData | None:
         """Fetch taxon data from NCBI, with caching."""
         if taxon_id in self._cache:
             return self._cache[taxon_id]

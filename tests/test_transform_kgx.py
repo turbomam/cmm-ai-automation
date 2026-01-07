@@ -15,7 +15,7 @@ from cmm_ai_automation.transform.kgx import (
 class TestKGXNode:
     """Tests for KGXNode model."""
 
-    def test_minimal_node(self):
+    def test_minimal_node(self) -> None:
         """Test creating a node with only required fields."""
         node = KGXNode(
             id="bacdive:7142",
@@ -26,7 +26,7 @@ class TestKGXNode:
         assert node.name is None
         assert node.provided_by is None
 
-    def test_full_node(self):
+    def test_full_node(self) -> None:
         """Test creating a node with all common fields."""
         node = KGXNode(
             id="bacdive:7142",
@@ -44,7 +44,7 @@ class TestKGXNode:
         assert len(node.xref) == 2
         assert len(node.synonym) == 2
 
-    def test_custom_properties_allowed(self):
+    def test_custom_properties_allowed(self) -> None:
         """Test that custom properties are allowed (KGX lenient design)."""
         node = KGXNode(
             id="bacdive:7142",
@@ -55,17 +55,17 @@ class TestKGXNode:
         assert node.model_extra["type_strain"] == "yes"
         assert node.model_extra["biosafety_level"] == "1"
 
-    def test_missing_required_id_fails(self):
+    def test_missing_required_id_fails(self) -> None:
         """Test that missing id raises ValidationError."""
         with pytest.raises(ValidationError):
             KGXNode(category=["biolink:OrganismTaxon"])
 
-    def test_missing_required_category_fails(self):
+    def test_missing_required_category_fails(self) -> None:
         """Test that missing category raises ValidationError."""
         with pytest.raises(ValidationError):
             KGXNode(id="bacdive:7142")
 
-    def test_empty_category_fails(self):
+    def test_empty_category_fails(self) -> None:
         """Test that empty category list raises ValidationError."""
         with pytest.raises(ValidationError):
             KGXNode(id="bacdive:7142", category=[])
@@ -74,7 +74,7 @@ class TestKGXNode:
 class TestKGXEdge:
     """Tests for KGXEdge model."""
 
-    def test_minimal_edge(self):
+    def test_minimal_edge(self) -> None:
         """Test creating an edge with only required fields."""
         edge = KGXEdge(
             subject="bacdive:7142",
@@ -90,7 +90,7 @@ class TestKGXEdge:
         assert edge.agent_type == "manual_agent"
         assert edge.id is None
 
-    def test_full_edge(self):
+    def test_full_edge(self) -> None:
         """Test creating an edge with all recommended fields."""
         edge = KGXEdge(
             id="edge_1",
@@ -119,7 +119,7 @@ class TestKGXEdge:
             "not_provided",
         ],
     )
-    def test_valid_knowledge_levels(self, knowledge_level):
+    def test_valid_knowledge_levels(self, knowledge_level: str) -> None:
         """Test that all valid knowledge_level enum values are accepted."""
         edge = KGXEdge(
             subject="bacdive:7142",
@@ -143,7 +143,7 @@ class TestKGXEdge:
             "not_provided",
         ],
     )
-    def test_valid_agent_types(self, agent_type):
+    def test_valid_agent_types(self, agent_type: str) -> None:
         """Test that all valid agent_type enum values are accepted."""
         edge = KGXEdge(
             subject="bacdive:7142",
@@ -154,7 +154,7 @@ class TestKGXEdge:
         )
         assert edge.agent_type == agent_type
 
-    def test_invalid_knowledge_level_fails(self):
+    def test_invalid_knowledge_level_fails(self) -> None:
         """Test that invalid knowledge_level raises ValidationError."""
         with pytest.raises(ValidationError):
             KGXEdge(
@@ -165,7 +165,7 @@ class TestKGXEdge:
                 agent_type="manual_agent",
             )
 
-    def test_invalid_agent_type_fails(self):
+    def test_invalid_agent_type_fails(self) -> None:
         """Test that invalid agent_type raises ValidationError."""
         with pytest.raises(ValidationError):
             KGXEdge(
@@ -190,7 +190,7 @@ class TestNormalizeCurie:
             ("infores", "bacdive", "infores:bacdive"),
         ],
     )
-    def test_normalize_curie(self, prefix, local_id, expected):
+    def test_normalize_curie(self, prefix: str, local_id: str, expected: str) -> None:
         """Test CURIE normalization with various inputs."""
         assert normalize_curie(prefix, local_id) == expected
 
@@ -211,11 +211,11 @@ class TestSplitListField:
             ("value1;;value3", ["value1", "value3"]),  # Empty middle value
         ],
     )
-    def test_split_list_field(self, input_str, expected):
+    def test_split_list_field(self, input_str: str | None, expected: list[str]) -> None:
         """Test splitting delimited strings with various inputs."""
         assert split_list_field(input_str) == expected
 
-    def test_custom_delimiter(self):
+    def test_custom_delimiter(self) -> None:
         """Test using custom delimiter."""
         result = split_list_field("a|b|c", delimiter="|")
         assert result == ["a", "b", "c"]
@@ -224,7 +224,7 @@ class TestSplitListField:
 class TestTransformStrainRow:
     """Tests for transform_strain_row function."""
 
-    def test_minimal_valid_row(self):
+    def test_minimal_valid_row(self) -> None:
         """Test transformation with minimal required data."""
         row = {
             "bacdive_id_mam": "7142",
@@ -237,7 +237,7 @@ class TestTransformStrainRow:
         assert nodes[0].id == "bacdive:7142"
         assert nodes[0].category == ["biolink:OrganismTaxon"]
 
-    def test_row_with_species_taxon(self):
+    def test_row_with_species_taxon(self) -> None:
         """Test transformation with species taxonomy."""
         row = {
             "bacdive_id_mam": "7142",
@@ -267,7 +267,7 @@ class TestTransformStrainRow:
         assert edge.predicate == "biolink:in_taxon"
         assert edge.object == "NCBITaxon:408"
 
-    def test_full_strain_row(self):
+    def test_full_strain_row(self) -> None:
         """Test transformation with all available fields."""
         row = {
             "bacdive_id_mam": "7142",
@@ -294,7 +294,7 @@ class TestTransformStrainRow:
         assert strain_node.model_extra["biosafety_level"] == "1"
         assert strain_node.model_extra["availability_status"] == "available"
 
-    def test_prefer_fresh_lookup_over_sub_or_mpj(self):
+    def test_prefer_fresh_lookup_over_sub_or_mpj(self) -> None:
         """Test that fresh_lookup values are preferred over sub_or_mpj."""
         row = {
             "bacdive_id_mam": "7142",
@@ -309,7 +309,7 @@ class TestTransformStrainRow:
         assert strain_node.in_taxon == ["NCBITaxon:408"]  # Used fresh
         assert strain_node.model_extra["type_strain"] == "yes"  # Used fresh
 
-    def test_fallback_to_sub_or_mpj(self):
+    def test_fallback_to_sub_or_mpj(self) -> None:
         """Test fallback to sub_or_mpj when fresh_lookup not available."""
         row = {
             "bacdive_id_mam": "7142",
@@ -322,7 +322,7 @@ class TestTransformStrainRow:
         assert strain_node.in_taxon == ["NCBITaxon:408"]
         assert strain_node.model_extra["biosafety_level"] == "1"
 
-    def test_empty_bacdive_id_returns_empty(self):
+    def test_empty_bacdive_id_returns_empty(self) -> None:
         """Test that row without BacDive ID returns empty results."""
         row = {
             "bacdive_id_mam": "",
@@ -333,7 +333,7 @@ class TestTransformStrainRow:
         assert len(nodes) == 0
         assert len(edges) == 0
 
-    def test_missing_bacdive_id_returns_empty(self):
+    def test_missing_bacdive_id_returns_empty(self) -> None:
         """Test that row without bacdive_id_mam key returns empty results."""
         row = {
             "scientific_name_sub_or_mpj": "Methylorubrum extorquens",
@@ -343,7 +343,7 @@ class TestTransformStrainRow:
         assert len(nodes) == 0
         assert len(edges) == 0
 
-    def test_name_construction_priority(self):
+    def test_name_construction_priority(self) -> None:
         """Test name construction uses scientific_name + strain_id when both present."""
         row = {
             "bacdive_id_mam": "7142",
@@ -354,7 +354,7 @@ class TestTransformStrainRow:
 
         assert nodes[0].name == "Methylorubrum extorquens DSM:1337"
 
-    def test_name_fallback_scientific_only(self):
+    def test_name_fallback_scientific_only(self) -> None:
         """Test name uses scientific_name when strain_id not present."""
         row = {
             "bacdive_id_mam": "7142",
@@ -364,7 +364,7 @@ class TestTransformStrainRow:
 
         assert nodes[0].name == "Methylorubrum extorquens"
 
-    def test_name_fallback_strain_id_only(self):
+    def test_name_fallback_strain_id_only(self) -> None:
         """Test name uses strain_id when scientific_name not present."""
         row = {
             "bacdive_id_mam": "7142",
@@ -374,7 +374,7 @@ class TestTransformStrainRow:
 
         assert nodes[0].name == "DSM:1337"
 
-    def test_name_fallback_curie(self):
+    def test_name_fallback_curie(self) -> None:
         """Test name uses CURIE when neither scientific_name nor strain_id present."""
         row = {
             "bacdive_id_mam": "7142",
@@ -383,7 +383,7 @@ class TestTransformStrainRow:
 
         assert nodes[0].name == "bacdive:7142"
 
-    def test_edge_has_required_provenance(self):
+    def test_edge_has_required_provenance(self) -> None:
         """Test that edges have proper provenance fields."""
         row = {
             "bacdive_id_mam": "7142",
