@@ -1,5 +1,4 @@
 import chromadb
-from pprint import pprint
 
 # Connect to Chroma
 client_dive = chromadb.PersistentClient(path="data/chroma_mediadive")
@@ -9,26 +8,26 @@ client_togo = chromadb.PersistentClient(path="data/chroma_togomedium")
 col_togo = client_togo.get_collection("togomedium_media")
 
 queries = [
-    "Medium 88", 
-    "Sulphur medium", 
+    "Medium 88",
+    "Sulphur medium",
     "Paracoccus medium",
-    "Hypho", 
-    "Hyphomicrobium", 
-    "PIPES", 
+    "Hypho",
+    "Hyphomicrobium",
+    "PIPES",
     "Methanol Peptone Yeast Glucose",
-    "MPYG"
+    "MPYG",
 ]
 
 print("--- MEDIADIVE SEARCH ---")
 res_dive = col_dive.query(query_texts=queries, n_results=3)
-for q, ids, metas, dists in zip(queries, res_dive['ids'], res_dive['metadatas'], res_dive['distances']):
+for q, ids, metas, dists in zip(queries, res_dive["ids"], res_dive["metadatas"], res_dive["distances"], strict=False):
     print(f"\nQuery: {q}")
-    for id, meta, dist in zip(ids, metas, dists):
+    for id, meta, dist in zip(ids, metas, dists, strict=False):
         print(f"  [{dist:.3f}] {id}: {meta.get('name')}")
 
 print("\n\n--- TOGOMEDIUM SEARCH ---")
 res_togo = col_togo.query(query_texts=queries, n_results=3)
-for q, ids, metas, dists in zip(queries, res_togo['ids'], res_togo['metadatas'], res_togo['distances']):
+for q, ids, metas, dists in zip(queries, res_togo["ids"], res_togo["metadatas"], res_togo["distances"], strict=False):
     print(f"\nQuery: {q}")
-    for id, meta, dist in zip(ids, metas, dists):
+    for id, meta, dist in zip(ids, metas, dists, strict=False):
         print(f"  [{dist:.3f}] {id}: {meta.get('name')} (Orig: {meta.get('original_id')})")

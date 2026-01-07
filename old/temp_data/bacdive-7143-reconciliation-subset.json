@@ -1,11 +1,17 @@
 {
-  "_id": 7143,
+  "External links": {
+    "culture collection no.": "DSM 1338, ATCC 14718, NCIB 9133, CCUG 2477, JCM 2805, IAM 12632, NCCB 78016, NCIMB 9133, VKM B-2067",
+    "straininfo link": {
+      "@ref": 76597,
+      "straininfo": 45565
+    }
+  },
   "General": {
     "BacDive-ID": 7143,
     "DSM-Number": 1338,
     "NCBI tax id": {
-      "NCBI tax id": 408,
-      "Matching level": "species"
+      "Matching level": "species",
+      "NCBI tax id": 408
     },
     "strain history": [
       {
@@ -20,14 +26,14 @@
   },
   "Name and taxonomic classification": {
     "LPSN": {
-      "domain": "Bacteria",
-      "phylum": "Pseudomonadota",
       "class": "Alphaproteobacteria",
-      "order": "Hyphomicrobiales",
+      "domain": "Bacteria",
       "family": "Methylobacteriaceae",
-      "genus": "Methylorubrum",
-      "species": "Methylorubrum extorquens",
       "full scientific name": "<I>Methylorubrum</I> <I>extorquens</I> (Urakami and Komagata 1984 ex Bassalik 1913) Green and Ardley 2018",
+      "genus": "Methylorubrum",
+      "order": "Hyphomicrobiales",
+      "phylum": "Pseudomonadota",
+      "species": "Methylorubrum extorquens",
       "synonyms": [
         {
           "@ref": 20215,
@@ -39,54 +45,48 @@
         }
       ]
     },
-    "domain": "Bacteria",
-    "phylum": "Proteobacteria",
     "class": "Alphaproteobacteria",
-    "order": "Rhizobiales",
+    "domain": "Bacteria",
     "family": "Methylobacteriaceae",
-    "genus": "Methylorubrum",
-    "species": "Methylorubrum extorquens",
     "full scientific name": "Methylorubrum extorquens (Urakami and Komagata 1984) Green and Ardley 2018",
+    "genus": "Methylorubrum",
+    "order": "Rhizobiales",
+    "phylum": "Proteobacteria",
+    "species": "Methylorubrum extorquens",
     "strain designation": "0355, D355, AM1",
     "type strain": "no"
   },
   "Sequence information": {
     "16S sequences": [
       {
-        "description": "Methylobacterium extorquens 16S ribosomal RNA gene, partial sequence; tRNA-Ile and tRNA-Ala genes, complete sequence; and 23S ribosomal RNA gene, partial sequence",
+        "NCBI tax ID": 408,
         "accession": "AF293375",
-        "length": 2552,
         "database": "nuccore",
-        "NCBI tax ID": 408
+        "description": "Methylobacterium extorquens 16S ribosomal RNA gene, partial sequence; tRNA-Ile and tRNA-Ala genes, complete sequence; and 23S ribosomal RNA gene, partial sequence",
+        "length": 2552
       },
       {
-        "description": "Methylobacterium extorquens partial 16S rRNA gene, isolate OS-44.c3",
+        "NCBI tax ID": 408,
         "accession": "AM237358",
-        "length": 510,
         "database": "nuccore",
-        "NCBI tax ID": 408
+        "description": "Methylobacterium extorquens partial 16S rRNA gene, isolate OS-44.c3",
+        "length": 510
       },
       {
-        "description": "Methylobacterium extorquens partial 16S rRNA gene, strain IAM 12632",
+        "NCBI tax ID": 408,
         "accession": "AJ400916",
-        "length": 736,
         "database": "nuccore",
-        "NCBI tax ID": 408
+        "description": "Methylobacterium extorquens partial 16S rRNA gene, strain IAM 12632",
+        "length": 736
       }
     ],
     "Genome sequences": {
-      "description": "Methylorubrum extorquens AM1",
+      "NCBI tax ID": 272630,
       "accession": "GCA_000022685",
       "assembly level": "complete",
       "database": "ncbi",
-      "NCBI tax ID": 272630
+      "description": "Methylorubrum extorquens AM1"
     }
   },
-  "External links": {
-    "culture collection no.": "DSM 1338, ATCC 14718, NCIB 9133, CCUG 2477, JCM 2805, IAM 12632, NCCB 78016, NCIMB 9133, VKM B-2067",
-    "straininfo link": {
-      "@ref": 76597,
-      "straininfo": 45565
-    }
-  }
+  "_id": 7143
 }
