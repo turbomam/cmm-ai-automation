@@ -9,18 +9,19 @@ References:
 
 import json
 import logging
-import time
 from dataclasses import dataclass
 from typing import Any
 from urllib.parse import quote
 
 import requests
 
+from cmm_ai_automation.clients.base import HTTPClientBase
+
 logger = logging.getLogger(__name__)
 
 # PubChem rate limit: max 5 requests per second
 # We use 0.25s delay to stay well under limit
-DEFAULT_RATE_LIMIT_DELAY = 0.25
+PUBCHEM_RATE_LIMIT_DELAY = 0.25
 
 # Properties to fetch from PubChem
 # See: https://pubchem.ncbi.nlm.nih.gov/docs/pug-rest#section=Compound-Property-Tables
@@ -123,7 +124,7 @@ class LookupError:
     error_message: str
 
 
-class PubChemClient:
+class PubChemClient(HTTPClientBase):
     """Client for PubChem PUG-REST API.
 
     Example:
@@ -138,7 +139,7 @@ class PubChemClient:
 
     def __init__(
         self,
-        rate_limit_delay: float = DEFAULT_RATE_LIMIT_DELAY,
+        rate_limit_delay: float = PUBCHEM_RATE_LIMIT_DELAY,
         timeout: float = 30.0,
     ):
         """Initialize PubChem client.
@@ -147,42 +148,7 @@ class PubChemClient:
             rate_limit_delay: Seconds to wait between requests (default: 0.25)
             timeout: Request timeout in seconds (default: 30)
         """
-        self.rate_limit_delay = rate_limit_delay
-        self.timeout = timeout
-        self._last_request_time: float = 0
-        self._session = requests.Session()
-        self._session.headers.update(
-            {
-                "Accept": "application/json",
-                "User-Agent": "cmm-ai-automation/0.1.0 (https://github.com/turbomam/cmm-ai-automation)",
-            }
-        )
-
-    def _wait_for_rate_limit(self) -> None:
-        """Wait if needed to respect rate limit."""
-        elapsed = time.time() - self._last_request_time
-        if elapsed < self.rate_limit_delay:
-            time.sleep(self.rate_limit_delay - elapsed)
-        self._last_request_time = time.time()
-
-    def _get(self, url: str) -> dict[str, Any]:
-        """Make a GET request with rate limiting.
-
-        Args:
-            url: Full URL to fetch
-
-        Returns:
-            Parsed JSON response
-
-        Raises:
-            requests.RequestException: On network errors
-        """
-        self._wait_for_rate_limit()
-        logger.debug(f"GET {url}")
-        response = self._session.get(url, timeout=self.timeout)
-        response.raise_for_status()
-        result: dict[str, Any] = response.json()
-        return result
+        super().__init__(rate_limit_delay=rate_limit_delay, timeout=timeout)
 
     def get_cids_by_name(self, name: str) -> list[int] | LookupError:
         """Get all CIDs matching a compound name.
@@ -197,7 +163,7 @@ class PubChemClient:
         url = f"{self.BASE_URL}/compound/name/{encoded_name}/cids/JSON"
 
         try:
-            data = self._get(url)
+            data = self._get_json(url)
         except requests.HTTPError as e:
             try:
                 error_data = e.response.json()
@@ -282,7 +248,7 @@ class PubChemClient:
         url = f"{self.BASE_URL}/compound/name/{encoded_name}/property/{properties}/JSON"
 
         try:
-            data = self._get(url)
+            data = self._get_json(url)
         except requests.HTTPError as e:
             # Try to parse PubChem error response
             try:
@@ -346,7 +312,7 @@ class PubChemClient:
         url = f"{self.BASE_URL}/compound/cid/{cid}/property/{properties}/JSON"
 
         try:
-            data = self._get(url)
+            data = self._get_json(url)
         except requests.HTTPError as e:
             try:
                 error_data = e.response.json()
@@ -406,7 +372,7 @@ class PubChemClient:
         url = f"{self.BASE_URL}/compound/cid/{cid}/synonyms/JSON"
 
         try:
-            data = self._get(url)
+            data = self._get_json(url)
         except requests.HTTPError as e:
             try:
                 error_data = e.response.json()

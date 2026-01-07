@@ -1,0 +1,308 @@
+{
+  "Culture and growth conditions": {
+    "culture medium": {
+      "@ref": 528,
+      "composition": "Name: NUTRIENT AGAR (DSMZ Medium 1; with strain-specific modifications)\nComposition:\nAgar 15.0 g/l\nMethanol 10.0 g/l\nPeptone 5.0 g/l\nMeat extract 3.0 g/l\nDistilled water",
+      "growth": "yes",
+      "link": "https://mediadive.dsmz.de/medium/1",
+      "name": "NUTRIENT AGAR (DSMZ Medium 1)"
+    },
+    "culture temp": [
+      {
+        "@ref": 528,
+        "growth": "positive",
+        "temperature": "30",
+        "type": "growth"
+      },
+      {
+        "@ref": 67770,
+        "growth": "positive",
+        "temperature": "30",
+        "type": "growth"
+      }
+    ]
+  },
+  "External links": {
+    "@ref": 528,
+    "culture collection no.": "DSM 1338, ATCC 14718, NCIB 9133, CCUG 2477, JCM 2805, IAM 12632, NCCB 78016, NCIMB 9133, VKM B-2067",
+    "literature": [
+      {
+        "DOI": "10.1016/s1389-1723(00)88966-5",
+        "Pubmed-ID": "16232766",
+        "authors": "Maeda H, Suzuki S, Ikeguchi M, Sakai T, Shibata K",
+        "journal": "J Biosci Bioeng",
+        "title": "Enzymatic synthesis of L-[4-13C]aspartic acid.",
+        "year": 2000
+      },
+      {
+        "DOI": "922",
+        "Pubmed-ID": "16404155",
+        "authors": "Kim KS, Kim JH, Kim DY, Kim HJ, Park ST, Kim YM",
+        "journal": "Mol Cells",
+        "mesh": "Amino Acid Sequence, Amino Acid Substitution, Base Sequence, Cloning, Molecular, DNA Gyrase/*genetics/metabolism, DNA Topoisomerase IV/genetics, DNA, Bacterial, *Drug Resistance, Bacterial, Fluoroquinolones/*pharmacology, Genes, Bacterial, Methylobacterium/*drug effects/enzymology, Methylophilaceae/chemistry/genetics, Microbial Sensitivity Tests, Molecular Sequence Data, Mutation",
+        "title": "Molecular cloning of the DNA gyrase genes from Methylovorus sp. strain SS1 and the mechanism of intrinsic quinolone resistance in methylotrophic bacteria.",
+        "topic": "Enzymology",
+        "topic2": "Genetics",
+        "year": 2005
+      }
+    ],
+    "straininfo link": {
+      "@ref": 76597,
+      "straininfo": 45565
+    }
+  },
+  "General": {
+    "@ref": 528,
+    "BacDive-ID": 7143,
+    "DSM-Number": 1338,
+    "NCBI tax id": {
+      "Matching level": "species",
+      "NCBI tax id": 408
+    },
+    "description": "Methylorubrum extorquens 0355 is a mesophilic, Gram-negative bacterium that was isolated from air.",
+    "doi": "10.13145/bacdive7143.20250331.9.3",
+    "keywords": [
+      "genome sequence",
+      "16S sequence",
+      "Bacteria",
+      "mesophilic",
+      "Gram-negative"
+    ],
+    "strain history": [
+      {
+        "@ref": 528,
+        "history": "<- NCIB; NCIB 9133 (<i>Pseudomonas</i>) {1978} <- P. H. A. Sneath; 0355 (<i>Pseudomonas</i>) <- J. R. Quayle; AM1 (<i>Pseudomonas</i>)"
+      },
+      {
+        "@ref": 67770,
+        "history": "T. Urakami TK 0004 <-- NCIB 9133 <-- P. H. A. Sneath D355."
+      }
+    ]
+  },
+  "Genome-based predictions": {},
+  "Isolation, sampling and environmental information": {
+    "isolation": [
+      {
+        "@ref": 528,
+        "sample type": "air"
+      },
+      {
+        "@ref": 44544,
+        "sample type": "Air"
+      }
+    ],
+    "isolation source categories": {
+      "Cat1": "#Environmental",
+      "Cat2": "#Air"
+    },
+    "taxonmaps": {
+      "16S sequence": "AF293375",
+      "@ref": 69479,
+      "File name": "preview.99_253.png",
+      "Last taxonomy": "Methylorubrum",
+      "Sequence Identity": null,
+      "Total samples": 110728,
+      "animal counts": 47578,
+      "aquatic counts": 23711,
+      "plant counts": 16159,
+      "soil counts": 23280,
+      "url": "https://microbeatlas.org/index.html?action=taxon&taxon_id=90_15368;96_177;97_192;98_215;99_253&stattab=map"
+    }
+  },
+  "Morphology": {},
+  "Name and taxonomic classification": {
+    "@ref": 528,
+    "LPSN": {
+      "@ref": 20215,
+      "class": "Alphaproteobacteria",
+      "description": "domain/bacteria",
+      "domain": "Bacteria",
+      "family": "Methylobacteriaceae",
+      "full scientific name": "<I>Methylorubrum</I> <I>extorquens</I> (Urakami and Komagata 1984 ex Bassalik 1913) Green and Ardley 2018",
+      "genus": "Methylorubrum",
+      "keyword": "phylum/pseudomonadota",
+      "order": "Hyphomicrobiales",
+      "phylum": "Pseudomonadota",
+      "species": "Methylorubrum extorquens",
+      "synonyms": [
+        {
+          "@ref": 20215,
+          "synonym": "Methylobacterium extorquens"
+        },
+        {
+          "@ref": 20215,
+          "synonym": "Protomonas extorquens"
+        }
+      ]
+    },
+    "class": "Alphaproteobacteria",
+    "domain": "Bacteria",
+    "family": "Methylobacteriaceae",
+    "full scientific name": "Methylorubrum extorquens (Urakami and Komagata 1984) Green and Ardley 2018",
+    "genus": "Methylorubrum",
+    "order": "Rhizobiales",
+    "phylum": "Proteobacteria",
+    "species": "Methylorubrum extorquens",
+    "strain designation": "0355, D355, AM1",
+    "type strain": "no"
+  },
+  "Physiology and metabolism": {
+    "compound production": [
+      {
+        "@ref": 528,
+        "compound": "bacteriochlorophyll"
+      },
+      {
+        "@ref": 528,
+        "compound": "glutamate dehydrogenase, NADP-dependent"
+      }
+    ],
+    "fatty acid profile": {
+      "fatty acids": [
+        {
+          "@ref": 44544,
+          "ECL": 13,
+          "fatty acid": "C13:0",
+          "percentage": 3.2
+        },
+        {
+          "@ref": 44544,
+          "ECL": 18,
+          "fatty acid": "C18:0",
+          "percentage": 2.5
+        },
+        {
+          "@ref": 44544,
+          "ECL": 15.485,
+          "fatty acid": "C14:0 3OH/C16:1 ISO I",
+          "percentage": 7.1
+        },
+        {
+          "@ref": 44544,
+          "ECL": 15.819,
+          "fatty acid": "C16:1 &omega;7c",
+          "percentage": 11.8
+        },
+        {
+          "@ref": 44544,
+          "ECL": 17.824,
+          "fatty acid": "C18:1 &omega;7c /12t/9t",
+          "percentage": 75.4
+        }
+      ],
+      "method/protocol": "CCUG",
+      "type of FA analysis": "whole cell analysis"
+    },
+    "observation": {
+      "@ref": 67770,
+      "observation": "quinones: Q-10"
+    }
+  },
+  "Reference": [
+    {
+      "@id": 528,
+      "authors": "Curators of the DSMZ",
+      "catalogue": "Leibniz Institut DSMZ-Deutsche Sammlung von Mikroorganismen und Zellkulturen GmbH (DSM 1338)",
+      "doi/url": "https://www.dsmz.de/collection/catalogue/details/culture/DSM-1338"
+    },
+    {
+      "@id": 20215,
+      "authors": "Parte, A.C., Sard\u00e0 Carbasse, J., Meier-Kolthoff, J.P., Reimer, L.C. and G\u00f6ker, M.",
+      "doi/url": "10.1099/ijsem.0.004332",
+      "title": "List of Prokaryotic names with Standing in Nomenclature (LPSN) moves to the DSMZ"
+    },
+    {
+      "@id": 20218,
+      "authors": "Verslyppe, B., De Smet, W., De Baets, B., De Vos, P., Dawyndt P.",
+      "doi/url": "10.1016/j.syapm.2013.11.002",
+      "journal": "Syst Appl Microbiol. 37: 42-50 2014",
+      "pubmed": 24321274,
+      "title": "StrainInfo introduces electronic passports for microorganisms."
+    },
+    {
+      "@id": 44544,
+      "authors": "Curators of the CCUG",
+      "catalogue": "Culture Collection University of Gothenburg (CCUG) (CCUG 2477)",
+      "doi/url": "https://www.ccug.se/strain?id=2477"
+    },
+    {
+      "@id": 67770,
+      "authors": "Curators of the JCM",
+      "doi/url": "https://jcm.brc.riken.jp/en/"
+    },
+    {
+      "@id": 69479,
+      "authors": "Jo\u00e3o F Matias Rodrigues, Janko Tackmann,Gregor Rot, Thomas SB Schmidt, Lukas Malfertheiner, Mihai Danaila,Marija Dmitrijeva, Daniela Gaio, Nicolas N\u00e4pflin and Christian von Mering. University of Zurich.",
+      "doi/url": "https://microbeatlas.org/",
+      "title": "MicrobeAtlas 1.0 beta"
+    },
+    {
+      "@id": 76597,
+      "authors": "Reimer, L.C., Lissin, A.,Schober, I., Witte,J.F., Podstawka, A., L\u00fcken, H., Bunk, B.,Overmann, J.",
+      "doi/url": "10.60712/SI-ID45565.1",
+      "title": "StrainInfo: A central database for resolving microbial strain identifiers"
+    },
+    {
+      "@id": 124043,
+      "authors": "Isabel Schober, Julia Koblitz",
+      "title": "Data extracted from sequence databases, automatically matched based on designation and taxonomy"
+    },
+    {
+      "@id": 125438,
+      "authors": "Julia Koblitz, Lorenz Christian Reimer, R\u00fcdiger Pukall, J\u00f6rg Overmann",
+      "doi/url": "10.1101/2024.08.12.607695",
+      "title": "Predicting bacterial phenotypic traits through improved machine learning using high-quality, curated datasets"
+    },
+    {
+      "@id": 125439,
+      "authors": "Philipp M\u00fcnch, Ren\u00e9 Mreches, Martin Binder, H\u00fcseyin Anil G\u00fcnd\u00fcz, Xiao-Yin To, Alice McHardy",
+      "doi/url": "https://github.com/GenomeNet/deepG",
+      "title": "deepG: Deep Learning for Genome Sequence Data. R package version 0.3.1"
+    }
+  ],
+  "Safety information": {
+    "risk assessment": {
+      "@ref": 528,
+      "biosafety level": "1",
+      "biosafety level comment": "Risk group (German classification)"
+    }
+  },
+  "Sequence information": {
+    "16S sequences": [
+      {
+        "@ref": 20218,
+        "NCBI tax ID": 408,
+        "accession": "AF293375",
+        "database": "nuccore",
+        "description": "Methylobacterium extorquens 16S ribosomal RNA gene, partial sequence; tRNA-Ile and tRNA-Ala genes, complete sequence; and 23S ribosomal RNA gene, partial sequence",
+        "length": 2552
+      },
+      {
+        "@ref": 20218,
+        "NCBI tax ID": 408,
+        "accession": "AM237358",
+        "database": "nuccore",
+        "description": "Methylobacterium extorquens partial 16S rRNA gene, isolate OS-44.c3",
+        "length": 510
+      },
+      {
+        "@ref": 124043,
+        "NCBI tax ID": 408,
+        "accession": "AJ400916",
+        "database": "nuccore",
+        "description": "Methylobacterium extorquens partial 16S rRNA gene, strain IAM 12632",
+        "length": 736
+      }
+    ],
+    "Genome sequences": {
+      "@ref": 67770,
+      "NCBI tax ID": 272630,
+      "accession": "GCA_000022685",
+      "assembly level": "complete",
+      "database": "ncbi",
+      "description": "Methylorubrum extorquens AM1"
+    }
+  },
+  "_id": 7143,
+  "bacdive_id": 7143
+}

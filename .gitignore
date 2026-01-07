@@ -181,6 +181,19 @@ data/*.tar.gz
 
 # LibreOffice lock files
 data/.~lock.*
+.~lock.*
 
 # Cache directories
 data/*_cache/
+
+# Generated data files - rebuild locally
+data/bacdive_strain_medium_edges.tsv
+data/edge_patterns.tsv
+data/mongodb_collections_report.tsv
+
+# Manual backups and archives
+data/chroma-archives/
+data/mongodb_backups/
+
+# Downloaded ontology files - refetch as needed
+data/ontologies/

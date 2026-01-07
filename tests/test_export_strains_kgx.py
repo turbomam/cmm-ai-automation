@@ -4,14 +4,11 @@ from __future__ import annotations
 
 from typing import Any
 
-from cmm_ai_automation.scripts.export_strains_kgx import (
-    BIOLINK_CATEGORY,
-    COLLECTION_PREFIX_MAP,
-    StrainRecord,
-    extract_bacdive_data,
-    fetch_ncbi_synonyms,
-    generate_query_variants,
-)
+from cmm_ai_automation.strains import StrainRecord
+from cmm_ai_automation.strains.bacdive import extract_bacdive_data
+from cmm_ai_automation.strains.enrichment import generate_query_variants
+from cmm_ai_automation.strains.models import BIOLINK_CATEGORY, COLLECTION_PREFIX_MAP
+from cmm_ai_automation.strains.ncbi import fetch_ncbi_synonyms
 
 
 class TestStrainRecord:

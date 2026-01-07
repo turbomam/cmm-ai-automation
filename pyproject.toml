@@ -42,6 +42,7 @@ dependencies = [
   "pydantic-ai>=1.30.1",
   "pydantic>=2.12.5",
   "neo4j>=4.4.13",
+  "aiohttp==3.13.3",
 ]
 
 [dependency-groups]
@@ -105,9 +106,9 @@ skip = [
   "src/cmm_ai_automation/datamodel/cmm_ai_automation_pydantic.py",
   "src/cmm_ai_automation/datamodel/cmm_ai_automation.py",
 ]
+ignore-words-list = "bu,linke,crossreference"
 
 # Reminder: words have to be lowercased for the ignore-words-list
-ignore-words-list = "linke,crossreference"
 quiet-level = 3
 
 # Ref.: https://github.com/crate-ci/typos (spell checker)
