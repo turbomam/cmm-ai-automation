@@ -87,6 +87,64 @@ def lookup_bacdive_by_species(collection: Collection[dict[str, Any]], species_na
     return result
 
 
+def search_species_with_synonyms(
+    collection: Collection[dict[str, Any]], species_name: str
+) -> dict[str, Any] | None:
+    """Search for a species by name, checking both current name and synonyms.
+
+    This function handles taxonomic reclassifications where a species name
+    may have changed. For example:
+        - "Sinorhizobium meliloti" → now "Ensifer meliloti"
+        - "Methylobacterium extorquens" → now "Methylorubrum extorquens"
+
+    Search strategy:
+        1. Try exact match on current species name (fastest)
+        2. Try LPSN species name (alternative field)
+        3. Try synonyms list (for renamed species)
+
+    Args:
+        collection: MongoDB collection
+        species_name: Binomial species name (e.g., "Sinorhizobium meliloti")
+
+    Returns:
+        BacDive document or None if not found
+
+    Examples:
+        >>> # Current name
+        >>> doc = search_species_with_synonyms(collection, "Ensifer meliloti")
+        >>> doc is not None
+        True
+
+        >>> # Old name (synonym)
+        >>> doc = search_species_with_synonyms(collection, "Sinorhizobium meliloti")
+        >>> doc is not None
+        True
+        >>> doc['Name and taxonomic classification']['species']
+        'Ensifer meliloti'
+    """
+    # Strategy 1: Direct match on current species name
+    doc = collection.find_one({"Name and taxonomic classification.species": species_name})
+    if doc:
+        logger.debug(f"Found '{species_name}' by current species name")
+        return doc
+
+    # Strategy 2: Match on LPSN species name (may differ from main species field)
+    doc = collection.find_one({"Name and taxonomic classification.LPSN.species": species_name})
+    if doc:
+        logger.debug(f"Found '{species_name}' by LPSN species name")
+        return doc
+
+    # Strategy 3: Search in synonyms (for renamed species)
+    doc = collection.find_one({"Name and taxonomic classification.LPSN.synonyms.synonym": species_name})
+    if doc:
+        current_name = doc.get("Name and taxonomic classification", {}).get("species", "Unknown")
+        logger.debug(f"Found '{species_name}' as synonym of current name '{current_name}'")
+        return doc
+
+    logger.debug(f"Species not found: '{species_name}'")
+    return None
+
+
 def lookup_bacdive_by_culture_collection(
     collection: Collection[dict[str, Any]], search_id: str
 ) -> dict[str, Any] | None:

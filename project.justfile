@@ -177,6 +177,14 @@ export-kgx:
 # KGX TARGETS - Knowledge Graph Exchange Operations
 # =============================================================================
 
+# Export BacDive strains directly from MongoDB to KGX JSON Lines format
+# REQUIRES: BacDive MongoDB populated (via load-bacdive), NETWORK: no (MongoDB local)
+# WRITES: output/kgx/cmm_strains_bacdive_nodes.jsonl, output/kgx/cmm_strains_bacdive_edges.jsonl
+kgx-export-bacdive limit='':
+  @mkdir -p output/kgx
+  {{ if limit == '' { 'uv run python -m cmm_ai_automation.scripts.export_bacdive_kgx' } else { 'uv run python -m cmm_ai_automation.scripts.export_bacdive_kgx --limit ' + limit } }}
+  @echo "✓ BacDive MongoDB export complete"
+
 # Export strains to KGX format
 # REQUIRES: data/private/strains.tsv, BacDive API, NCBI API, NETWORK: yes
 # WRITES: output/kgx/strains_nodes.tsv, output/kgx/strains_edges.tsv

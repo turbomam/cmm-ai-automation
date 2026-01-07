@@ -7,6 +7,7 @@ This subpackage provides modular components for processing strain data:
 - consolidation: Deduplication and merging
 - ncbi: NCBI Entrez API functions
 - bacdive: BacDive MongoDB lookup functions
+- culture_collection: Culture collection ID search and reconciliation
 - enrichment: Enrichment pipeline orchestration
 - export: KGX node/edge generation
 """
@@ -15,6 +16,13 @@ from cmm_ai_automation.strains.bacdive import (
     enrich_strain_from_bacdive,
     enrich_strains_with_bacdive,
     get_bacdive_collection,
+    search_species_with_synonyms,
+)
+from cmm_ai_automation.strains.culture_collection import (
+    batch_search_culture_collections,
+    parse_culture_collection_id,
+    reconcile_culture_collection_id,
+    search_culture_collection,
 )
 from cmm_ai_automation.strains.consolidation import (
     consolidate_strains,
@@ -49,6 +57,7 @@ __all__ = [
     "EnrichmentStats",
     "IterativeEnrichmentPipeline",
     "StrainRecord",
+    "batch_search_culture_collections",
     "consolidate_strains",
     "deduplicate_by_canonical_id",
     "enrich_strain_from_bacdive",
@@ -63,8 +72,12 @@ __all__ = [
     "infer_taxonomic_rank",
     "merge_records",
     "parse_all_strain_sources",
+    "parse_culture_collection_id",
     "parse_growth_preferences_tsv",
     "parse_strains_tsv",
     "parse_taxa_and_genomes_tsv",
+    "reconcile_culture_collection_id",
     "run_inference_pipeline",
+    "search_culture_collection",
+    "search_species_with_synonyms",
 ]
