@@ -29,9 +29,13 @@ This directory contains manually curated and computationally enriched strain dat
 
 **Status:** Final enriched dataset for analysis
 
-## Privacy
+## Privacy & Access
 
-All files in this directory are **ignored by git** and should remain private until the research team decides to publish.
+All files in `data/private/strains/` are **ignored by git** and remain private.
+
+**Planned:** One of these files (likely `strains.tsv` or a derivative) will eventually be added to the team's Google Sheets workbook for broader access.
+
+**Current access:** Until then, contact Mark (repository owner) for access to these files.
 
 ## Regeneration
 
