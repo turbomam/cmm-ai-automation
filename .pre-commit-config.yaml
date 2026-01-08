@@ -16,8 +16,10 @@ repos:
             data/.*
           )$
       - id: end-of-file-fixer
+        exclude: ^data/
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
+        exclude: ^data/
 
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.37.0
