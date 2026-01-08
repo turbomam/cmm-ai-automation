@@ -4,6 +4,8 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
+
 from cmm_ai_automation.strains import StrainRecord
 from cmm_ai_automation.strains.bacdive import extract_bacdive_data
 from cmm_ai_automation.strains.enrichment import generate_query_variants
@@ -397,6 +399,7 @@ class TestIdPriorityRules:
         assert node["id"] == "cmm:strain-DSM-16371"
 
 
+@pytest.mark.integration
 class TestFetchNcbiSynonyms:
     """Tests for fetch_ncbi_synonyms function."""
 

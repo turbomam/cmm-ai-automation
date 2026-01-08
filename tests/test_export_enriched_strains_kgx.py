@@ -39,7 +39,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "AM-1",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is not None
         assert node.id == "bacdive:7142"
@@ -55,7 +55,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "AM-1",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is not None
         assert node.id == "NCBITaxon:408"
@@ -70,7 +70,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "AM-1",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is not None
         assert node.id == "bacdive:7142"  # BacDive is primary
@@ -86,7 +86,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "AM-1",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is None
 
@@ -99,7 +99,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is not None
         assert node.name == "Methylobacterium extorquens"
@@ -113,7 +113,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "AM-1",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is not None
         assert node.synonym is not None
@@ -128,7 +128,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "AM-1",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is not None
         assert node.synonym is None or len(node.synonym) == 0
@@ -142,7 +142,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is not None
         assert node.name == "BacDive strain 7142"
@@ -156,7 +156,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is not None
         assert node.name == "NCBITaxon 408"
@@ -170,7 +170,7 @@ class TestCreateStrainNode:
             "strain_designation_sub_or_mpj": "AM-1",
         }
 
-        node = create_strain_node(strain_data)
+        node, species_taxon_id = create_strain_node(strain_data)
 
         assert node is not None
         assert node.id == "bacdive:7142"
