@@ -1307,15 +1307,137 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#13-references" class="md-nav__link">
+  <a href="#13-verification-notes-2026-01-08" class="md-nav__link">
     <span class="md-ellipsis">
       
-        13. References
+        13. Verification Notes (2026-01-08)
       
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="13. References">
+    <nav class="md-nav" aria-label="13. Verification Notes (2026-01-08)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#methodology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Methodology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issues-fixed-credit-to-kg-microbe-team" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issues Fixed (Credit to kg-microbe team)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cosmetic-changes-not-actually-fixed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cosmetic Changes (Not Actually Fixed)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#issues-still-present-verified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Issues Still Present (Verified)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Issues Still Present (Verified)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-missing-biolink-3x-required-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Missing Biolink 3.x Required Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-invalid-provenance-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Invalid Provenance Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-schema-pollution-edge-columns-in-node-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Schema Pollution - Edge Columns in Node Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-unregistered-prefixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Unregistered Prefixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. References">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1367,15 +1489,22 @@
 
 
 <h1 id="kg-microbe-technical-debt-and-fair-compliance-risks">kg-microbe Technical Debt and FAIR Compliance Risks</h1>
-<p><strong>Date:</strong> 2026-01-07<br />
-<strong>Purpose:</strong> Document actionable risks in kg-microbe's approach and how CMM mitigates them<br />
+<p><strong>Date:</strong> 2026-01-07
+<strong>Last Verified:</strong> 2026-01-08
+<strong>Purpose:</strong> Document actionable risks in kg-microbe's approach and how CMM mitigates them
 <strong>Audience:</strong> Collaborators, reviewers, funders evaluating data quality</p>
 <hr />
 <h2 id="executive-summary">Executive Summary</h2>
 <p>kg-microbe, while valuable for comprehensive microbial data, has <strong>measurable technical debt</strong> that violates FAIR principles and creates downstream integration risks. This document quantifies these issues and shows how cmm-ai-automation addresses them.</p>
-<p><strong>Key Risk Metrics:</strong>
-- <strong>Invalid CURIEs with spaces/colons</strong> break RDF export (see kg-microbe#430)
-- <strong>Biolink Model violations</strong> affect many edges using <code>capable_of</code> predicate (see kg-microbe#438)
+<blockquote>
+<p><strong>2026-01-08 Update:</strong> Independent verification against current kg-microbe data (commit <code>e2861c4</code>) shows some issues have been addressed while others remain. See <a href="#verification-notes-2026-01-08">Verification Notes</a> for details.</p>
+</blockquote>
+<p><strong>Key Risk Metrics (Verified 2026-01-08):</strong>
+- <strong>~~Invalid CURIEs with spaces/colons~~</strong> - Issue #430 still OPEN but current transformed data shows clean CURIEs
+- <strong>~~Biolink Model violations~~</strong> - Fixed Dec 2025: <code>capable_of</code> replaced with <code>METPO:2000103</code> (commit <code>19aeb82</code>)
+- <strong>Missing Biolink 3.x required fields</strong> - Edge files lack <code>knowledge_level</code> and <code>agent_type</code> ⚠️ STILL TRUE
+- <strong>Invalid provenance format</strong> - <code>primary_knowledge_source</code> uses <code>bacdive</code> not <code>infores:bacdive</code> ⚠️ STILL TRUE
+- <strong>Schema pollution</strong> - Node file headers contain edge columns (subject, predicate, object, relation) ⚠️ STILL TRUE
 - <strong>High false positive rate</strong> in media grounding (documented in <a href="../kg_microbe_nodes_analysis/">kg_microbe_nodes_analysis.md</a>)
 - <strong>No automated validation</strong> in CI pipeline</p>
 <p><strong>To verify current counts:</strong></p>
@@ -2577,12 +2706,185 @@ kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w
 - Reusable LinkML schemas
 - Contributions to standards (Biolink, METPO)"</p>
 <hr />
-<h2 id="13-references">13. References</h2>
+<h2 id="13-verification-notes-2026-01-08">13. Verification Notes (2026-01-08)</h2>
+<p>Independent verification performed against kg-microbe repository at commit <code>e2861c4</code> (2026-01-05).</p>
+<h3 id="methodology">Methodology</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Verified against local clone of kg-microbe</span>
+<span class="nb">cd</span><span class="w"> </span>~/gitrepos/kg-microbe
+git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-1<span class="w">  </span><span class="c1"># e2861c4</span>
+
+<span class="c1"># Examined transformed data in data/transformed/</span>
+ls<span class="w"> </span>data/transformed/<span class="w">  </span><span class="c1"># bacdive, bactotraits, madin_etal, ontologies</span>
+</code></pre></div>
+<h3 id="issues-fixed-credit-to-kg-microbe-team">Issues Fixed (Credit to kg-microbe team)</h3>
+<table>
+<thead>
+<tr>
+<th>Original Issue</th>
+<th>Fix</th>
+<th>Commit</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>biolink:capable_of</code> with wrong object types (#438)</td>
+<td>Replaced with <code>METPO:2000103</code></td>
+<td><code>19aeb82</code></td>
+</tr>
+<tr>
+<td>CURIEs with spaces (#430)</td>
+<td>Current data shows no spaces</td>
+<td>Unknown</td>
+</tr>
+<tr>
+<td>CURIEs with extra colons (#430)</td>
+<td>Current data shows clean format</td>
+<td>Unknown</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recent positive commits (Dec 2025):</strong>
+- <code>19aeb82</code> - Replace biolink:capable_of with METPO:2000103
+- <code>f422156</code> - Refactor growth media category to METPO:1004005
+- <code>28d6a9c</code> - Prioritize METPO predicates and standardize chemical categories</p>
+<h3 id="cosmetic-changes-not-actually-fixed">Cosmetic Changes (Not Actually Fixed)</h3>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Looks Like</th>
+<th>Reality</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strain:bacdive_</code> → <code>kgmicrobe.strain:</code></td>
+<td>Scoped prefix</td>
+<td><strong>Not registered in Bioregistry</strong> (404)</td>
+</tr>
+<tr>
+<td><code>medium:104c</code> → <code>mediadive.medium:104c</code></td>
+<td>Source attribution</td>
+<td><strong>Not registered in Bioregistry</strong> (404)</td>
+</tr>
+</tbody>
+</table>
+<p>These prefix changes look better but don't solve the fundamental problem: CURIEs must expand to resolvable URLs. Unregistered prefixes are just local conventions that look like standards compliance.</p>
+<p><strong>Verification:</strong>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://bioregistry.io/registry/kgmicrobe.strain
+<span class="m">404</span>
+$<span class="w"> </span>curl<span class="w"> </span>-s<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://bioregistry.io/registry/kgmicrobe
+<span class="m">404</span>
+</code></pre></div></p>
+<h3 id="issues-still-present-verified">Issues Still Present (Verified)</h3>
+<h4 id="1-missing-biolink-3x-required-fields">1. Missing Biolink 3.x Required Fields</h4>
+<p><strong>Edge file headers (all 3 sources identical):</strong>
+<div class="highlight"><pre><span></span><code>subject predicate   object  relation    primary_knowledge_source
+</code></pre></div></p>
+<p><strong>Missing required fields:</strong>
+- <code>knowledge_level</code> - How the assertion was made (knowledge_assertion, prediction, etc.)
+- <code>agent_type</code> - Who/what made the assertion (manual_agent, automated_agent, etc.)</p>
+<h4 id="2-invalid-provenance-format">2. Invalid Provenance Format</h4>
+<p><strong>Current <code>primary_knowledge_source</code> values:</strong>
+<div class="highlight"><pre><span></span><code>bacdive
+bacdive:1
+bacdive:10
+</code></pre></div></p>
+<p><strong>Should be:</strong>
+<div class="highlight"><pre><span></span><code>infores:bacdive
+</code></pre></div></p>
+<p>The <code>infores:</code> prefix is required per KGX specification for knowledge source attribution.</p>
+<h4 id="3-schema-pollution-edge-columns-in-node-files">3. Schema Pollution - Edge Columns in Node Files</h4>
+<p><strong>Node file headers (bacdive, bactotraits, madin_etal):</strong>
+<div class="highlight"><pre><span></span><code>id  category    name    description xref    provided_by synonym iri object  predicate   relation    same_as subject subsets
+</code></pre></div></p>
+<p><strong>Edge-specific columns that shouldn't be in node files:</strong>
+- <code>subject</code>
+- <code>predicate</code>
+- <code>object</code>
+- <code>relation</code></p>
+<p>These columns exist as headers even though they're reportedly unpopulated. Having them in the schema is a design issue.</p>
+<p><strong>Ontology node files have cleaner headers:</strong>
+<div class="highlight"><pre><span></span><code>id  category    name    provided_by synonym deprecated  iri same_as
+</code></pre></div></p>
+<h4 id="4-unregistered-prefixes">4. Unregistered Prefixes</h4>
+<p>Many prefixes used in kg-microbe are not registered in Bioregistry:</p>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Bioregistry Status</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kgmicrobe.strain:</code></td>
+<td>❌ Not registered</td>
+<td>Cannot expand to URL</td>
+</tr>
+<tr>
+<td><code>bacdive.isolation_source:</code></td>
+<td>❌ Not registered</td>
+<td>Cannot expand to URL</td>
+</tr>
+<tr>
+<td><code>mediadive.medium:</code></td>
+<td>❌ Not registered</td>
+<td>Cannot expand to URL</td>
+</tr>
+<tr>
+<td><code>carbon_substrates:</code></td>
+<td>❌ Not registered</td>
+<td>Cannot expand to URL</td>
+</tr>
+<tr>
+<td><code>pathways:</code></td>
+<td>❌ Not registered</td>
+<td>Cannot expand to URL</td>
+</tr>
+<tr>
+<td><code>NCBITaxon:</code></td>
+<td>✅ Registered</td>
+<td>Expands correctly</td>
+</tr>
+<tr>
+<td><code>CHEBI:</code></td>
+<td>✅ Registered</td>
+<td>Expands correctly</td>
+</tr>
+<tr>
+<td><code>EC:</code></td>
+<td>✅ Registered</td>
+<td>Expands correctly</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why this matters:</strong>
+- CURIEs are supposed to be compact URIs that expand to resolvable URLs
+- Without registration, <code>kgmicrobe.strain:12345</code> is just a local convention
+- Cannot be used with standard Bioregistry-aware tools
+- Defeats the purpose of using CURIE format</p>
+<p><strong>Note:</strong> CMM has the same problem with its prefixes (#53). The difference is explicit tracking as technical debt.</p>
+<h3 id="recommendations">Recommendations</h3>
+<ol>
+<li><strong>Acknowledge progress</strong> - kg-microbe team has made significant improvements on predicates and CURIE format</li>
+<li><strong>File issues for remaining items:</strong></li>
+<li>Missing Biolink 3.x fields (knowledge_level, agent_type)</li>
+<li>infores: format for primary_knowledge_source</li>
+<li>Prefix registration in Bioregistry</li>
+<li><strong>Offer PRs</strong> - Schema cleanup (remove edge columns from node headers) is low-effort</li>
+<li><strong>Run <code>kgx validate</code></strong> jointly to get authoritative counts</li>
+<li><strong>Engage communities</strong> - Ask Bioregistry/Biolink for guidance on prefix registration patterns</li>
+</ol>
+<hr />
+<h2 id="14-references">14. References</h2>
 <h3 id="cmm-documentation">CMM Documentation</h3>
 <ul>
 <li><a href="../architecture/">Architecture</a></li>
 <li><a href="../best-practices/">Best Practices</a></li>
 <li><a href="../cmm_vs_kg_microbe/">kg-microbe Comparison</a></li>
+<li><a href="../kg_microbe_verification_2026-01-08/">Verification Notes 2026-01-08</a> - Raw evidence for claims in this document</li>
 </ul>
 <h3 id="kg-microbe-issues">kg-microbe Issues</h3>
 <ul>
@@ -2609,8 +2911,8 @@ kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w
 <li>Unni et al. (2022) "Biolink Model: A universal schema for knowledge graphs" - <em>bioRxiv</em></li>
 </ul>
 <hr />
-<p><strong>Last Updated:</strong> 2026-01-07<br />
-<strong>Maintainer:</strong> @turbomam<br />
+<p><strong>Last Updated:</strong> 2026-01-08
+<strong>Maintainer:</strong> @turbomam
 <strong>Status:</strong> Living document - update as issues evolve</p>
 
 
