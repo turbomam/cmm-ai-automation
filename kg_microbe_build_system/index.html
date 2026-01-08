@@ -535,6 +535,78 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#transform-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transform Dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Transform Dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-ontologies-bacdive-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ontologies → bacdive Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correct-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correct Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontologies-is-faster-when-cached" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ontologies is Faster (When Cached)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filename-case-issue-fixed-in-475" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filename Case Issue (Fixed in #475)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safe-files-during-interrupted-transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe Files During Interrupted Transforms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#merge-configurations" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -818,12 +890,13 @@ poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </sp
 poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform
 poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge
 
-<span class="c1"># Selective transform (recommended for CMM work)</span>
-poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+<span class="c1"># Selective transform for CMM work (CORRECT ORDER - ontologies first!)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
 
 <span class="c1"># Selective merge</span>
 poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge<span class="w"> </span>-y<span class="w"> </span>merge.cmm.yaml<span class="w">  </span><span class="c1"># (create custom config first)</span>
 </code></pre></div>
+<p><strong>⚠️ Transform order matters!</strong> See <a href="#transform-dependencies">Transform Dependencies</a> below.</p>
 <hr />
 <h2 id="cli-commands">CLI Commands</h2>
 <h3 id="download">Download</h3>
@@ -924,10 +997,88 @@ Options:
 </tbody>
 </table>
 <h3 id="cmm-relevant-subset">CMM-Relevant Subset</h3>
-<p>For CMM work, you likely only need:
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+<p>For CMM work, you need ontologies plus the trait sources:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
 </code></pre></div></p>
-<p>The ontology transforms are expensive (especially NCBITaxon) and only needed if you're rebuilding from scratch or need updated ontology versions.</p>
+<hr />
+<h2 id="transform-dependencies">Transform Dependencies</h2>
+<p><strong>Critical:</strong> Some transforms depend on outputs from other transforms. Running them out of order causes failures or slow fallbacks.</p>
+<h3 id="the-ontologies-bacdive-dependency">The <code>ontologies</code> → <code>bacdive</code> Dependency</h3>
+<p>The <code>bacdive</code> transform needs <code>data/transformed/ontologies/ncbitaxon_nodes.tsv</code> for fast taxon label lookups. If this file doesn't exist:</p>
+<div class="highlight"><pre><span></span><code>Warning: NCBITaxon nodes file not found at data/transformed/ontologies/ncbitaxon_nodes.tsv
+  Will fall back to OakLib queries (slower)
+</code></pre></div>
+<p><strong>The OakLib fallback is ~3x slower and should be avoided.</strong></p>
+<h3 id="correct-order">Correct Order</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Step 1: Run ontologies first (creates ncbitaxon_nodes.tsv)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies
+
+<span class="c1"># Step 2: Run other transforms (can read ncbitaxon_nodes.tsv)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+</code></pre></div>
+<p>Or as a single command:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+</code></pre></div></p>
+<h3 id="ontologies-is-faster-when-cached">Ontologies is Faster (When Cached)</h3>
+<p>The expensive part of ontologies transform is ROBOT processing of <code>ncbitaxon.owl</code> (~1.6GB). However, if you have the cached JSON file, ROBOT is skipped:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Size</th>
+<th>What It Means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data/raw/ncbitaxon_removed_subset.json</code></td>
+<td>~623MB</td>
+<td>ROBOT already ran, will be reused</td>
+</tr>
+<tr>
+<td><code>data/raw/chebi.json</code></td>
+<td>~482MB</td>
+<td>ROBOT already ran, will be reused</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Check if you have the cache:</strong>
+<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>-lh<span class="w"> </span>data/raw/ncbitaxon_removed_subset.json<span class="w"> </span>data/raw/chebi.json
+</code></pre></div></p>
+<p>If these exist, the ontologies transform skips ROBOT processing (still takes time, but not hours).</p>
+<h3 id="filename-case-issue-fixed-in-475">Filename Case Issue (Fixed in #475)</h3>
+<p>There was a bug where <code>bacdive.py</code> looked for <code>NCBITaxon_nodes.tsv</code> (mixed case) but ontologies creates <code>ncbitaxon_nodes.tsv</code> (lowercase). This was fixed in commit <code>26c029b</code> (PR #477).</p>
+<p>If you're on an older version, update:
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
+</code></pre></div></p>
+<h3 id="safe-files-during-interrupted-transforms">Safe Files During Interrupted Transforms</h3>
+<p>If you ctrl-C during a transform, your <strong>raw files are safe</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Safe?</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data/raw/</code></td>
+<td>✅ Yes</td>
+<td>Transforms only READ from here</td>
+</tr>
+<tr>
+<td><code>data/transformed/</code></td>
+<td>⚠️ May be partial</td>
+<td>Transforms WRITE here - may need to re-run</td>
+</tr>
+</tbody>
+</table>
+<p>Expensive cached files that survive interruption:
+- <code>data/raw/ncbitaxon_removed_subset.json</code> (623MB)
+- <code>data/raw/chebi.json</code> (482MB)
+- <code>data/raw/bacdive_strains.json</code> (748MB)
+- <code>data/raw/mediadive/</code> (42MB total)</p>
 <hr />
 <h2 id="merge-configurations">Merge Configurations</h2>
 <p>Three merge configs exist:</p>
@@ -1088,13 +1239,13 @@ rm<span class="w"> </span>-rf<span class="w"> </span>data/merged/*
 <span class="c1"># Keep data/raw/ - expensive to re-download, and download is cached anyway</span>
 </code></pre></div>
 <h3 id="rebuild">Rebuild</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># If you kept data/raw/:</span>
-poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+<div class="highlight"><pre><span></span><code><span class="c1"># If you kept data/raw/ (remember: ontologies FIRST!)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
 poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge<span class="w"> </span>-y<span class="w"> </span>merge.cmm.yaml
 
 <span class="c1"># Full rebuild from scratch:</span>
 poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>download<span class="w"> </span>-y<span class="w"> </span>download.yaml<span class="w"> </span>-o<span class="w"> </span>data/raw
-poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
 poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge
 </code></pre></div>
 <hr />
@@ -1178,7 +1329,7 @@ poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </sp
 <blockquote>
 <p>The KG construction process, particularly the transform step involving trimming of NCBI Taxonomy for any KG and the steps involving the microbial UniProt dataset for KG-Microbe-Function and KG-Microbe-Biomedical-Function, is computationally intensive. Successful execution on a local machine may require significant memory resources (e.g., &gt;500 GB of RAM).</p>
 </blockquote>
-<p><strong>For CMM work:</strong> The bacdive, bactotraits, madin_etal, and mediadive transforms are reasonable on a standard machine. Avoid <code>ontologies</code> transform unless necessary (NCBITaxon is huge).</p>
+<p><strong>For CMM work:</strong> The bacdive, bactotraits, madin_etal, and mediadive transforms are reasonable on a standard machine. The <code>ontologies</code> transform is <strong>required first</strong> (see <a href="#transform-dependencies">Transform Dependencies</a>). It's faster when you have the cached JSON files (<code>ncbitaxon_removed_subset.json</code>, <code>chebi.json</code>), but still takes significant time.</p>
 <hr />
 <h2 id="documentation-status">Documentation Status</h2>
 <table>
