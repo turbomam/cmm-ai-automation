@@ -1,7 +1,7 @@
 # Hypho + MP grounding status and next steps (since last download)
 
 _Date generated: 2026-01-07_
-_Updated: 2026-01-08 (added etymology 2a, MediaDive 162 comparison 2a-ii, 11+ Hypho variants 2a-iii, verified clustering 2a-iv, local PDF table 2b)_
+_Updated: 2026-01-08 (added etymology 2a, MediaDive 162 comparison 2a-ii, 11+ Hypho variants 2a-iii, verified clustering 2a-iv, local PDF table 2b; corrected EDTA/methanol statements - EDTA reduces consistency, not blocks growth)_
 
 This note captures what we’ve most recently established about **grounding “Hypho” and “MP” media** (± methanol) from your sheet-derived ingredient lists, plus a few related cleanups (MPYG, DSMZ:88), and concrete next steps for automation.
 
@@ -93,10 +93,12 @@ The "Hypho" name stuck in the *Methylobacterium* research community even though 
 ### Key distinguishing feature from MP
 
 The critical difference between Hypho and MP media is the **metal chelator**:
-- **Hypho**: EDTA-chelated metals (Vishniac-style) - inhibits growth on methanol
-- **MP**: Citrate-chelated metals (C7 solution) - supports robust growth on methanol
+- **Hypho**: EDTA-chelated metals (Vishniac-style)
+- **MP**: Citrate-chelated metals (C7 solution)
 
-This is why MP medium was developed - EDTA was found to inhibit *M. extorquens* growth on C1 compounds, particularly methanol.
+**Why MP was developed:** Delaney et al. 2013 found that EDTA-based Hypho medium produced **slower and inconsistent** growth on methanol - freshly prepared medium sometimes required days of "aging" before supporting growth, and results varied between batches and between plastic vs glass vessels. EDTA sequesters metals (especially calcium needed for PQQ-dependent methanol dehydrogenase), but growth *can* still occur under the right conditions. MP medium with citrate chelation provides **faster and more reproducible** growth, not because EDTA completely blocks methanol metabolism, but because citrate allows more consistent metal bioavailability.
+
+**Important:** Methylotrophs *can* grow on EDTA-Hypho + methanol (as demonstrated in BER-CMM lab data). The issue is reproducibility and growth rate, not impossibility.
 
 ---
 
@@ -123,9 +125,9 @@ This is why MP medium was developed - EDTA was found to inhibit *M. extorquens* 
 
 ### Implications
 
-1. **Methanol compatibility**: MediaDive 162 (no EDTA) would likely support methanol growth. Delaney Hypho (EDTA) inhibits methanol growth.
+1. **Methanol compatibility**: Both can support methanol growth, but with different characteristics. MediaDive 162 (no EDTA) may provide more consistent growth. Delaney Hypho (EDTA) can support methanol growth but may show more batch-to-batch variability.
 
-2. **Trace metal availability**: MediaDive 162 has fewer metals and no chelator. Delaney Hypho has a richer metal set but EDTA sequesters them.
+2. **Trace metal availability**: MediaDive 162 has fewer metals and no chelator. Delaney Hypho has a richer metal set but EDTA affects their bioavailability.
 
 3. **Defined vs semi-defined**: MediaDive 162 includes yeast extract (semi-defined). Delaney Hypho is fully defined.
 
@@ -195,12 +197,12 @@ Related media for HYPHOMICROBIUM MEDIUM
 1419   HYPHOMICROBIUM MEDIUM
 ```
 
-**But they are chemically incompatible:**
+**But they are chemically distinct:**
 
 | ID | Chelator | pH | Type | Methanol growth? |
 |----|----------|-----|------|------------------|
-| 162 | **None** | 7.2 | complex | Likely yes |
-| 1355 | **EDTA** (Vishniac) | 6.0 | defined | **No** (EDTA inhibits) |
+| 162 | **None** | 7.2 | complex | Yes (consistent) |
+| 1355 | **EDTA** (Vishniac) | 6.0 | defined | Yes (but may vary batch-to-batch) |
 | 1419 | **NTA** (Hutner's) | 7.5 | complex | Unknown |
 
 ### Verified trace element lineages
@@ -223,7 +225,7 @@ Related media for HYPHOMICROBIUM MEDIUM
 
 **MediaDive "Related media" is a name-match grouping, not a chemistry match.**
 
-Do not assume related media are interchangeable. A strain that grows on 162 (no EDTA, pH 7.2) may fail completely on 1355 (EDTA, pH 6.0).
+Do not assume related media are interchangeable. A strain optimized for 162 (no EDTA, pH 7.2) may show different growth kinetics on 1355 (EDTA, pH 6.0) due to chelator and pH differences.
 
 ---
 

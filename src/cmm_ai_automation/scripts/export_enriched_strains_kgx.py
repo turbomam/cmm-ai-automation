@@ -35,7 +35,7 @@ from cmm_ai_automation.strains.ncbi import (
     fetch_ncbi_linkouts,
     fetch_ncbi_synonyms,
 )
-from cmm_ai_automation.transform.kgx import KGXNode
+from cmm_ai_automation.transform.kgx import KGXEdge, KGXNode
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
@@ -44,6 +44,7 @@ logger = logging.getLogger(__name__)
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 DEFAULT_INPUT = PROJECT_ROOT / "data" / "private" / "derived" / "strains_enriched.tsv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "kgx" / "enriched_strains_nodes.tsv"
+DEFAULT_EDGES_OUTPUT = PROJECT_ROOT / "output" / "kgx" / "enriched_strains_edges.tsv"
 
 
 def read_enriched_strains(input_path: Path) -> list[dict[str, str]]:
@@ -65,7 +66,7 @@ def read_enriched_strains(input_path: Path) -> list[dict[str, str]]:
     return strains
 
 
-def create_strain_node(strain_data: dict[str, str], enrich_ncbi: bool = True) -> KGXNode | None:
+def create_strain_node(strain_data: dict[str, str], enrich_ncbi: bool = True) -> tuple[KGXNode | None, str | None]:
     """Create KGX node from enriched strain data.
 
     Args:
@@ -73,10 +74,11 @@ def create_strain_node(strain_data: dict[str, str], enrich_ncbi: bool = True) ->
         enrich_ncbi: If True, fetch additional data from NCBI for NCBI-only strains
 
     Returns:
-        KGXNode or None if no valid identifier
+        Tuple of (KGXNode or None if no valid identifier, species_taxon_id or None)
     """
     bacdive_id = strain_data.get("bacdive_id_mam", "").strip()
     ncbi_strain_taxon = strain_data.get("ncbi_taxon_strain_mam", "").strip()
+    species_taxon_id = strain_data.get("species_taxon_id_sub_or_mpj", "").strip()
     scientific_name = strain_data.get("scientific_name_sub_or_mpj", "").strip()
     strain_designation = strain_data.get("strain_designation_sub_or_mpj", "").strip()
 
@@ -89,7 +91,7 @@ def create_strain_node(strain_data: dict[str, str], enrich_ncbi: bool = True) ->
         name = strain_designation or scientific_name or f"NCBITaxon {ncbi_strain_taxon}"
     else:
         # No valid identifier
-        return None
+        return None, None
 
     # Create node
     node = KGXNode(
@@ -141,7 +143,7 @@ def create_strain_node(strain_data: dict[str, str], enrich_ncbi: bool = True) ->
     if synonyms:
         node.synonym = list(set(synonyms))  # Deduplicate
 
-    return node
+    return node, species_taxon_id
 
 
 @click.command()
@@ -160,32 +162,51 @@ def create_strain_node(strain_data: dict[str, str], enrich_ncbi: bool = True) ->
     help="Path to output KGX nodes file",
 )
 @click.option(
+    "--edges-output",
+    "edges_output_path",
+    type=click.Path(path_type=Path),
+    default=DEFAULT_EDGES_OUTPUT,
+    help="Path to output KGX edges file",
+)
+@click.option(
     "--no-ncbi-enrichment",
     is_flag=True,
     help="Disable NCBI enrichment for NCBI-only strains (faster, less complete)",
 )
-def main(input_path: Path, output_path: Path, no_ncbi_enrichment: bool) -> None:
-    """Export enriched strains to KGX nodes format."""
+def main(input_path: Path, output_path: Path, edges_output_path: Path, no_ncbi_enrichment: bool) -> None:
+    """Export enriched strains to KGX nodes and edges format."""
     enrich_ncbi = not no_ncbi_enrichment
 
     # Read input
     strains = read_enriched_strains(input_path)
 
-    # Create nodes
+    # Create nodes and edges
     nodes = []
+    edges = []
     skipped = 0
 
     for strain_data in strains:
-        node = create_strain_node(strain_data, enrich_ncbi=enrich_ncbi)
+        node, species_taxon_id = create_strain_node(strain_data, enrich_ncbi=enrich_ncbi)
         if node:
             nodes.append(node)
+
+            # Create in_taxon edge if species taxon ID exists and differs from strain ID
+            if species_taxon_id and f"NCBITaxon:{species_taxon_id}" != node.id:
+                edge = KGXEdge(
+                    subject=node.id,
+                    predicate="biolink:in_taxon",
+                    object=f"NCBITaxon:{species_taxon_id}",
+                    knowledge_level="knowledge_assertion",
+                    agent_type="manual_agent",
+                )
+                edges.append(edge)
         else:
             skipped += 1
             logger.debug(f"Skipped strain with no valid identifier: {strain_data}")
 
-    logger.info(f"Created {len(nodes)} KGX nodes, skipped {skipped} records")
+    logger.info(f"Created {len(nodes)} KGX nodes, {len(edges)} edges, skipped {skipped} records")
 
-    # Write output
+    # Write nodes
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
     with output_path.open("w") as f:
@@ -209,6 +230,27 @@ def main(input_path: Path, output_path: Path, no_ncbi_enrichment: bool) -> None:
             writer.writerow(row)
 
     logger.info(f"Wrote {len(nodes)} nodes to {output_path}")
+
+    # Write edges
+    if edges:
+        edges_output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        with edges_output_path.open("w") as f:
+            writer = csv.DictWriter(
+                f,
+                fieldnames=["subject", "predicate", "object"],
+                delimiter="\t",
+                extrasaction="ignore",
+            )
+            writer.writeheader()
+
+            for edge in edges:
+                row = edge.model_dump(exclude_none=True)
+                writer.writerow(row)
+
+        logger.info(f"Wrote {len(edges)} edges to {edges_output_path}")
+    else:
+        logger.info("No edges to write")
 
 
 if __name__ == "__main__":
