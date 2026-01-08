@@ -162,7 +162,6 @@ data/chroma_ncbitaxon/
 output/
 
 # Large inferred schemas - regenerate locally as needed
-mediadive-schemas/
 
 # Generated output files - rebuild locally
 output/
