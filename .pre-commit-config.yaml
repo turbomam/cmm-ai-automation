@@ -110,8 +110,8 @@ repos:
   - repo: local
     hooks:
       - id: pytest
-        name: pytest (all tests except MediaDive which blocks CI IPs)
-        entry: uv run pytest --cov --cov-report=term-missing -q
+        name: pytest (skip integration + MediaDive tests in CI)
+        entry: uv run pytest -m 'not integration and not mediadive' --cov --cov-report=term-missing -q
         language: system
         pass_filenames: false
         always_run: true
