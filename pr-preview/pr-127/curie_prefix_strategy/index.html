@@ -618,6 +618,56 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#two-different-problems-terms-vs-instances" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Different Problems: Terms vs Instances
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metpo-for-domain-specific-terms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        METPO for Domain-Specific Terms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="METPO for Domain-Specific Terms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-metpo-for-cmm-categories-and-predicates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using METPO for CMM Categories and Predicates
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-instance-id-problem-still-unsolved" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Instance ID Problem (Still Unsolved)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#proposed-strategy-draft" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -998,6 +1048,162 @@ cmm:ST0001    → Strain (unmapped) #1
 <ol>
 <li>"Can we register a <code>w3id.org/cmm/</code> namespace that routes to our GitHub Pages, so our minted IDs are resolvable even before formal Bioregistry registration?"</li>
 </ol>
+<hr />
+<h2 id="two-different-problems-terms-vs-instances">Two Different Problems: Terms vs Instances</h2>
+<p><strong>Critical distinction:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>What It Is</th>
+<th>Namespace</th>
+<th>Examples</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ontology terms</strong> (T-box)</td>
+<td>Classes, predicates, categories</td>
+<td>METPO, Biolink, OBO ontologies</td>
+<td><code>METPO:1004005</code> (the class "Growth Medium")</td>
+</tr>
+<tr>
+<td><strong>Instance data</strong> (A-box)</td>
+<td>Specific strains, media, experiments</td>
+<td>Database prefixes, project prefix</td>
+<td><code>bacdive:161512</code> (a specific strain)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>METPO is for terms, NOT instances.</strong> You can't use <code>METPO:</code> to identify a specific strain from BacDive or a specific medium from MediaDive.</p>
+<hr />
+<h2 id="metpo-for-domain-specific-terms">METPO for Domain-Specific Terms</h2>
+<p>METPO provides a registered namespace for microbial phenotype ontology terms:</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>METPO Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prefix registered?</td>
+<td>✅ Yes (<code>METPO:</code>)</td>
+<td>In OBO/Bioregistry</td>
+</tr>
+<tr>
+<td>URL resolvable?</td>
+<td>✅ Yes</td>
+<td>Via OBO PURLs</td>
+</tr>
+<tr>
+<td>Formal local ID registry?</td>
+<td>❌ No</td>
+<td>But has BioPortal dumps, code to analyze</td>
+</tr>
+<tr>
+<td>Governance</td>
+<td>Informal</td>
+<td>BBOP team, responsive to requests</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What METPO gives us:</strong>
+- Registered prefix for ontology terms
+- Can create new classes/predicates relatively quickly
+- Terms become part of a shared vocabulary
+- Resolvable URIs via OBO infrastructure</p>
+<p><strong>What we do for METPO local IDs:</strong>
+- Code analyzes old sheets and BioPortal dumps (location: TBD - @turbomam has this)
+- Track what IDs exist, avoid collisions
+- Informal but functional
+- Can be agile about creating new terms for small categories</p>
+<h3 id="using-metpo-for-cmm-categories-and-predicates">Using METPO for CMM Categories and Predicates</h3>
+<p>For domain-specific <strong>categories</strong> (node types) and <strong>predicates</strong> (edge types) that don't fit Biolink:</p>
+<table>
+<thead>
+<tr>
+<th>CMM Concept</th>
+<th>Type</th>
+<th>Potential METPO Term</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Growth medium (category)</td>
+<td>Class</td>
+<td><code>METPO:1004005</code></td>
+<td>Already exists</td>
+</tr>
+<tr>
+<td>"grows in" (predicate)</td>
+<td>Property</td>
+<td><code>METPO:2000517</code></td>
+<td>Already exists</td>
+</tr>
+<tr>
+<td>Growth condition (category)</td>
+<td>Class</td>
+<td><code>METPO:XXXXXXX</code></td>
+<td>Could propose</td>
+</tr>
+<tr>
+<td>"optimal pH" (predicate)</td>
+<td>Property</td>
+<td><code>METPO:XXXXXXX</code></td>
+<td>Could propose</td>
+</tr>
+</tbody>
+</table>
+<p><strong>METPO does NOT solve:</strong> Identifying specific instances (strains, media, experiments) from external databases.</p>
+<hr />
+<h2 id="the-instance-id-problem-still-unsolved">The Instance ID Problem (Still Unsolved)</h2>
+<p>For actual instance data, we still need:</p>
+<table>
+<thead>
+<tr>
+<th>Instance Type</th>
+<th>Source</th>
+<th>Prefix Needed</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BacDive strains</td>
+<td>BacDive database</td>
+<td><code>bacdive:</code> ✅ registered</td>
+</tr>
+<tr>
+<td>MediaDive media</td>
+<td>MediaDive database</td>
+<td><code>mediadive:</code> ❌ not registered</td>
+</tr>
+<tr>
+<td>TogoMedium media</td>
+<td>TogoMedium database</td>
+<td><code>togomedium:</code> ❌ not registered</td>
+</tr>
+<tr>
+<td>Literature-described media</td>
+<td>Our curation</td>
+<td><code>cmm:</code> ❌ not registered</td>
+</tr>
+<tr>
+<td>Growth conditions</td>
+<td>Our curation</td>
+<td><code>cmm:</code> ❌ not registered</td>
+</tr>
+<tr>
+<td>Experimental observations</td>
+<td>Our curation</td>
+<td><code>cmm:</code> ❌ not registered</td>
+</tr>
+</tbody>
+</table>
+<p><strong>This is the real prefix registration burden</strong> - not ontology terms (we have METPO), but instance identifiers from databases and our own minted entities.</p>
 <hr />
 <h2 id="proposed-strategy-draft">Proposed Strategy (Draft)</h2>
 <h3 id="phase-1-use-whats-registered">Phase 1: Use What's Registered</h3>
