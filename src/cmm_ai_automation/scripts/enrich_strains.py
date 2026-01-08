@@ -39,7 +39,7 @@ from dotenv import load_dotenv
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-DEFAULT_INPUT = "./data/private/strains.tsv"
+DEFAULT_INPUT = "./data/private/strains/strains.tsv"
 REQUEST_DELAY = 0.5  # Be polite to APIs
 
 # NCBI E-utilities base URL

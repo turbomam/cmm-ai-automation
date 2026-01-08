@@ -49,7 +49,7 @@ NCBI_ESEARCH_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi"
 
 # Default paths
 DEFAULT_TAXA_GENOMES = Path("data/private/taxa_and_genomes.tsv")
-DEFAULT_STRAINS = Path("data/private/strains.tsv")
+DEFAULT_STRAINS = Path("data/private/strains/strains.tsv")
 DEFAULT_GROWTH_PREFS = Path("data/private/growth_preferences.tsv")
 DEFAULT_LOG_FILE = Path("output/ncbi_cache_log.txt")
 

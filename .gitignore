@@ -189,3 +189,6 @@ data/mongodb_backups/
 
 # Downloaded ontology files - refetch as needed
 data/ontologies/
+/strains.tsv
+/strains_merged.tsv
+/strains_enriched.tsv

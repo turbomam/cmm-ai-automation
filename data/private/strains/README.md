@@ -1,0 +1,51 @@
+# Strains Data - Private/Curated
+
+This directory contains manually curated and computationally enriched strain data that includes private/unpublished information from the research team.
+
+## Files
+
+### `strains.tsv`
+**Source:** Manually derived from the team's Google Sheets workbook "strains" tab
+**Provenance:** Human-curated data combining:
+- Culture collection IDs
+- Species taxonomic IDs  
+- Growth characteristics
+- Lab-specific annotations
+
+**Do NOT commit to public repository** - contains unpublished research data
+
+### `strains_merged.tsv` (if present)
+**Source:** Computational merge of `strains.tsv` with other downloaded Google Sheets data
+**Process:** Uses `strains/consolidation.py` merge logic
+**Status:** Intermediate processing file
+
+### `strains_enriched.tsv` (if present)
+**Source:** Computationally enriched from `strains_merged.tsv` or `strains.tsv`
+**Process:** Enrichment via `scripts/enrich_strains.py` using:
+- NCBI Taxonomy API
+- BacDive API/MongoDB
+- Culture collection web scraping
+- Semantic search via ChromaDB
+
+**Status:** Final enriched dataset for analysis
+
+## Privacy
+
+All files in this directory are **ignored by git** and should remain private until the research team decides to publish.
+
+## Regeneration
+
+To regenerate enriched data:
+
+```bash
+# Enrich strains (requires API credentials)
+uv run python -m cmm_ai_automation.scripts.enrich_strains \
+  --input data/private/strains/strains.tsv \
+  --output data/private/strains/strains_enriched.tsv
+```
+
+## See Also
+
+- `data/private/` - Other downloaded Google Sheets tabs (may be publishable)
+- `src/cmm_ai_automation/strains/` - Strain processing modules
+- `src/cmm_ai_automation/scripts/enrich_strains.py` - Main enrichment script
