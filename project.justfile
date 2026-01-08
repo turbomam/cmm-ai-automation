@@ -69,6 +69,13 @@ download-sheets:
 download-sheet tab:
   uv run download-sheets --tabs {{tab}}
 
+# Export KGX nodes from enriched strains file
+# READS: data/private/derived/strains_enriched.tsv, WRITES: output/kgx/enriched_strains_nodes.tsv
+export-enriched-strains:
+  @mkdir -p output/kgx
+  uv run python -m cmm_ai_automation.scripts.export_enriched_strains_kgx
+  @echo "✓ Exported enriched strains to output/kgx/enriched_strains_nodes.tsv"
+
 # Enrich ingredients with PubChem data (optionally CAS)
 # REQUIRES: PubChem API access, OPTIONAL: CAS API key, NETWORK: yes, WRITES: output file, CACHES: cache/*.json
 enrich-ingredients input output:
