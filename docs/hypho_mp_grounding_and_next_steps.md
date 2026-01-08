@@ -1,7 +1,7 @@
 # Hypho + MP grounding status and next steps (since last download)
 
 _Date generated: 2026-01-07_
-_Updated: 2026-01-08 (added etymology 2a, MediaDive 162 comparison 2a-ii, 11+ Hypho variants 2a-iii, verified clustering 2a-iv, local PDF table 2b; corrected EDTA/methanol statements - EDTA reduces consistency, not blocks growth)_
+_Updated: 2026-01-08 (added etymology 2a, MediaDive 162 comparison 2a-ii, 11+ Hypho variants 2a-iii, verified clustering 2a-iv, local PDF table 2b; corrected EDTA/methanol statements - EDTA reduces consistency, not blocks growth; added sheet vs paper verification 2c - MP exact match, Hypho has 2 discrepancies; added four-way comparison 2d and recommended CURIEs 2e - Hypho→mediadive:1355, MP→paper DOI only)_
 
 This note captures what we’ve most recently established about **grounding “Hypho” and “MP” media** (± methanol) from your sheet-derived ingredient lists, plus a few related cleanups (MPYG, DSMZ:88), and concrete next steps for automation.
 
@@ -240,6 +240,154 @@ The following PDF files are stored in `papers/` for offline reference:
 | `pone.0062957.s006.pdf` | **Text S1: variant-Hypho medium recipe** (phosphate buffer, EDTA-chelated Vishniac metals) | S1 Text |
 
 These supplements contain the authoritative recipes for both media formulations.
+
+---
+
+## 2c) Sheet vs Paper: Ingredient verification
+
+Comparison of `media_ingredients` sheet data against Delaney 2013 paper supplements.
+
+### MP Medium: Sheet vs Table S1 — **EXACT MATCH**
+
+| Ingredient | Paper (Table S1) | Sheet | Match? |
+|------------|------------------|-------|--------|
+| PIPES | 30 mM | 30 mM | ✓ |
+| K₂HPO₄·3H₂O | 1.45 mM | 1.45 mM | ✓ |
+| NaH₂PO₄·H₂O | 1.88 mM | 1.88 mM | ✓ |
+| MgCl₂·6H₂O | 0.5 mM | 0.5 mM | ✓ |
+| (NH₄)₂SO₄ | 8 mM | 8 mM | ✓ |
+| CaCl₂·2H₂O | 20 µM | 20 µM | ✓ |
+| Sodium citrate | 45.6 µM | 45.6 µM | ✓ |
+| ZnSO₄·7H₂O | 1.2 µM | 1.2 µM | ✓ |
+| MnCl₂·4H₂O | 1 µM | 1 µM | ✓ |
+| FeSO₄·7H₂O | 18 µM | 18 µM | ✓ |
+| (NH₄)₆Mo₇O₂₄·4H₂O | 2 µM | 2 µM | ✓ |
+| CuSO₄·5H₂O | 1 µM | 1 µM | ✓ |
+| CoCl₂·6H₂O | 2 µM | 2 µM | ✓ |
+| Na₂WO₄·2H₂O | 0.33 µM | 0.33 µM | ✓ |
+
+**Conclusion:** MP medium in sheet matches Delaney 2013 Table S1 exactly.
+
+### Hypho Medium: Sheet vs Text S1 — **TWO DISCREPANCIES**
+
+**Base salts (10X stock):**
+
+| Ingredient | Paper (10X stock) | Sheet (10X stock) | Match? |
+|------------|-------------------|-------------------|--------|
+| K₂HPO₄ | 25.3 g/L | 25.3 g/L | ✓ |
+| NaH₂PO₄ | 22.5 g/L (or 25.9 g/L as monohydrate) | **29.9 g/L** | ⚠️ ~15-30% higher |
+| (NH₄)₂SO₄ | 5 g/L | 5 g/L | ✓ |
+| MgSO₄·7H₂O | 2 g/L | 2 g/L | ✓ |
+
+**Vishniac Trace Elements (1000X stock):**
+
+| Ingredient | Paper (g/L) | Sheet (g/L) | Match? |
+|------------|-------------|-------------|--------|
+| EDTA·2Na | 10–12.74 | 10 | ✓ |
+| ZnSO₄·7H₂O | 4.4 | 4.4 | ✓ |
+| CaCl₂·2H₂O | 1.466 | 1.4 | ✓ |
+| MnCl₂·4H₂O | 1.012 | 1.0 | ✓ |
+| FeSO₄·7H₂O | 0.998 | 1.0 | ✓ |
+| (NH₄)₆Mo₇O₂₄·4H₂O | 0.22 | 0.2 | ✓ |
+| CuSO₄·5H₂O | 0.314 | 0.3 | ✓ |
+| CoCl₂·6H₂O | 0.322 | **1.6** | ❌ **5× higher** |
+
+### Discrepancy analysis
+
+**1. NaH₂PO₄ (Sodium phosphate monobasic): ~15-30% higher in sheet**
+
+- Paper: 22.5 g/L anhydrous or 25.9 g/L monohydrate
+- Sheet: 29.9 g/L (labeled "monohydrous")
+- Impact: Higher phosphate buffering capacity, slightly different pH equilibrium
+
+**2. CoCl₂·6H₂O (Cobalt chloride): 5× higher in sheet**
+
+- Paper: 0.161 g in 500 mL = 0.322 g/L
+- Sheet: 0.16 g/100 mL = 1.6 g/L
+- Possible explanations:
+  - **Intentional modification**: Delaney 2013 notes cobalt limitation was a problem; strains evolved increased cobalt uptake. Higher cobalt may be a lab improvement.
+  - **Typo**: 0.16 could be a typo for 0.016 (missing zero), which would give 0.16 g/L — still 2× off but closer.
+- Impact: Cobalt is essential for B₁₂ synthesis in methylotrophs. Higher cobalt could improve growth consistency.
+
+### Action items
+
+1. **Verify with lab colleagues** whether the Hypho discrepancies are intentional modifications or transcription errors.
+2. **If intentional**: Document as "BER-CMM variant-Hypho" distinct from Delaney 2013 Text S1.
+3. **If typo**: Correct the sheet values to match Text S1.
+
+---
+
+## 2d) Four-way comparison: External databases vs Paper vs Sheet
+
+Comparison of Hypho medium across Delaney 2013 Text S1, MediaDive 1355, TogoMedium M925, and the BER-CMM sheet.
+
+### Base salts (per 1L final medium)
+
+| Ingredient | Delaney Text S1 | MediaDive 1355 | TogoMedium M925 | BER-CMM Sheet | Notes |
+|------------|-----------------|----------------|-----------------|---------------|-------|
+| K₂HPO₄ | 2.53 g | 2.50 g | 2.5 g | 2.53 g | ✓ All match |
+| NaH₂PO₄ | 2.25 g | 2.25 g | 2.25 g | **2.99 g** | ⚠️ Sheet 33% higher |
+| (NH₄)₂SO₄ | 0.5 g | 0.50 g | 0.5 g | 0.5 g | ✓ All match |
+| MgSO₄·7H₂O | 0.2 g | 0.20 g | 0.2 g | 0.2 g | ✓ All match |
+| **pH** | ~6.75 | **6.0** | not stated | not stated | MediaDive lower |
+
+### Vishniac Trace Elements (per 500 mL of 1000X stock)
+
+| Ingredient | Delaney Text S1 | MediaDive 1355 | TogoMedium M925 | BER-CMM Sheet (×5) | Notes |
+|------------|-----------------|----------------|-----------------|---------------------|-------|
+| EDTA | 5 g | 5 g | 5 g | 5 g | ✓ All match |
+| ZnSO₄·7H₂O | 2.2 g | 2.2 g | 2.2 g | 2.2 g | ✓ All match |
+| CaCl₂·2H₂O | 0.733 g | 0.733 g | 0.733 g | 0.7 g | ✓ All match |
+| MnCl₂·4H₂O | 0.506 g | 0.506 g | 0.506 g | 0.5 g | ✓ All match |
+| FeSO₄·7H₂O | 0.499 g | 0.499 g | 0.499 g | 0.5 g | ✓ All match |
+| (NH₄)₆Mo₇O₂₄·4H₂O | 0.110 g | 0.110 g | 0.11 g | 0.1 g | ✓ All match |
+| CuSO₄·5H₂O | 0.157 g | 0.157 g | 0.157 g | 0.15 g | ✓ All match |
+| CoCl₂·6H₂O | 0.161 g | 0.161 g | 0.161 g | **0.8 g** | ❌ Sheet 5× higher |
+
+### Key finding
+
+**MediaDive 1355 = TogoMedium M925 = Delaney Text S1**
+
+All three external sources have **identical Vishniac trace element recipes** and nearly identical base salts. The only difference is pH (MediaDive 1355 specifies 6.0 vs Delaney's ~6.75).
+
+### Carbon source note
+
+- **MediaDive 1355**: Methylamine 2 mL (added post-autoclave)
+- **TogoMedium M925**: Methylamine hydrochloride 2 g
+- **Delaney Text S1**: Carbon source treated as supplement (not part of base)
+
+---
+
+## 2e) Recommended CURIEs for grounding
+
+| Medium | Recommended CURIE | Alternative CURIE | Notes |
+|--------|-------------------|-------------------|-------|
+| **Hypho** | `mediadive:1355` | `togomedium:M925` | Both match Delaney Text S1 exactly for Vishniac trace elements |
+| **MP** | `doi:10.1371/journal.pone.0062957.s005` | None found | Novel formulation; no MediaDive/TogoMedium equivalent exists |
+
+### Why these CURIEs?
+
+**For Hypho (`mediadive:1355`):**
+- Exact match to Delaney 2013 Text S1 Vishniac trace elements
+- Web-resolvable: https://mediadive.dsmz.de/medium/1355
+- DSMZ is authoritative for culture media
+- Alternative `togomedium:M925` is equally valid (https://togomedium.org/medium/M925)
+
+**For MP (paper DOI only):**
+- MP medium (PIPES + citrate + tungstate) is a **novel formulation** from Delaney 2013
+- No equivalent found in MediaDive or TogoMedium
+- Must use paper supplement DOI as canonical identifier
+
+### BER-CMM sheet variant status
+
+The BER-CMM sheet's Hypho recipe has **two discrepancies** vs all three canonical sources:
+
+1. **NaH₂PO₄**: 33% higher (2.99 g vs 2.25 g)
+2. **CoCl₂·6H₂O**: 5× higher (0.8 g vs 0.161 g per 500 mL stock)
+
+**Implication:** The BER-CMM Hypho is a **local variant**, not an exact match to `mediadive:1355` or `togomedium:M925`. Consider:
+- Grounding as `closeMatch` rather than `exactMatch`
+- Or minting a local identifier `ber-cmm:Hypho-variant` with `derivedFrom` relationship to `mediadive:1355`
 
 ---
 
