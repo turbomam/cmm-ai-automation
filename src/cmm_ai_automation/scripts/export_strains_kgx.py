@@ -48,7 +48,7 @@ logger = logging.getLogger(__name__)
 
 # Default paths
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
-DEFAULT_STRAINS = PROJECT_ROOT / "data" / "private" / "strains" / "strains.tsv"
+DEFAULT_STRAINS = PROJECT_ROOT / "data" / "private" / "strains.tsv"
 DEFAULT_TAXA_GENOMES = PROJECT_ROOT / "data" / "private" / "taxa_and_genomes.tsv"
 DEFAULT_GROWTH_PREFS = PROJECT_ROOT / "data" / "private" / "growth_preferences.tsv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "kgx" / "strains_nodes.tsv"

@@ -32,10 +32,10 @@ load_dotenv()
 # Default paths relative to project root
 # __file__ is src/cmm_ai_automation/scripts/enrich_ingredients.py
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
-DEFAULT_INPUT = PROJECT_ROOT / "data" / "private" / "normalized" / "ingredients.tsv"
-DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "private" / "enriched" / "ingredients_enriched.tsv"
-DEFAULT_CACHE = PROJECT_ROOT / "data" / "private" / "enriched" / "pubchem_cache.json"
-DEFAULT_CAS_CACHE = PROJECT_ROOT / "data" / "private" / "enriched" / "cas_cache.json"
+DEFAULT_INPUT = PROJECT_ROOT / "data" / "private" / "derived" / "ingredients.tsv"
+DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "private" / "derived" / "ingredients_enriched.tsv"
+DEFAULT_CACHE = PROJECT_ROOT / "data" / "private" / "derived" / "pubchem_cache.json"
+DEFAULT_CAS_CACHE = PROJECT_ROOT / "data" / "private" / "derived" / "cas_cache.json"
 
 logger = logging.getLogger(__name__)
 

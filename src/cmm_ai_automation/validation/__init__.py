@@ -11,7 +11,7 @@ Main entry points:
 Example:
     from cmm_ai_automation.validation import validate_sheet, print_validation_report
 
-    report = validate_sheet(Path("data/private/strains/strains.tsv"))
+    report = validate_sheet(Path("data/private/strains.tsv"))
     print_validation_report(report)
 """
 

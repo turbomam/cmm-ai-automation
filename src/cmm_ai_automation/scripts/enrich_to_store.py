@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Multi-source enrichment pipeline that loads data into EnrichmentStore.
 
-Reads normalized ingredients and enriches them by querying:
+Reads ingredients and enriches them by querying:
 - PubChem (chemical identifiers, structure)
 - ChEBI (roles, ontology)
 - CAS Common Chemistry (mixtures, additional identifiers)
@@ -12,7 +12,7 @@ based on (InChIKey, CAS RN) composite keys. The store tracks data provenance,
 handles conflicts, and can export to KGX format for knowledge graph integration.
 
 Usage:
-    uv run python -m cmm_ai_automation.scripts.enrich_to_store -i data/private/normalized/ingredients.tsv
+    uv run python -m cmm_ai_automation.scripts.enrich_to_store -i data/private/derived/ingredients.tsv
     uv run python -m cmm_ai_automation.scripts.enrich_to_store --dry-run
     uv run python -m cmm_ai_automation.scripts.enrich_to_store --export-kgx
 """
@@ -37,7 +37,7 @@ load_dotenv()
 
 # Default paths
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
-DEFAULT_INPUT = PROJECT_ROOT / "data" / "private" / "normalized" / "ingredients.tsv"
+DEFAULT_INPUT = PROJECT_ROOT / "data" / "private" / "derived" / "ingredients.tsv"
 DEFAULT_STORE = PROJECT_ROOT / "data" / "enrichment.duckdb"
 DEFAULT_OUTPUT = PROJECT_ROOT / "output" / "kgx" / "ingredients"
 
