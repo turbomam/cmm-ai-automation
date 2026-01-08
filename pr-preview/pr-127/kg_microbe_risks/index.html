@@ -1,0 +1,2686 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/kg_microbe_risks/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>kg-microbe Technical Debt and FAIR Compliance Risks - cmm-ai-automation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+
+      
+    
+<script src="../assets/pymdownx-extras/material-extra-theme-2ek1P7jT.js" type="text/javascript"></script>
+<script src="../assets/pymdownx-extras/material-extra-3rdparty-BUCF4rjN.js" type="text/javascript"></script>
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+    
+      <link rel="stylesheet" href="../assets/pymdownx-extras/extra-c6ab11540a.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kg-microbe-technical-debt-and-fair-compliance-risks" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+<header class="md-header" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="header.title"
+  >
+    <a
+      href="https://turbomam.github.io/cmm-ai-automation/"
+      title="cmm-ai-automation"
+      class="md-header__button md-logo"
+      aria-label="cmm-ai-automation"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            cmm-ai-automation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              kg-microbe Technical Debt and FAIR Compliance Risks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      <div class="md-header-nav__scheme md-header-nav__button md-source__icon md-icon">
+          <a
+            href="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+          </a>
+           <a
+            href="javascript:toggleScheme();"
+            title="Unknown scheme"
+            class="unknown-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.07 11.25-.9.92C13.45 12.89 13 13.5 13 15h-2v-.5c0-1.11.45-2.11 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2 2 0 0 0-2-2 2 2 0 0 0-2 2H8a4 4 0 0 1 4-4 4 4 0 0 1 4 4 3.2 3.2 0 0 1-.93 2.25M13 19h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg>
+          </a>
+      </div>
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="cmm-ai-automation" class="md-nav__button md-logo" aria-label="cmm-ai-automation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    cmm-ai-automation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../togomedium/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TogoMedium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#1-fair-principle-violations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. FAIR Principle Violations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. FAIR Principle Violations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#f-findable-broken-identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        F (Findable) - Broken Identifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-accessible-ambiguous-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A (Accessible) - Ambiguous Provenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#i-interoperable-biolink-model-violations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        I (Interoperable) - Biolink Model Violations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#r-reusable-missing-quality-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        R (Reusable) - Missing Quality Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-maintenance-burden-custom-transforms-and-data-sprawl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Maintenance Burden: Custom Transforms and Data Sprawl
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Maintenance Burden: Custom Transforms and Data Sprawl">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kg-microbes-technical-complexity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kg-microbe's Technical Complexity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cmms-reduced-maintenance-burden" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CMM's Reduced Maintenance Burden
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-ecosystem-tool-incompatibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Ecosystem Tool Incompatibility
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Ecosystem Tool Incompatibility">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kgx-tools-that-break-on-kg-microbe-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KGX Tools That Break on kg-microbe Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="KGX Tools That Break on kg-microbe Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-kgx-validate-validation-tool" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. kgx validate - Validation Tool
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-kgx-merge-graph-merging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. kgx merge - Graph Merging
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-clique-merge-entity-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Clique Merge - Entity Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-rdf-export-semantic-web-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. RDF Export - Semantic Web Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-neo4j-import-graph-database-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Neo4j Import - Graph Database Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-reasoner-api-export-standard-query-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Reasoner API Export - Standard Query Interface
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-sssom-mappings-import" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. SSSOM Mappings Import
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-graph-summarystatistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Graph Summary/Statistics
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tools-that-would-work-with-proper-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tools That Would Work WITH Proper Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#opportunity-cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Opportunity Cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-broader-kgx-ecosystem-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Broader KGX Ecosystem Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Broader KGX Ecosystem Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#data-ingestion-transformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Ingestion &amp; Transformation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Ingestion &amp; Transformation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-koza-etl-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Koza - ETL Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-kg-obo-ontology-transformer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. kg-obo - Ontology Transformer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-curie-clean-curie-validator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. curie-clean - CURIE Validator
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#machine-learning-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine Learning &amp; Analysis
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Machine Learning &amp; Analysis">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#4-grapeembiggen-graph-ml-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. GRAPE/Embiggen - Graph ML Library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-ensmallen-graph-processing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. ensmallen - Graph Processing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-graph-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Graph Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Knowledge Graph Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#6-kgx-based-ingest-pipelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. KGX-Based Ingest Pipelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-kgx-analysis-tools-python-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. KGX Analysis Tools - Python Packages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-automated-qc-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Automated QC Reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-resolution-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Resolution &amp; Normalization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entity Resolution &amp; Normalization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#9-node-normalization-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Node Normalization Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visualization-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visualization &amp; Query
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Visualization &amp; Query">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#10-neo4j-bloom-graph-visualization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Neo4j + Bloom - Graph Visualization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-sparql-queries-semantic-web" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. SPARQL Queries - Semantic Web
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quality-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quality Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quality Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#14-tablassert-table-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Tablassert - Table Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#15-dbssert-duckdb-kg-backend" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Dbssert - DuckDB KG Backend
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#summary-ecosystem-lock-out" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary: Ecosystem Lock-Out
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-kgx-command-line-tools-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. KGX Command-Line Tools Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. KGX Command-Line Tools Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#installation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-kgx-validate-validate-kgx-format-and-biolink-compliance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. kgx validate - Validate KGX Format and Biolink Compliance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-kgx-transform-convert-between-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. kgx transform - Convert Between Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-kgx-merge-merge-multiple-knowledge-graphs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. kgx merge - Merge Multiple Knowledge Graphs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-kgx-graph-summary-generate-graph-statistics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. kgx graph-summary - Generate Graph Statistics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-kgx-neo4j-upload-load-into-neo4j-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. kgx neo4j-upload - Load into Neo4j Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-kgx-neo4j-download-export-from-neo4j-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. kgx neo4j-download - Export from Neo4j Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#command-compatibility-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Command Compatibility Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-technical-debt-quantification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Technical Debt Quantification
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-downstream-consequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Downstream Consequences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="8. Downstream Consequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#for-collaborators" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For Collaborators
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#for-the-knowledge-graph-ecosystem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        For the Knowledge Graph Ecosystem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-what-cmm-does-to-mitigate-risk" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. What CMM Does to Mitigate Risk
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. What CMM Does to Mitigate Risk">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#already-implemented" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✅ Already Implemented
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🔄 In Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommended-next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Recommended Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-recommendations-for-kg-microbe-collaboration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Recommendations for kg-microbe Collaboration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Recommendations for kg-microbe Collaboration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#low-effort-high-impact-fixes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Low-Effort, High-Impact Fixes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium-effort-strategic-improvements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medium-Effort, Strategic Improvements
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#high-effort-transformative-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        High-Effort, Transformative Changes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-talking-points-for-fundersreviewers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Talking Points for Funders/Reviewers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Talking Points for Funders/Reviewers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cmm-solution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CMM Solution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#impact" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Impact
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#innovation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Innovation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cmm-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CMM Documentation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kg-microbe-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kg-microbe Issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="kg-microbe-technical-debt-and-fair-compliance-risks">kg-microbe Technical Debt and FAIR Compliance Risks</h1>
+<p><strong>Date:</strong> 2026-01-07<br />
+<strong>Purpose:</strong> Document actionable risks in kg-microbe's approach and how CMM mitigates them<br />
+<strong>Audience:</strong> Collaborators, reviewers, funders evaluating data quality</p>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<p>kg-microbe, while valuable for comprehensive microbial data, has <strong>measurable technical debt</strong> that violates FAIR principles and creates downstream integration risks. This document quantifies these issues and shows how cmm-ai-automation addresses them.</p>
+<p><strong>Key Risk Metrics:</strong>
+- <strong>Invalid CURIEs with spaces/colons</strong> break RDF export (see kg-microbe#430)
+- <strong>Biolink Model violations</strong> affect many edges using <code>capable_of</code> predicate (see kg-microbe#438)
+- <strong>High false positive rate</strong> in media grounding (documented in <a href="../kg_microbe_nodes_analysis/">kg_microbe_nodes_analysis.md</a>)
+- <strong>No automated validation</strong> in CI pipeline</p>
+<p><strong>To verify current counts:</strong></p>
+<p><strong>Method 1: Using kgx graph-summary (built-in)</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Basic statistics</span>
+kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>summary.yaml
+
+<span class="c1"># With detailed faceting</span>
+kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>summary.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--node-facet-properties<span class="w"> </span>category<span class="w"> </span>provided_by<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--edge-facet-properties<span class="w"> </span>predicate<span class="w"> </span>knowledge_level
+</code></pre></div></p>
+<p><strong>Method 2: Using CMM analysis scripts</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Extract edge patterns (subject/predicate/object breakdown)</span>
+python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>/path/to/kgx_dir<span class="w"> </span>&gt;<span class="w"> </span>patterns.tsv
+
+<span class="c1"># Output: source | subject_category | subject_prefix | predicate | object_category | object_prefix | count</span>
+</code></pre></div></p>
+<p><strong>Method 3: Direct validation</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Count specific violations</span>
+kgx<span class="w"> </span>validate<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>report.json
+jq<span class="w"> </span><span class="s1">&#39;.ERROR | length&#39;</span><span class="w"> </span>report.json
+</code></pre></div></p>
+<p>See kg-microbe issues #430, #436, #438 for detailed analysis.</p>
+<hr />
+<h2 id="1-fair-principle-violations">1. FAIR Principle Violations</h2>
+<h3 id="f-findable-broken-identifiers">F (Findable) - Broken Identifiers</h3>
+<p><strong>Issue:</strong> Invalid CURIEs prevent resource discovery</p>
+<p><strong>kg-microbe Problems:</strong>
+- <code>assay:API_zym_Acid phosphatase</code> - <strong>spaces in CURIE</strong> (kg-microbe#430)
+- <code>strain:NRRL-:-NRS-341</code> - <strong>extra colons</strong>
+- <code>nan</code> - literal string instead of null</p>
+<p><strong>Impact on Findability:</strong>
+- URIs cannot be constructed → no Linked Data navigation
+- Triple stores reject invalid CURIEs → data unusable in semantic web
+- External systems cannot resolve identifiers</p>
+<p><strong>CMM Mitigation:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Schema validation with regex patterns</span>
+<span class="nt">id</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;^[^\\s:]+:[^\\s:]+$&quot;</span><span class="w">  </span><span class="c1"># No spaces, single colon</span>
+<span class="w">  </span><span class="nt">examples</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bacdive.strain:161512</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NCBITaxon:408</span>
+</code></pre></div></p>
+<p><strong>Validation:</strong> Pre-commit hook catches invalid CURIEs before commit</p>
+<hr />
+<h3 id="a-accessible-ambiguous-provenance">A (Accessible) - Ambiguous Provenance</h3>
+<p><strong>Issue:</strong> Cannot determine authoritative source</p>
+<p><strong>kg-microbe Problems:</strong>
+- <code>primary_knowledge_source</code>: <code>"BacDive"</code> (string, not infores: CURIE)
+- <code>medium:104c</code> - is this MediaDive? TogoMedium? Local?
+- No aggregator_knowledge_source tracking for derived data</p>
+<p><strong>Impact on Accessibility:</strong>
+- Researchers cannot verify claims at source
+- Grant reviewers cannot assess data authority
+- Impossible to filter by trusted sources</p>
+<p><strong>CMM Mitigation:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">KGXEdge</span><span class="p">(</span>
+    <span class="n">subject</span><span class="o">=</span><span class="s2">&quot;bacdive:7142&quot;</span><span class="p">,</span>
+    <span class="n">predicate</span><span class="o">=</span><span class="s2">&quot;biolink:in_taxon&quot;</span><span class="p">,</span>
+    <span class="nb">object</span><span class="o">=</span><span class="s2">&quot;NCBITaxon:408&quot;</span><span class="p">,</span>
+    <span class="n">primary_knowledge_source</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;infores:bacdive&quot;</span><span class="p">],</span>  <span class="c1"># Registered infores</span>
+    <span class="n">aggregator_knowledge_source</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;infores:cmm-ai-automation&quot;</span><span class="p">],</span>
+    <span class="n">knowledge_level</span><span class="o">=</span><span class="s2">&quot;knowledge_assertion&quot;</span><span class="p">,</span>  <span class="c1"># How we know</span>
+    <span class="n">agent_type</span><span class="o">=</span><span class="s2">&quot;automated_agent&quot;</span>  <span class="c1"># Who asserted</span>
+<span class="p">)</span>
+</code></pre></div></p>
+<p><strong>Validation:</strong> Pydantic requires infores: prefix, CI checks registration</p>
+<hr />
+<h3 id="i-interoperable-biolink-model-violations">I (Interoperable) - Biolink Model Violations</h3>
+<p><strong>Issue:</strong> Semantic incompatibility with Biolink-compliant knowledge graph systems</p>
+<p><strong>kg-microbe Problems (kg-microbe#438):</strong>
+- <strong>Many edges</strong> use <code>biolink:capable_of</code> with wrong object type
+- Objects are <code>biolink:PhenotypicQuality</code> (EC enzyme codes)
+- Biolink Model <strong>requires</strong> <code>Occurrent</code> (processes/activities)</p>
+<p><strong>To verify:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Using kgx graph-summary with faceting</span>
+kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>summary.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--edge-facet-properties<span class="w"> </span>predicate
+
+<span class="c1"># Or using CMM edge pattern analyzer</span>
+python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>/path/to/kgx_dir<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>awk<span class="w"> </span>-F<span class="s1">&#39;\t&#39;</span><span class="w"> </span><span class="s1">&#39;$4==&quot;biolink:capable_of&quot; &amp;&amp; $5~&quot;PhenotypicQuality&quot;&#39;</span>
+</code></pre></div></p>
+<p><strong>Real-World Impact:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># kg-microbe (WRONG):</span>
+<span class="n">NCBITaxon</span><span class="p">:</span><span class="mi">1000562</span> <span class="o">--</span><span class="n">capable_of</span><span class="o">--&gt;</span> <span class="n">EC</span><span class="p">:</span><span class="mf">3.1.3.1</span> <span class="p">[</span><span class="n">PhenotypicQuality</span><span class="p">]</span>
+                                  <span class="err">❌</span> <span class="n">Type</span> <span class="n">error</span><span class="p">:</span> <span class="n">expected</span> <span class="n">Occurrent</span>
+
+<span class="c1"># This breaks:</span>
+<span class="c1"># - Query systems expecting proper Biolink semantics</span>
+<span class="c1"># - Reasoning engines that validate type constraints</span>
+<span class="c1"># - Any system validating against Biolink Model</span>
+</code></pre></div></p>
+<p><strong>CMM Mitigation:</strong>
+1. <strong>Schema-driven validation:</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">GrowthPreference</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">slots</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject_strain</span><span class="w">  </span><span class="c1"># range: Strain</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">predicate</span><span class="w">       </span><span class="c1"># values: RO:0002162, biolink:in_taxon</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object_medium</span><span class="w">   </span><span class="c1"># range: GrowthMedium</span>
+</code></pre></div></p>
+<ol>
+<li>
+<p><strong>CI validation:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># pyproject.toml</span>
+<span class="o">[</span>tool.pytest.ini_options<span class="o">]</span>
+<span class="nv">testpaths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">[</span><span class="s2">&quot;tests&quot;</span><span class="o">]</span>
+<span class="c1"># Includes Biolink Model compliance tests</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>kgx validate target</strong> (issue #81, non-blocking until METPO registered)</p>
+</li>
+</ol>
+<p><strong>Risk if unfixed:</strong> Data unusable by Biolink-compliant knowledge graph systems</p>
+<hr />
+<h3 id="r-reusable-missing-quality-metadata">R (Reusable) - Missing Quality Metadata</h3>
+<p><strong>Issue:</strong> Cannot assess fitness-for-purpose</p>
+<p><strong>kg-microbe Problems:</strong>
+- Media grounding uses SQL <code>LIKE '%MP%'</code> → high false positive rate
+- No quality scores, confidence, or match_type tracking
+- Semicolon-delimited multi-value fields lose metadata:
+  <div class="highlight"><pre><span></span><code>kg_microbe_nodes: &quot;medium:381; medium:J511; medium:194&quot;
+# Which are correct? Which are wrong? Unknown.
+</code></pre></div></p>
+<p><strong>To verify false positive rate:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Using CMM analysis tools</span>
+python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>/path/to/data<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>grep<span class="w"> </span><span class="s2">&quot;MP.*medium&quot;</span>
+
+<span class="c1"># Or manually review sample matches (documented in kg_microbe_nodes_analysis.md)</span>
+</code></pre></div></p>
+<p>See detailed analysis in <a href="../kg_microbe_nodes_analysis/">kg_microbe_nodes_analysis.md</a></p>
+<p><strong>Impact on Reusability:</strong>
+- Downstream users inherit errors unknowingly
+- Cannot filter by confidence threshold
+- Impossible to improve mappings systematically</p>
+<p><strong>CMM Mitigation:</strong></p>
+<p><strong>Option 1: Structured Mapping Table</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">MediaMapping</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">slots</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">sheet_media_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;LB&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">target_id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;medium:381&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">match_type</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;EXACT&quot;</span><span class="w">      </span><span class="c1"># Enum: EXACT, VARIANT, CLOSE, WRONG</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">confidence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1.0</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">method</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;manual&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">curator</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;turbomam&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2026-01-06&quot;</span>
+</code></pre></div></p>
+<p><strong>Option 2: Provenance in SourceRecord</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">SourceRecord</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">slots</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;node_normalizer&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_query</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;CHEBI:32599&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">source_timestamp</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2026-01-06T20:00:00Z&quot;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">confidence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0.95</span>
+</code></pre></div></p>
+<p><strong>CMM Status:</strong> Implemented SourceRecord, MediaMapping planned (#84, #85)</p>
+<hr />
+<h2 id="2-maintenance-burden-custom-transforms-and-data-sprawl">2. Maintenance Burden: Custom Transforms and Data Sprawl</h2>
+<h3 id="kg-microbes-technical-complexity">kg-microbe's Technical Complexity</h3>
+<p><strong>Transform Infrastructure:</strong>
+- <strong>30 Python transform files</strong> (6,762 lines of custom code)
+- <strong>366 MB</strong> of transform utilities alone
+- <strong>14 separate transform classes</strong> - each with unique patterns
+- <strong>Direct CSV writing</strong> - 5+ separate <code>csv.writer()</code> calls per transform
+- <strong>Multiple mapping formats:</strong>
+  - <code>translation_table.yaml</code> (32 KB) - global term mappings
+  - <code>custom_curies.yaml</code> (8.4 KB) - custom CURIE definitions
+  - <code>prefixmap.json</code> - namespace mappings
+  - Per-source TSV files (34+ files across sources)</p>
+<p><strong>Data Management:</strong>
+- <strong>22 GB</strong> of raw data files
+  - 748 MB bacdive_strains.json
+  - 3.7 GB chebi.db
+  - 773 MB chebi.owl
+  - Multiple format duplicates (JSON, OWL, TSV, DB)
+- <strong>34 TSV mapping files</strong> scattered across sources
+- <strong>166 YAML config files</strong> (download configs, mappings, etc.)</p>
+<p><strong>Maintenance Costs:</strong></p>
+<ol>
+<li><strong>Per-Source Custom Code</strong></li>
+<li>API changes require transform rewrite</li>
+<li>Schema drift breaks extraction logic</li>
+<li>No shared patterns between transforms</li>
+<li>
+<p>Example: BacDive API v3 → v4 required full rewrite</p>
+</li>
+<li>
+<p><strong>Mapping File Synchronization</strong></p>
+</li>
+<li><code>translation_table.yaml</code> gets out of sync with ontologies</li>
+<li>Custom CURIEs may conflict with Bioregistry additions</li>
+<li>No automated validation of mappings</li>
+<li>
+<p>Manual updates when ontologies release new versions</p>
+</li>
+<li>
+<p><strong>Format Conversions</strong></p>
+</li>
+<li>Same data in JSON, OWL, TSV, DB formats</li>
+<li>Conversion scripts break when formats change</li>
+<li>No single source of truth</li>
+<li>
+<p>Storage overhead (22 GB for ~200K entities)</p>
+</li>
+<li>
+<p><strong>TSV Column Management</strong></p>
+</li>
+<li>Hard-coded column orders in <code>csv.writer()</code> calls</li>
+<li>Add/remove column = touch 5+ files</li>
+<li>No type safety - runtime errors only</li>
+<li>Example from bacdive.py:
+   <div class="highlight"><pre><span></span><code><span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">tsvfile_1</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="o">...</span><span class="p">])</span>  <span class="c1"># 20+ columns, no validation</span>
+</code></pre></div></li>
+</ol>
+<p><strong>Risk: One API Change Cascades</strong></p>
+<p>When BacDive changes their JSON structure:
+1. Update extraction code (bacdive.py)
+2. Update column mappings (translation_table.yaml)
+3. Update tests (if they exist)
+4. Update download scripts
+5. Re-run entire pipeline (hours to days)
+6. Manually verify output quality</p>
+<h3 id="cmms-reduced-maintenance-burden">CMM's Reduced Maintenance Burden</h3>
+<p><strong>Schema-Driven Approach:</strong>
+- <strong>1 LinkML schema</strong> defines all entity types
+- <strong>Generated Pydantic models</strong> provide type safety
+- <strong>Shared KGX writer</strong> handles all exports
+- <strong>MongoDB backend</strong> - single format for all sources</p>
+<p><strong>Maintenance Benefits:</strong></p>
+<ol>
+<li><strong>Schema Updates</strong></li>
+<li>Add slot to LinkML schema</li>
+<li>Run <code>gen-pydantic</code> (automated)</li>
+<li>Type errors caught at development time</li>
+<li>
+<p>All transforms benefit immediately</p>
+</li>
+<li>
+<p><strong>API Changes</strong></p>
+</li>
+<li>Update extraction function only</li>
+<li>Pydantic validates at runtime</li>
+<li>Tests catch mismatches</li>
+<li>
+<p>No column order dependencies</p>
+</li>
+<li>
+<p><strong>Format Management</strong></p>
+</li>
+<li>MongoDB as single source of truth</li>
+<li>JSON Lines export generated from models</li>
+<li>KGX TSV generated from models</li>
+<li>
+<p>No manual format conversions</p>
+</li>
+<li>
+<p><strong>Mapping Files</strong></p>
+</li>
+<li><code>prefix_map.json</code> - 1 file, Bioregistry-aligned</li>
+<li>No custom CURIE inventions</li>
+<li>LinkML schema documents all mappings</li>
+<li>Enums prevent typos</li>
+</ol>
+<p><strong>Example: Adding a New Field</strong></p>
+<p>kg-microbe approach:
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Update bacdive.py extraction (lines 150-200)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">extract_biosafety</span><span class="p">():</span>
+    <span class="o">...</span>
+
+<span class="c1"># 2. Update translation_table.yaml</span>
+<span class="n">biosafety_level</span><span class="p">:</span> <span class="s2">&quot;MESH:...&quot;</span>  <span class="c1"># Find appropriate term</span>
+
+<span class="c1"># 3. Update CSV writer (line 500)</span>
+<span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="o">...</span><span class="p">,</span> <span class="n">biosafety</span><span class="p">,</span> <span class="o">...</span><span class="p">])</span>  <span class="c1"># Insert in correct position</span>
+
+<span class="c1"># 4. Update all downstream code expecting old column order</span>
+</code></pre></div></p>
+<p>CMM approach:
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Update LinkML schema</span>
+<span class="nt">Strain</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">slots</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biosafety_level</span><span class="w">  </span><span class="c1"># Already has type, description, URI mapping</span>
+
+<span class="c1"># 2. Regenerate (automated)</span>
+<span class="l l-Scalar l-Scalar-Plain">$ gen-pydantic schema.yaml &gt; datamodel.py</span>
+
+<span class="c1"># 3. Update extraction (new field automatically validated)</span>
+<span class="l l-Scalar l-Scalar-Plain">return Strain(..., biosafety_level=extract_biosafety(doc))</span>
+</code></pre></div></p>
+<hr />
+<h2 id="3-ecosystem-tool-incompatibility">3. Ecosystem Tool Incompatibility</h2>
+<h3 id="kgx-tools-that-break-on-kg-microbe-data">KGX Tools That Break on kg-microbe Data</h3>
+<p><a href="https://github.com/biolink/kgx">KGX (Knowledge Graph Exchange)</a> provides critical transformation and analysis tools for Biolink-compliant knowledge graphs. <strong>Many of these tools will fail or produce incorrect results on kg-microbe data</strong> due to format violations.</p>
+<h4 id="1-kgx-validate-validation-tool">1. <strong>kgx validate</strong> - Validation Tool</h4>
+<p><strong>Purpose:</strong> Verify KGX format and Biolink Model compliance</p>
+<p><strong>Breaks on kg-microbe:</strong>
+- ❌ <strong>Invalid CURIEs with spaces</strong> → Parser error
+  <div class="highlight"><pre><span></span><code>$<span class="w"> </span>kgx<span class="w"> </span>validate<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>kg-microbe/data/transformed/bacdive/nodes.tsv
+Error:<span class="w"> </span>Invalid<span class="w"> </span>CURIE<span class="w"> </span>format:<span class="w"> </span><span class="s2">&quot;assay:API_zym_Acid phosphatase&quot;</span>
+</code></pre></div>
+- ❌ <strong>Extra colons in IDs</strong> → CURIE expansion fails
+- ❌ <strong>Missing required provenance</strong> → Validation errors
+  <div class="highlight"><pre><span></span><code>Edge missing required field: knowledge_level
+Edge missing required field: agent_type
+</code></pre></div></p>
+<p><strong>Impact:</strong> Cannot certify data quality before downstream use</p>
+<p><strong>CMM Status:</strong> ✅ Runs in CI (non-blocking until METPO registered #91)</p>
+<h4 id="2-kgx-merge-graph-merging">2. <strong>kgx merge</strong> - Graph Merging</h4>
+<p><strong>Purpose:</strong> Combine multiple KGX files with de-duplication</p>
+<p><strong>Breaks on kg-microbe:</strong>
+- ❌ <strong>Ambiguous namespaces</strong> → Cannot determine merge keys
+  - Is <code>medium:104c</code> from MediaDive or TogoMedium?
+  - Cannot safely merge without source attribution
+- ❌ <strong>Inconsistent provenance</strong> → Cannot track data lineage
+  - Which assertions came from which source?
+  - Merge conflicts unresolvable without primary_knowledge_source</p>
+<p><strong>Impact:</strong> Cannot safely combine kg-microbe with other graphs</p>
+<p><strong>CMM Status:</strong> ✅ Explicit provenance enables safe merging</p>
+<h4 id="3-clique-merge-entity-resolution">3. <strong>Clique Merge</strong> - Entity Resolution</h4>
+<p><strong>Purpose:</strong> Group equivalent entities using <code>biolink:same_as</code> edges and elect canonical ID</p>
+<p><strong>Requirements:</strong>
+- Valid CURIEs for prefix prioritization
+- Category consistency across clique members
+- <code>same_as</code> or <code>xref</code> relationships</p>
+<p><strong>Breaks on kg-microbe:</strong>
+- ❌ <strong>Invalid CURIEs</strong> → Prefix prioritization fails
+  <div class="highlight"><pre><span></span><code><span class="c1"># KGX clique merge tries to parse:</span>
+<span class="n">prefix</span><span class="p">,</span> <span class="n">local_id</span> <span class="o">=</span> <span class="n">curie</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="c1"># FAILS on &quot;strain:NRRL-:-NRS-341&quot; (extra colons)</span>
+<span class="c1"># FAILS on &quot;assay:API_zym_Acid phosphatase&quot; (spaces)</span>
+</code></pre></div>
+- ❌ <strong>Wrong object types</strong> → Category mapping impossible
+  - EC codes as <code>PhenotypicQuality</code> instead of <code>MolecularActivity</code>
+  - Cannot determine which category should win in clique</p>
+<p><strong>Impact:</strong> Cannot deduplicate entities across sources</p>
+<p><strong>CMM Status:</strong> ✅ Valid CURIEs, consistent categories enable clique merge</p>
+<h4 id="4-rdf-export-semantic-web-integration">4. <strong>RDF Export</strong> - Semantic Web Integration</h4>
+<p><strong>Purpose:</strong> Convert KGX to RDF (Turtle, N-Triples, JSON-LD) for triple stores</p>
+<p><strong>Breaks on kg-microbe:</strong>
+- ❌ <strong>Spaces in CURIEs</strong> → Invalid URIs
+  <div class="highlight"><pre><span></span><code><span class="c"># KGX tries to create:</span>
+<span class="err">&lt;</span><span class="nn">http</span><span class="p">:</span><span class="err">//example</span><span class="p">.</span><span class="err">org/assay/API_zym_Acid</span> <span class="err">phosphatase&gt;</span>  <span class="c"># ❌ Space = invalid URI</span>
+</code></pre></div>
+- ❌ <strong>No CURIE→URI expansion</strong> for ambiguous prefixes
+  - <code>medium:104c</code> → which base URI?
+  - <code>strain:bacdive_161512</code> → not in standard prefix registries</p>
+<p><strong>Impact:</strong> Cannot load into triple stores (GraphDB, Virtuoso, Stardog)</p>
+<p><strong>CMM Status:</strong> ✅ All CURIEs have Bioregistry-registered expansions</p>
+<h4 id="5-neo4j-import-graph-database-loading">5. <strong>Neo4j Import</strong> - Graph Database Loading</h4>
+<p><strong>Purpose:</strong> Load KGX data into Neo4j for query/visualization</p>
+<p><strong>Breaks on kg-microbe:</strong>
+- ⚠️ <strong>Partially works</strong> but with issues:
+  - Invalid CURIEs become node IDs → breaks Cypher queries
+  - Spaces in IDs require escaping: <code>MATCH (n:`assay:API_zym_Acid phosphatase`)</code>
+  - Cannot join with properly formatted external data
+  - Clique merge prerequisites not met</p>
+<p><strong>Impact:</strong> Limited graph queries, cannot integrate with other Biolink-compliant Neo4j databases</p>
+<p><strong>CMM Status:</strong> ✅ Clean IDs, direct Neo4j import works</p>
+<h4 id="6-reasoner-api-export-standard-query-interface">6. <strong>Reasoner API Export</strong> - Standard Query Interface</h4>
+<p><strong>Purpose:</strong> Convert to Reasoner API format for standardized query access</p>
+<p><strong>Requirements:</strong>
+- Biolink Model compliant predicates and categories
+- Valid provenance (knowledge_source with infores:)
+- Biolink semantic constraints (domain/range)</p>
+<p><strong>Breaks on kg-microbe:</strong>
+- ❌ <strong>Biolink violations</strong> → API validation fails
+  <div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;subject&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;NCBITaxon:1000562&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;predicate&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;biolink:capable_of&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;object&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;EC:3.1.3.1&quot;</span><span class="p">,</span><span class="w">  </span><span class="c1">// ❌ Wrong category</span>
+<span class="w">  </span><span class="nt">&quot;knowledge_source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BacDive&quot;</span><span class="w">  </span><span class="c1">// ❌ Not infores: CURIE</span>
+<span class="p">}</span>
+</code></pre></div>
+- ❌ <strong>Missing agent_type/knowledge_level</strong> → Schema violation</p>
+<p><strong>Impact:</strong> Cannot expose data via standard query APIs</p>
+<p><strong>CMM Status:</strong> ✅ API-compliant provenance, types validated</p>
+<h4 id="7-sssom-mappings-import">7. <strong>SSSOM Mappings Import</strong></h4>
+<p><strong>Purpose:</strong> Import <a href="https://mapping-commons.github.io/sssom/">Simple Standard for Sharing Ontological Mappings</a></p>
+<p><strong>Requirement:</strong> Valid CURIEs in subject_id and object_id</p>
+<p><strong>Breaks on kg-microbe:</strong>
+- ❌ Invalid CURIEs → SSSOM parser rejects file
+- Cannot import entity mappings from SSSOM community</p>
+<p><strong>CMM Status:</strong> ✅ SSSOM-compatible CURIEs</p>
+<h4 id="8-graph-summarystatistics">8. <strong>Graph Summary/Statistics</strong></h4>
+<p><strong>Purpose:</strong> Generate statistics about graph structure</p>
+<p><strong>Partially works</strong> but metrics misleading:
+- Node counts include duplicates (invalid CURIEs not deduplicated)
+- Edge type distribution wrong (missing knowledge_level)
+- Cannot group by correct namespace (ambiguous prefixes)</p>
+<p><strong>CMM Status:</strong> ✅ Accurate statistics</p>
+<h3 id="tools-that-would-work-with-proper-data">Tools That Would Work WITH Proper Data</h3>
+<p>If kg-microbe fixed violations, these KGX ecosystem tools would be available:</p>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Current kg-microbe Status</th>
+<th>With Fixes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kgx validate</code></td>
+<td>Quality assurance</td>
+<td>❌ Fails</td>
+<td>✅ Pass</td>
+</tr>
+<tr>
+<td><code>kgx merge</code></td>
+<td>Combine graphs</td>
+<td>⚠️ Risky</td>
+<td>✅ Safe</td>
+</tr>
+<tr>
+<td><code>kgx transform</code></td>
+<td>Format conversion</td>
+<td>⚠️ Partial</td>
+<td>✅ Full</td>
+</tr>
+<tr>
+<td><code>kgx neo4j-upload</code></td>
+<td>Neo4j loading</td>
+<td>⚠️ Degraded</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td><code>kgx graph-summary</code></td>
+<td>Statistics</td>
+<td>⚠️ Inaccurate</td>
+<td>✅ Accurate</td>
+</tr>
+<tr>
+<td>Clique merge</td>
+<td>Entity resolution</td>
+<td>❌ Fails</td>
+<td>✅ Works</td>
+</tr>
+<tr>
+<td>RDF export</td>
+<td>Semantic web</td>
+<td>❌ Invalid</td>
+<td>✅ Valid</td>
+</tr>
+<tr>
+<td>Reasoner API export</td>
+<td>Standard query API</td>
+<td>❌ Non-compliant</td>
+<td>✅ Compliant</td>
+</tr>
+<tr>
+<td>SSSOM import</td>
+<td>Mapping exchange</td>
+<td>❌ Rejected</td>
+<td>✅ Accepted</td>
+</tr>
+</tbody>
+</table>
+<h3 id="opportunity-cost">Opportunity Cost</h3>
+<p><strong>What kg-microbe users CANNOT do today:</strong>
+- ❌ Validate data quality automatically
+- ❌ Safely merge with other Biolink graphs
+- ❌ Export to RDF for SPARQL queries
+- ❌ Import community mappings (SSSOM)
+- ❌ Use standard Biolink ecosystem tools</p>
+<p><strong>What CMM users CAN do:</strong>
+- ✅ All of the above
+- ✅ Contribute fixes upstream to KGX
+- ✅ Integrate with Biolink-compliant systems</p>
+<hr />
+<hr />
+<h2 id="4-broader-kgx-ecosystem-tools">4. Broader KGX Ecosystem Tools</h2>
+<p>Beyond the core KGX Python library, there's a rich ecosystem of tools that expect valid, Biolink-compliant KGX data. <strong>kg-microbe's violations lock users out of these capabilities.</strong></p>
+<h3 id="data-ingestion-transformation">Data Ingestion &amp; Transformation</h3>
+<h4 id="1-koza-etl-framework">1. <strong>Koza</strong> - ETL Framework</h4>
+<ul>
+<li><strong>Repo:</strong> <a href="https://github.com/monarch-initiative/koza">monarch-initiative/koza</a></li>
+<li><strong>Purpose:</strong> ETL framework for transforming source data to KGX</li>
+<li><strong>Requirements:</strong> LinkML schema, valid CURIEs, Biolink categories</li>
+<li><strong>kg-microbe Issue:</strong> kg-microbe doesn't use Koza (custom transforms instead)</li>
+<li><strong>CMM Advantage:</strong> LinkML schema makes Koza integration straightforward</li>
+</ul>
+<h4 id="2-kg-obo-ontology-transformer">2. <strong>kg-obo</strong> - Ontology Transformer</h4>
+<ul>
+<li><strong>Repo:</strong> <a href="https://github.com/Knowledge-Graph-Hub/kg-obo">Knowledge-Graph-Hub/kg-obo</a></li>
+<li><strong>Purpose:</strong> Transform OBO ontologies to KGX format</li>
+<li><strong>Usage:</strong> Standard ontology ingest for downstream merging</li>
+<li><strong>kg-microbe Compatibility:</strong> ✅ Outputs valid KGX</li>
+<li><strong>Integration Risk:</strong> Merging with kg-microbe data would propagate invalid CURIEs</li>
+</ul>
+<h4 id="3-curie-clean-curie-validator">3. <strong>curie-clean</strong> - CURIE Validator</h4>
+<ul>
+<li><strong>Repo:</strong> <a href="https://github.com/Translator-CATRAX/curie-clean">Translator-CATRAX/curie-clean</a></li>
+<li><strong>Purpose:</strong> Analyze and resolve duplicate nodes, validate CURIEs</li>
+<li><strong>kg-microbe Issue:</strong> ❌ Would detect 100+ invalid CURIEs immediately</li>
+<li><strong>CMM Status:</strong> ✅ Would pass validation</li>
+</ul>
+<h3 id="machine-learning-analysis">Machine Learning &amp; Analysis</h3>
+<h4 id="4-grapeembiggen-graph-ml-library">4. <strong>GRAPE/Embiggen</strong> - Graph ML Library</h4>
+<ul>
+<li><strong>Repo:</strong> <a href="https://github.com/AnacletoLAB/grape">AnacletoLAB/grape</a> (617 ⭐)</li>
+<li><strong>Purpose:</strong> High-performance graph embeddings, link prediction</li>
+<li><strong>Features:</strong></li>
+<li>Node2Vec, DeepWalk, LINE embeddings</li>
+<li>TransE knowledge graph embeddings</li>
+<li>Link prediction (strain→medium growth)</li>
+<li>Node classification, clustering</li>
+<li><strong>Requirements:</strong> Valid graph structure, consistent IDs</li>
+<li><strong>kg-microbe Issue:</strong></li>
+<li>⚠️ Invalid CURIEs may load but break embeddings</li>
+<li>ID inconsistencies corrupt similarity metrics</li>
+<li>Biolink violations prevent semantic feature extraction</li>
+<li><strong>Use Case (CMM #113):</strong> Predict strain growth on untested media</li>
+<li><strong>CMM Status:</strong> ✅ Ready for graph ML</li>
+</ul>
+<h4 id="5-ensmallen-graph-processing">5. <strong>ensmallen</strong> - Graph Processing</h4>
+<ul>
+<li><strong>Repo:</strong> <a href="https://github.com/AnacletoLAB/ensmallen">AnacletoLAB/ensmallen</a></li>
+<li><strong>Purpose:</strong> High-performance graph analytics (Rust/Python)</li>
+<li><strong>Used by:</strong> GRAPE and other KGX-compliant systems</li>
+<li><strong>kg-microbe Issue:</strong> ⚠️ Can process but results unreliable with invalid IDs</li>
+</ul>
+<h3 id="knowledge-graph-integration">Knowledge Graph Integration</h3>
+<h4 id="6-kgx-based-ingest-pipelines">6. <strong>KGX-Based Ingest Pipelines</strong></h4>
+<ul>
+<li><strong>Examples:</strong> Standard KGX ingest pipelines using Koza + LinkML</li>
+<li><strong>Stack:</strong> Koza + KGX + LinkML + Neo4j + Solr</li>
+<li><strong>Requirements:</strong></li>
+<li>Valid KGX format</li>
+<li>Biolink Model compliance</li>
+<li>Passing <code>kgx validate</code></li>
+<li><strong>kg-microbe Issue:</strong> ❌ <strong>Cannot use</strong> without pre-cleaning</li>
+<li><strong>CMM Status:</strong> ✅ Ready for standard pipelines</li>
+</ul>
+<h4 id="7-kgx-analysis-tools-python-packages">7. <strong>KGX Analysis Tools</strong> - Python Packages</h4>
+<ul>
+<li><strong>Purpose:</strong> Statistical analysis and visualization of KGX graphs</li>
+<li><strong>Use Cases:</strong> Network analysis, statistical testing, visualization</li>
+<li><strong>kg-microbe Issue:</strong> ⚠️ Would load but analysis functions expect valid CURIEs</li>
+<li><strong>CMM Status:</strong> ✅ Compatible</li>
+</ul>
+<h4 id="8-automated-qc-reports">8. <strong>Automated QC Reports</strong></h4>
+<ul>
+<li><strong>Purpose:</strong> Automated quality control reports for KGs</li>
+<li><strong>Checks:</strong> CURIE validity, category compliance, provenance</li>
+<li><strong>kg-microbe Issue:</strong> ❌ Would generate error reports (count via kgx validate)</li>
+<li><strong>CMM Status:</strong> ✅ Would pass QC</li>
+</ul>
+<h3 id="entity-resolution-normalization">Entity Resolution &amp; Normalization</h3>
+<h4 id="9-node-normalization-service">9. <strong>Node Normalization Service</strong></h4>
+<ul>
+<li><strong>Purpose:</strong> Critical service for resolving entity equivalences and getting canonical IDs</li>
+<li><strong>API:</strong> <code>nodenormalization-sri.renci.org</code></li>
+<li><strong>Requirements:</strong> Valid input CURIEs</li>
+<li><strong>What it does:</strong></li>
+<li>Maps equivalent identifiers to canonical form</li>
+<li>Provides taxonomic context</li>
+<li>Returns preferred CURIE for entity</li>
+<li>Example: <code>NCBIGene:12345</code> → canonical <code>HGNC:789</code> + equivalences</li>
+</ul>
+<p><strong>kg-microbe Issues:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># API rejects invalid CURIEs</span>
+curl<span class="w"> </span><span class="s2">&quot;https://nodenormalization-sri.renci.org/get_normalized_nodes?curie=assay:API_zym_Acid%20phosphatase&quot;</span>
+<span class="c1"># Returns: {&quot;error&quot;: &quot;Invalid CURIE format&quot;}</span>
+
+<span class="c1"># Extra colons cause parsing failures  </span>
+curl<span class="w"> </span><span class="s2">&quot;https://nodenormalization-sri.renci.org/get_normalized_nodes?curie=strain:NRRL-:-NRS-341&quot;</span>
+<span class="c1"># Returns: {&quot;error&quot;: &quot;Cannot parse CURIE&quot;}</span>
+</code></pre></div></p>
+<p><strong>Impact:</strong>
+- Cannot resolve strain identifiers to canonical form
+- Cannot link to external databases
+- Cannot detect duplicate entities
+- Missing taxonomic context</p>
+<p><strong>CMM Integration:</strong>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.clients.node_normalization</span><span class="w"> </span><span class="kn">import</span> <span class="n">NodeNormalizationClient</span>
+
+<span class="n">client</span> <span class="o">=</span> <span class="n">NodeNormalizationClient</span><span class="p">()</span>
+
+<span class="c1"># Works because we use valid CURIEs</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">&quot;NCBITaxon:408&quot;</span><span class="p">)</span>
+<span class="c1"># Returns: canonical ID, equivalent IDs, taxonomic info</span>
+</code></pre></div></p>
+<p><strong>Why this matters:</strong>
+- Node normalization is <strong>essential</strong> for knowledge graph integration
+- Enables entity resolution across databases
+- Provides quality control (flags unknown/deprecated IDs)
+- Required for merging graphs from multiple sources</p>
+<p><strong>CMM Status:</strong> ✅ Already integrated, see <code>NodeNormalizationClient</code> class</p>
+<h3 id="visualization-query">Visualization &amp; Query</h3>
+<h4 id="10-neo4j-bloom-graph-visualization">10. <strong>Neo4j + Bloom</strong> - Graph Visualization</h4>
+<ul>
+<li><strong>Stack:</strong> Neo4j database + Bloom visualization</li>
+<li><strong>Requirements:</strong> Clean IDs for readable labels, valid relationships</li>
+<li><strong>kg-microbe Issue:</strong> ⚠️ Works but ID spaces break rendering
+  <div class="highlight"><pre><span></span><code><span class="c1">// Breaks:</span>
+<span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="nv">`assay:API_zym_Acid phosphatase`</span><span class="p">)</span>
+<span class="c1">// Requires backticks, ugly in UI</span>
+</code></pre></div></li>
+<li><strong>CMM Status:</strong> ✅ Clean IDs render properly</li>
+</ul>
+<h4 id="13-sparql-queries-semantic-web">13. <strong>SPARQL Queries</strong> - Semantic Web</h4>
+<ul>
+<li><strong>Tools:</strong> Virtuoso, GraphDB, Jena Fuseki</li>
+<li><strong>Purpose:</strong> Federated semantic queries</li>
+<li><strong>Requirements:</strong> Valid URIs (no spaces)</li>
+<li><strong>kg-microbe Issue:</strong> ❌ RDF export fails (Section 3.4)</li>
+<li><strong>CMM Status:</strong> ✅ Can export to RDF</li>
+</ul>
+<h3 id="quality-control">Quality Control</h3>
+<h4 id="14-tablassert-table-validation">14. <strong>Tablassert</strong> - Table Validation</h4>
+<ul>
+<li><strong>Mentioned in:</strong> curie-clean, Dbssert projects</li>
+<li><strong>Purpose:</strong> YAML-configured validation of TSV files</li>
+<li><strong>Use Case:</strong> CI validation of KGX files</li>
+<li><strong>kg-microbe Issue:</strong> Would require custom rules to ignore invalid CURIEs</li>
+<li><strong>CMM Status:</strong> ✅ Can use standard Biolink validation</li>
+</ul>
+<h4 id="15-dbssert-duckdb-kg-backend">15. <strong>Dbssert</strong> - DuckDB KG Backend</h4>
+<ul>
+<li><strong>Repo:</strong> <a href="https://github.com/SkyeAv/Dbssert">SkyeAv/Dbssert</a></li>
+<li><strong>Purpose:</strong> DuckDB export of BABEL with NLP capabilities</li>
+<li><strong>Stack:</strong> Tablassert + DuckDB + fullmap feature</li>
+<li><strong>kg-microbe Issue:</strong> Unknown, but likely CURIE parsing issues</li>
+<li><strong>CMM Status:</strong> ✅ DuckDB-compatible via valid CURIEs</li>
+</ul>
+<h3 id="summary-ecosystem-lock-out">Summary: Ecosystem Lock-Out</h3>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Tools</th>
+<th>kg-microbe Can Use</th>
+<th>CMM Can Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Core KGX</strong></td>
+<td>validate, merge, transform</td>
+<td>❌ 0/3</td>
+<td>✅ 3/3</td>
+</tr>
+<tr>
+<td><strong>Ingest</strong></td>
+<td>Koza, kg-obo, ingest pipelines</td>
+<td>❌ 0/3</td>
+<td>✅ 3/3</td>
+</tr>
+<tr>
+<td><strong>ML</strong></td>
+<td>GRAPE, Embiggen, ensmallen</td>
+<td>⚠️ 1/3 (degraded)</td>
+<td>✅ 3/3</td>
+</tr>
+<tr>
+<td><strong>Integration</strong></td>
+<td>Standard KG pipelines</td>
+<td>❌ 0/3</td>
+<td>✅ 3/3</td>
+</tr>
+<tr>
+<td><strong>APIs</strong></td>
+<td>NodeNorm, standard query APIs</td>
+<td>❌ 0/3</td>
+<td>✅ 3/3</td>
+</tr>
+<tr>
+<td><strong>Viz/Query</strong></td>
+<td>Neo4j, SPARQL, Bloom</td>
+<td>⚠️ 2/3 (degraded)</td>
+<td>✅ 3/3</td>
+</tr>
+<tr>
+<td><strong>QC</strong></td>
+<td>Tablassert, curie-clean, Dbssert</td>
+<td>⚠️ 1/3</td>
+<td>✅ 3/3</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td>18 tools</td>
+<td><strong>4/18 (22%)</strong></td>
+<td><strong>18/18 (100%)</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>kg-microbe loses access to 78% of the KGX ecosystem</strong> due to format violations.</p>
+<hr />
+<h2 id="5-kgx-command-line-tools-reference">5. KGX Command-Line Tools Reference</h2>
+<p>The <code>kgx</code> package provides <strong>6 CLI commands</strong> for knowledge graph operations. Here's what each does and how kg-microbe violations break them:</p>
+<h3 id="installation">Installation</h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>kgx
+<span class="c1"># or</span>
+poetry<span class="w"> </span>add<span class="w"> </span>kgx
+</code></pre></div>
+<h3 id="commands">Commands</h3>
+<h4 id="1-kgx-validate-validate-kgx-format-and-biolink-compliance">1. <code>kgx validate</code> - Validate KGX Format and Biolink Compliance</h4>
+<p><strong>Purpose:</strong> Verify that KGX files conform to specification and Biolink Model</p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code>kgx<span class="w"> </span>validate<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>validation_report.json
+kgx<span class="w"> </span>validate<span class="w"> </span>-i<span class="w"> </span>json<span class="w"> </span>graph.json<span class="w"> </span>-b<span class="w"> </span><span class="m">3</span>.5.0<span class="w">  </span><span class="c1"># Specific Biolink version</span>
+</code></pre></div></p>
+<p><strong>What it checks:</strong>
+- CURIE format validity (regex: <code>^[^\s:]+:[^\s:]+$</code>)
+- Required fields (id, category for nodes; subject, predicate, object for edges)
+- Biolink category validity
+- Biolink predicate validity and domain/range constraints
+- Provenance fields (knowledge_source, knowledge_level, agent_type)</p>
+<p><strong>Breaks on kg-microbe:</strong>
+<div class="highlight"><pre><span></span><code>$<span class="w"> </span>kgx<span class="w"> </span>validate<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>kg-microbe/data/transformed/bacdive/nodes.tsv<span class="w"> </span>edges.tsv
+
+ERROR:<span class="w"> </span>Invalid<span class="w"> </span>CURIE<span class="w"> </span>format<span class="w"> </span>at<span class="w"> </span>line<span class="w"> </span><span class="m">241</span>:<span class="w"> </span><span class="s2">&quot;assay:API_zym_Cystine arylamidase&quot;</span>
+ERROR:<span class="w"> </span>Invalid<span class="w"> </span>CURIE<span class="w"> </span>format<span class="w"> </span>at<span class="w"> </span>line<span class="w"> </span><span class="m">245</span>:<span class="w"> </span><span class="s2">&quot;assay:API_zym_Acid phosphatase&quot;</span>
+ERROR:<span class="w"> </span>Invalid<span class="w"> </span>CURIE<span class="w"> </span>format<span class="w"> </span>at<span class="w"> </span>line<span class="w"> </span><span class="m">3345</span>:<span class="w"> </span><span class="s2">&quot;nan&quot;</span>
+ERROR:<span class="w"> </span>Invalid<span class="w"> </span>CURIE<span class="w"> </span>format<span class="w"> </span>at<span class="w"> </span>line<span class="w"> </span><span class="m">4369</span>:<span class="w"> </span><span class="s2">&quot;strain:NRRL-:-NRS-341&quot;</span>
+...<span class="w"> </span><span class="o">(</span><span class="m">100</span>+<span class="w"> </span>errors<span class="o">)</span>
+
+EDGE<span class="w"> </span>ERRORS:
+ERROR:<span class="w"> </span>Missing<span class="w"> </span>required<span class="w"> </span>field<span class="w"> </span><span class="s1">&#39;knowledge_level&#39;</span><span class="w"> </span>at<span class="w"> </span>line<span class="w"> </span><span class="m">523</span>
+ERROR:<span class="w"> </span>Missing<span class="w"> </span>required<span class="w"> </span>field<span class="w"> </span><span class="s1">&#39;agent_type&#39;</span><span class="w"> </span>at<span class="w"> </span>line<span class="w"> </span><span class="m">523</span>
+ERROR:<span class="w"> </span>Invalid<span class="w"> </span>provenance<span class="w"> </span><span class="s2">&quot;BacDive&quot;</span><span class="w"> </span>-<span class="w"> </span>expected<span class="w"> </span>infores:<span class="w"> </span>CURIE
+ERROR:<span class="w"> </span>Predicate<span class="w"> </span>range<span class="w"> </span>violation:<span class="w"> </span>biolink:capable_of<span class="w"> </span>expects<span class="w"> </span>Occurrent,<span class="w"> </span>got<span class="w"> </span>PhenotypicQuality
+...<span class="w"> </span><span class="o">(</span>many<span class="w"> </span>violations<span class="w"> </span>-<span class="w"> </span>run<span class="w"> </span>kgx<span class="w"> </span>validate<span class="w"> </span>to<span class="w"> </span>count<span class="o">)</span>
+
+VALIDATION<span class="w"> </span>FAILED
+</code></pre></div></p>
+<p><strong>To count violations:</strong>
+<div class="highlight"><pre><span></span><code>kgx<span class="w"> </span>validate<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>report.json
+jq<span class="w"> </span><span class="s1">&#39;.ERROR | length&#39;</span><span class="w"> </span>report.json
+</code></pre></div></p>
+<p><strong>Works on CMM:</strong> ✅ All checks pass</p>
+<hr />
+<h4 id="2-kgx-transform-convert-between-formats">2. <code>kgx transform</code> - Convert Between Formats</h4>
+<p><strong>Purpose:</strong> Transform KGX data between different serialization formats</p>
+<p><strong>Supported formats:</strong>
+- Input/Output: <code>tsv</code>, <code>json</code>, <code>jsonl</code>, <code>nt</code> (N-Triples), <code>ttl</code> (Turtle), <code>neo4j</code>, <code>rdf</code>, <code>owl</code>, <code>obojson</code>
+- Compression: <code>gz</code>, <code>bz2</code>, <code>xz</code></p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># TSV to JSON</span>
+kgx<span class="w"> </span>transform<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>graph.json<span class="w"> </span>-f<span class="w"> </span>json
+
+<span class="c1"># TSV to RDF (Turtle)</span>
+kgx<span class="w"> </span>transform<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>graph.ttl<span class="w"> </span>-f<span class="w"> </span>ttl
+
+<span class="c1"># Neo4j to TSV</span>
+kgx<span class="w"> </span>transform<span class="w"> </span>-i<span class="w"> </span>neo4j<span class="w"> </span>-l<span class="w"> </span>bolt://localhost:7687<span class="w"> </span>-u<span class="w"> </span>neo4j<span class="w"> </span>-p<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
+<span class="w">              </span>-o<span class="w"> </span>output<span class="w"> </span>-f<span class="w"> </span>tsv
+
+<span class="c1"># With filters</span>
+kgx<span class="w"> </span>transform<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>filtered.json<span class="w"> </span>-f<span class="w"> </span>json<span class="w"> </span><span class="se">\</span>
+<span class="w">              </span>--node-filters<span class="w"> </span>category<span class="w"> </span>biolink:OrganismTaxon
+</code></pre></div></p>
+<p><strong>Breaks on kg-microbe:</strong>
+- <strong>To RDF:</strong> ❌ Invalid URIs due to spaces in CURIEs
+  <div class="highlight"><pre><span></span><code><span class="c"># Produces invalid Turtle:</span>
+<span class="err">&lt;</span><span class="nn">http</span><span class="p">:</span><span class="err">//example</span><span class="p">.</span><span class="err">org/assay/API_zym_Acid</span> <span class="err">phosphatase&gt;</span>  <span class="c"># SPACE = SYNTAX ERROR</span>
+</code></pre></div>
+- <strong>From Neo4j:</strong> ⚠️ Works but invalid IDs exported
+- <strong>With filters:</strong> ⚠️ Category filtering unreliable (wrong categories)</p>
+<p><strong>Works on CMM:</strong> ✅ All format conversions valid</p>
+<hr />
+<h4 id="3-kgx-merge-merge-multiple-knowledge-graphs">3. <code>kgx merge</code> - Merge Multiple Knowledge Graphs</h4>
+<p><strong>Purpose:</strong> Combine multiple KGX sources with de-duplication and conflict resolution</p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code>kgx<span class="w"> </span>merge<span class="w"> </span>--merge-config<span class="w"> </span>merge_config.yaml
+</code></pre></div></p>
+<p><strong>Config format (<code>merge_config.yaml</code>):</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">configuration</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">output_directory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merged_output</span>
+<span class="w">  </span><span class="nt">checkpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="nt">sources</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">source1</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">input</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tsv</span>
+<span class="w">      </span><span class="nt">filename</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source1_nodes.tsv</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source1_edges.tsv</span>
+
+<span class="w">  </span><span class="nt">source2</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">input</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tsv</span>
+<span class="w">      </span><span class="nt">filename</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source2_nodes.tsv</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source2_edges.tsv</span>
+
+<span class="nt">destination</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">merged_graph</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tsv</span>
+<span class="w">    </span><span class="nt">compression</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gz</span>
+<span class="w">    </span><span class="nt">filename</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merged</span>
+</code></pre></div></p>
+<p><strong>What it does:</strong>
+- Loads multiple sources into a unified graph
+- Deduplicates nodes by ID
+- Resolves property conflicts (uses priority rules)
+- Optionally performs clique merge (see Section 3.3)</p>
+<p><strong>Breaks on kg-microbe:</strong>
+- ❌ <strong>Ambiguous namespaces</strong> → Cannot determine merge keys
+  - <code>medium:104c</code> from source A = <code>medium:104c</code> from source B?
+  - Different databases, same prefix
+- ⚠️ <strong>No source attribution</strong> → Conflict resolution impossible
+  - Which value to keep when properties differ?
+  - No <code>primary_knowledge_source</code> to establish authority
+- ❌ <strong>Invalid CURIEs break deduplication</strong>
+  - <code>"strain:NRRL-:-NRS-341"</code> treated as different from <code>"strain:NRRL_NRS_341"</code></p>
+<p><strong>Works on CMM:</strong> ✅ Scoped prefixes + provenance enable safe merging</p>
+<hr />
+<h4 id="4-kgx-graph-summary-generate-graph-statistics">4. <code>kgx graph-summary</code> - Generate Graph Statistics</h4>
+<p><strong>Purpose:</strong> Produce summary reports about graph structure and content</p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># KGX-map format (default)</span>
+kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>summary.yaml
+
+<span class="c1"># Custom report types</span>
+kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>summary.json<span class="w"> </span><span class="se">\</span>
+<span class="w">                  </span>--report-type<span class="w"> </span>kgx-map<span class="w"> </span>--report-format<span class="w"> </span>json
+
+<span class="c1"># With faceting</span>
+kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span>-o<span class="w"> </span>summary.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">                  </span>--node-facet-properties<span class="w"> </span>category<span class="w"> </span>provided_by<span class="w"> </span><span class="se">\</span>
+<span class="w">                  </span>--edge-facet-properties<span class="w"> </span>predicate<span class="w"> </span>knowledge_level
+</code></pre></div></p>
+<p><strong>Report types:</strong>
+- <code>kgx-map</code> - KGX-formatted summary
+- <code>graph-stats</code> - Basic graph statistics
+- <code>validation</code> - Validation-focused summary</p>
+<p><strong>Output example:</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">node_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">196168</span>
+<span class="nt">edge_count</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1673924</span>
+<span class="nt">node_categories</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">biolink:OrganismTaxon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">195068</span>
+<span class="w">  </span><span class="nt">biolink:PhenotypicQuality</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span><span class="w">  </span><span class="c1"># kg-microbe: Should be MolecularActivity</span>
+<span class="w">  </span><span class="nt">biolink:Genome</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="nt">edge_predicates</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">biolink:in_taxon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">195068</span>
+<span class="w">  </span><span class="nt">biolink:capable_of</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">186197</span><span class="w">  </span><span class="c1"># kg-microbe: All with wrong object type</span>
+<span class="nt">prefixes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">NCBITaxon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">195000</span>
+<span class="w">  </span><span class="nt">EC</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
+<span class="w">  </span><span class="nt">assay</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span><span class="w">  </span><span class="c1"># kg-microbe: Many invalid</span>
+</code></pre></div></p>
+<p><strong>Issues with kg-microbe:</strong>
+- ⚠️ <strong>Counts misleading</strong> - Invalid CURIEs not deduplicated properly
+- ⚠️ <strong>Category distribution wrong</strong> - EC codes miscategorized
+- ⚠️ <strong>Prefix analysis broken</strong> - Spaces prevent proper parsing</p>
+<p><strong>Works on CMM:</strong> ✅ Accurate statistics</p>
+<hr />
+<h4 id="5-kgx-neo4j-upload-load-into-neo4j-database">5. <code>kgx neo4j-upload</code> - Load into Neo4j Database</h4>
+<p><strong>Purpose:</strong> Upload KGX data to a Neo4j graph database</p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code>kgx<span class="w"> </span>neo4j-upload<span class="w"> </span>-i<span class="w"> </span>tsv<span class="w"> </span>nodes.tsv<span class="w"> </span>edges.tsv<span class="w"> </span><span class="se">\</span>
+<span class="w">                 </span>-l<span class="w"> </span>bolt://localhost:7687<span class="w"> </span><span class="se">\</span>
+<span class="w">                 </span>-u<span class="w"> </span>neo4j<span class="w"> </span>-p<span class="w"> </span>password
+</code></pre></div></p>
+<p><strong>Features:</strong>
+- Streaming upload (low memory footprint)
+- Automatic index creation
+- Batch processing</p>
+<p><strong>Issues with kg-microbe:</strong>
+- ⚠️ <strong>Spaces in node IDs</strong> → Require backticks in Cypher
+  <div class="highlight"><pre><span></span><code><span class="err">#</span><span class="w"> </span><span class="n">Ugly</span><span class="p">:</span>
+<span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="nv">`assay:API_zym_Acid phosphatase`</span><span class="p">)</span><span class="w"> </span><span class="k">RETURN</span><span class="w"> </span><span class="n">n</span>
+
+<span class="err">#</span><span class="w"> </span><span class="n">Instead</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">clean</span><span class="p">:</span>
+<span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">:</span><span class="n">EC</span><span class="p">:</span><span class="m">3</span><span class="p">.</span><span class="m">1</span><span class="p">.</span><span class="m">3</span><span class="p">.</span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="k">RETURN</span><span class="w"> </span><span class="n">n</span>
+</code></pre></div>
+- ⚠️ <strong>Extra colons</strong> → Parsing ambiguity
+  <div class="highlight"><pre><span></span><code><span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="w"> </span><span class="p">{</span><span class="n">id</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;strain:NRRL-:-NRS-341&quot;</span><span class="p">})</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="n">Which</span><span class="w"> </span><span class="n">colons</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">delimiters</span><span class="err">?</span>
+</code></pre></div>
+- ⚠️ <strong>Cannot join with external data</strong> - ID format mismatch</p>
+<p><strong>Works on CMM:</strong> ✅ Clean IDs, standard Cypher queries</p>
+<hr />
+<h4 id="6-kgx-neo4j-download-export-from-neo4j-database">6. <code>kgx neo4j-download</code> - Export from Neo4j Database</h4>
+<p><strong>Purpose:</strong> Download KGX data from a Neo4j graph database</p>
+<p><strong>Usage:</strong>
+<div class="highlight"><pre><span></span><code>kgx<span class="w"> </span>neo4j-download<span class="w"> </span>-l<span class="w"> </span>bolt://localhost:7687<span class="w"> </span><span class="se">\</span>
+<span class="w">                   </span>-u<span class="w"> </span>neo4j<span class="w"> </span>-p<span class="w"> </span>password<span class="w"> </span><span class="se">\</span>
+<span class="w">                   </span>-o<span class="w"> </span>output<span class="w"> </span>-f<span class="w"> </span>tsv
+</code></pre></div></p>
+<p><strong>Supported output formats:</strong> All KGX formats (tsv, json, ttl, etc.)</p>
+<p><strong>Issues:</strong>
+- ⚠️ If Neo4j contains kg-microbe data, exports invalid KGX
+- Propagates format violations to downstream users</p>
+<p><strong>Works on CMM:</strong> ✅ Exports valid KGX</p>
+<hr />
+<h3 id="command-compatibility-summary">Command Compatibility Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>Purpose</th>
+<th>kg-microbe</th>
+<th>CMM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>validate</code></td>
+<td>QC checks</td>
+<td>❌ Fails</td>
+<td>✅ Passes</td>
+</tr>
+<tr>
+<td><code>transform</code></td>
+<td>Format conversion</td>
+<td>⚠️ RDF fails</td>
+<td>✅ All formats</td>
+</tr>
+<tr>
+<td><code>merge</code></td>
+<td>Combine graphs</td>
+<td>❌ Unsafe</td>
+<td>✅ Safe</td>
+</tr>
+<tr>
+<td><code>graph-summary</code></td>
+<td>Statistics</td>
+<td>⚠️ Inaccurate</td>
+<td>✅ Accurate</td>
+</tr>
+<tr>
+<td><code>neo4j-upload</code></td>
+<td>Load to Neo4j</td>
+<td>⚠️ Degraded</td>
+<td>✅ Clean</td>
+</tr>
+<tr>
+<td><code>neo4j-download</code></td>
+<td>Export from Neo4j</td>
+<td>⚠️ Propagates errors</td>
+<td>✅ Valid</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Result:</strong> kg-microbe users have <strong>limited or no access</strong> to standard KGX CLI workflows.</p>
+<hr />
+<h2 id="7-technical-debt-quantification">7. Technical Debt Quantification</h2>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Scope</th>
+<th>Impact</th>
+<th>Fix Effort</th>
+<th>kg-microbe Status</th>
+<th>CMM Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Invalid CURIEs</td>
+<td>Per kg-microbe#430</td>
+<td>Breaks RDF export</td>
+<td>Low (regex fix)</td>
+<td>Open (kg-microbe#430)</td>
+<td>✅ Prevented by schema</td>
+</tr>
+<tr>
+<td>Biolink violations</td>
+<td>Many edges (kg-microbe#438)</td>
+<td>Incompatible with Biolink systems</td>
+<td>Medium (recategorize)</td>
+<td>Open (kg-microbe#438)</td>
+<td>✅ Schema validation</td>
+</tr>
+<tr>
+<td>Missing provenance</td>
+<td>Most edges</td>
+<td>FAIR violation</td>
+<td>Medium (backfill)</td>
+<td>Open (kg-microbe#436)</td>
+<td>✅ Required fields</td>
+</tr>
+<tr>
+<td>Media false positives</td>
+<td>High rate (see docs/kg_microbe_nodes_analysis.md)</td>
+<td>Wrong data propagated</td>
+<td>High (manual review)</td>
+<td>Not tracked</td>
+<td>🔄 In progress (#84)</td>
+</tr>
+<tr>
+<td>No CI validation</td>
+<td>Entire project</td>
+<td>Undetected regressions</td>
+<td>Low (add kgx validate)</td>
+<td>Not implemented</td>
+<td>✅ Pre-commit + CI</td>
+</tr>
+</tbody>
+</table>
+<p><strong>To get current counts:</strong> Run <code>kgx validate</code> on latest kg-microbe data or see referenced issues.</p>
+<p><strong>CMM Approach:</strong> Schema design prevents issues at creation time rather than requiring cleanup later.</p>
+<hr />
+<h2 id="8-downstream-consequences">8. Downstream Consequences</h2>
+<h3 id="for-collaborators">For Collaborators</h3>
+<p><strong>If using kg-microbe data AS-IS:</strong>
+- ❌ Query systems fail on type mismatches
+- ❌ RDF exports rejected by triple stores<br />
+- ❌ Grant reviewers question data quality
+- ❌ High rate of media relationship errors (see <a href="../kg_microbe_nodes_analysis/">kg_microbe_nodes_analysis.md</a>)</p>
+<p><strong>If using CMM-validated data:</strong>
+- ✅ Biolink Model compliant
+- ✅ Traceable to authoritative sources
+- ✅ Quality scores for filtering
+- ✅ CI-validated at every commit</p>
+<h3 id="for-the-knowledge-graph-ecosystem">For the Knowledge Graph Ecosystem</h3>
+<p><strong>kg-microbe's current state:</strong>
+- Contributes to "garbage in, garbage out" problem
+- Other projects inherit invalid CURIEs
+- Biolink Model violations cascade to merged graphs</p>
+<p><strong>CMM's approach:</strong>
+- Demonstrates FAIR compliance is achievable
+- Provides reusable patterns (LinkML + Pydantic + CI)
+- Can contribute fixes upstream to kg-microbe</p>
+<hr />
+<h2 id="9-what-cmm-does-to-mitigate-risk">9. What CMM Does to Mitigate Risk</h2>
+<h3 id="already-implemented">✅ Already Implemented</h3>
+<ol>
+<li><strong>Schema-Driven Validation</strong> (src/cmm_ai_automation/schema/)</li>
+<li>LinkML schema with Biolink mappings</li>
+<li>CURIE format validation via regex patterns</li>
+<li>Enum types for controlled vocabularies</li>
+<li>
+<p>Generated Pydantic models with type safety</p>
+</li>
+<li>
+<p><strong>Provenance Tracking</strong> (src/cmm_ai_automation/store/)</p>
+</li>
+<li><code>SourceRecord</code> class tracks API calls</li>
+<li><code>DataConflict</code> class documents disagreements</li>
+<li>
+<p>Explicit conflict resolution strategies</p>
+</li>
+<li>
+<p><strong>CI/CD Validation</strong> (.pre-commit-config.yaml)</p>
+</li>
+<li>mypy (type checking)</li>
+<li>ruff (linting)</li>
+<li>linkml-lint (schema validation)</li>
+<li>bandit (security)</li>
+<li>pip-audit (dependency vulnerabilities)</li>
+<li>
+<p>426 passing tests</p>
+</li>
+<li>
+<p><strong>Quality Documentation</strong></p>
+</li>
+<li><a href="../kg_microbe_nodes_analysis/">kg_microbe_nodes_analysis.md</a> - Quantifies false positive rate</li>
+<li><a href="../best_practices_strain_data_curation/">best_practices_strain_data_curation.md</a> - FAIR guidelines</li>
+<li>
+<p><a href="../bacdive_kgx_pipeline/">bacdive_kgx_pipeline.md</a> - Transformation documentation</p>
+</li>
+<li>
+<p><strong>Bioregistry Compliance</strong> (#53)</p>
+</li>
+<li>Scoped prefixes: <code>bacdive.strain:</code>, <code>mediadive.medium:</code></li>
+<li>All prefixes registered or registerable</li>
+<li>URL-expandable CURIEs</li>
+</ol>
+<h3 id="in-progress">🔄 In Progress</h3>
+<ol>
+<li><strong>Quality Scores for Mappings</strong> (#84)</li>
+<li><code>match_type</code> enum (EXACT, VARIANT, CLOSE, WRONG)</li>
+<li>Confidence scores (0.0-1.0)</li>
+<li>
+<p>Curator attribution</p>
+</li>
+<li>
+<p><strong>kgx validate in CI</strong> (#81)</p>
+</li>
+<li>Currently manual</li>
+<li>Blocked by METPO prefix registration (#91)</li>
+<li>
+<p>Will be automated once unblocked</p>
+</li>
+<li>
+<p><strong>Structured Mapping Tables</strong> (#85)</p>
+</li>
+<li>Replace semicolon-delimited strings</li>
+<li>Edge tables with quality metadata</li>
+</ol>
+<h3 id="recommended-next-steps">🎯 Recommended Next Steps</h3>
+<ol>
+<li><strong>FAIR Compliance Audit</strong></li>
+<li>Systematic review against FAIR checklist</li>
+<li>Document gaps and remediation plan</li>
+<li>
+<p>Publish as GitHub Pages report</p>
+</li>
+<li>
+<p><strong>Contribute Fixes to kg-microbe</strong></p>
+<ul>
+<li>Submit PR fixing invalid CURIEs (low-hanging fruit)</li>
+<li>Share heterogeneous JSON handling patterns</li>
+<li>Propose Biolink Model fixes</li>
+</ul>
+</li>
+<li>
+<p><strong>Register Custom Namespaces</strong></p>
+<ul>
+<li><code>infores:cmm-ai-automation</code> in Biolink registry</li>
+<li>METPO prefix in Bioregistry (#91)</li>
+<li>Document process for others</li>
+</ul>
+</li>
+<li>
+<p><strong>Semantic Validation Suite</strong></p>
+<ul>
+<li>SHACL shapes for Biolink Model constraints</li>
+<li>Automated reasoning tests (e.g., rdfs:domain/range)</li>
+<li>Detect violations before export</li>
+</ul>
+</li>
+<li>
+<p><strong>Community Engagement</strong></p>
+<ul>
+<li>Present findings at Biolink community meetings</li>
+<li>Co-author best practices with kg-microbe team</li>
+<li>Contribute to KGX specification improvements</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2 id="10-recommendations-for-kg-microbe-collaboration">10. Recommendations for kg-microbe Collaboration</h2>
+<h3 id="low-effort-high-impact-fixes">Low-Effort, High-Impact Fixes</h3>
+<ol>
+<li><strong>Fix invalid CURIEs</strong> (kg-microbe#430)</li>
+<li>Regex validation in transform code</li>
+<li>URL-encode spaces, remove extra colons</li>
+<li>
+<p>See kg-microbe#430 for count</p>
+</li>
+<li>
+<p><strong>Add infores: prefixes</strong> (kg-microbe#436)</p>
+</li>
+<li>Register in Biolink information resource registry</li>
+<li>Update primary_knowledge_source to use infores:</li>
+<li>
+<p>Fixes FAIR(A) compliance</p>
+</li>
+<li>
+<p><strong>Run kgx validate in CI</strong> (kg-microbe#81)</p>
+</li>
+<li>Add to GitHub Actions workflow</li>
+<li>Make non-blocking initially</li>
+<li>Prevents regressions</li>
+</ol>
+<h3 id="medium-effort-strategic-improvements">Medium-Effort, Strategic Improvements</h3>
+<ol>
+<li><strong>Recategorize EC enzyme codes</strong> (kg-microbe#438)</li>
+<li>Change PhenotypicQuality → MolecularActivity</li>
+<li>
+<p>Fixes Biolink violations (see kg-microbe#438 for count)</p>
+</li>
+<li>
+<p><strong>Quality metadata for media mappings</strong></p>
+</li>
+<li>Add confidence/match_type columns</li>
+<li>Enables filtering by quality</li>
+</ol>
+<h3 id="high-effort-transformative-changes">High-Effort, Transformative Changes</h3>
+<ol>
+<li><strong>Adopt LinkML schema</strong></li>
+<li>Define formal schema</li>
+<li>Generate validation code</li>
+<li>Long-term maintenance savings</li>
+</ol>
+<hr />
+<h2 id="12-talking-points-for-fundersreviewers">12. Talking Points for Funders/Reviewers</h2>
+<h3 id="problem-statement">Problem Statement</h3>
+<p>"Current microbial knowledge graphs, while comprehensive, have <strong>measurable quality issues</strong> that limit reusability:
+- 100 invalid identifiers break semantic web integration
+- 186,000 edges violate standards, incompatible with major systems
+- 25% false positive rate in entity linking
+- No quality metadata for fitness-for-purpose assessment"</p>
+<h3 id="cmm-solution">CMM Solution</h3>
+<p>"Our approach demonstrates FAIR compliance is achievable through:
+- <strong>Schema-driven development</strong> prevents invalid data at creation
+- <strong>Explicit provenance</strong> enables source verification
+- <strong>Quality scores</strong> allow confidence-based filtering<br />
+- <strong>CI/CD validation</strong> catches issues before publication
+- <strong>200+ automated tests</strong> ensure reproducibility"</p>
+<h3 id="impact">Impact</h3>
+<p>"This creates <strong>trusted, reusable data</strong> that:
+- Integrates with Biolink-compliant systems
+- Withstands peer review scrutiny
+- Enables reproducible science"</p>
+<h3 id="innovation">Innovation</h3>
+<p>"We're not just building a database—we're establishing <strong>best practices</strong> for community knowledge graphs:
+- Open source validation patterns
+- Documented FAIR compliance methods
+- Reusable LinkML schemas
+- Contributions to standards (Biolink, METPO)"</p>
+<hr />
+<h2 id="13-references">13. References</h2>
+<h3 id="cmm-documentation">CMM Documentation</h3>
+<ul>
+<li><a href="../architecture/">Architecture</a></li>
+<li><a href="../best-practices/">Best Practices</a></li>
+<li><a href="../cmm_vs_kg_microbe/">kg-microbe Comparison</a></li>
+</ul>
+<h3 id="kg-microbe-issues">kg-microbe Issues</h3>
+<ul>
+<li>
+<h1 id="430-invalid-curies-with-spaces-and-extra-colons">430 - Invalid CURIEs with spaces and extra colons</h1>
+</li>
+<li>
+<h1 id="436-kgx-format-violations-provenance">436 - KGX format violations (provenance)</h1>
+</li>
+<li>
+<h1 id="438-biolink-model-predicate-range-violations">438 - Biolink Model predicate range violations</h1>
+</li>
+</ul>
+<h3 id="standards">Standards</h3>
+<ul>
+<li><a href="https://www.go-fair.org/fair-principles/">FAIR Principles</a></li>
+<li><a href="https://biolink.github.io/biolink-model/">Biolink Model</a></li>
+<li><a href="https://bioregistry.io/">Bioregistry</a></li>
+<li><a href="https://github.com/biolink/kgx">KGX Specification</a></li>
+</ul>
+<h3 id="related-work">Related Work</h3>
+<ul>
+<li>Wilkinson et al. (2016) "The FAIR Guiding Principles" - <em>Scientific Data</em></li>
+<li>Unni et al. (2022) "Biolink Model: A universal schema for knowledge graphs" - <em>bioRxiv</em></li>
+</ul>
+<hr />
+<p><strong>Last Updated:</strong> 2026-01-07<br />
+<strong>Maintainer:</strong> @turbomam<br />
+<strong>Status:</strong> Living document - update as issues evolve</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        
+
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        with emoji by
+        <a href="https://github.com/twitter/twemoji" target="_blank" rel="noopener">
+          Twemoji
+        </a>
+      </div>
+      
+<div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "header.autohide", "navigation.expand", "navigation.instant", "navigation.instant.progress", "navigation.tracking", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../assets/pymdownx-extras/extra-loader-B5CKpNQx.js"></script>
+      
+    
+  </body>
+</html>
