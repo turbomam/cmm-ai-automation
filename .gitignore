@@ -157,20 +157,14 @@ data/private/*
 
 # Generated/cached data - rebuild locally
 data/chroma_ncbitaxon/
-data/mediadive_*.json
-data/*.duckdb
 
 # Pipeline output - regenerate as needed
 output/
 
 # Large inferred schemas - regenerate locally as needed
-mediadive-schemas/
 
 # Generated output files - rebuild locally
 output/
-
-# DuckDB enrichment store - rebuild via enrich-to-store
-data/enrichment.duckdb
 
 # Session notes (between-session memory for AI assistants)
 SESSION_NOTES.md
@@ -186,10 +180,8 @@ data/.~lock.*
 # Cache directories
 data/*_cache/
 
-# Generated data files - rebuild locally
+# Large generated data files - rebuild locally (> 50 MB)
 data/bacdive_strain_medium_edges.tsv
-data/edge_patterns.tsv
-data/mongodb_collections_report.tsv
 
 # Manual backups and archives
 data/chroma-archives/
@@ -197,3 +189,6 @@ data/mongodb_backups/
 
 # Downloaded ontology files - refetch as needed
 data/ontologies/
+/strains.tsv
+/strains_merged.tsv
+/strains_enriched.tsv
