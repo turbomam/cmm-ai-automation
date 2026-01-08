@@ -702,6 +702,67 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#software-engineering-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Engineering Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Software Engineering Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aillm-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI/LLM Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1161,6 +1222,106 @@ poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </sp
 </tr>
 </tbody>
 </table>
+<hr />
+<h2 id="software-engineering-practices">Software Engineering Practices</h2>
+<h3 id="test-coverage">Test Coverage</h3>
+<p><strong>Current state:</strong> Minimal test coverage, focused on newest transforms only.</p>
+<table>
+<thead>
+<tr>
+<th>Test File</th>
+<th>Lines</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>demo_test.py</code></td>
+<td>250 bytes</td>
+<td>Demo/smoke test only</td>
+</tr>
+<tr>
+<td><code>test_bakta.py</code></td>
+<td>7.1 KB</td>
+<td>Bakta transform</td>
+</tr>
+<tr>
+<td><code>test_cog.py</code></td>
+<td>11.4 KB</td>
+<td>COG transform</td>
+</tr>
+<tr>
+<td><code>test_kegg.py</code></td>
+<td>11.8 KB</td>
+<td>KEGG transform</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Untested transforms (core CMM sources):</strong>
+- ❌ <code>bacdive</code> - No tests
+- ❌ <code>bactotraits</code> - No tests
+- ❌ <code>madin_etal</code> - No tests
+- ❌ <code>mediadive</code> - No tests
+- ❌ <code>ontologies</code> - No tests
+- ❌ <code>rhea_mappings</code> - No tests</p>
+<p><strong>Concern:</strong> The 3 tested transforms (bakta, cog, kegg) are the newest additions from 2026-01. The 5+ original/core transforms have zero test coverage.</p>
+<h3 id="cicd-pipeline">CI/CD Pipeline</h3>
+<p>GitHub Actions workflow (<code>.github/workflows/qc.yml</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Runs on push/PR to master, Python 3.10-3.12</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry run tox -e codespell</span><span class="w">  </span><span class="c1"># Spell checking</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry run tox -e lint</span><span class="w">       </span><span class="c1"># Ruff linting</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry run tox -e py</span><span class="w">         </span><span class="c1"># Pytest</span>
+</code></pre></div>
+<p><strong>Present:</strong>
+- Multi-version Python testing (3.10, 3.11, 3.12)
+- Spell checking (codespell)
+- Linting (ruff)
+- Unit tests (pytest)</p>
+<p><strong>Absent:</strong>
+- Pre-commit hooks (no <code>.pre-commit-config.yaml</code>)
+- Type checking (mypy)
+- Integration tests with actual transform outputs
+- Schema validation tests (Biolink compliance)</p>
+<h3 id="aillm-configuration">AI/LLM Configuration</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Status</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AGENTS.md</code></td>
+<td>❌ Missing</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>CLAUDE.md</code></td>
+<td>❌ Missing</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>SKILLS/</code></td>
+<td>❌ Missing</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>.claude/settings.local.json</code></td>
+<td>✅ Present</td>
+<td>Permission settings only (no project context)</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>.claude/settings.local.json</code> contains Bash permissions and MCP server configs but no project-specific context or instructions.</p>
+<h3 id="recommendations">Recommendations</h3>
+<ol>
+<li><strong>Testing:</strong> Add tests for core transforms (bacdive, bactotraits, madin_etal, mediadive)</li>
+<li><strong>Pre-commit:</strong> Add pre-commit hooks for consistent formatting/linting</li>
+<li><strong>Schema validation:</strong> Add tests that verify output conforms to Biolink/KGX schemas</li>
+<li><strong>AI context:</strong> Add CLAUDE.md with project conventions (especially custom schema decisions)</li>
+</ol>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
