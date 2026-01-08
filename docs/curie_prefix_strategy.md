@@ -175,6 +175,74 @@ cmm:ST0001    → Strain (unmapped) #1
 
 ---
 
+## Two Different Problems: Terms vs Instances
+
+**Critical distinction:**
+
+| Type | What It Is | Namespace | Examples |
+|------|------------|-----------|----------|
+| **Ontology terms** (T-box) | Classes, predicates, categories | METPO, Biolink, OBO ontologies | `METPO:1004005` (the class "Growth Medium") |
+| **Instance data** (A-box) | Specific strains, media, experiments | Database prefixes, project prefix | `bacdive:161512` (a specific strain) |
+
+**METPO is for terms, NOT instances.** You can't use `METPO:` to identify a specific strain from BacDive or a specific medium from MediaDive.
+
+---
+
+## METPO for Domain-Specific Terms
+
+METPO provides a registered namespace for microbial phenotype ontology terms:
+
+| Aspect | METPO Status | Notes |
+|--------|--------------|-------|
+| Prefix registered? | ✅ Yes (`METPO:`) | In OBO/Bioregistry |
+| URL resolvable? | ✅ Yes | Via OBO PURLs |
+| Formal local ID registry? | ❌ No | But has BioPortal dumps, code to analyze |
+| Governance | Informal | BBOP team, responsive to requests |
+
+**What METPO gives us:**
+- Registered prefix for ontology terms
+- Can create new classes/predicates relatively quickly
+- Terms become part of a shared vocabulary
+- Resolvable URIs via OBO infrastructure
+
+**What we do for METPO local IDs:**
+- Code analyzes old sheets and BioPortal dumps (location: TBD - @turbomam has this)
+- Track what IDs exist, avoid collisions
+- Informal but functional
+- Can be agile about creating new terms for small categories
+
+### Using METPO for CMM Categories and Predicates
+
+For domain-specific **categories** (node types) and **predicates** (edge types) that don't fit Biolink:
+
+| CMM Concept | Type | Potential METPO Term | Notes |
+|-------------|------|---------------------|-------|
+| Growth medium (category) | Class | `METPO:1004005` | Already exists |
+| "grows in" (predicate) | Property | `METPO:2000517` | Already exists |
+| Growth condition (category) | Class | `METPO:XXXXXXX` | Could propose |
+| "optimal pH" (predicate) | Property | `METPO:XXXXXXX` | Could propose |
+
+**METPO does NOT solve:** Identifying specific instances (strains, media, experiments) from external databases.
+
+---
+
+## The Instance ID Problem (Still Unsolved)
+
+For actual instance data, we still need:
+
+| Instance Type | Source | Prefix Needed |
+|---------------|--------|---------------|
+| BacDive strains | BacDive database | `bacdive:` ✅ registered |
+| MediaDive media | MediaDive database | `mediadive:` ❌ not registered |
+| TogoMedium media | TogoMedium database | `togomedium:` ❌ not registered |
+| Literature-described media | Our curation | `cmm:` ❌ not registered |
+| Growth conditions | Our curation | `cmm:` ❌ not registered |
+| Experimental observations | Our curation | `cmm:` ❌ not registered |
+
+**This is the real prefix registration burden** - not ontology terms (we have METPO), but instance identifiers from databases and our own minted entities.
+
+---
+
 ## Proposed Strategy (Draft)
 
 ### Phase 1: Use What's Registered
