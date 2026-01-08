@@ -12,7 +12,8 @@ repos:
         args: [--autofix, --indent=2]
         exclude: |
           (?x)^(
-            \.vscode/.*
+            \.vscode/.*|
+            data/.*
           )$
       - id: end-of-file-fixer
       - id: trailing-whitespace
@@ -30,11 +31,13 @@ repos:
       - id: codespell
         additional_dependencies:
           - tomli
+        exclude: ^data/
 
   - repo: https://github.com/crate-ci/typos
     rev: v1.31.1
     hooks:
       - id: typos
+        exclude: ^data/
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
