@@ -895,7 +895,7 @@
 
 <h1 id="hypho-mp-grounding-status-and-next-steps-since-last-download">Hypho + MP grounding status and next steps (since last download)</h1>
 <p><em>Date generated: 2026-01-07</em>
-<em>Updated: 2026-01-08 (added etymology 2a, MediaDive 162 comparison 2a-ii, 11+ Hypho variants 2a-iii, verified clustering 2a-iv, local PDF table 2b)</em></p>
+<em>Updated: 2026-01-08 (added etymology 2a, MediaDive 162 comparison 2a-ii, 11+ Hypho variants 2a-iii, verified clustering 2a-iv, local PDF table 2b; corrected EDTA/methanol statements - EDTA reduces consistency, not blocks growth)</em></p>
 <p>This note captures what we’ve most recently established about <strong>grounding “Hypho” and “MP” media</strong> (± methanol) from your sheet-derived ingredient lists, plus a few related cleanups (MPYG, DSMZ:88), and concrete next steps for automation.</p>
 <hr />
 <h2 id="1-high-confidence-grounding-for-mp-methylobacterium-pipes-medium">1) High-confidence grounding for MP (“Methylobacterium PIPES medium”)</h2>
@@ -966,9 +966,10 @@
 <p>The "Hypho" name stuck in the <em>Methylobacterium</em> research community even though the medium is now primarily used for <em>M. extorquens</em> rather than <em>Hyphomicrobium</em> species. The Delaney 2013 paper refers to it as "variant-Hypho" to acknowledge both its heritage and the modifications made over decades of use.</p>
 <h3 id="key-distinguishing-feature-from-mp">Key distinguishing feature from MP</h3>
 <p>The critical difference between Hypho and MP media is the <strong>metal chelator</strong>:
-- <strong>Hypho</strong>: EDTA-chelated metals (Vishniac-style) - inhibits growth on methanol
-- <strong>MP</strong>: Citrate-chelated metals (C7 solution) - supports robust growth on methanol</p>
-<p>This is why MP medium was developed - EDTA was found to inhibit <em>M. extorquens</em> growth on C1 compounds, particularly methanol.</p>
+- <strong>Hypho</strong>: EDTA-chelated metals (Vishniac-style)
+- <strong>MP</strong>: Citrate-chelated metals (C7 solution)</p>
+<p><strong>Why MP was developed:</strong> Delaney et al. 2013 found that EDTA-based Hypho medium produced <strong>slower and inconsistent</strong> growth on methanol - freshly prepared medium sometimes required days of "aging" before supporting growth, and results varied between batches and between plastic vs glass vessels. EDTA sequesters metals (especially calcium needed for PQQ-dependent methanol dehydrogenase), but growth <em>can</em> still occur under the right conditions. MP medium with citrate chelation provides <strong>faster and more reproducible</strong> growth, not because EDTA completely blocks methanol metabolism, but because citrate allows more consistent metal bioavailability.</p>
+<p><strong>Important:</strong> Methylotrophs <em>can</em> grow on EDTA-Hypho + methanol (as demonstrated in BER-CMM lab data). The issue is reproducibility and growth rate, not impossibility.</p>
 <hr />
 <h2 id="2a-ii-mediadive-162-vs-delaney-hypho-same-name-different-media">2a-ii) MediaDive 162 vs Delaney Hypho: same name, different media</h2>
 <p><strong>Critical finding:</strong> The name "Hypho" or "Hyphomicrobium medium" refers to <strong>multiple distinct formulations</strong> that should not be treated as interchangeable.</p>
@@ -1047,10 +1048,10 @@
 <h3 id="implications">Implications</h3>
 <ol>
 <li>
-<p><strong>Methanol compatibility</strong>: MediaDive 162 (no EDTA) would likely support methanol growth. Delaney Hypho (EDTA) inhibits methanol growth.</p>
+<p><strong>Methanol compatibility</strong>: Both can support methanol growth, but with different characteristics. MediaDive 162 (no EDTA) may provide more consistent growth. Delaney Hypho (EDTA) can support methanol growth but may show more batch-to-batch variability.</p>
 </li>
 <li>
-<p><strong>Trace metal availability</strong>: MediaDive 162 has fewer metals and no chelator. Delaney Hypho has a richer metal set but EDTA sequesters them.</p>
+<p><strong>Trace metal availability</strong>: MediaDive 162 has fewer metals and no chelator. Delaney Hypho has a richer metal set but EDTA affects their bioavailability.</p>
 </li>
 <li>
 <p><strong>Defined vs semi-defined</strong>: MediaDive 162 includes yeast extract (semi-defined). Delaney Hypho is fully defined.</p>
@@ -1192,7 +1193,7 @@
 1355   HYPHOMICROBIUM MEDIUM
 1419   HYPHOMICROBIUM MEDIUM
 </code></pre></div>
-<p><strong>But they are chemically incompatible:</strong></p>
+<p><strong>But they are chemically distinct:</strong></p>
 <table>
 <thead>
 <tr>
@@ -1209,14 +1210,14 @@
 <td><strong>None</strong></td>
 <td>7.2</td>
 <td>complex</td>
-<td>Likely yes</td>
+<td>Yes (consistent)</td>
 </tr>
 <tr>
 <td>1355</td>
 <td><strong>EDTA</strong> (Vishniac)</td>
 <td>6.0</td>
 <td>defined</td>
-<td><strong>No</strong> (EDTA inhibits)</td>
+<td>Yes (but may vary batch-to-batch)</td>
 </tr>
 <tr>
 <td>1419</td>
@@ -1241,7 +1242,7 @@
 - 1386 is notable: uses <strong>HEPES buffer</strong> (closest to MP philosophy)</p>
 <h3 id="warning">Warning</h3>
 <p><strong>MediaDive "Related media" is a name-match grouping, not a chemistry match.</strong></p>
-<p>Do not assume related media are interchangeable. A strain that grows on 162 (no EDTA, pH 7.2) may fail completely on 1355 (EDTA, pH 6.0).</p>
+<p>Do not assume related media are interchangeable. A strain optimized for 162 (no EDTA, pH 7.2) may show different growth kinetics on 1355 (EDTA, pH 6.0) due to chelator and pH differences.</p>
 <hr />
 <h2 id="2b-local-copies-of-delaney-2013-pdfs">2b) Local copies of Delaney 2013 PDFs</h2>
 <p>The following PDF files are stored in <code>papers/</code> for offline reference:</p>
