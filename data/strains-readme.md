@@ -1,37 +1,29 @@
 # Strains Data - Private/Curated
 
-This directory contains manually curated and computationally enriched strain data that includes private/unpublished information from the research team.
+This directory contains enriched strain data that includes private/unpublished information from the research team.
 
 ## Files
 
-### `strains.tsv`
-**Source:** Manually derived from the team's Google Sheets workbook "strains" tab
-**Provenance:** Human-curated data combining:
-- Culture collection IDs
-- Species taxonomic IDs  
-- Growth characteristics
-- Lab-specific annotations
+### `strains_enriched.tsv`
+**Source:** Enriched strain data with columns from multiple sources, indicated by suffixes:
+- `_sub_or_mpj` - original values from Google Sheets "strains" tab
+- `_mam` - values from BacDive enrichment
+- `_fresh_lookup` - re-queried values from NCBI/BacDive
+- Agreement columns comparing values across sources
 
-**Do NOT commit to public repository** - contains unpublished research data
+**Provenance:** ⚠️ **UNCLEAR** - The exact process that created this file is not fully documented. The original `strains.tsv` and intermediate `strains_merged.tsv` files have been removed.
 
-### `strains_merged.tsv` (if present)
-**Source:** Manually merged in spreadsheet software (LibreOffice Calc) combining:
-- Columns from `strains.tsv` (with suffix `_sub_or_mpj`)
-- Columns from BacDive enrichment (with suffix `_mam`)
-- Deduplication and conflict resolution
+**Note:** The existing `scripts/enrich_strains.py` does **NOT** produce this file format - it outputs different columns. A proper regeneration pipeline needs to be built (see GitHub issues #125, #126).
 
-**Process:** **NOT programmatically generated** - this was a manual curation step
-**Status:** Intermediate working file from prior analysis
+## Column Suffix Convention
 
-### `strains_enriched.tsv` (if present)
-**Source:** Computationally enriched from `strains_merged.tsv` or `strains.tsv`
-**Process:** Enrichment via `scripts/enrich_strains.py` using:
-- NCBI Taxonomy API
-- BacDive API/MongoDB
-- Culture collection web scraping
-- Semantic search via ChromaDB
+| Suffix | Meaning |
+|--------|---------|
+| `_sub_or_mpj` | Original value from strains.tsv / Google Sheets |
+| `_mam` | Value from BacDive enrichment |
+| `_fresh_lookup` | Re-queried value (preferred when available) |
 
-**Status:** Final enriched dataset for analysis
+Priority for lookups: `_fresh_lookup` > `_sub_or_mpj` > `_mam`
 
 ## Privacy & Access
 
@@ -43,17 +35,18 @@ All files in `data/private/strains/` are **ignored by git** and remain private.
 
 ## Regeneration
 
-To regenerate enriched data:
+⚠️ **Current state:** No script regenerates `strains_enriched.tsv` in its current format.
 
+**To download fresh strains data from Google Sheets:**
 ```bash
-# Enrich strains (requires API credentials)
-uv run python -m cmm_ai_automation.scripts.enrich_strains \
-  --input data/private/strains/strains.tsv \
-  --output data/private/strains/strains_enriched.tsv
+uv run python -m cmm_ai_automation.scripts.download_sheets
 ```
+
+**TODO:** Build proper pipeline to recreate enriched file from Google Sheets data - see issues #125, #126.
 
 ## See Also
 
 - `data/private/` - Other downloaded Google Sheets tabs (may be publishable)
 - `src/cmm_ai_automation/strains/` - Strain processing modules
-- `src/cmm_ai_automation/scripts/enrich_strains.py` - Main enrichment script
+- `src/cmm_ai_automation/transform/kgx.py` - Uses column suffixes in `transform_strain_row()`
+- `docs/best_practices_strain_data_curation.md` - Data curation guidelines
