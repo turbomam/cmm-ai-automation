@@ -105,10 +105,10 @@ def create_strain_node(strain_data: dict[str, str], enrich_ncbi: bool = True) ->
     if ncbi_strain_taxon:
         xrefs.append(f"NCBITaxon:{ncbi_strain_taxon}")
 
-    # Enrich NCBI-only strains
+    # Enrich with NCBI data when NCBI ID is available
     synonyms = []
-    if ncbi_strain_taxon and not bacdive_id and enrich_ncbi:
-        logger.info(f"Enriching NCBI-only strain: NCBITaxon:{ncbi_strain_taxon}")
+    if ncbi_strain_taxon and enrich_ncbi:
+        logger.info(f"Enriching with NCBI data: {node_id} (NCBITaxon:{ncbi_strain_taxon})")
 
         # Fetch synonyms from NCBI
         try:
