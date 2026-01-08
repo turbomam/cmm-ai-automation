@@ -2,7 +2,8 @@
 
 **Purpose:** Document key differences in approach and resulting data quality between this repository and kg-microbe.
 
-**Date:** 2026-01-07  
+**Date:** 2026-01-07
+**Last Verified:** 2026-01-08
 **Related Issue:** #123
 
 ---
@@ -11,35 +12,72 @@
 
 While both projects create knowledge graphs for microbial data, cmm-ai-automation prioritizes strict KGX/Biolink compliance, explicit provenance tracking, and schema-driven validation. This leads to higher data quality but requires more upfront modeling work.
 
+> **2026-01-08 Update:** Verification against kg-microbe commit `e2861c4` shows significant recent improvements. Some originally cited issues have been fixed (CURIE format, `capable_of` predicate). Remaining differences documented below with verification status.
+
 ---
 
 ## 1. Prefix Strategy and CURIE Validity
 
 ### kg-microbe Approach
 
-- Uses **generic prefixes** with source embedded in local ID:
-  - `strain:bacdive_161512`
-  - `medium:104c` (ambiguous - MediaDive? TogoMedium?)
-  - `assay:API_zym_Cystine arylamidase` ⚠️ **spaces in CURIE**
+> **Status (2026-01-08):** Surface improvements, but fundamental issues remain
 
-**Issues** (see kg-microbe#430):
-- 100 invalid CURIEs (0.05% of nodes) with spaces or extra colons
-- Examples: `assay:API_zym_Acid phosphatase`, `strain:NRRL-:-NRS-341`
-- Breaks RDF export and CURIE expansion
+**Current state (verified against commit `e2861c4`):**
+- Changed from `strain:bacdive_161512` to `kgmicrobe.strain:161512`
+- No spaces found in current CURIE IDs (improvement from #430)
+- Uses `mediadive.medium:`, `bacdive.isolation_source:`
 
-### CMM Approach
+**However, these prefixes are NOT registered:**
 
-- Uses **scoped bioregistry-style prefixes**:
-  - `bacdive.strain:161512`
-  - `mediadive.medium:104c`
-  - `NCBITaxon:408`
+| Prefix | Bioregistry Status | Resolvable URL? |
+|--------|-------------------|-----------------|
+| `kgmicrobe.strain:` | ❌ Not found (404) | No |
+| `bacdive.isolation_source:` | ❌ Not found | No |
+| `carbon_substrates:` | ❌ Not found | No |
+| `pathways:` | ❌ Not found | No |
 
-**Advantages:**
-- Unambiguous source attribution
-- Valid CURIE format (no spaces or invalid chars)
-- URL-expandable via bioregistry
+**The identifier lifecycle problem:**
+```
+BacDive strain 161512
+    ↓
+kg-microbe transforms to `kgmicrobe.strain:161512`
+    ↓
+Where does this CURIE resolve to?
+    → Not Bioregistry (not registered)
+    → Not BacDive directly (different ID scheme)
+    → No durable registry tracks these local IDs
+    ↓
+Result: Looks like a CURIE but doesn't function as one
+```
+
+This is "KGX-shaped data" rather than "KGX-compliant data."
+
+### CMM Approach (Long-term Goal)
+
+We aim for **full identifier lifecycle management**:
+
+1. **Use existing registered prefixes when possible:**
+   - `NCBITaxon:408` - Bioregistry registered, resolvable
+   - `CHEBI:32599` - Bioregistry registered, resolvable
+   - `bacdive:161512` - Bioregistry registered, resolves to BacDive page
+
+2. **Register new prefixes before using them:**
+   - Submit to Bioregistry with URL pattern
+   - Or register with w3id.org for persistent URIs
+   - Document the identifier policy
+
+3. **Track local ID assignments durably:**
+   - If we mint IDs, maintain a registry
+   - Document what each ID refers to
+   - Plan for ID deprecation/merging
+
+**Current CMM prefixes:**
+- `bacdive.strain:` - Scoped prefix (needs Bioregistry registration - see #53)
+- `mediadive.medium:` - Scoped prefix (needs registration)
 
 **Documentation:** See [best-practices.md](best-practices.md) and [#53](https://github.com/turbomam/cmm-ai-automation/issues/53)
+
+**Note:** CMM has the same registration gap as kg-microbe. The difference is we're tracking it as technical debt (#53) rather than considering it resolved.
 
 ---
 
@@ -71,15 +109,35 @@ While both projects create knowledge graphs for microbial data, cmm-ai-automatio
 
 ### kg-microbe Issues
 
-From kg-microbe#438:
-- **186,197 edges** use `biolink:capable_of` with wrong object type
-- Objects categorized as `biolink:PhenotypicQuality` (EC enzyme codes)
-- Biolink Model requires `Occurrent` (processes/activities) as range
+> **Status (2026-01-08):** Predicate issue fixed, but provenance fields still missing
 
-From kg-microbe#436:
-- Empty or inconsistent `relation` values in edges
-- Non-CURIE `primary_knowledge_source` values
-- Subject/object with spaces (see #430)
+**Fixed (credit to kg-microbe team):**
+- ✅ `biolink:capable_of` replaced with `METPO:2000103` (commit `19aeb82`, Dec 2025)
+- ✅ Growth media category changed to `METPO:1004005` (commit `f422156`)
+
+**Still missing (verified):**
+
+| Required Field | kg-microbe Status | KGX/Biolink Requirement |
+|----------------|-------------------|------------------------|
+| `knowledge_level` | ❌ Missing | Required enum: `knowledge_assertion`, `prediction`, etc. |
+| `agent_type` | ❌ Missing | Required enum: `manual_agent`, `automated_agent`, etc. |
+| `primary_knowledge_source` | ⚠️ Wrong format | Uses `bacdive` instead of `infores:bacdive` |
+
+**Current edge schema (all sources):**
+```
+subject  predicate  object  relation  primary_knowledge_source
+```
+
+Only 5 columns. Biolink 3.x requires `knowledge_level` and `agent_type` for proper provenance.
+
+**Sample `primary_knowledge_source` values:**
+```
+bacdive
+bacdive:1
+bacdive:10
+```
+
+These are not valid `infores:` CURIEs. Should be `infores:bacdive` (registered in Biolink information-resource-registry).
 
 ### CMM Approach
 
@@ -94,6 +152,12 @@ From kg-microbe#436:
       # Evaluating: ChemicalMixture vs custom METPO class
   ```
 - Edge predicates validated against Biolink Model or METPO
+- Required provenance fields in edge model:
+  ```python
+  knowledge_level: Literal["knowledge_assertion", "prediction", ...]
+  agent_type: Literal["manual_agent", "automated_agent", ...]
+  primary_knowledge_source: list[str]  # Must be infores: CURIEs
+  ```
 - `kgx validate` target (currently non-blocking during METPO registration - see #91)
 
 **Documentation:** See [#59](https://github.com/turbomam/cmm-ai-automation/issues/59) for alignment strategy
@@ -370,39 +434,121 @@ slots:
 
 ---
 
-## 9. Documented Gray Zones / Incompatibilities
+## 9. What True KGX/Biolink Compliance Requires
 
-### Known kg-microbe Issues Referenced in CMM Docs
+KGX is not just "nodes and edges in TSV files." It's part of an interoperability ecosystem with specific requirements:
 
-1. **Invalid CURIEs** (kg-microbe#430)
-   - 100 nodes with spaces or extra colons
-   - Documented in [best-practices.md](best-practices.md)
+### Identifier Requirements
 
-2. **Biolink Model violations** (kg-microbe#438)
-   - Wrong object types for `capable_of` predicate
-   - 186K+ edges affected
+| Requirement | Description | kg-microbe | CMM Goal |
+|-------------|-------------|-----------|----------|
+| **Registered prefixes** | All prefixes in Bioregistry or prefix.cc | ❌ `kgmicrobe.strain:` not registered | 🔄 Track in #53 |
+| **Resolvable URLs** | CURIEs expand to working URLs | ❌ No expansion defined | 🔄 Plan w3id.org or Bioregistry |
+| **Durable ID registry** | Local IDs tracked somewhere permanent | ❌ No registry | 🔄 Need to design |
 
-3. **Prefix ambiguity**
-   - `medium:` could be MediaDive, TogoMedium, or local
-   - CMM uses scoped prefixes: `mediadive.medium:`, `togomedium:M443`
+### Edge Provenance Requirements (Biolink 3.x)
 
-4. **Media grounding quality**
-   - Substring matching produces false positives
-   - CMM plans explicit quality tracking (#84)
+| Field | Purpose | kg-microbe | CMM |
+|-------|---------|-----------|-----|
+| `knowledge_level` | How assertion was made | ❌ Missing | ✅ In model |
+| `agent_type` | Who/what made assertion | ❌ Missing | ✅ In model |
+| `primary_knowledge_source` | Origin database | ⚠️ `bacdive` (not `infores:`) | ✅ `infores:` CURIEs |
+
+### The Difference Between "KGX-Shaped" and "KGX-Compliant"
+
+**KGX-Shaped (kg-microbe current state):**
+- TSV files with correct column names
+- Subject/predicate/object structure
+- Looks like KGX but doesn't fully function in ecosystem
+
+**KGX-Compliant (goal):**
+- Passes `kgx validate` without errors
+- CURIEs resolve to URLs via Bioregistry
+- Provenance enables trust assessment
+- Can merge safely with other Biolink KGs
+- Works with downstream tools (GRAPE, Neo4j, SPARQL)
+
+---
+
+## 10. Documented Gray Zones / Incompatibilities
+
+### kg-microbe Issues Status (Verified 2026-01-08)
+
+| Issue | Original Problem | Current Status |
+|-------|-----------------|----------------|
+| #430 Invalid CURIEs | Spaces, extra colons | ✅ Fixed in current data (issue still open) |
+| #438 Biolink violations | `capable_of` wrong object type | ✅ Fixed (commit `19aeb82`) |
+| #436 KGX format | Missing provenance fields | ⚠️ Still missing `knowledge_level`, `agent_type` |
+| Prefix registration | Unregistered prefixes | ⚠️ `kgmicrobe.strain:` etc. not in Bioregistry |
+| infores: format | Bare strings for knowledge source | ⚠️ Uses `bacdive` not `infores:bacdive` |
+
+### CMM Technical Debt (Honest Assessment)
+
+| Issue | Status | Tracking |
+|-------|--------|----------|
+| `bacdive.strain:` not registered | ⚠️ Same problem as kg-microbe | #53 |
+| `mediadive.medium:` not registered | ⚠️ Same problem | #53 |
+| No w3id.org or persistent URIs | 🔄 Not yet addressed | Need new issue |
+| Local ID registry | 🔄 Not designed | Need new issue |
 
 ### CMM Intentional Divergences
 
 | Design Choice | CMM | kg-microbe | Rationale |
 |---|---|---|---|
-| Prefix style | `bacdive.strain:12345` | `strain:bacdive_12345` | URL-expandable, unambiguous source |
+| Prefix style | `bacdive.strain:12345` | `kgmicrobe.strain:12345` | Neither registered yet |
 | Schema | LinkML with Biolink mappings | Ad-hoc Python classes | Type safety, validation, documentation |
 | Provenance | `SourceRecord` and `DataConflict` classes | Implicit in file structure | Transparent lineage, conflict resolution |
 | Validation | CI + kgx validate | Manual + tox | Catch issues early |
 | Entity IDs | Canonical namespace policy (#98) | Post-merge dedup | One ID per entity, explicit policy |
+| Technical debt tracking | Explicit issues | Issues filed but may not reflect current code | Transparency |
 
 ---
 
-## 10. Areas of Potential Coordination
+## 11. Community Resources and Getting Help
+
+### The "Too Broken to Test" Problem
+
+A key lesson from kg-microbe: when data deviates too far from standards, the ecosystem tools designed to help identify problems cannot even run. This creates a vicious cycle:
+
+```
+Non-compliant data
+    ↓
+Tools like `kgx validate` fail to parse
+    ↓
+Can't get specific error counts or locations
+    ↓
+Don't know where to ask for help
+    ↓
+Problems accumulate
+    ↓
+More non-compliant data
+```
+
+**CMM strategy:** Stay close enough to compliance that tools work, even if imperfectly. A tool that reports "47 errors of type X" is more actionable than one that crashes.
+
+### Community Resources for Help
+
+| Resource | What They Help With | How to Engage |
+|----------|--------------------|--------------|
+| **Bioregistry** | Prefix registration, URL patterns | GitHub issues, PRs to add prefixes |
+| **Biolink Model** | Category/predicate questions, infores registration | GitHub discussions, Slack |
+| **KGX** | Validation errors, format questions | GitHub issues |
+| **w3id.org** | Persistent URI registration | GitHub PR to w3id.org repo |
+| **OBO Foundry** | Ontology term requests (METPO, etc.) | Ontology-specific trackers |
+
+### Specific Asks We Could Make
+
+1. **Bioregistry:** "We need to register `bacdive.strain` with URL pattern `https://bacdive.dsmz.de/strain/{id}` - is this the right approach for database-specific strain IDs?"
+
+2. **Biolink:** "For microbial cultivation data, what's the recommended category for growth media? We're using METPO but want to ensure compatibility."
+
+3. **KGX:** "We're trying to validate kg-microbe data but getting parse errors on CURIEs. Is there a lenient mode or pre-validation step?"
+
+4. **infores registry:** "We want to register `infores:cmm-ai-automation` as an aggregator knowledge source. What metadata is required?"
+
+---
+
+## 12. Areas of Potential Coordination
 
 Despite differences, there are collaboration opportunities:
 
@@ -429,7 +575,7 @@ Despite differences, there are collaboration opportunities:
 
 ---
 
-## 11. When to Use Each Approach
+## 13. When to Use Each Approach
 
 ### Use kg-microbe When
 
@@ -448,13 +594,15 @@ Despite differences, there are collaboration opportunities:
 
 ---
 
-## 12. References
+## 14. References
 
 ### CMM Documentation
 
 - [Architecture](architecture.md)
 - [Best Practices](best-practices.md)
 - [kg-microbe Nodes Analysis](kg_microbe_nodes_analysis.md)
+- [kg-microbe Risks](kg_microbe_risks.md) - Technical debt and FAIR compliance
+- [Verification Notes 2026-01-08](kg_microbe_verification_2026-01-08.md) - Raw evidence
 - [Session Notes 2025-12-16](session-notes-2025-12-16.md)
 
 ### CMM Issues
@@ -485,5 +633,41 @@ Despite differences, there are collaboration opportunities:
 
 ---
 
-**Last Updated:** 2026-01-07  
+## 15. Verification Log
+
+### 2026-01-08 Verification
+
+**Repository:** kg-microbe at commit `e2861c4`
+
+**Method:**
+```bash
+cd ~/gitrepos/kg-microbe
+git log --oneline -1  # e2861c4
+
+# Examined headers
+head -1 data/transformed/bacdive/nodes.tsv
+head -1 data/transformed/bacdive/edges.tsv
+
+# Checked prefixes
+cut -f1 data/transformed/*/nodes.tsv | sed 's/:.*/:/' | sort -u
+
+# Checked primary_knowledge_source values
+cut -f5 data/transformed/bacdive/edges.tsv | sort -u | head -10
+
+# Checked Bioregistry for prefix registration
+curl -s https://bioregistry.io/registry/kgmicrobe  # 404
+curl -s https://bioregistry.io/registry/kgmicrobe.strain  # 404
+```
+
+**Findings:**
+- Node headers include edge columns (subject, predicate, object, relation)
+- Edge files have only 5 columns (missing knowledge_level, agent_type)
+- primary_knowledge_source uses `bacdive` not `infores:bacdive`
+- Prefixes like `kgmicrobe.strain:` not registered in Bioregistry
+- No spaces found in current CURIEs (improvement)
+- `capable_of` replaced with METPO predicate (improvement)
+
+---
+
+**Last Updated:** 2026-01-08
 **Maintainer:** @turbomam

@@ -1,7 +1,8 @@
 # kg-microbe Technical Debt and FAIR Compliance Risks
 
-**Date:** 2026-01-07  
-**Purpose:** Document actionable risks in kg-microbe's approach and how CMM mitigates them  
+**Date:** 2026-01-07
+**Last Verified:** 2026-01-08
+**Purpose:** Document actionable risks in kg-microbe's approach and how CMM mitigates them
 **Audience:** Collaborators, reviewers, funders evaluating data quality
 
 ---
@@ -10,9 +11,14 @@
 
 kg-microbe, while valuable for comprehensive microbial data, has **measurable technical debt** that violates FAIR principles and creates downstream integration risks. This document quantifies these issues and shows how cmm-ai-automation addresses them.
 
-**Key Risk Metrics:**
-- **Invalid CURIEs with spaces/colons** break RDF export (see kg-microbe#430)
-- **Biolink Model violations** affect many edges using `capable_of` predicate (see kg-microbe#438)
+> **2026-01-08 Update:** Independent verification against current kg-microbe data (commit `e2861c4`) shows some issues have been addressed while others remain. See [Verification Notes](#verification-notes-2026-01-08) for details.
+
+**Key Risk Metrics (Verified 2026-01-08):**
+- **~~Invalid CURIEs with spaces/colons~~** - Issue #430 still OPEN but current transformed data shows clean CURIEs
+- **~~Biolink Model violations~~** - Fixed Dec 2025: `capable_of` replaced with `METPO:2000103` (commit `19aeb82`)
+- **Missing Biolink 3.x required fields** - Edge files lack `knowledge_level` and `agent_type` ⚠️ STILL TRUE
+- **Invalid provenance format** - `primary_knowledge_source` uses `bacdive` not `infores:bacdive` ⚠️ STILL TRUE
+- **Schema pollution** - Node file headers contain edge columns (subject, predicate, object, relation) ⚠️ STILL TRUE
 - **High false positive rate** in media grounding (documented in [kg_microbe_nodes_analysis.md](kg_microbe_nodes_analysis.md))
 - **No automated validation** in CI pipeline
 
@@ -1186,12 +1192,143 @@ kgx neo4j-download -l bolt://localhost:7687 \
 
 ---
 
-## 13. References
+## 13. Verification Notes (2026-01-08)
+
+Independent verification performed against kg-microbe repository at commit `e2861c4` (2026-01-05).
+
+### Methodology
+
+```bash
+# Verified against local clone of kg-microbe
+cd ~/gitrepos/kg-microbe
+git log --oneline -1  # e2861c4
+
+# Examined transformed data in data/transformed/
+ls data/transformed/  # bacdive, bactotraits, madin_etal, ontologies
+```
+
+### Issues Fixed (Credit to kg-microbe team)
+
+| Original Issue | Fix | Commit |
+|----------------|-----|--------|
+| `biolink:capable_of` with wrong object types (#438) | Replaced with `METPO:2000103` | `19aeb82` |
+| CURIEs with spaces (#430) | Current data shows no spaces | Unknown |
+| CURIEs with extra colons (#430) | Current data shows clean format | Unknown |
+
+**Recent positive commits (Dec 2025):**
+- `19aeb82` - Replace biolink:capable_of with METPO:2000103
+- `f422156` - Refactor growth media category to METPO:1004005
+- `28d6a9c` - Prioritize METPO predicates and standardize chemical categories
+
+### Cosmetic Changes (Not Actually Fixed)
+
+| Change | Looks Like | Reality |
+|--------|-----------|---------|
+| `strain:bacdive_` → `kgmicrobe.strain:` | Scoped prefix | **Not registered in Bioregistry** (404) |
+| `medium:104c` → `mediadive.medium:104c` | Source attribution | **Not registered in Bioregistry** (404) |
+
+These prefix changes look better but don't solve the fundamental problem: CURIEs must expand to resolvable URLs. Unregistered prefixes are just local conventions that look like standards compliance.
+
+**Verification:**
+```bash
+$ curl -s -o /dev/null -w "%{http_code}" https://bioregistry.io/registry/kgmicrobe.strain
+404
+$ curl -s -o /dev/null -w "%{http_code}" https://bioregistry.io/registry/kgmicrobe
+404
+```
+
+### Issues Still Present (Verified)
+
+#### 1. Missing Biolink 3.x Required Fields
+
+**Edge file headers (all 3 sources identical):**
+```
+subject	predicate	object	relation	primary_knowledge_source
+```
+
+**Missing required fields:**
+- `knowledge_level` - How the assertion was made (knowledge_assertion, prediction, etc.)
+- `agent_type` - Who/what made the assertion (manual_agent, automated_agent, etc.)
+
+#### 2. Invalid Provenance Format
+
+**Current `primary_knowledge_source` values:**
+```
+bacdive
+bacdive:1
+bacdive:10
+```
+
+**Should be:**
+```
+infores:bacdive
+```
+
+The `infores:` prefix is required per KGX specification for knowledge source attribution.
+
+#### 3. Schema Pollution - Edge Columns in Node Files
+
+**Node file headers (bacdive, bactotraits, madin_etal):**
+```
+id	category	name	description	xref	provided_by	synonym	iri	object	predicate	relation	same_as	subject	subsets
+```
+
+**Edge-specific columns that shouldn't be in node files:**
+- `subject`
+- `predicate`
+- `object`
+- `relation`
+
+These columns exist as headers even though they're reportedly unpopulated. Having them in the schema is a design issue.
+
+**Ontology node files have cleaner headers:**
+```
+id	category	name	provided_by	synonym	deprecated	iri	same_as
+```
+
+#### 4. Unregistered Prefixes
+
+Many prefixes used in kg-microbe are not registered in Bioregistry:
+
+| Prefix | Bioregistry Status | Consequence |
+|--------|-------------------|-------------|
+| `kgmicrobe.strain:` | ❌ Not registered | Cannot expand to URL |
+| `bacdive.isolation_source:` | ❌ Not registered | Cannot expand to URL |
+| `mediadive.medium:` | ❌ Not registered | Cannot expand to URL |
+| `carbon_substrates:` | ❌ Not registered | Cannot expand to URL |
+| `pathways:` | ❌ Not registered | Cannot expand to URL |
+| `NCBITaxon:` | ✅ Registered | Expands correctly |
+| `CHEBI:` | ✅ Registered | Expands correctly |
+| `EC:` | ✅ Registered | Expands correctly |
+
+**Why this matters:**
+- CURIEs are supposed to be compact URIs that expand to resolvable URLs
+- Without registration, `kgmicrobe.strain:12345` is just a local convention
+- Cannot be used with standard Bioregistry-aware tools
+- Defeats the purpose of using CURIE format
+
+**Note:** CMM has the same problem with its prefixes (#53). The difference is explicit tracking as technical debt.
+
+### Recommendations
+
+1. **Acknowledge progress** - kg-microbe team has made significant improvements on predicates and CURIE format
+2. **File issues for remaining items:**
+   - Missing Biolink 3.x fields (knowledge_level, agent_type)
+   - infores: format for primary_knowledge_source
+   - Prefix registration in Bioregistry
+3. **Offer PRs** - Schema cleanup (remove edge columns from node headers) is low-effort
+4. **Run `kgx validate`** jointly to get authoritative counts
+5. **Engage communities** - Ask Bioregistry/Biolink for guidance on prefix registration patterns
+
+---
+
+## 14. References
 
 ### CMM Documentation
 - [Architecture](architecture.md)
 - [Best Practices](best-practices.md)
 - [kg-microbe Comparison](cmm_vs_kg_microbe.md)
+- [Verification Notes 2026-01-08](kg_microbe_verification_2026-01-08.md) - Raw evidence for claims in this document
 
 ### kg-microbe Issues
 - #430 - Invalid CURIEs with spaces and extra colons
@@ -1210,6 +1347,6 @@ kgx neo4j-download -l bolt://localhost:7687 \
 
 ---
 
-**Last Updated:** 2026-01-07  
-**Maintainer:** @turbomam  
+**Last Updated:** 2026-01-08
+**Maintainer:** @turbomam
 **Status:** Living document - update as issues evolve

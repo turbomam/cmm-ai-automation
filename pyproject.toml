@@ -227,7 +227,7 @@ exclude_lines = [
 # Changed from 60% to 27% (2025-12-20) when scripts were added to coverage
 # Previous threshold was for library code only - see issue #28
 # Scripts add ~5000 lines; incrementally raise as script tests are added
-fail_under = 26
+fail_under = 30
 
 # Ref.: https://bandit.readthedocs.io/
 [tool.bandit]
