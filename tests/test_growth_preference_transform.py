@@ -145,6 +145,7 @@ class TestTransformPreferenceRow:
         edge = transform_preference_row(row, media_map)
 
         assert edge is not None
+        assert edge.model_extra is not None
         assert "growth_value" in edge.model_extra
         assert edge.model_extra["growth_value"] == "3.5"
 
@@ -237,4 +238,5 @@ class TestTransformPreferenceRow:
         assert edge is not None
         assert edge.knowledge_level == "knowledge_assertion"
         assert edge.agent_type == "manual_agent"
+        assert edge.primary_knowledge_source is not None
         assert "infores:cmm-ai-automation" in edge.primary_knowledge_source

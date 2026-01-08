@@ -11,6 +11,7 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "BacDive",
+                "name": "BacDive Strain 13546",
                 "url": "https://bacdive.dsmz.de/strain/13546",
             }
         ]
@@ -25,10 +26,12 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "BacDive",
+                "name": "BacDive",
                 "url": "https://bacdive.dsmz.de/strain/100",
             },
             {
                 "provider": "BacDive",
+                "name": "BacDive",
                 "url": "https://bacdive.dsmz.de/strain/200",
             },
         ]
@@ -44,6 +47,7 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "bacdive",  # lowercase
+                "name": "bacdive",
                 "url": "https://bacdive.dsmz.de/strain/999",
             }
         ]
@@ -57,6 +61,7 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "BioCyc",
+                "name": "BioCyc",
                 "url": "http://biocyc.org/organism-summary?object=GCF_000346065",
             }
         ]
@@ -71,6 +76,7 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "BioCyc",
+                "name": "BioCyc",
                 "url": "http://biocyc.org/organism-summary?object=12345",
             }
         ]
@@ -85,6 +91,7 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "LPSN",
+                "name": "LPSN",
                 "url": "https://lpsn.dsmz.de/species/methylobacterium-extorquens",
             }
         ]
@@ -99,6 +106,7 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "lpsn",  # lowercase
+                "name": "lpsn",
                 "url": "https://lpsn.dsmz.de/species/test-species",
             }
         ]
@@ -112,14 +120,17 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "BacDive",
+                "name": "BacDive",
                 "url": "https://bacdive.dsmz.de/strain/100",
             },
             {
                 "provider": "BioCyc",
+                "name": "BioCyc",
                 "url": "http://biocyc.org/organism-summary?object=GCF_000001",
             },
             {
                 "provider": "LPSN",
+                "name": "LPSN",
                 "url": "https://lpsn.dsmz.de/species/test-bacterium",
             },
         ]
@@ -144,6 +155,7 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "UnknownDatabase",
+                "name": "UnknownDatabase",
                 "url": "http://example.com/something/123",
             }
         ]
@@ -157,6 +169,7 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "BacDive",
+                "name": "BacDive",
                 "url": "https://bacdive.dsmz.de/no_strain_here",  # No /strain/ID pattern
             }
         ]
@@ -170,10 +183,12 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "BacDive",
+                "name": "BacDive",
                 "url": "https://bacdive.dsmz.de/strain/100",
             },
             {
                 "provider": "BacDive",
+                "name": "BacDive",
                 "url": "https://bacdive.dsmz.de/strain/100",  # Duplicate
             },
         ]
@@ -188,6 +203,7 @@ class TestExtractXrefsFromLinkouts:
         linkouts: list[NcbiLinkout] = [
             {
                 "provider": "SomeOtherName",
+                "name": "SomeOtherName",
                 "url": "https://bacdive.dsmz.de/strain/999",
             }
         ]
@@ -209,6 +225,7 @@ class TestExtractXrefsFromLinkouts:
             linkouts: list[NcbiLinkout] = [
                 {
                     "provider": "LPSN",
+                    "name": "LPSN",
                     "url": f"https://lpsn.dsmz.de/species/{name}",
                 }
             ]
@@ -225,6 +242,7 @@ class TestExtractXrefsFromLinkouts:
             linkouts: list[NcbiLinkout] = [
                 {
                     "provider": "BioCyc",
+                    "name": "BioCyc",
                     "url": f"http://biocyc.org/organism-summary?object=GCF_{gcf_id}",
                 }
             ]

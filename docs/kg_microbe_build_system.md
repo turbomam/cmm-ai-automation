@@ -335,6 +335,72 @@ From the README:
 
 ---
 
+## Software Engineering Practices
+
+### Test Coverage
+
+**Current state:** Minimal test coverage, focused on newest transforms only.
+
+| Test File | Lines | Covers |
+|-----------|-------|--------|
+| `demo_test.py` | 250 bytes | Demo/smoke test only |
+| `test_bakta.py` | 7.1 KB | Bakta transform |
+| `test_cog.py` | 11.4 KB | COG transform |
+| `test_kegg.py` | 11.8 KB | KEGG transform |
+
+**Untested transforms (core CMM sources):**
+- ❌ `bacdive` - No tests
+- ❌ `bactotraits` - No tests
+- ❌ `madin_etal` - No tests
+- ❌ `mediadive` - No tests
+- ❌ `ontologies` - No tests
+- ❌ `rhea_mappings` - No tests
+
+**Concern:** The 3 tested transforms (bakta, cog, kegg) are the newest additions from 2026-01. The 5+ original/core transforms have zero test coverage.
+
+### CI/CD Pipeline
+
+GitHub Actions workflow (`.github/workflows/qc.yml`):
+
+```yaml
+# Runs on push/PR to master, Python 3.10-3.12
+- poetry run tox -e codespell  # Spell checking
+- poetry run tox -e lint       # Ruff linting
+- poetry run tox -e py         # Pytest
+```
+
+**Present:**
+- Multi-version Python testing (3.10, 3.11, 3.12)
+- Spell checking (codespell)
+- Linting (ruff)
+- Unit tests (pytest)
+
+**Absent:**
+- Pre-commit hooks (no `.pre-commit-config.yaml`)
+- Type checking (mypy)
+- Integration tests with actual transform outputs
+- Schema validation tests (Biolink compliance)
+
+### AI/LLM Configuration
+
+| File | Status | Contents |
+|------|--------|----------|
+| `AGENTS.md` | ❌ Missing | - |
+| `CLAUDE.md` | ❌ Missing | - |
+| `SKILLS/` | ❌ Missing | - |
+| `.claude/settings.local.json` | ✅ Present | Permission settings only (no project context) |
+
+The `.claude/settings.local.json` contains Bash permissions and MCP server configs but no project-specific context or instructions.
+
+### Recommendations
+
+1. **Testing:** Add tests for core transforms (bacdive, bactotraits, madin_etal, mediadive)
+2. **Pre-commit:** Add pre-commit hooks for consistent formatting/linting
+3. **Schema validation:** Add tests that verify output conforms to Biolink/KGX schemas
+4. **AI context:** Add CLAUDE.md with project conventions (especially custom schema decisions)
+
+---
+
 ## Related Documentation
 
 - [kg_microbe_verification_2026-01-08.md](kg_microbe_verification_2026-01-08.md) - Data quality verification
