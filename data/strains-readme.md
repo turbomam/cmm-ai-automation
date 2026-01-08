@@ -15,9 +15,13 @@ This directory contains manually curated and computationally enriched strain dat
 **Do NOT commit to public repository** - contains unpublished research data
 
 ### `strains_merged.tsv` (if present)
-**Source:** Computational merge of `strains.tsv` with other downloaded Google Sheets data
-**Process:** Uses `strains/consolidation.py` merge logic
-**Status:** Intermediate processing file
+**Source:** Manually merged in spreadsheet software (LibreOffice Calc) combining:
+- Columns from `strains.tsv` (with suffix `_sub_or_mpj`)
+- Columns from BacDive enrichment (with suffix `_mam`)
+- Deduplication and conflict resolution
+
+**Process:** **NOT programmatically generated** - this was a manual curation step
+**Status:** Intermediate working file from prior analysis
 
 ### `strains_enriched.tsv` (if present)
 **Source:** Computationally enriched from `strains_merged.tsv` or `strains.tsv`
