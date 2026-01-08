@@ -16,12 +16,14 @@ poetry run kg download -y download.yaml -o data/raw
 poetry run kg transform
 poetry run kg merge
 
-# Selective transform (recommended for CMM work)
-poetry run kg transform -s bacdive -s bactotraits -s madin_etal -s mediadive
+# Selective transform for CMM work (CORRECT ORDER - ontologies first!)
+poetry run kg transform -s ontologies && poetry run kg transform -s bacdive -s bactotraits -s madin_etal -s mediadive
 
 # Selective merge
 poetry run kg merge -y merge.cmm.yaml  # (create custom config first)
 ```
+
+**⚠️ Transform order matters!** See [Transform Dependencies](#transform-dependencies) below.
 
 ---
 
@@ -86,12 +88,82 @@ Options:
 
 ### CMM-Relevant Subset
 
-For CMM work, you likely only need:
+For CMM work, you need ontologies plus the trait sources:
 ```bash
+poetry run kg transform -s ontologies && poetry run kg transform -s bacdive -s bactotraits -s madin_etal -s mediadive
+```
+
+---
+
+## Transform Dependencies
+
+**Critical:** Some transforms depend on outputs from other transforms. Running them out of order causes failures or slow fallbacks.
+
+### The `ontologies` → `bacdive` Dependency
+
+The `bacdive` transform needs `data/transformed/ontologies/ncbitaxon_nodes.tsv` for fast taxon label lookups. If this file doesn't exist:
+
+```
+Warning: NCBITaxon nodes file not found at data/transformed/ontologies/ncbitaxon_nodes.tsv
+  Will fall back to OakLib queries (slower)
+```
+
+**The OakLib fallback is ~3x slower and should be avoided.**
+
+### Correct Order
+
+```bash
+# Step 1: Run ontologies first (creates ncbitaxon_nodes.tsv)
+poetry run kg transform -s ontologies
+
+# Step 2: Run other transforms (can read ncbitaxon_nodes.tsv)
 poetry run kg transform -s bacdive -s bactotraits -s madin_etal -s mediadive
 ```
 
-The ontology transforms are expensive (especially NCBITaxon) and only needed if you're rebuilding from scratch or need updated ontology versions.
+Or as a single command:
+```bash
+poetry run kg transform -s ontologies && poetry run kg transform -s bacdive -s bactotraits -s madin_etal -s mediadive
+```
+
+### Ontologies is Faster (When Cached)
+
+The expensive part of ontologies transform is ROBOT processing of `ncbitaxon.owl` (~1.6GB). However, if you have the cached JSON file, ROBOT is skipped:
+
+| File | Size | What It Means |
+|------|------|---------------|
+| `data/raw/ncbitaxon_removed_subset.json` | ~623MB | ROBOT already ran, will be reused |
+| `data/raw/chebi.json` | ~482MB | ROBOT already ran, will be reused |
+
+**Check if you have the cache:**
+```bash
+ls -lh data/raw/ncbitaxon_removed_subset.json data/raw/chebi.json
+```
+
+If these exist, the ontologies transform skips ROBOT processing (still takes time, but not hours).
+
+### Filename Case Issue (Fixed in #475)
+
+There was a bug where `bacdive.py` looked for `NCBITaxon_nodes.tsv` (mixed case) but ontologies creates `ncbitaxon_nodes.tsv` (lowercase). This was fixed in commit `26c029b` (PR #477).
+
+If you're on an older version, update:
+```bash
+git pull origin main
+```
+
+### Safe Files During Interrupted Transforms
+
+If you ctrl-C during a transform, your **raw files are safe**:
+
+| Directory | Safe? | Why |
+|-----------|-------|-----|
+| `data/raw/` | ✅ Yes | Transforms only READ from here |
+| `data/transformed/` | ⚠️ May be partial | Transforms WRITE here - may need to re-run |
+
+Expensive cached files that survive interruption:
+- `data/raw/ncbitaxon_removed_subset.json` (623MB)
+- `data/raw/chebi.json` (482MB)
+- `data/raw/bacdive_strains.json` (748MB)
+- `data/raw/mediadive/` (42MB total)
 
 ---
 
@@ -239,13 +311,13 @@ rm -rf data/merged/*
 ### Rebuild
 
 ```bash
-# If you kept data/raw/:
-poetry run kg transform -s bacdive -s bactotraits -s madin_etal -s mediadive
+# If you kept data/raw/ (remember: ontologies FIRST!)
+poetry run kg transform -s ontologies && poetry run kg transform -s bacdive -s bactotraits -s madin_etal -s mediadive
 poetry run kg merge -y merge.cmm.yaml
 
 # Full rebuild from scratch:
 poetry run kg download -y download.yaml -o data/raw
-poetry run kg transform
+poetry run kg transform -s ontologies && poetry run kg transform -s bacdive -s bactotraits -s madin_etal -s mediadive
 poetry run kg merge
 ```
 
@@ -318,7 +390,7 @@ From the README:
 
 > The KG construction process, particularly the transform step involving trimming of NCBI Taxonomy for any KG and the steps involving the microbial UniProt dataset for KG-Microbe-Function and KG-Microbe-Biomedical-Function, is computationally intensive. Successful execution on a local machine may require significant memory resources (e.g., >500 GB of RAM).
 
-**For CMM work:** The bacdive, bactotraits, madin_etal, and mediadive transforms are reasonable on a standard machine. Avoid `ontologies` transform unless necessary (NCBITaxon is huge).
+**For CMM work:** The bacdive, bactotraits, madin_etal, and mediadive transforms are reasonable on a standard machine. The `ontologies` transform is **required first** (see [Transform Dependencies](#transform-dependencies)). It's faster when you have the cached JSON files (`ncbitaxon_removed_subset.json`, `chebi.json`), but still takes significant time.
 
 ---
 
