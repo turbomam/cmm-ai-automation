@@ -11,8 +11,14 @@ Primary identifier strategy:
 2. NCBITaxon:{strain_taxon_id} - when only ncbi_taxon_strain_mam is present
 3. Skip rows with neither identifier
 
+For NCBI-only strains, fetches additional metadata from NCBI Taxonomy:
+- Synonyms from NCBI
+- Linkouts to external databases (BacDive, BioCyc, LPSN)
+- Cross-references extracted from linkouts
+
 Usage:
     uv run python -m cmm_ai_automation.scripts.export_enriched_strains_kgx
+    uv run python -m cmm_ai_automation.scripts.export_enriched_strains_kgx --no-ncbi-enrichment
     uv run python -m cmm_ai_automation.scripts.export_enriched_strains_kgx --output output/kgx/enriched_strains_nodes.tsv
 """
 
@@ -24,6 +30,11 @@ from pathlib import Path
 
 import click
 
+from cmm_ai_automation.strains.ncbi import (
+    extract_xrefs_from_linkouts,
+    fetch_ncbi_linkouts,
+    fetch_ncbi_synonyms,
+)
 from cmm_ai_automation.transform.kgx import KGXNode
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
@@ -54,11 +65,12 @@ def read_enriched_strains(input_path: Path) -> list[dict[str, str]]:
     return strains
 
 
-def create_strain_node(strain_data: dict[str, str]) -> KGXNode | None:
+def create_strain_node(strain_data: dict[str, str], enrich_ncbi: bool = True) -> KGXNode | None:
     """Create KGX node from enriched strain data.
 
     Args:
         strain_data: Dictionary with strain data from enriched file
+        enrich_ncbi: If True, fetch additional data from NCBI for NCBI-only strains
 
     Returns:
         KGXNode or None if no valid identifier
@@ -93,13 +105,41 @@ def create_strain_node(strain_data: dict[str, str]) -> KGXNode | None:
     if ncbi_strain_taxon:
         xrefs.append(f"NCBITaxon:{ncbi_strain_taxon}")
 
+    # Enrich NCBI-only strains
+    synonyms = []
+    if ncbi_strain_taxon and not bacdive_id and enrich_ncbi:
+        logger.info(f"Enriching NCBI-only strain: NCBITaxon:{ncbi_strain_taxon}")
+
+        # Fetch synonyms from NCBI
+        try:
+            ncbi_data = fetch_ncbi_synonyms(ncbi_strain_taxon)
+            synonyms.extend(ncbi_data.get("synonyms", []))
+            synonyms.extend(ncbi_data.get("equivalent_names", []))
+            logger.debug(f"  Found {len(synonyms)} synonyms from NCBI")
+        except Exception as e:
+            logger.warning(f"  Could not fetch NCBI synonyms: {e}")
+
+        # Fetch linkouts and extract xrefs
+        try:
+            linkouts_data = fetch_ncbi_linkouts([ncbi_strain_taxon])
+            if ncbi_strain_taxon in linkouts_data:
+                linkouts = linkouts_data[ncbi_strain_taxon]
+                extracted_xrefs = extract_xrefs_from_linkouts(linkouts)
+                xrefs.extend(extracted_xrefs)
+                logger.debug(f"  Found {len(extracted_xrefs)} xrefs from NCBI linkouts")
+        except Exception as e:
+            logger.warning(f"  Could not fetch NCBI linkouts: {e}")
+
     if xrefs and len(xrefs) > 1:
         # Remove primary ID from xrefs
         node.xref = [x for x in xrefs if x != node_id]
 
     # Add scientific name as synonym if different from name
     if scientific_name and scientific_name != name:
-        node.synonym = [scientific_name]
+        synonyms.append(scientific_name)
+
+    if synonyms:
+        node.synonym = list(set(synonyms))  # Deduplicate
 
     return node
 
@@ -119,8 +159,15 @@ def create_strain_node(strain_data: dict[str, str]) -> KGXNode | None:
     default=DEFAULT_OUTPUT,
     help="Path to output KGX nodes file",
 )
-def main(input_path: Path, output_path: Path) -> None:
+@click.option(
+    "--no-ncbi-enrichment",
+    is_flag=True,
+    help="Disable NCBI enrichment for NCBI-only strains (faster, less complete)",
+)
+def main(input_path: Path, output_path: Path, no_ncbi_enrichment: bool) -> None:
     """Export enriched strains to KGX nodes format."""
+    enrich_ncbi = not no_ncbi_enrichment
+
     # Read input
     strains = read_enriched_strains(input_path)
 
@@ -129,7 +176,7 @@ def main(input_path: Path, output_path: Path) -> None:
     skipped = 0
 
     for strain_data in strains:
-        node = create_strain_node(strain_data)
+        node = create_strain_node(strain_data, enrich_ncbi=enrich_ncbi)
         if node:
             nodes.append(node)
         else:
