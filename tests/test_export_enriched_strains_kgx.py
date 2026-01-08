@@ -174,4 +174,4 @@ class TestCreateStrainNode:
 
         assert node is not None
         assert node.id == "bacdive:7142"
-        assert "NCBITaxon:408" in node.xref
+        assert node.xref is not None and "NCBITaxon:408" in node.xref
