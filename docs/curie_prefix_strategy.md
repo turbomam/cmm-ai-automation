@@ -367,16 +367,112 @@ https://togomedium.org/sparqlist/api/gmdb_medium_by_gmid?gm_id=M443
 
 ---
 
+## Identifier Registry Landscape
+
+### Registries to Consider
+
+| Registry | Purpose | Relationship |
+|----------|---------|--------------|
+| [Bioregistry](https://bioregistry.io) | Meta-registry aggregating from many sources | **Primary** - imports from OBO, prefix.cc, Identifiers.org |
+| [OBO Foundry](https://obofoundry.org) | Ontology registry (T-box terms) | Bioregistry imports OBO prefixes |
+| [Identifiers.org](https://identifiers.org) | Life science identifier resolution (MIRIAM) | Bioregistry imports from it |
+| [prefix.cc](https://prefix.cc) | Community prefix registry | Bioregistry imports from it |
+| [w3id.org](https://w3id.org) | **Persistent URI redirect service** | Different - provides resolution, not cataloging |
+| [N2T.net](https://n2t.net) | ARK/EZID identifier resolution | Separate infrastructure |
+
+**Key insight:** Bioregistry is a meta-registry. If a prefix is in OBO Foundry, prefix.cc, or Identifiers.org, it's likely already in Bioregistry.
+
+**w3id.org is different:** It's a redirect service (register `w3id.org/cmm/` → your GitHub Pages), not a semantic registry.
+
+### Project Prefix Status (Verified 2026-01-08)
+
+| Prefix | Bioregistry | Identifiers.org | OBO Foundry | Notes |
+|--------|-------------|-----------------|-------------|-------|
+| `cmm` | ❌ 404 | ❌ 404 | ❌ 404 | Available |
+| `cmm-ai` | ❌ Not checked | - | - | Likely available |
+| `ber-cmm-ai` | ❌ Not checked | - | - | Clearly scoped to project |
+
+**Note:** `cmo` (Clinical Measurement Ontology) IS registered - similar but different.
+
+### Prefix Naming Trade-offs
+
+**Short prefix (`cmm:`):**
+- Pro: Concise CURIEs, easy to type
+- Con: "CMM" is generic (Capability Maturity Model, etc.), harder to claim ownership
+
+**Long prefix (`ber-cmm-ai:` or `cmm-ai:`):**
+- Pro: Clearly scoped, unlikely to conflict, matches repo names
+- Con: Verbose CURIEs
+
+**Recommendation:** Lean toward `cmm-ai:` - matches repository naming, distinguishes from generic CMM uses.
+
+---
+
+## Custom Prefixes in Use (Audit 2026-01-08)
+
+### kg-microbe Constants (`constants.py`)
+
+| Prefix | Bioregistry | Notes |
+|--------|-------------|-------|
+| `kgmicrobe.strain:` | ❌ Not registered | For strains not in BacDive |
+| `mediadive.medium:` | ❌ Not registered | MediaDive media |
+| `mediadive.solution:` | ❌ Not registered | MediaDive solutions |
+| `mediadive.ingredient:` | ❌ Not registered | MediaDive ingredients |
+| `mediadive.medium-type:` | ❌ Not registered | Complex vs defined |
+| `bacdive.isolation_source:` | ❌ Not registered | Isolation source categories |
+| `cell_shape:` | ❌ Not registered | Cell morphology |
+| `pathways:` | ❌ Not registered | Metabolic pathways |
+| `carbon_substrates:` | ❌ Not registered | Carbon source utilization |
+| `assay:` | ❌ Not registered | Assay types |
+| `debio:` | ❌ Not registered | Debio ontology |
+| `BSL:` | ❌ Not registered | Biosafety levels |
+| `taxonomy_id:` | ❌ Not registered | Taxonomy identifiers |
+
+### Registered Prefixes (for comparison)
+
+| Prefix | Bioregistry | Notes |
+|--------|-------------|-------|
+| `bacdive:` | ✅ Registered | BacDive strains |
+| `NCBITaxon:` | ✅ Registered | NCBI taxonomy |
+| `CHEBI:` | ✅ Registered | ChEBI chemicals |
+| `GO:` | ✅ Registered | Gene Ontology |
+| `KEGG:` | ✅ Registered | KEGG |
+| `RHEA:` | ✅ Registered | Rhea reactions |
+| `METPO:` | ✅ Registered | Microbial phenotype ontology |
+| `EC:` | ✅ Registered | Enzyme Commission |
+| `PubChem:` | ✅ Registered | PubChem compounds |
+| `CAS-RN:` | ✅ Registered | CAS Registry Numbers |
+
+### CMM-AI Data Usage
+
+Found in `CMM-AI/data/`:
+- `kgmicrobe.medium:` (e.g., `kgmicrobe.medium:ATCC_1306`)
+- `mediadive.medium:` (e.g., `mediadive.medium:632`)
+
+### Observations
+
+1. **13+ unregistered prefixes** in active use in kg-microbe
+2. Most follow `database.entity_type:` convention
+3. None resolve to URLs via Bioregistry
+4. Some are very domain-specific (`cell_shape:`, `carbon_substrates:`)
+5. The `kgmicrobe.*` prefixes are project-specific but not registered
+
+---
+
 ## Action Items
 
 - [x] Research MediaDive's resolver - **No unified resolver, URLs are type-specific**
 - [x] Research TogoMedium's ID scheme - **IDs prefixed by type (M for media), may enable single prefix**
+- [x] Check if `cmm` is registered - **Not registered as of 2026-01-08**
+- [x] Audit custom prefixes in kg-microbe, CMM-AI, cmm-ai-automation
+- [ ] Decide on project prefix name (`cmm-ai:` vs `ber-cmm-ai:` vs other)
 - [ ] Draft Bioregistry issue asking about prefix strategy for type-specific resolvers
 - [ ] Decide on local ID format for minted entities
 - [ ] Design registry schema for minted IDs
-- [ ] Register w3id.org/cmm/ namespace (low barrier)
+- [ ] Register w3id.org/cmm-ai/ namespace (low barrier)
 - [ ] Consider asking MediaDive to add unified resolver
 - [ ] Verify TogoMedium ID uniqueness across entity types
+- [ ] Prioritize which unregistered prefixes to formalize
 
 ---
 
