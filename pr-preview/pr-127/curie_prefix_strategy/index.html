@@ -790,6 +790,117 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#identifier-registry-landscape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifier Registry Landscape
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Identifier Registry Landscape">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#registries-to-consider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registries to Consider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#project-prefix-status-verified-2026-01-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Prefix Status (Verified 2026-01-08)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prefix-naming-trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prefix Naming Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-prefixes-in-use-audit-2026-01-08" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Prefixes in Use (Audit 2026-01-08)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Custom Prefixes in Use (Audit 2026-01-08)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kg-microbe-constants-constantspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kg-microbe Constants (constants.py)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registered-prefixes-for-comparison" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registered Prefixes (for comparison)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cmm-ai-data-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CMM-AI Data Usage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#observations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Observations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#action-items" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1374,16 +1485,263 @@ Type visible, still mostly numeric.</p>
 <p><strong>Bioregistry status:</strong> <code>togomedium</code> is NOT registered (404 on lookup).</p>
 <p><strong>Implication:</strong> Could potentially use a single <code>togomedium:</code> prefix since media IDs start with "M", components with different prefix, etc. But need to verify if their ID scheme is truly unique per entity type.</p>
 <hr />
+<h2 id="identifier-registry-landscape">Identifier Registry Landscape</h2>
+<h3 id="registries-to-consider">Registries to Consider</h3>
+<table>
+<thead>
+<tr>
+<th>Registry</th>
+<th>Purpose</th>
+<th>Relationship</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://bioregistry.io">Bioregistry</a></td>
+<td>Meta-registry aggregating from many sources</td>
+<td><strong>Primary</strong> - imports from OBO, prefix.cc, Identifiers.org</td>
+</tr>
+<tr>
+<td><a href="https://obofoundry.org">OBO Foundry</a></td>
+<td>Ontology registry (T-box terms)</td>
+<td>Bioregistry imports OBO prefixes</td>
+</tr>
+<tr>
+<td><a href="https://identifiers.org">Identifiers.org</a></td>
+<td>Life science identifier resolution (MIRIAM)</td>
+<td>Bioregistry imports from it</td>
+</tr>
+<tr>
+<td><a href="https://prefix.cc">prefix.cc</a></td>
+<td>Community prefix registry</td>
+<td>Bioregistry imports from it</td>
+</tr>
+<tr>
+<td><a href="https://w3id.org">w3id.org</a></td>
+<td><strong>Persistent URI redirect service</strong></td>
+<td>Different - provides resolution, not cataloging</td>
+</tr>
+<tr>
+<td><a href="https://n2t.net">N2T.net</a></td>
+<td>ARK/EZID identifier resolution</td>
+<td>Separate infrastructure</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key insight:</strong> Bioregistry is a meta-registry. If a prefix is in OBO Foundry, prefix.cc, or Identifiers.org, it's likely already in Bioregistry.</p>
+<p><strong>w3id.org is different:</strong> It's a redirect service (register <code>w3id.org/cmm/</code> → your GitHub Pages), not a semantic registry.</p>
+<h3 id="project-prefix-status-verified-2026-01-08">Project Prefix Status (Verified 2026-01-08)</h3>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Bioregistry</th>
+<th>Identifiers.org</th>
+<th>OBO Foundry</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cmm</code></td>
+<td>❌ 404</td>
+<td>❌ 404</td>
+<td>❌ 404</td>
+<td>Available</td>
+</tr>
+<tr>
+<td><code>cmm-ai</code></td>
+<td>❌ Not checked</td>
+<td>-</td>
+<td>-</td>
+<td>Likely available</td>
+</tr>
+<tr>
+<td><code>ber-cmm-ai</code></td>
+<td>❌ Not checked</td>
+<td>-</td>
+<td>-</td>
+<td>Clearly scoped to project</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> <code>cmo</code> (Clinical Measurement Ontology) IS registered - similar but different.</p>
+<h3 id="prefix-naming-trade-offs">Prefix Naming Trade-offs</h3>
+<p><strong>Short prefix (<code>cmm:</code>):</strong>
+- Pro: Concise CURIEs, easy to type
+- Con: "CMM" is generic (Capability Maturity Model, etc.), harder to claim ownership</p>
+<p><strong>Long prefix (<code>ber-cmm-ai:</code> or <code>cmm-ai:</code>):</strong>
+- Pro: Clearly scoped, unlikely to conflict, matches repo names
+- Con: Verbose CURIEs</p>
+<p><strong>Recommendation:</strong> Lean toward <code>cmm-ai:</code> - matches repository naming, distinguishes from generic CMM uses.</p>
+<hr />
+<h2 id="custom-prefixes-in-use-audit-2026-01-08">Custom Prefixes in Use (Audit 2026-01-08)</h2>
+<h3 id="kg-microbe-constants-constantspy">kg-microbe Constants (<code>constants.py</code>)</h3>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Bioregistry</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>kgmicrobe.strain:</code></td>
+<td>❌ Not registered</td>
+<td>For strains not in BacDive</td>
+</tr>
+<tr>
+<td><code>mediadive.medium:</code></td>
+<td>❌ Not registered</td>
+<td>MediaDive media</td>
+</tr>
+<tr>
+<td><code>mediadive.solution:</code></td>
+<td>❌ Not registered</td>
+<td>MediaDive solutions</td>
+</tr>
+<tr>
+<td><code>mediadive.ingredient:</code></td>
+<td>❌ Not registered</td>
+<td>MediaDive ingredients</td>
+</tr>
+<tr>
+<td><code>mediadive.medium-type:</code></td>
+<td>❌ Not registered</td>
+<td>Complex vs defined</td>
+</tr>
+<tr>
+<td><code>bacdive.isolation_source:</code></td>
+<td>❌ Not registered</td>
+<td>Isolation source categories</td>
+</tr>
+<tr>
+<td><code>cell_shape:</code></td>
+<td>❌ Not registered</td>
+<td>Cell morphology</td>
+</tr>
+<tr>
+<td><code>pathways:</code></td>
+<td>❌ Not registered</td>
+<td>Metabolic pathways</td>
+</tr>
+<tr>
+<td><code>carbon_substrates:</code></td>
+<td>❌ Not registered</td>
+<td>Carbon source utilization</td>
+</tr>
+<tr>
+<td><code>assay:</code></td>
+<td>❌ Not registered</td>
+<td>Assay types</td>
+</tr>
+<tr>
+<td><code>debio:</code></td>
+<td>❌ Not registered</td>
+<td>Debio ontology</td>
+</tr>
+<tr>
+<td><code>BSL:</code></td>
+<td>❌ Not registered</td>
+<td>Biosafety levels</td>
+</tr>
+<tr>
+<td><code>taxonomy_id:</code></td>
+<td>❌ Not registered</td>
+<td>Taxonomy identifiers</td>
+</tr>
+</tbody>
+</table>
+<h3 id="registered-prefixes-for-comparison">Registered Prefixes (for comparison)</h3>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Bioregistry</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bacdive:</code></td>
+<td>✅ Registered</td>
+<td>BacDive strains</td>
+</tr>
+<tr>
+<td><code>NCBITaxon:</code></td>
+<td>✅ Registered</td>
+<td>NCBI taxonomy</td>
+</tr>
+<tr>
+<td><code>CHEBI:</code></td>
+<td>✅ Registered</td>
+<td>ChEBI chemicals</td>
+</tr>
+<tr>
+<td><code>GO:</code></td>
+<td>✅ Registered</td>
+<td>Gene Ontology</td>
+</tr>
+<tr>
+<td><code>KEGG:</code></td>
+<td>✅ Registered</td>
+<td>KEGG</td>
+</tr>
+<tr>
+<td><code>RHEA:</code></td>
+<td>✅ Registered</td>
+<td>Rhea reactions</td>
+</tr>
+<tr>
+<td><code>METPO:</code></td>
+<td>✅ Registered</td>
+<td>Microbial phenotype ontology</td>
+</tr>
+<tr>
+<td><code>EC:</code></td>
+<td>✅ Registered</td>
+<td>Enzyme Commission</td>
+</tr>
+<tr>
+<td><code>PubChem:</code></td>
+<td>✅ Registered</td>
+<td>PubChem compounds</td>
+</tr>
+<tr>
+<td><code>CAS-RN:</code></td>
+<td>✅ Registered</td>
+<td>CAS Registry Numbers</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cmm-ai-data-usage">CMM-AI Data Usage</h3>
+<p>Found in <code>CMM-AI/data/</code>:
+- <code>kgmicrobe.medium:</code> (e.g., <code>kgmicrobe.medium:ATCC_1306</code>)
+- <code>mediadive.medium:</code> (e.g., <code>mediadive.medium:632</code>)</p>
+<h3 id="observations">Observations</h3>
+<ol>
+<li><strong>13+ unregistered prefixes</strong> in active use in kg-microbe</li>
+<li>Most follow <code>database.entity_type:</code> convention</li>
+<li>None resolve to URLs via Bioregistry</li>
+<li>Some are very domain-specific (<code>cell_shape:</code>, <code>carbon_substrates:</code>)</li>
+<li>The <code>kgmicrobe.*</code> prefixes are project-specific but not registered</li>
+</ol>
+<hr />
 <h2 id="action-items">Action Items</h2>
 <ul>
 <li>[x] Research MediaDive's resolver - <strong>No unified resolver, URLs are type-specific</strong></li>
 <li>[x] Research TogoMedium's ID scheme - <strong>IDs prefixed by type (M for media), may enable single prefix</strong></li>
+<li>[x] Check if <code>cmm</code> is registered - <strong>Not registered as of 2026-01-08</strong></li>
+<li>[x] Audit custom prefixes in kg-microbe, CMM-AI, cmm-ai-automation</li>
+<li>[ ] Decide on project prefix name (<code>cmm-ai:</code> vs <code>ber-cmm-ai:</code> vs other)</li>
 <li>[ ] Draft Bioregistry issue asking about prefix strategy for type-specific resolvers</li>
 <li>[ ] Decide on local ID format for minted entities</li>
 <li>[ ] Design registry schema for minted IDs</li>
-<li>[ ] Register w3id.org/cmm/ namespace (low barrier)</li>
+<li>[ ] Register w3id.org/cmm-ai/ namespace (low barrier)</li>
 <li>[ ] Consider asking MediaDive to add unified resolver</li>
 <li>[ ] Verify TogoMedium ID uniqueness across entity types</li>
+<li>[ ] Prioritize which unregistered prefixes to formalize</li>
 </ul>
 <hr />
 <h2 id="references">References</h2>
