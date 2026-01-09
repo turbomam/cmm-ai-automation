@@ -1,0 +1,1562 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/kg_microbe_build_system/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>kg-microbe Build System Reference - cmm-ai-automation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+
+      
+    
+<script src="../assets/pymdownx-extras/material-extra-theme-2ek1P7jT.js" type="text/javascript"></script>
+<script src="../assets/pymdownx-extras/material-extra-3rdparty-BUCF4rjN.js" type="text/javascript"></script>
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+    
+      <link rel="stylesheet" href="../assets/pymdownx-extras/extra-c6ab11540a.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#kg-microbe-build-system-reference" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+<header class="md-header" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="header.title"
+  >
+    <a
+      href="https://turbomam.github.io/cmm-ai-automation/"
+      title="cmm-ai-automation"
+      class="md-header__button md-logo"
+      aria-label="cmm-ai-automation"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            cmm-ai-automation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              kg-microbe Build System Reference
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      <div class="md-header-nav__scheme md-header-nav__button md-source__icon md-icon">
+          <a
+            href="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+          </a>
+           <a
+            href="javascript:toggleScheme();"
+            title="Unknown scheme"
+            class="unknown-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.07 11.25-.9.92C13.45 12.89 13 13.5 13 15h-2v-.5c0-1.11.45-2.11 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2 2 0 0 0-2-2 2 2 0 0 0-2 2H8a4 4 0 0 1 4-4 4 4 0 0 1 4 4 3.2 3.2 0 0 1-.93 2.25M13 19h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg>
+          </a>
+      </div>
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="cmm-ai-automation" class="md-nav__button md-logo" aria-label="cmm-ai-automation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    cmm-ai-automation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../togomedium/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TogoMedium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cli-commands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CLI Commands
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="CLI Commands">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#download" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Download
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#transform" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transform
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Transforms
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Transforms">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cmm-relevant-subset" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CMM-Relevant Subset
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#transform-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Transform Dependencies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Transform Dependencies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-ontologies-bacdive-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The ontologies → bacdive Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#correct-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Correct Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ontologies-is-faster-when-cached" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ontologies is Faster (When Cached)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filename-case-issue-fixed-in-475" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filename Case Issue (Fixed in #475)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#safe-files-during-interrupted-transforms" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Safe Files During Interrupted Transforms
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#merge-configurations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge Configurations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Merge Configurations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#creating-a-cmm-specific-merge-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating a CMM-Specific Merge Config
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-standard-tools-vs-custom-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture: Standard Tools vs Custom Code
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture: Standard Tools vs Custom Code">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-transform-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Transform Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cleaning-and-rebuilding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cleaning and Rebuilding
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cleaning and Rebuilding">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#backup-current-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backup Current Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#clean-intermediate-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Intermediate Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rebuild" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rebuild
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anti-patterns-and-reproducibility-concerns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anti-patterns and Reproducibility Concerns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anti-patterns and Reproducibility Concerns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pre-processed-files-from-google-drive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-processed Files from Google Drive
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#resource-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resource Requirements
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#documentation-status" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Documentation Status
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#software-engineering-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software Engineering Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Software Engineering Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#test-coverage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Test Coverage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cicd-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CI/CD Pipeline
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aillm-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI/LLM Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recommendations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommendations
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#related-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Related Documentation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="kg-microbe-build-system-reference">kg-microbe Build System Reference</h1>
+<p><strong>Date:</strong> 2026-01-08
+<strong>Based on:</strong> kg-microbe commit <code>cddcd79</code>
+<strong>Purpose:</strong> Document build commands, available transforms, and architecture for CMM team use</p>
+<hr />
+<h2 id="quick-reference">Quick Reference</h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/kg-microbe
+
+<span class="c1"># Full pipeline</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>download<span class="w"> </span>-y<span class="w"> </span>download.yaml<span class="w"> </span>-o<span class="w"> </span>data/raw
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge
+
+<span class="c1"># Selective transform for CMM work (CORRECT ORDER - ontologies first!)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+
+<span class="c1"># Selective merge</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge<span class="w"> </span>-y<span class="w"> </span>merge.cmm.yaml<span class="w">  </span><span class="c1"># (create custom config first)</span>
+</code></pre></div>
+<p><strong>⚠️ Transform order matters!</strong> See <a href="#transform-dependencies">Transform Dependencies</a> below.</p>
+<hr />
+<h2 id="cli-commands">CLI Commands</h2>
+<h3 id="download">Download</h3>
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>download<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+
+Options:
+<span class="w">  </span>-y<span class="w"> </span>PATH<span class="w">    </span>YAML<span class="w"> </span>config<span class="w"> </span>file<span class="w"> </span><span class="o">(</span>required,<span class="w"> </span>e.g.,<span class="w"> </span>download.yaml<span class="o">)</span>
+<span class="w">  </span>-o<span class="w"> </span>TEXT<span class="w">    </span>Output<span class="w"> </span>directory<span class="w"> </span><span class="o">(</span>required,<span class="w"> </span>e.g.,<span class="w"> </span>data/raw<span class="o">)</span>
+<span class="w">  </span>-x<span class="w">         </span>Download<span class="w"> </span>only<span class="w"> </span>first<span class="w"> </span><span class="m">5</span><span class="w"> </span>kB<span class="w"> </span><span class="o">(</span><span class="k">for</span><span class="w"> </span>testing<span class="o">)</span>
+<span class="w">  </span>-i<span class="w">         </span>Ignore<span class="w"> </span>cache,<span class="w"> </span>force<span class="w"> </span>re-download
+</code></pre></div>
+<p><strong>Re-running is safe:</strong> Existing files are cached. Only use <code>-i</code> if you need fresh copies.</p>
+<h3 id="transform">Transform</h3>
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+
+Options:
+<span class="w">  </span>-i<span class="w"> </span>PATH<span class="w">    </span>Input<span class="w"> </span>directory<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>data/raw<span class="o">)</span>
+<span class="w">  </span>-o<span class="w"> </span>TEXT<span class="w">    </span>Output<span class="w"> </span>directory<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>data/transformed<span class="o">)</span>
+<span class="w">  </span>-s<span class="w"> </span>SOURCE<span class="w">  </span>Specific<span class="w"> </span>source<span class="o">(</span>s<span class="o">)</span><span class="w"> </span>to<span class="w"> </span>transform<span class="w"> </span><span class="o">(</span>repeatable<span class="o">)</span>
+<span class="w">  </span>--show-status<span class="w"> </span>/<span class="w"> </span>--no-show-status
+</code></pre></div>
+<p><strong>Available sources:</strong>
+<div class="highlight"><pre><span></span><code>-s [ontologies|bacdive|bakta|cog|kegg|mediadive|madin_etal|rhea_mappings|bactotraits]
+</code></pre></div></p>
+<h3 id="merge">Merge</h3>
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+
+Options:
+<span class="w">  </span>-y<span class="w"> </span>PATH<span class="w">      </span>YAML<span class="w"> </span>merge<span class="w"> </span>config<span class="w"> </span><span class="o">(</span>default:<span class="w"> </span>merge.yaml<span class="o">)</span>
+<span class="w">  </span>-p<span class="w"> </span>INTEGER<span class="w">   </span>Number<span class="w"> </span>of<span class="w"> </span>processes
+</code></pre></div>
+<hr />
+<h2 id="available-transforms">Available Transforms</h2>
+<table>
+<thead>
+<tr>
+<th>Transform</th>
+<th>Description</th>
+<th>Input Data</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bacdive</code></td>
+<td>Microbial strain traits</td>
+<td><code>bacdive_strains.json</code> (Google Drive)</td>
+<td>Core CMM source</td>
+</tr>
+<tr>
+<td><code>bactotraits</code></td>
+<td>Microbial traits database</td>
+<td><code>BactoTraits_databaseV2_Jun2022.csv</code></td>
+<td>Core CMM source</td>
+</tr>
+<tr>
+<td><code>madin_etal</code></td>
+<td>Condensed traits (bacteria-archaea-traits)</td>
+<td><code>madin_etal.csv</code> (GitHub)</td>
+<td>Core CMM source</td>
+</tr>
+<tr>
+<td><code>mediadive</code></td>
+<td>Growth media, solutions, ingredients</td>
+<td>MediaDive API + cached JSON</td>
+<td><strong>New from Marcin</strong></td>
+</tr>
+<tr>
+<td><code>ontologies</code></td>
+<td>NCBITaxon, ChEBI, ENVO, GO, EC, METPO, UPA</td>
+<td>OBO PURLs</td>
+<td>Expensive (large ontologies)</td>
+</tr>
+<tr>
+<td><code>bakta</code></td>
+<td>Gene annotations</td>
+<td>CMM-specific Bakta files</td>
+<td>New in 2026-01</td>
+</tr>
+<tr>
+<td><code>cog</code></td>
+<td>Clusters of Orthologous Groups</td>
+<td>NCBI FTP (<code>cog-24.def.tab</code>)</td>
+<td>New in 2026-01</td>
+</tr>
+<tr>
+<td><code>kegg</code></td>
+<td>KEGG orthologs</td>
+<td>KEGG REST API</td>
+<td>New in 2026-01</td>
+</tr>
+<tr>
+<td><code>rhea_mappings</code></td>
+<td>Rhea reaction → GO/EC mappings</td>
+<td>Expasy FTP</td>
+<td>Supporting data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="cmm-relevant-subset">CMM-Relevant Subset</h3>
+<p>For CMM work, you need ontologies plus the trait sources:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+</code></pre></div></p>
+<hr />
+<h2 id="transform-dependencies">Transform Dependencies</h2>
+<p><strong>Critical:</strong> Some transforms depend on outputs from other transforms. Running them out of order causes failures or slow fallbacks.</p>
+<h3 id="the-ontologies-bacdive-dependency">The <code>ontologies</code> → <code>bacdive</code> Dependency</h3>
+<p>The <code>bacdive</code> transform needs <code>data/transformed/ontologies/ncbitaxon_nodes.tsv</code> for fast taxon label lookups. If this file doesn't exist:</p>
+<div class="highlight"><pre><span></span><code>Warning: NCBITaxon nodes file not found at data/transformed/ontologies/ncbitaxon_nodes.tsv
+  Will fall back to OakLib queries (slower)
+</code></pre></div>
+<p><strong>The OakLib fallback is ~3x slower and should be avoided.</strong></p>
+<h3 id="correct-order">Correct Order</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Step 1: Run ontologies first (creates ncbitaxon_nodes.tsv)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies
+
+<span class="c1"># Step 2: Run other transforms (can read ncbitaxon_nodes.tsv)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+</code></pre></div>
+<p>Or as a single command:
+<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+</code></pre></div></p>
+<h3 id="ontologies-is-faster-when-cached">Ontologies is Faster (When Cached)</h3>
+<p>The expensive part of ontologies transform is ROBOT processing of <code>ncbitaxon.owl</code> (~1.6GB). However, if you have the cached JSON file, ROBOT is skipped:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Size</th>
+<th>What It Means</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data/raw/ncbitaxon_removed_subset.json</code></td>
+<td>~623MB</td>
+<td>ROBOT already ran, will be reused</td>
+</tr>
+<tr>
+<td><code>data/raw/chebi.json</code></td>
+<td>~482MB</td>
+<td>ROBOT already ran, will be reused</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Check if you have the cache:</strong>
+<div class="highlight"><pre><span></span><code>ls<span class="w"> </span>-lh<span class="w"> </span>data/raw/ncbitaxon_removed_subset.json<span class="w"> </span>data/raw/chebi.json
+</code></pre></div></p>
+<p>If these exist, the ontologies transform skips ROBOT processing (still takes time, but not hours).</p>
+<h3 id="filename-case-issue-fixed-in-475">Filename Case Issue (Fixed in #475)</h3>
+<p>There was a bug where <code>bacdive.py</code> looked for <code>NCBITaxon_nodes.tsv</code> (mixed case) but ontologies creates <code>ncbitaxon_nodes.tsv</code> (lowercase). This was fixed in commit <code>26c029b</code> (PR #477).</p>
+<p>If you're on an older version, update:
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>pull<span class="w"> </span>origin<span class="w"> </span>main
+</code></pre></div></p>
+<h3 id="safe-files-during-interrupted-transforms">Safe Files During Interrupted Transforms</h3>
+<p>If you ctrl-C during a transform, your <strong>raw files are safe</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Directory</th>
+<th>Safe?</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>data/raw/</code></td>
+<td>✅ Yes</td>
+<td>Transforms only READ from here</td>
+</tr>
+<tr>
+<td><code>data/transformed/</code></td>
+<td>⚠️ May be partial</td>
+<td>Transforms WRITE here - may need to re-run</td>
+</tr>
+</tbody>
+</table>
+<p>Expensive cached files that survive interruption:
+- <code>data/raw/ncbitaxon_removed_subset.json</code> (623MB)
+- <code>data/raw/chebi.json</code> (482MB)
+- <code>data/raw/bacdive_strains.json</code> (748MB)
+- <code>data/raw/mediadive/</code> (42MB total)</p>
+<hr />
+<h2 id="merge-configurations">Merge Configurations</h2>
+<p>Three merge configs exist:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contents</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>merge.yaml</code></td>
+<td>Full KG (all active sources)</td>
+<td>Production releases</td>
+</tr>
+<tr>
+<td><code>merge.minimal.yaml</code></td>
+<td>bacdive + madin_etal only</td>
+<td>Quick testing</td>
+</tr>
+<tr>
+<td><code>merge.current.yaml</code></td>
+<td>bacdive + madin_etal + bactotraits</td>
+<td>Development</td>
+</tr>
+</tbody>
+</table>
+<h3 id="creating-a-cmm-specific-merge-config">Creating a CMM-Specific Merge Config</h3>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>merge.current.yaml<span class="w"> </span>merge.cmm.yaml
+<span class="c1"># Edit to add mediadive source, then:</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge<span class="w"> </span>-y<span class="w"> </span>merge.cmm.yaml
+</code></pre></div>
+<p>Example addition for <code>merge.cmm.yaml</code>:
+<div class="highlight"><pre><span></span><code><span class="w">    </span><span class="nt">mediadive</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;mediadive&quot;</span>
+<span class="w">      </span><span class="nt">input</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tsv</span>
+<span class="w">        </span><span class="nt">filename</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data/transformed/mediadive/nodes.tsv</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">data/transformed/mediadive/edges.tsv</span>
+</code></pre></div></p>
+<hr />
+<h2 id="directory-structure">Directory Structure</h2>
+<div class="highlight"><pre><span></span><code>kg-microbe/
+├── data/
+│   ├── raw/              # Downloaded source files (cached)
+│   │   ├── bacdive_strains.json
+│   │   ├── mediadive.json
+│   │   ├── mediadive/    # Cached MediaDive API responses
+│   │   └── ...
+│   ├── transformed/      # Transform outputs (nodes.tsv, edges.tsv per source)
+│   │   ├── bacdive/
+│   │   ├── bactotraits/
+│   │   ├── mediadive/
+│   │   ├── ontologies/
+│   │   └── ...
+│   └── merged/           # Final merged KG
+│       └── merged-kg/
+├── download.yaml         # Download configuration
+├── merge.yaml            # Full merge configuration
+├── merge.minimal.yaml    # Minimal merge configuration
+├── merge.current.yaml    # Development merge configuration
+└── kg_microbe/
+    ├── transform.py      # Transform dispatcher
+    └── transform_utils/  # Per-source transform code
+        ├── bacdive/
+        ├── mediadive/
+        └── ...
+</code></pre></div>
+<hr />
+<h2 id="architecture-standard-tools-vs-custom-code">Architecture: Standard Tools vs Custom Code</h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Standard BBOP/KGX Tool</th>
+<th>Custom kg-microbe Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Download</strong></td>
+<td><code>kghub-downloader</code></td>
+<td>Config only (<code>download.yaml</code>)</td>
+</tr>
+<tr>
+<td><strong>Merge</strong></td>
+<td>KGX merge library</td>
+<td>Config only (<code>merge.yaml</code>)</td>
+</tr>
+<tr>
+<td><strong>Transform</strong></td>
+<td><strong>None</strong></td>
+<td>Custom Python per source</td>
+</tr>
+<tr>
+<td><strong>Node/Edge schema</strong></td>
+<td><strong>None</strong></td>
+<td>Hardcoded in <code>Transform</code> base class</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-transform-framework">The Transform Framework</h3>
+<p>kg-microbe uses a custom <code>Transform</code> base class (<code>kg_microbe/transform_utils/transform.py</code>) rather than KGX instantiators:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># From transform_utils/transform.py lines 53-75</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">node_header</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ID_COLUMN</span><span class="p">,</span>
+    <span class="n">CATEGORY_COLUMN</span><span class="p">,</span>
+    <span class="n">NAME_COLUMN</span><span class="p">,</span>
+    <span class="n">DESCRIPTION_COLUMN</span><span class="p">,</span>
+    <span class="n">XREF_COLUMN</span><span class="p">,</span>
+    <span class="n">PROVIDED_BY_COLUMN</span><span class="p">,</span>
+    <span class="n">SYNONYM_COLUMN</span><span class="p">,</span>
+    <span class="n">IRI_COLUMN</span><span class="p">,</span>
+    <span class="n">OBJECT_COLUMN</span><span class="p">,</span>      <span class="c1"># ← Edge column in node header</span>
+    <span class="n">PREDICATE_COLUMN</span><span class="p">,</span>   <span class="c1"># ← Edge column in node header</span>
+    <span class="n">RELATION_COLUMN</span><span class="p">,</span>    <span class="c1"># ← Edge column in node header (deprecated in Biolink 3.x)</span>
+    <span class="n">SAME_AS_COLUMN</span><span class="p">,</span>
+    <span class="n">SUBJECT_COLUMN</span><span class="p">,</span>     <span class="c1"># ← Edge column in node header</span>
+    <span class="n">SUBSETS_COLUMN</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="bp">self</span><span class="o">.</span><span class="n">edge_header</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">SUBJECT_COLUMN</span><span class="p">,</span>
+    <span class="n">PREDICATE_COLUMN</span><span class="p">,</span>
+    <span class="n">OBJECT_COLUMN</span><span class="p">,</span>
+    <span class="n">RELATION_COLUMN</span><span class="p">,</span>
+    <span class="n">PRIMARY_KNOWLEDGE_SOURCE_COLUMN</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<p><strong>This explains why:</strong>
+- Node files have edge-specific columns (<code>subject</code>, <code>predicate</code>, <code>object</code>, <code>relation</code>) - baked into base class
+- Edge files have only 5 columns (missing Biolink 3.x <code>knowledge_level</code>, <code>agent_type</code>)
+- The <code>relation</code> column persists despite being deprecated</p>
+<p>Each source has its own transform class that inherits from this base:
+- <code>kg_microbe/transform_utils/bacdive/bacdive.py</code> → <code>BacDiveTransform</code>
+- <code>kg_microbe/transform_utils/mediadive/mediadive.py</code> → <code>MediaDiveTransform</code>
+- etc.</p>
+<hr />
+<h2 id="cleaning-and-rebuilding">Cleaning and Rebuilding</h2>
+<h3 id="backup-current-outputs">Backup Current Outputs</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/kg-microbe
+
+<span class="c1"># Backup transformed data</span>
+tar<span class="w"> </span>-czvf<span class="w"> </span>backup_transformed_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span>data/transformed/
+
+<span class="c1"># Backup merged data</span>
+tar<span class="w"> </span>-czvf<span class="w"> </span>backup_merged_<span class="k">$(</span>date<span class="w"> </span>+%Y%m%d<span class="k">)</span>.tar.gz<span class="w"> </span>data/merged/
+</code></pre></div>
+<h3 id="clean-intermediate-files">Clean Intermediate Files</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Clean transformed data (cheap to regenerate)</span>
+rm<span class="w"> </span>-rf<span class="w"> </span>data/transformed/*
+
+<span class="c1"># Clean merged data (cheap to regenerate)</span>
+rm<span class="w"> </span>-rf<span class="w"> </span>data/merged/*
+
+<span class="c1"># Keep data/raw/ - expensive to re-download, and download is cached anyway</span>
+</code></pre></div>
+<h3 id="rebuild">Rebuild</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># If you kept data/raw/ (remember: ontologies FIRST!)</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge<span class="w"> </span>-y<span class="w"> </span>merge.cmm.yaml
+
+<span class="c1"># Full rebuild from scratch:</span>
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>download<span class="w"> </span>-y<span class="w"> </span>download.yaml<span class="w"> </span>-o<span class="w"> </span>data/raw
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>ontologies<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>bacdive<span class="w"> </span>-s<span class="w"> </span>bactotraits<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w"> </span>-s<span class="w"> </span>mediadive
+poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge
+</code></pre></div>
+<hr />
+<h2 id="anti-patterns-and-reproducibility-concerns">Anti-patterns and Reproducibility Concerns</h2>
+<h3 id="pre-processed-files-from-google-drive">Pre-processed Files from Google Drive</h3>
+<p><strong>Problem:</strong> Some "raw" downloads are actually pre-processed files hosted on Google Drive rather than fetched directly from authoritative sources.</p>
+<p>From <code>download.yaml</code>:
+<div class="highlight"><pre><span></span><code><span class="c1"># BacDive - pre-processed JSON from Google Drive, not BacDive API</span>
+<span class="p p-Indicator">-</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gdrive:1b_UWdIvsIM81V5WdFedNoxN3R4UUf4F2</span>
+<span class="w">  </span><span class="nt">local_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bacdive_strains.json</span>
+
+<span class="c1"># UniProt - pre-processed tarballs from Google Drive</span>
+<span class="p p-Indicator">-</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://drive.google.com/file/d/1-aFVHE54t8HvcV4Z32hyTkmlXci07Y9g/view?usp=drive_link</span>
+<span class="w">  </span><span class="nt">local_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uniprot_proteomes.tar.gz</span>
+<span class="p p-Indicator">-</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://drive.google.com/file/d/1PkqAp5v0IKs9qwu9mbK7gVeNaO-p3HsI/view?usp=drive_link</span>
+<span class="w">  </span><span class="nt">local_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uniprot_human.tar.gz</span>
+</code></pre></div></p>
+<p><strong>Why this is problematic:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Broken provenance chain</strong></td>
+<td>Cannot trace data back to authoritative source</td>
+</tr>
+<tr>
+<td><strong>Unknown processing</strong></td>
+<td>What transformations were applied before upload?</td>
+</tr>
+<tr>
+<td><strong>Version ambiguity</strong></td>
+<td>Which version of the source data was used?</td>
+</tr>
+<tr>
+<td><strong>Not reproducible</strong></td>
+<td>Cannot regenerate from scratch without the Google Drive files</td>
+</tr>
+<tr>
+<td><strong>Single point of failure</strong></td>
+<td>If Google Drive link breaks, pipeline fails</td>
+</tr>
+<tr>
+<td><strong>No update path</strong></td>
+<td>How do you get fresh data from the actual source?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Best practice:</strong> Download raw data directly from authoritative APIs/endpoints, then apply all transformations in documented, versioned code.</p>
+<p><strong>Contrast with good examples in the same file:</strong>
+<div class="highlight"><pre><span></span><code><span class="c1"># Good: Direct from authoritative source</span>
+<span class="p p-Indicator">-</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://purl.obolibrary.org/obo/chebi.owl.gz</span>
+<span class="w">  </span><span class="nt">local_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chebi.owl.gz</span>
+
+<span class="c1"># Good: Direct from source API</span>
+<span class="p p-Indicator">-</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://mediadive.dsmz.de/rest/media</span>
+<span class="w">  </span><span class="nt">local_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mediadive.json</span>
+
+<span class="c1"># Good: Direct from source repository</span>
+<span class="p p-Indicator">-</span>
+<span class="w">  </span><span class="nt">url</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://github.com/bacteria-archaea-traits/bacteria-archaea-traits/blob/master/output/condensed_traits_NCBI.csv?raw=true</span>
+<span class="w">  </span><span class="nt">local_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">madin_etal.csv</span>
+</code></pre></div></p>
+<p><strong>Recommendation:</strong> For any source using <code>gdrive:</code> or Google Drive URLs, document:
+1. What the original authoritative source is
+2. What processing was applied before upload
+3. When the file was created and from what version of source data
+4. How to regenerate the file from scratch</p>
+<hr />
+<h2 id="resource-requirements">Resource Requirements</h2>
+<p>From the README:</p>
+<blockquote>
+<p>The KG construction process, particularly the transform step involving trimming of NCBI Taxonomy for any KG and the steps involving the microbial UniProt dataset for KG-Microbe-Function and KG-Microbe-Biomedical-Function, is computationally intensive. Successful execution on a local machine may require significant memory resources (e.g., &gt;500 GB of RAM).</p>
+</blockquote>
+<p><strong>For CMM work:</strong> The bacdive, bactotraits, madin_etal, and mediadive transforms are reasonable on a standard machine. The <code>ontologies</code> transform is <strong>required first</strong> (see <a href="#transform-dependencies">Transform Dependencies</a>). It's faster when you have the cached JSON files (<code>ncbitaxon_removed_subset.json</code>, <code>chebi.json</code>), but still takes significant time.</p>
+<hr />
+<h2 id="documentation-status">Documentation Status</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Documented?</th>
+<th>Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Basic usage</td>
+<td>✅ Brief</td>
+<td>README.md</td>
+</tr>
+<tr>
+<td>CLI options</td>
+<td>✅ Via <code>--help</code></td>
+<td>CLI</td>
+</tr>
+<tr>
+<td>Transform sources</td>
+<td>❌ Not listed</td>
+<td>(this document)</td>
+</tr>
+<tr>
+<td>Merge configs</td>
+<td>❌ Not explained</td>
+<td>(this document)</td>
+</tr>
+<tr>
+<td>Architecture</td>
+<td>❌ Not documented</td>
+<td>(this document)</td>
+</tr>
+<tr>
+<td>Custom schema issues</td>
+<td>❌ Not documented</td>
+<td>See <code>kg_microbe_verification_2026-01-08.md</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="software-engineering-practices">Software Engineering Practices</h2>
+<h3 id="test-coverage">Test Coverage</h3>
+<p><strong>Current state:</strong> Minimal test coverage, focused on newest transforms only.</p>
+<table>
+<thead>
+<tr>
+<th>Test File</th>
+<th>Lines</th>
+<th>Covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>demo_test.py</code></td>
+<td>250 bytes</td>
+<td>Demo/smoke test only</td>
+</tr>
+<tr>
+<td><code>test_bakta.py</code></td>
+<td>7.1 KB</td>
+<td>Bakta transform</td>
+</tr>
+<tr>
+<td><code>test_cog.py</code></td>
+<td>11.4 KB</td>
+<td>COG transform</td>
+</tr>
+<tr>
+<td><code>test_kegg.py</code></td>
+<td>11.8 KB</td>
+<td>KEGG transform</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Untested transforms (core CMM sources):</strong>
+- ❌ <code>bacdive</code> - No tests
+- ❌ <code>bactotraits</code> - No tests
+- ❌ <code>madin_etal</code> - No tests
+- ❌ <code>mediadive</code> - No tests
+- ❌ <code>ontologies</code> - No tests
+- ❌ <code>rhea_mappings</code> - No tests</p>
+<p><strong>Concern:</strong> The 3 tested transforms (bakta, cog, kegg) are the newest additions from 2026-01. The 5+ original/core transforms have zero test coverage.</p>
+<h3 id="cicd-pipeline">CI/CD Pipeline</h3>
+<p>GitHub Actions workflow (<code>.github/workflows/qc.yml</code>):</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Runs on push/PR to master, Python 3.10-3.12</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry run tox -e codespell</span><span class="w">  </span><span class="c1"># Spell checking</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry run tox -e lint</span><span class="w">       </span><span class="c1"># Ruff linting</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">poetry run tox -e py</span><span class="w">         </span><span class="c1"># Pytest</span>
+</code></pre></div>
+<p><strong>Present:</strong>
+- Multi-version Python testing (3.10, 3.11, 3.12)
+- Spell checking (codespell)
+- Linting (ruff)
+- Unit tests (pytest)</p>
+<p><strong>Absent:</strong>
+- Pre-commit hooks (no <code>.pre-commit-config.yaml</code>)
+- Type checking (mypy)
+- Integration tests with actual transform outputs
+- Schema validation tests (Biolink compliance)</p>
+<h3 id="aillm-configuration">AI/LLM Configuration</h3>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Status</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AGENTS.md</code></td>
+<td>❌ Missing</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>CLAUDE.md</code></td>
+<td>❌ Missing</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>SKILLS/</code></td>
+<td>❌ Missing</td>
+<td>-</td>
+</tr>
+<tr>
+<td><code>.claude/settings.local.json</code></td>
+<td>✅ Present</td>
+<td>Permission settings only (no project context)</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>.claude/settings.local.json</code> contains Bash permissions and MCP server configs but no project-specific context or instructions.</p>
+<h3 id="recommendations">Recommendations</h3>
+<ol>
+<li><strong>Testing:</strong> Add tests for core transforms (bacdive, bactotraits, madin_etal, mediadive)</li>
+<li><strong>Pre-commit:</strong> Add pre-commit hooks for consistent formatting/linting</li>
+<li><strong>Schema validation:</strong> Add tests that verify output conforms to Biolink/KGX schemas</li>
+<li><strong>AI context:</strong> Add CLAUDE.md with project conventions (especially custom schema decisions)</li>
+</ol>
+<hr />
+<h2 id="related-documentation">Related Documentation</h2>
+<ul>
+<li><a href="../kg_microbe_verification_2026-01-08/">kg_microbe_verification_2026-01-08.md</a> - Data quality verification</li>
+<li><a href="../kg_microbe_risks/">kg_microbe_risks.md</a> - Risk assessment for CMM</li>
+<li><a href="../cmm_vs_kg_microbe/">cmm_vs_kg_microbe.md</a> - Comparison of approaches</li>
+<li><a href="../curie_prefix_strategy/">curie_prefix_strategy.md</a> - CURIE/prefix planning</li>
+</ul>
+<hr />
+<h2 id="see-also">See Also</h2>
+<ul>
+<li><a href="https://github.com/biolink/kgx">KGX documentation</a></li>
+<li><a href="https://github.com/monarch-initiative/kghub-downloader">kghub-downloader</a></li>
+<li><a href="https://github.com/Knowledge-Graph-Hub/kg-microbe">kg-microbe repository</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        
+
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        with emoji by
+        <a href="https://github.com/twitter/twemoji" target="_blank" rel="noopener">
+          Twemoji
+        </a>
+      </div>
+      
+<div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "header.autohide", "navigation.expand", "navigation.instant", "navigation.instant.progress", "navigation.tracking", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../assets/pymdownx-extras/extra-loader-B5CKpNQx.js"></script>
+      
+    
+  </body>
+</html>
