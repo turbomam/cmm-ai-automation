@@ -832,7 +832,9 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "ipykernel" },
     { name = "jupyter" },
+    { name = "jupyterlab" },
     { name = "linkml" },
     { name = "mkdocs-material" },
     { name = "mkdocs-mermaid2-plugin" },
@@ -887,7 +889,9 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
+    { name = "ipykernel", specifier = ">=7.1.0" },
     { name = "jupyter", specifier = ">=1.0.0" },
+    { name = "jupyterlab", specifier = ">=4.5.0" },
     { name = "linkml", specifier = ">=1.9.5" },
     { name = "mkdocs-material", specifier = ">=8.2.8" },
     { name = "mkdocs-mermaid2-plugin", specifier = ">=1.1.1" },
