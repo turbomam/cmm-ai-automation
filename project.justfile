@@ -83,13 +83,6 @@ export-enriched-strains-fast:
   uv run python -m cmm_ai_automation.scripts.export_enriched_strains_kgx --no-ncbi-enrichment
   @echo "✓ Exported enriched strains (no NCBI enrichment) to output/kgx/enriched_strains_nodes.tsv and output/kgx/enriched_strains_edges.tsv"
 
-# Export enriched strains without NCBI enrichment (faster, BacDive + manually curated NCBI IDs only)
-# READS: data/private/derived/strains_enriched.tsv, NETWORK: no, WRITES: output/kgx/enriched_strains_nodes.tsv
-export-enriched-strains-fast:
-  @mkdir -p output/kgx
-  uv run python -m cmm_ai_automation.scripts.export_enriched_strains_kgx --no-ncbi-enrichment
-  @echo "✓ Exported enriched strains (no NCBI enrichment) to output/kgx/enriched_strains_nodes.tsv"
-
 # Enrich ingredients with PubChem data (optionally CAS)
 # REQUIRES: PubChem API access, OPTIONAL: CAS API key, NETWORK: yes, WRITES: output file, CACHES: cache/*.json
 enrich-ingredients input output:
