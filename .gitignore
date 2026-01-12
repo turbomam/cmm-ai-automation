@@ -195,3 +195,7 @@ data/ontologies/
 /strains.tsv
 /strains_merged.tsv
 /strains_enriched.tsv
+
+# Generated datamodel - do not commit
+src/cmm_ai_automation/datamodel/cmm_ai_automation.py
+src/cmm_ai_automation/datamodel/cmm_ai_automation_pydantic.py
