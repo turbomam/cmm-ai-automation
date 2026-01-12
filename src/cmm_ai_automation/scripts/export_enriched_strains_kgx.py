@@ -238,7 +238,7 @@ def main(input_path: Path, output_path: Path, edges_output_path: Path, no_ncbi_e
         with edges_output_path.open("w") as f:
             writer = csv.DictWriter(
                 f,
-                fieldnames=["subject", "predicate", "object"],
+                fieldnames=["subject", "predicate", "object", "knowledge_level", "agent_type"],
                 delimiter="\t",
                 extrasaction="ignore",
             )

@@ -473,6 +473,121 @@ The `.claude/settings.local.json` contains Bash permissions and MCP server confi
 
 ---
 
+## Analyzing Build Output
+
+### Extracting the Merged Archive
+
+The merge step produces a compressed archive in `data/merged/merged-kg.tar.gz`. To analyze the KGX files, extract them first:
+
+```bash
+cd ~/gitrepos/kg-microbe
+
+# Extract without deleting the archive
+tar -xzf data/merged/merged-kg.tar.gz -C data/merged/
+```
+
+**Flags explained:**
+- `-x` = extract
+- `-z` = decompress gzip
+- `-f` = file to extract
+- `-C` = directory to extract into
+
+The `tar` command extracts by default without removing the original archive.
+
+After extraction, you'll have:
+```
+data/merged/
+├── merged-kg.tar.gz              # Original archive (preserved)
+└── merged-kg/                    # Extracted directory
+    ├── merged-kg_nodes.tsv       # All nodes
+    └── merged-kg_edges.tsv       # All edges
+```
+
+### Analyzing Edge Patterns
+
+Two scripts are available for analyzing edge patterns. The key difference is **which source files contribute to each pattern**:
+
+#### Option 1: Analyze Merged Data (Source Information Lost)
+
+Use `analyze_kgx_patterns.py` on the merged output. This shows aggregate patterns across all sources but **doesn't show which source contributed each pattern**:
+
+```bash
+cd ~/gitrepos/cmm-ai-automation
+
+# Analyze merged data (all patterns labeled "merged-kg")
+uv run python src/cmm_ai_automation/scripts/analyze_kgx_patterns.py ../kg-microbe/data/merged/
+
+# Save to timestamped file
+uv run python src/cmm_ai_automation/scripts/analyze_kgx_patterns.py ../kg-microbe/data/merged/ > edge_patterns_merged_$(date +%Y-%m-%d).tsv
+```
+
+**Output format:**
+```tsv
+source     subject_category              subject_prefix      predicate              object_category              object_prefix    count
+merged-kg  biolink:OrganismTaxon         NCBITaxon           biolink:subclass_of    biolink:OrganismTaxon        NCBITaxon        882437
+merged-kg  biolink:OrganismTaxon         kgmicrobe.strain    METPO:2000028          biolink:ChemicalEntity       CHEBI            321601
+merged-kg  biolink:ChemicalSubstance     CHEBI               biolink:subclass_of    biolink:ChemicalSubstance    CHEBI            275776
+```
+
+**Limitation:** All patterns show `merged-kg` as the source. You cannot tell if a pattern came from bacdive, mediadive, ontologies, etc.
+
+#### Option 2: Analyze Transformed Data (Preserves Source Information)
+
+Use `extract_edge_patterns.py` on the **transformed** directory before merging. This shows **which source directory contributes each pattern**:
+
+```bash
+cd ~/gitrepos/cmm-ai-automation
+
+# Analyze transformed data (source breakdown preserved)
+uv run python src/cmm_ai_automation/scripts/extract_edge_patterns.py ../kg-microbe/data/transformed/
+
+# Save to timestamped file
+uv run python src/cmm_ai_automation/scripts/extract_edge_patterns.py ../kg-microbe/data/transformed/ > edge_patterns_by_source_$(date +%Y-%m-%d).tsv
+```
+
+**Output format:**
+```tsv
+source       subject_category              subject_prefix      predicate              object_category              object_prefix    count
+bacdive      biolink:OrganismTaxon         kgmicrobe.strain    METPO:2000028          biolink:ChemicalEntity       CHEBI            321601
+mediadive    biolink:ChemicalEntity        mediadive.solution  biolink:has_part       biolink:ChemicalEntity       CHEBI            38531
+bactotraits  biolink:OrganismTaxon         NCBITaxon           METPO:2000006          biolink:ChemicalEntity       CHEBI            36816
+ontologies   biolink:OrganismTaxon         NCBITaxon           biolink:subclass_of    biolink:OrganismTaxon        NCBITaxon        882437
+```
+
+**Advantage:** You can see exactly which source (bacdive, mediadive, bactotraits, ontologies, etc.) contributes each pattern.
+
+#### Which Script to Use?
+
+| Use Case | Script | Data Location |
+|----------|--------|---------------|
+| Want to see which source contributes patterns | `extract_edge_patterns.py` | `data/transformed/` |
+| Already merged and don't need source breakdown | `analyze_kgx_patterns.py` | `data/merged/` |
+| Debugging transform-specific issues | `extract_edge_patterns.py` | `data/transformed/` |
+| Quick aggregate statistics | `analyze_kgx_patterns.py` | `data/merged/` |
+
+#### What the Output Shows
+
+Both scripts produce the same TSV format with these columns:
+
+- **source**: Which file/directory the pattern came from
+- **subject_category**: Biolink category of the subject node (e.g., `biolink:OrganismTaxon`)
+- **subject_prefix**: ID prefix of the subject (e.g., `NCBITaxon`, `kgmicrobe.strain`)
+- **predicate**: Relationship type (e.g., `biolink:subclass_of`, `METPO:2000028`)
+- **object_category**: Biolink category of the object node
+- **object_prefix**: ID prefix of the object
+- **count**: Number of edges with this exact pattern
+
+#### Use Cases
+
+- **Quality checking:** Are the expected relationships present?
+- **Data exploration:** What kinds of connections exist?
+- **Source auditing:** Which transform contributes specific patterns?
+- **Integration planning:** Which prefixes/categories need mapping?
+- **Bug detection:** Unexpected patterns may indicate transform issues
+- **Performance analysis:** Which sources create the most edges?
+
+---
+
 ## Related Documentation
 
 - [kg_microbe_verification_2026-01-08.md](kg_microbe_verification_2026-01-08.md) - Data quality verification
