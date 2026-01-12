@@ -33,19 +33,19 @@ def load_config(config_path: Path) -> Any:
 @click.option(
     "--nodes",
     type=click.Path(exists=True, path_type=Path),
-    required=True,
+    default="data/private/static/delaney-media-nodes.tsv",
     help="Path to nodes TSV file",
 )
 @click.option(
     "--edges",
     type=click.Path(exists=True, path_type=Path),
-    required=True,
+    default="data/private/static/delaney-media-edges.tsv",
     help="Path to edges TSV file",
 )
 @click.option(
     "--config",
     type=click.Path(exists=True, path_type=Path),
-    required=True,
+    default="config/kgx_validation_config.yaml",
     help="Path to validation configuration YAML file",
 )
 @click.option(

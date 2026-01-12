@@ -91,20 +91,22 @@ CHEBI, GO, ENVO, OBI, NCBITaxon, MIxS, RHEA, BAO
 
 ## Implementation Notes
 
-### Modified KGX Validation
+### Custom KGX Validation
 
-This project employs a modified KGX validation process to accommodate project-specific requirements. These modifications are implemented in `src/cmm_ai_automation/scripts/validate_kgx.py` and can be executed via the following `just` target:
+This project employs a custom KGX validation process to accommodate project-specific requirements. These customizations are implemented in `src/cmm_ai_automation/scripts/validate_kgx_custom.py` and can be executed via the following `just` target:
 
 ```bash
-just validate-kgx <nodes_tsv> <edges_tsv>
+just validate-kgx-custom [nodes_tsv] [edges_tsv]
 ```
 
-The primary modifications include:
+If no arguments are provided, it defaults to validating the Delaney media files in `data/private/static/`.
+
+The primary customizations include:
 
 1.  **Monkey Patching**: The script monkey patches `kgx.prefix_manager.PrefixManager.is_curie` to allow slashes in the local part of CURIEs (e.g., `doi:10.1007/s00203-018-1567-5`). This is necessary because the default regex in the `kgx` library is too strict for certain valid identifiers used in this project.
 2.  **Custom Prefix Injection**: The script injects additional prefixes into the `kgx.validator.Validator` instance at runtime. These prefixes are defined in `config/kgx_validation_config.yaml` and allow the validator to recognize project-specific namespaces (like `doi`, `uuid`, etc.) that are not yet registered in the standard Biolink context.
 
-These patches and injections are applied only within the scope of the `validate-kgx` target to minimize global side effects.
+These patches and injections are applied only within the scope of the `validate-kgx-custom` target to minimize global side effects.
 
 ## Quick Start
 
