@@ -1,0 +1,2267 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/SETUP_LOG/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Setup Log: cmm-ai-automation - cmm-ai-automation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+
+      
+    
+<script src="../assets/pymdownx-extras/material-extra-theme-2ek1P7jT.js" type="text/javascript"></script>
+<script src="../assets/pymdownx-extras/material-extra-3rdparty-BUCF4rjN.js" type="text/javascript"></script>
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+    
+      <link rel="stylesheet" href="../assets/pymdownx-extras/extra-c6ab11540a.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#setup-log-cmm-ai-automation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+<header class="md-header" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="header.title"
+  >
+    <a
+      href="https://turbomam.github.io/cmm-ai-automation/"
+      title="cmm-ai-automation"
+      class="md-header__button md-logo"
+      aria-label="cmm-ai-automation"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            cmm-ai-automation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Setup Log: cmm-ai-automation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      <div class="md-header-nav__scheme md-header-nav__button md-source__icon md-icon">
+          <a
+            href="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+          </a>
+           <a
+            href="javascript:toggleScheme();"
+            title="Unknown scheme"
+            class="unknown-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.07 11.25-.9.92C13.45 12.89 13 13.5 13 15h-2v-.5c0-1.11.45-2.11 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2 2 0 0 0-2-2 2 2 0 0 0-2 2H8a4 4 0 0 1 4-4 4 4 0 0 1 4 4 3.2 3.2 0 0 1-.93 2.25M13 19h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg>
+          </a>
+      </div>
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="cmm-ai-automation" class="md-nav__button md-logo" aria-label="cmm-ai-automation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    cmm-ai-automation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../togomedium/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TogoMedium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-project-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Project Goals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="1. Project Goals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#collaboration-with-culturebotaicmm-ai" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collaboration with CultureBotAI/CMM-AI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-template-selection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Template Selection
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="2. Template Selection">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#evaluated-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Evaluated Options
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-repository-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Repository Creation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="3. Repository Creation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#31-create-empty-github-repo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.1 Create Empty GitHub Repo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#32-clone-locally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3.2 Clone Locally
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4-initialize-with-linkml-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Initialize with LinkML Template
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="4. Initialize with LinkML Template">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#41-install-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.1 Install Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#42-run-copier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.2 Run Copier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#43-template-output-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.3 Template Output Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#44-initial-commit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4.4 Initial Commit
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-add-ai-automation-claude-github-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Add AI Automation (Claude GitHub Actions)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="5. Add AI Automation (Claude GitHub Actions)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#51-source-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.1 Source Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#52-download-workflow-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.2 Download Workflow Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#53-download-custom-actions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.3 Download Custom Actions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#54-create-ai-controllers-config" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.4 Create AI Controllers Config
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#55-claude-workflow-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5.5 Claude Workflow Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6-add-google-sheets-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Add Google Sheets Integration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="6. Add Google Sheets Integration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#61-design-decision-gspread-vs-google-api-python-client" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.1 Design Decision: gspread vs google-api-python-client
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#62-add-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.2 Add Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#63-create-gsheets-module" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.3 Create gsheets Module
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#64-authentication-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6.4 Authentication Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-documentation-updates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Documentation Updates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#8-final-commit-and-push" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Final Commit and Push
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#9-post-setup-configuration-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Post-Setup Configuration Required
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="9. Post-Setup Configuration Required">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#91-github-repository-secrets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.1 GitHub Repository Secrets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#92-google-cloud-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.2 Google Cloud Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#93-local-development" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9.3 Local Development
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#10-planned-integrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Planned Integrations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="10. Planned Integrations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#knowledge-graph-and-ontology-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowledge Graph and Ontology Resources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ols-embeddings-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OLS Embeddings Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#data-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#11-project-initialization-with-just-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Project Initialization with just setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="11. Project Initialization with just setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#111-installing-just" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.1 Installing just
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#112-running-just-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.2 Running just setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#113-generated-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11.3 Generated Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#12-code-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Code Organization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="12. Code Organization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-classification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Classification
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#script-development-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Script Development Standards
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#13-code-quality-assurance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Code Quality Assurance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="13. Code Quality Assurance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#python-version" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Python Version
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#qa-tools-configured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        QA Tools Configured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing-qa-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installing QA Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pre-commit-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pre-commit Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ruff-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ruff Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#coverage-requirements" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Coverage Requirements
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#14-github-repository-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. GitHub Repository Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="14. GitHub Repository Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#branch-protection-main" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branch Protection (main)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#merge-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Merge Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#other-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Other Settings
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#workflow-for-contributors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workflow for Contributors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#commands-used" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Commands Used
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#15-google-sheets-authentication-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Google Sheets Authentication Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="15. Google Sheets Authentication Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#google-cloud-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Google Cloud Project
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#steps-performed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Steps Performed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-account-details" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service Account Details
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#available-worksheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Worksheets
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usage-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-notes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Notes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#16-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="setup-log-cmm-ai-automation">Setup Log: cmm-ai-automation</h1>
+<p>This document records the setup process and design decisions for the <code>cmm-ai-automation</code> repository.</p>
+<p><strong>Date:</strong> 2024-12-09
+<strong>Author:</strong> Mark Miller (with Claude Code assistance)
+<strong>Repository:</strong> https://github.com/turbomam/cmm-ai-automation</p>
+<hr />
+<h2 id="1-project-goals">1. Project Goals</h2>
+<p>Create a GitHub repository for AI-assisted automation of Critical Mineral Metabolism (CMM) data curation with:
+- Python-based tools using LinkML and OBO Foundry ecosystem
+- Integration with private Google Sheets (specifically "BER CMM Data for AI - for editing")
+- AI/LLM automation via GitHub Actions (Claude Code)</p>
+<h3 id="collaboration-with-culturebotaicmm-ai">Collaboration with CultureBotAI/CMM-AI</h3>
+<p>This repository is developed in collaboration with <a href="https://github.com/CultureBotAI/CMM-AI">CultureBotAI/CMM-AI</a>. The division of responsibilities:</p>
+<table>
+<thead>
+<tr>
+<th>Repository</th>
+<th>Focus</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/CultureBotAI/CMM-AI">CultureBotAI/CMM-AI</a></td>
+<td>AI-driven biological discovery, microorganism identification, analysis workflows</td>
+</tr>
+<tr>
+<td><a href="https://github.com/turbomam/cmm-ai-automation">turbomam/cmm-ai-automation</a></td>
+<td>Data modeling (LinkML), Google Sheets integration, OBO Foundry ontology tooling</td>
+</tr>
+</tbody>
+</table>
+<p>The AI automation workflows in this repository were adapted from those used in CMM-AI, which in turn came from the <a href="https://github.com/ai4curation/github-ai-integrations">ai4curation/github-ai-integrations</a> template maintained by the Monarch Initiative.</p>
+<hr />
+<h2 id="2-template-selection">2. Template Selection</h2>
+<h3 id="evaluated-options">Evaluated Options</h3>
+<table>
+<thead>
+<tr>
+<th>Template</th>
+<th>Tool</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/linkml/linkml-project-cookiecutter">linkml-project-cookiecutter</a></td>
+<td>cruft</td>
+<td>Official LinkML, well-maintained</td>
+<td>Uses Poetry, older approach</td>
+</tr>
+<tr>
+<td><a href="https://github.com/dalito/linkml-project-copier">linkml-project-copier</a></td>
+<td>copier</td>
+<td>Uses <code>uv</code>, modern, based on cookiecutter</td>
+<td>Newer, fewer users</td>
+</tr>
+<tr>
+<td><a href="https://github.com/INCATools/ontology-development-kit">ontology-development-kit (ODK)</a></td>
+<td>Docker/Make</td>
+<td>Full ontology lifecycle</td>
+<td>Overkill for this use case</td>
+</tr>
+<tr>
+<td><a href="https://github.com/ai4curation/github-ai-integrations">ai4curation/github-ai-integrations</a></td>
+<td>copier</td>
+<td>Claude GitHub Actions, MCP servers</td>
+<td>AI-only, no schema support</td>
+</tr>
+</tbody>
+</table>
+<h3 id="decision">Decision</h3>
+<p>Use <strong>linkml-project-copier</strong> as the base template, then layer on <strong>ai4curation/github-ai-integrations</strong> for AI automation.</p>
+<p><strong>Rationale:</strong>
+- <code>uv</code> is faster and simpler than Poetry for dependency management
+- LinkML provides schema-driven data modeling appropriate for structured CMM data
+- The ai4curation template provides battle-tested Claude GitHub Actions with MCP server integration (OLS for ontology lookup)</p>
+<hr />
+<h2 id="3-repository-creation">3. Repository Creation</h2>
+<h3 id="31-create-empty-github-repo">3.1 Create Empty GitHub Repo</h3>
+<div class="highlight"><pre><span></span><code>gh<span class="w"> </span>repo<span class="w"> </span>create<span class="w"> </span>turbomam/cmm-ai-automation<span class="w"> </span>--public<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--description<span class="w"> </span><span class="s2">&quot;AI-assisted automation for Critical Mineral Metabolism data curation using LinkML, OBO tools, and Google Sheets integration&quot;</span>
+</code></pre></div>
+<p><strong>Result:</strong> https://github.com/turbomam/cmm-ai-automation</p>
+<h3 id="32-clone-locally">3.2 Clone Locally</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/home/mark/gitrepos
+gh<span class="w"> </span>repo<span class="w"> </span>clone<span class="w"> </span>turbomam/cmm-ai-automation
+<span class="c1"># Warning: empty repository</span>
+</code></pre></div>
+<hr />
+<h2 id="4-initialize-with-linkml-template">4. Initialize with LinkML Template</h2>
+<h3 id="41-install-dependencies">4.1 Install Dependencies</h3>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>copier<span class="w"> </span>jinja2-time
+</code></pre></div>
+<p>Note: <code>jinja2-time</code> was required as an additional dependency for the copier template.</p>
+<h3 id="42-run-copier">4.2 Run Copier</h3>
+<div class="highlight"><pre><span></span><code>copier<span class="w"> </span>copy<span class="w"> </span>--trust<span class="w"> </span>--defaults<span class="w"> </span>gh:dalito/linkml-project-copier<span class="w"> </span>cmm-ai-automation<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data<span class="w"> </span><span class="nv">project_name</span><span class="o">=</span><span class="s2">&quot;cmm-ai-automation&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data<span class="w"> </span><span class="nv">project_description</span><span class="o">=</span><span class="s2">&quot;AI-assisted automation for Critical Mineral Metabolism data curation&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data<span class="w"> </span><span class="nv">full_name</span><span class="o">=</span><span class="s2">&quot;Mark Miller&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data<span class="w"> </span><span class="nv">email</span><span class="o">=</span><span class="s2">&quot;MAM@lbl.gov&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data<span class="w"> </span><span class="nv">github_org</span><span class="o">=</span><span class="s2">&quot;turbomam&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data<span class="w"> </span><span class="nv">main_schema_class</span><span class="o">=</span><span class="s2">&quot;CmmDataset&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data<span class="w"> </span><span class="nv">license</span><span class="o">=</span><span class="s2">&quot;MIT&quot;</span>
+</code></pre></div>
+<h3 id="43-template-output-structure">4.3 Template Output Structure</h3>
+<div class="highlight"><pre><span></span><code>cmm-ai-automation/
+├── .github/
+│   ├── dependabot.yml
+│   └── workflows/
+│       ├── deploy-docs.yaml
+│       ├── main.yaml
+│       ├── pypi-publish.yaml
+│       └── test_pages_build.yaml
+├── docs/
+├── examples/
+├── project/
+├── src/cmm_ai_automation/
+│   ├── schema/cmm_ai_automation.yaml  # LinkML schema
+│   └── datamodel/                      # Generated Python classes
+├── tests/
+├── pyproject.toml
+├── justfile
+└── mkdocs.yml
+</code></pre></div>
+<h3 id="44-initial-commit">4.4 Initial Commit</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/home/mark/gitrepos/cmm-ai-automation
+git<span class="w"> </span>init
+git<span class="w"> </span>add<span class="w"> </span>-A
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Initialize from linkml-project-copier template&quot;</span>
+git<span class="w"> </span>branch<span class="w"> </span>-m<span class="w"> </span>main
+git<span class="w"> </span>remote<span class="w"> </span>add<span class="w"> </span>origin<span class="w"> </span>git@github.com:turbomam/cmm-ai-automation.git
+</code></pre></div>
+<hr />
+<h2 id="5-add-ai-automation-claude-github-actions">5. Add AI Automation (Claude GitHub Actions)</h2>
+<h3 id="51-source-analysis">5.1 Source Analysis</h3>
+<p>Examined <a href="https://github.com/CultureBotAI/CMM-AI">CultureBotAI/CMM-AI</a> <code>.github/</code> directory, which uses the <a href="https://github.com/ai4curation/github-ai-integrations">ai4curation/github-ai-integrations</a> copier template.</p>
+<p><strong>Files identified:</strong>
+- <code>workflows/claude.yml</code> - Main Claude Code action
+- <code>workflows/claude-issue-triage.yml</code> - Auto-triage issues
+- <code>workflows/claude-issue-summarize.yml</code> - Auto-summarize issues
+- <code>copilot-setup-steps.yml</code> - GitHub Copilot workspace setup
+- <code>ai-controllers.json</code> - List of GitHub users who can control Claude
+- <code>actions/</code> - Custom composite actions</p>
+<h3 id="52-download-workflow-files">5.2 Download Workflow Files</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Create directories</span>
+mkdir<span class="w"> </span>-p<span class="w"> </span>.github/actions
+
+<span class="c1"># Download workflows</span>
+gh<span class="w"> </span>api<span class="w"> </span>repos/ai4curation/github-ai-integrations/contents/template/.github/workflows/claude.yml<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.content&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span>&gt;<span class="w"> </span>.github/workflows/claude.yml
+
+gh<span class="w"> </span>api<span class="w"> </span>repos/ai4curation/github-ai-integrations/contents/template/.github/workflows/claude-issue-triage.yml<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.content&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span>&gt;<span class="w"> </span>.github/workflows/claude-issue-triage.yml
+
+gh<span class="w"> </span>api<span class="w"> </span>repos/ai4curation/github-ai-integrations/contents/template/.github/workflows/claude-issue-summarize.yml<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.content&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span>&gt;<span class="w"> </span>.github/workflows/claude-issue-summarize.yml
+
+gh<span class="w"> </span>api<span class="w"> </span>repos/ai4curation/github-ai-integrations/contents/template/.github/copilot-setup-steps.yml<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.content&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span>&gt;<span class="w"> </span>.github/copilot-setup-steps.yml
+</code></pre></div>
+<h3 id="53-download-custom-actions">5.3 Download Custom Actions</h3>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>.github/actions/claude-code-action<span class="w"> </span><span class="se">\</span>
+<span class="w">         </span>.github/actions/claude-issue-summarize-action<span class="w"> </span><span class="se">\</span>
+<span class="w">         </span>.github/actions/claude-issue-triage-action
+
+<span class="c1"># Download action.yml for each</span>
+curl<span class="w"> </span>-sL<span class="w"> </span><span class="s2">&quot;https://raw.githubusercontent.com/ai4curation/github-ai-integrations/main/template/.github/actions/claude-code-action/action.yml&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="s2">&quot;.github/actions/claude-code-action/action.yml&quot;</span>
+
+curl<span class="w"> </span>-sL<span class="w"> </span><span class="s2">&quot;https://raw.githubusercontent.com/ai4curation/github-ai-integrations/main/template/.github/actions/claude-issue-summarize-action/action.yml&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="s2">&quot;.github/actions/claude-issue-summarize-action/action.yml&quot;</span>
+
+curl<span class="w"> </span>-sL<span class="w"> </span><span class="s2">&quot;https://raw.githubusercontent.com/ai4curation/github-ai-integrations/main/template/.github/actions/claude-issue-triage-action/action.yml&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="s2">&quot;.github/actions/claude-issue-triage-action/action.yml&quot;</span>
+</code></pre></div>
+<h3 id="54-create-ai-controllers-config">5.4 Create AI Controllers Config</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">echo</span><span class="w"> </span><span class="s1">&#39;[&quot;turbomam&quot;]&#39;</span><span class="w"> </span>&gt;<span class="w"> </span>.github/ai-controllers.json
+</code></pre></div>
+<p>This restricts Claude action triggers to the <code>turbomam</code> GitHub user.</p>
+<h3 id="55-claude-workflow-features">5.5 Claude Workflow Features</h3>
+<p>The <code>claude.yml</code> workflow includes:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Triggers on @claude mentions in:</span>
+<span class="c1"># - Issue comments</span>
+<span class="c1"># - PR review comments</span>
+<span class="c1"># - PR reviews</span>
+<span class="c1"># - New issues (title or body)</span>
+
+<span class="c1"># MCP Servers configured:</span>
+<span class="nt">mcp_config</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">  </span><span class="no">{</span>
+<span class="w">    </span><span class="no">&quot;mcpServers&quot;: {</span>
+<span class="w">      </span><span class="no">&quot;ols&quot;: {</span>
+<span class="w">        </span><span class="no">&quot;command&quot;: &quot;uvx&quot;,</span>
+<span class="w">        </span><span class="no">&quot;args&quot;: [&quot;ols-mcp&quot;]</span>
+<span class="w">      </span><span class="no">},</span>
+<span class="w">      </span><span class="no">&quot;sequential-thinking&quot;: {</span>
+<span class="w">        </span><span class="no">&quot;command&quot;: &quot;npx&quot;,</span>
+<span class="w">        </span><span class="no">&quot;args&quot;: [&quot;-y&quot;, &quot;@modelcontextprotocol/server-sequential-thinking&quot;]</span>
+<span class="w">      </span><span class="no">}</span>
+<span class="w">    </span><span class="no">}</span>
+<span class="w">  </span><span class="no">}</span>
+
+<span class="c1"># Allowed tools:</span>
+<span class="nt">allowed_tools</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Bash(*),FileEdit,Edit,MultiEdit,WebSearch,WebFetch,mcp__ols_mcp__search_all_ontologies,mcp__ols_mcp__get_terms_from_ontology&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="6-add-google-sheets-integration">6. Add Google Sheets Integration</h2>
+<h3 id="61-design-decision-gspread-vs-google-api-python-client">6.1 Design Decision: gspread vs google-api-python-client</h3>
+<table>
+<thead>
+<tr>
+<th>Library</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gspread</code></td>
+<td>Simple API, pandas integration</td>
+<td>Less control</td>
+</tr>
+<tr>
+<td><code>google-api-python-client</code></td>
+<td>Full API access</td>
+<td>More verbose</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Decision:</strong> Use <code>gspread</code> for simplicity, with <code>google-auth</code> for authentication.</p>
+<h3 id="62-add-dependencies">6.2 Add Dependencies</h3>
+<p>Updated <code>pyproject.toml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">dependencies</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span>
+<span class="w">  </span><span class="s2">&quot;linkml-runtime &gt;=1.9.4&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;gspread &gt;=6.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;google-auth &gt;=2.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;google-auth-oauthlib &gt;=1.0.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="s2">&quot;pandas &gt;=2.0.0&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<h3 id="63-create-gsheets-module">6.3 Create gsheets Module</h3>
+<p>Created <code>src/cmm_ai_automation/gsheets.py</code> with:</p>
+<ul>
+<li><code>get_gspread_client()</code> - Authenticate with service account</li>
+<li><code>get_spreadsheet()</code> - Open spreadsheet by name or ID</li>
+<li><code>list_worksheets()</code> - List all tabs in a spreadsheet</li>
+<li><code>get_sheet_data()</code> - Read worksheet to DataFrame</li>
+<li><code>update_sheet_data()</code> - Write DataFrame to worksheet</li>
+</ul>
+<p><strong>Known Spreadsheet IDs:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">KNOWN_SHEETS</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;BER CMM Data for AI - for editing&quot;</span><span class="p">:</span> <span class="s2">&quot;1h-kOdyvVb1EJPqgTiklTN9Z8br_8bP8KGmxA19clo7Q&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h3 id="64-authentication-strategy">6.4 Authentication Strategy</h3>
+<p>The module supports three credential locations (in order of precedence):
+1. Explicit path passed to functions
+2. <code>GOOGLE_APPLICATION_CREDENTIALS</code> environment variable
+3. Default gspread location: <code>~/.config/gspread/service_account.json</code></p>
+<hr />
+<h2 id="7-documentation-updates">7. Documentation Updates</h2>
+<p>Updated <code>README.md</code> with:
+- Feature list
+- Quick start guide
+- Google Sheets usage examples
+- AI integration documentation</p>
+<hr />
+<h2 id="8-final-commit-and-push">8. Final Commit and Push</h2>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>-A
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;Add AI automation and Google Sheets integration</span>
+
+<span class="s2">- Add Claude Code GitHub Action workflows from ai4curation/github-ai-integrations</span>
+<span class="s2">  - claude.yml: Main Claude Code action for @claude mentions</span>
+<span class="s2">  - claude-issue-triage.yml: Auto-triage new issues</span>
+<span class="s2">  - claude-issue-summarize.yml: Auto-summarize issues</span>
+<span class="s2">- Add custom actions for Claude integrations</span>
+<span class="s2">- Add copilot-setup-steps.yml for GitHub Copilot workspace</span>
+<span class="s2">- Add gsheets.py module for Google Sheets API access</span>
+<span class="s2">- Add gspread, google-auth, pandas dependencies</span>
+<span class="s2">- Update README with features, quick start, and usage examples&quot;</span>
+
+git<span class="w"> </span>push<span class="w"> </span>-u<span class="w"> </span>origin<span class="w"> </span>main
+</code></pre></div>
+<hr />
+<h2 id="9-post-setup-configuration-required">9. Post-Setup Configuration Required</h2>
+<h3 id="91-github-repository-secrets">9.1 GitHub Repository Secrets</h3>
+<table>
+<thead>
+<tr>
+<th>Secret</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CLAUDE_CODE_OAUTH_TOKEN</code></td>
+<td>Authentication for Claude GitHub Action</td>
+</tr>
+<tr>
+<td><code>GOOGLE_CREDENTIALS_JSON</code></td>
+<td>(Optional) Service account JSON for CI/CD</td>
+</tr>
+</tbody>
+</table>
+<h3 id="92-google-cloud-setup">9.2 Google Cloud Setup</h3>
+<ol>
+<li>Create a Google Cloud project</li>
+<li>Enable Google Sheets API and Google Drive API</li>
+<li>Create a service account</li>
+<li>Download JSON key file</li>
+<li>Share the "BER CMM Data for AI - for editing" spreadsheet with the service account email</li>
+</ol>
+<h3 id="93-local-development">9.3 Local Development</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/home/mark/gitrepos/cmm-ai-automation
+
+<span class="c1"># Initialize project</span>
+just<span class="w"> </span>setup
+
+<span class="c1"># Set credentials</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">GOOGLE_APPLICATION_CREDENTIALS</span><span class="o">=</span>/path/to/service_account.json
+
+<span class="c1"># Or copy to default location</span>
+cp<span class="w"> </span>/path/to/service_account.json<span class="w"> </span>~/.config/gspread/service_account.json
+</code></pre></div>
+<hr />
+<h2 id="10-planned-integrations">10. Planned Integrations</h2>
+<h3 id="knowledge-graph-and-ontology-resources">Knowledge Graph and Ontology Resources</h3>
+<table>
+<thead>
+<tr>
+<th>Project</th>
+<th>Purpose</th>
+<th>Integration Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/Knowledge-Graph-Hub/kg-microbe">kg-microbe</a></td>
+<td>Microbial knowledge graph with strain/function data</td>
+<td>Planned - CMM strains link via <code>kg_node_ids</code> column</td>
+</tr>
+<tr>
+<td><a href="https://github.com/biolink/kgx">kgx</a></td>
+<td>Knowledge Graph Exchange for Biolink Model graphs</td>
+<td>Planned - Import/export KG data</td>
+</tr>
+<tr>
+<td><a href="https://github.com/biolink/biolink-model">biolink-model</a></td>
+<td>Schema and upper ontology for biological KGs</td>
+<td>Planned - Data modeling alignment</td>
+</tr>
+<tr>
+<td><a href="https://github.com/biolink/biolink-model-toolkit">biolink-model-toolkit</a></td>
+<td>Python utilities for Biolink Model</td>
+<td>Planned - Model validation</td>
+</tr>
+<tr>
+<td><a href="https://github.com/berkeleybop/metpo">metpo</a></td>
+<td>Microbial Phenotype Ontology</td>
+<td>Planned - Phenotype annotation</td>
+</tr>
+</tbody>
+</table>
+<p>See also:
+- <a href="https://github.com/orgs/biolink/repositories">biolink organization</a> for additional tools (ontobio, etc.)
+- <a href="https://github.com/biopragmatics">biopragmatics organization</a> for identifier and ontology tools (bioregistry, curies, pyobo, etc.)</p>
+<h3 id="ols-embeddings-database">OLS Embeddings Database</h3>
+<p>A local copy of OLS text embeddings is available for semantic search and term mapping:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Location</td>
+<td><code>/home/mark/work/large/ontologies/embeddings.db</code></td>
+</tr>
+<tr>
+<td>Size</td>
+<td>288 GB</td>
+</tr>
+<tr>
+<td>Total embeddings</td>
+<td>~9.5 million</td>
+</tr>
+<tr>
+<td>Model</td>
+<td>OpenAI <code>text-embedding-3-small</code> (1536 dimensions)</td>
+</tr>
+<tr>
+<td>Source</td>
+<td><a href="https://cthoyt.com/2025/08/04/ontology-text-embeddings.html">cthoyt.com/2025/08/04/ontology-text-embeddings.html</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Database schema:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">CREATE</span><span class="w"> </span><span class="k">TABLE</span><span class="w"> </span><span class="n">embeddings</span><span class="w"> </span><span class="p">(</span>
+<span class="w">    </span><span class="n">ontologyId</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">entityType</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">iri</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">document</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">model</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">hash</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span>
+<span class="w">    </span><span class="n">embeddings</span><span class="w"> </span><span class="nb">TEXT</span><span class="p">,</span><span class="w">  </span><span class="c1">-- JSON-encoded float array</span>
+<span class="w">    </span><span class="k">PRIMARY</span><span class="w"> </span><span class="k">KEY</span><span class="w"> </span><span class="p">(</span><span class="n">ontologyId</span><span class="p">,</span><span class="w"> </span><span class="n">entityType</span><span class="p">,</span><span class="w"> </span><span class="n">iri</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></p>
+<p><strong>Top ontologies by embedding count:</strong>
+| Ontology | Count |
+|----------|-------|
+| ncbitaxon | 2,650,614 |
+| slm | 1,001,034 |
+| dron | 756,397 |
+| gaz | 678,436 |
+| pr | 364,392 |
+| snomed | 352,573 |
+| chebi | 221,776 |
+| go | 84,737 |</p>
+<p><strong>Planned CMM subset ontologies:</strong> chebi, go, obi, envo, ncbitaxon (subset), micro, metpo</p>
+<p><strong>Reference implementation:</strong> See <code>search_pcr_embeddings.py</code> and <code>chromadb_semantic_mapper.py</code> in <a href="https://github.com/berkeleybop/metpo">berkeleybop/metpo</a>.</p>
+<h3 id="data-flow">Data Flow</h3>
+<div class="highlight"><pre><span></span><code>Google Sheets (BER CMM Data)
+    ↓
+cmm-ai-automation (this repo)
+    ↓ LinkML schema validation
+    ↓ Ontology term lookup (OLS)
+    ↓
+kg-microbe (knowledge graph)
+    ↓ kgx export
+    ↓
+Biolink Model-compliant KG
+</code></pre></div>
+<hr />
+<h2 id="11-project-initialization-with-just-setup">11. Project Initialization with <code>just setup</code></h2>
+<h3 id="111-installing-just">11.1 Installing just</h3>
+<p>The <code>just</code> command runner was installed via pip:</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>just-bin
+just<span class="w"> </span>--version<span class="w">  </span><span class="c1"># 1.43.1</span>
+</code></pre></div>
+<p>Note: Attempted <code>cargo install just</code> first but the system Rust version was too old. The <code>just-bin</code> package provides pre-compiled binaries.</p>
+<h3 id="112-running-just-setup">11.2 Running <code>just setup</code></h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/home/mark/gitrepos/cmm-ai-automation
+just<span class="w"> </span>setup
+</code></pre></div>
+<p>This command executes:</p>
+<ol>
+<li><strong><code>uv sync --group dev</code></strong> - Install all dependencies including dev tools</li>
+<li>Installed 187 packages</li>
+<li>Created <code>.venv/</code> virtual environment</li>
+<li>
+<p>Generated <code>uv.lock</code> lockfile</p>
+</li>
+<li>
+<p><strong><code>uv run gen-project</code></strong> - Generate project artifacts from LinkML schema</p>
+</li>
+<li>Input: <code>src/cmm_ai_automation/schema/cmm_ai_automation.yaml</code></li>
+<li>Output directory: <code>project/</code></li>
+<li>
+<p>Generated formats: Java, TypeScript, JSON Schema, OWL, SHACL, ShEx, etc.</p>
+</li>
+<li>
+<p><strong><code>uv run gen-doc</code></strong> - Generate schema documentation</p>
+</li>
+<li>Output: <code>docs/schema/</code> and <code>docs/elements/</code></li>
+</ol>
+<h3 id="113-generated-files">11.3 Generated Files</h3>
+<p>After <code>just setup</code>, the following were generated:</p>
+<p><strong>Schema-generated Python datamodel</strong> (DO NOT EDIT):
+- <code>src/cmm_ai_automation/datamodel/cmm_ai_automation.py</code> - Python dataclasses
+- <code>src/cmm_ai_automation/datamodel/cmm_ai_automation_pydantic.py</code> - Pydantic models</p>
+<p><strong>Project artifacts</strong> (in <code>project/</code>):
+- <code>java/</code> - Java classes
+- <code>typescript/</code> - TypeScript definitions
+- <code>jsonschema/</code> - JSON Schema
+- <code>owl/</code> - OWL ontology
+- <code>shacl/</code> - SHACL shapes
+- <code>shex/</code> - ShEx expressions</p>
+<p><strong>Documentation</strong> (in <code>docs/</code>):
+- <code>schema/</code> - Schema documentation
+- <code>elements/</code> - Element documentation</p>
+<hr />
+<h2 id="12-code-organization">12. Code Organization</h2>
+<h3 id="directory-structure">Directory Structure</h3>
+<div class="highlight"><pre><span></span><code>src/cmm_ai_automation/
+├── __init__.py           # Package init (template-generated)
+├── _version.py           # Auto-versioning (template-generated)
+├── datamodel/            # GENERATED from LinkML schema
+│   ├── __init__.py       # DO NOT EDIT - regenerated by `just gen-py`
+│   ├── cmm_ai_automation.py
+│   └── cmm_ai_automation_pydantic.py
+├── schema/               # LinkML YAML schema (HAND-AUTHORED)
+│   └── cmm_ai_automation.yaml
+├── gsheets.py            # Google Sheets module (HAND-AUTHORED)
+└── scripts/              # CLI tools with Click (HAND-AUTHORED)
+    └── __init__.py
+</code></pre></div>
+<h3 id="code-classification">Code Classification</h3>
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Type</th>
+<th>Edit Policy</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>schema/*.yaml</code></td>
+<td>LinkML schema</td>
+<td>HAND-AUTHORED - edit freely</td>
+</tr>
+<tr>
+<td><code>datamodel/*.py</code></td>
+<td>Python from schema</td>
+<td>GENERATED - do not edit</td>
+</tr>
+<tr>
+<td><code>gsheets.py</code></td>
+<td>Utility module</td>
+<td>HAND-AUTHORED - edit freely</td>
+</tr>
+<tr>
+<td><code>scripts/*.py</code></td>
+<td>CLI tools</td>
+<td>HAND-AUTHORED - edit freely</td>
+</tr>
+<tr>
+<td><code>project/*</code></td>
+<td>Multi-format exports</td>
+<td>GENERATED - do not edit</td>
+</tr>
+<tr>
+<td><code>docs/schema/*</code></td>
+<td>Documentation</td>
+<td>GENERATED - do not edit</td>
+</tr>
+</tbody>
+</table>
+<h3 id="script-development-standards">Script Development Standards</h3>
+<p>Following <a href="https://github.com/berkeleybop/metpo">metpo conventions</a>:</p>
+<ol>
+<li><strong>Use Click CLI interfaces</strong> - proper named option parsing</li>
+<li><strong>Register in pyproject.toml</strong> - <code>[project.scripts]</code> entries</li>
+<li><strong>Integrate with Makefile</strong> - use <code>$&lt;</code> and <code>$@</code> patterns</li>
+<li><strong>Production quality</strong> - reusable tools, not one-off scripts</li>
+</ol>
+<p>Example script template:
+<div class="highlight"><pre><span></span><code><span class="ch">#!/usr/bin/env python3</span>
+<span class="sd">&quot;&quot;&quot;Brief description of what this script does.&quot;&quot;&quot;</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">click</span>
+
+<span class="nd">@click</span><span class="o">.</span><span class="n">command</span><span class="p">()</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--input&#39;</span><span class="p">,</span> <span class="s1">&#39;-i&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Input file path&#39;</span><span class="p">)</span>
+<span class="nd">@click</span><span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s1">&#39;--output&#39;</span><span class="p">,</span> <span class="s1">&#39;-o&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Output file path&#39;</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="nb">input</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">output</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Detailed description of the command.&quot;&quot;&quot;</span>
+    <span class="k">pass</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</code></pre></div></p>
+<hr />
+<h2 id="13-code-quality-assurance">13. Code Quality Assurance</h2>
+<h3 id="python-version">Python Version</h3>
+<p>Python 3.12+ is required (<code>requires-python = "&gt;=3.12"</code>).</p>
+<p><strong>Rationale:</strong>
+- Modern type hint syntax (<code>X | Y</code> unions, built-in generics)
+- Better error messages
+- Performance improvements
+- <code>uv</code> handles Python version management automatically (no pyenv needed)</p>
+<h3 id="qa-tools-configured">QA Tools Configured</h3>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>Purpose</th>
+<th>Command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ruff</strong></td>
+<td>Linting and formatting</td>
+<td><code>uv run ruff check src/</code></td>
+</tr>
+<tr>
+<td><strong>mypy</strong></td>
+<td>Static type checking</td>
+<td><code>uv run mypy src/cmm_ai_automation/</code></td>
+</tr>
+<tr>
+<td><strong>deptry</strong></td>
+<td>Dependency checking</td>
+<td><code>uv run deptry src/</code></td>
+</tr>
+<tr>
+<td><strong>pytest</strong></td>
+<td>Unit testing</td>
+<td><code>uv run pytest</code></td>
+</tr>
+<tr>
+<td><strong>pytest-cov</strong></td>
+<td>Coverage reporting</td>
+<td><code>uv run pytest --cov</code></td>
+</tr>
+<tr>
+<td><strong>pre-commit</strong></td>
+<td>Git hooks</td>
+<td><code>uv run pre-commit run --all-files</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="installing-qa-dependencies">Installing QA Dependencies</h3>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>sync<span class="w"> </span>--group<span class="w"> </span>dev<span class="w"> </span>--group<span class="w"> </span>qa
+</code></pre></div>
+<h3 id="pre-commit-setup">Pre-commit Setup</h3>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
+</code></pre></div>
+<h3 id="ruff-configuration">Ruff Configuration</h3>
+<p>Ruff is configured with these rule sets:
+- <code>E</code>, <code>W</code> - pycodestyle
+- <code>F</code> - Pyflakes
+- <code>I</code> - isort
+- <code>B</code> - flake8-bugbear
+- <code>C4</code> - flake8-comprehensions
+- <code>UP</code> - pyupgrade
+- <code>ARG</code> - unused arguments
+- <code>SIM</code> - simplify
+- <code>TCH</code> - type checking imports
+- <code>PTH</code> - pathlib
+- <code>RUF</code> - Ruff-specific</p>
+<p>Generated files (datamodel/, project/) are excluded from linting.</p>
+<h3 id="coverage-requirements">Coverage Requirements</h3>
+<ul>
+<li>Minimum coverage: 80%</li>
+<li>Branch coverage enabled</li>
+<li>Generated code excluded from coverage</li>
+</ul>
+<hr />
+<h2 id="14-github-repository-configuration">14. GitHub Repository Configuration</h2>
+<h3 id="branch-protection-main">Branch Protection (main)</h3>
+<p>Configured via GitHub API on 2024-12-09:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+<th>Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Require PR reviews</td>
+<td>1 approval</td>
+<td>Ensures code review before merge</td>
+</tr>
+<tr>
+<td>Dismiss stale reviews</td>
+<td>Yes</td>
+<td>Re-review after changes</td>
+</tr>
+<tr>
+<td>Require conversation resolution</td>
+<td>Yes</td>
+<td>All comments must be addressed</td>
+</tr>
+<tr>
+<td>Enforce admins</td>
+<td><strong>No</strong></td>
+<td>Owner (turbomam) can bypass for urgent fixes</td>
+</tr>
+<tr>
+<td>Allow force pushes</td>
+<td>No</td>
+<td>Preserve history</td>
+</tr>
+<tr>
+<td>Allow deletions</td>
+<td>No</td>
+<td>Protect main branch</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key point:</strong> <code>enforce_admins: false</code> allows the repository owner to push directly or merge without approval when needed, while still requiring reviews for other contributors.</p>
+<h3 id="merge-settings">Merge Settings</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Allow squash merge</td>
+<td>Yes (preferred)</td>
+</tr>
+<tr>
+<td>Allow merge commit</td>
+<td>No</td>
+</tr>
+<tr>
+<td>Allow rebase merge</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Delete branch on merge</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>Allow auto-merge</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<h3 id="other-settings">Other Settings</h3>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Issues</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Projects</td>
+<td>Enabled</td>
+</tr>
+<tr>
+<td>Wiki</td>
+<td>Disabled (use docs/ instead)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="workflow-for-contributors">Workflow for Contributors</h3>
+<ol>
+<li>Create a feature branch: <code>git checkout -b feature/my-feature</code></li>
+<li>Make changes and commit</li>
+<li>Push branch: <code>git push -u origin feature/my-feature</code></li>
+<li>Create PR via <code>gh pr create</code> or GitHub web UI</li>
+<li>Request review (or owner can self-merge with bypass)</li>
+<li>Squash merge after approval</li>
+<li>Branch auto-deleted</li>
+</ol>
+<h3 id="commands-used">Commands Used</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Set branch protection</span>
+gh<span class="w"> </span>api<span class="w"> </span>repos/turbomam/cmm-ai-automation/branches/main/protection<span class="w"> </span>-X<span class="w"> </span>PUT<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--input<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">{</span>
+<span class="s">  &quot;required_status_checks&quot;: null,</span>
+<span class="s">  &quot;enforce_admins&quot;: false,</span>
+<span class="s">  &quot;required_pull_request_reviews&quot;: {</span>
+<span class="s">    &quot;dismiss_stale_reviews&quot;: true,</span>
+<span class="s">    &quot;require_code_owner_reviews&quot;: false,</span>
+<span class="s">    &quot;required_approving_review_count&quot;: 1</span>
+<span class="s">  },</span>
+<span class="s">  &quot;restrictions&quot;: null,</span>
+<span class="s">  &quot;required_conversation_resolution&quot;: true</span>
+<span class="s">}</span>
+<span class="s">EOF</span>
+
+<span class="c1"># Configure merge settings</span>
+gh<span class="w"> </span>api<span class="w"> </span>repos/turbomam/cmm-ai-automation<span class="w"> </span>-X<span class="w"> </span>PATCH<span class="w"> </span>--input<span class="w"> </span>-<span class="w"> </span><span class="s">&lt;&lt; &#39;EOF&#39;</span>
+<span class="s">{</span>
+<span class="s">  &quot;has_wiki&quot;: false,</span>
+<span class="s">  &quot;allow_squash_merge&quot;: true,</span>
+<span class="s">  &quot;allow_merge_commit&quot;: false,</span>
+<span class="s">  &quot;allow_rebase_merge&quot;: true,</span>
+<span class="s">  &quot;delete_branch_on_merge&quot;: true,</span>
+<span class="s">  &quot;allow_auto_merge&quot;: true</span>
+<span class="s">}</span>
+<span class="s">EOF</span>
+</code></pre></div>
+<hr />
+<h2 id="15-google-sheets-authentication-setup">15. Google Sheets Authentication Setup</h2>
+<p><strong>Date:</strong> 2024-12-09</p>
+<h3 id="google-cloud-project">Google Cloud Project</h3>
+<p>Used existing project <code>mam-gdrive-mcp-server</code> (already had Google Drive API enabled).</p>
+<h3 id="steps-performed">Steps Performed</h3>
+<p><strong>1. Set active project:</strong>
+<div class="highlight"><pre><span></span><code>gcloud<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>project<span class="w"> </span>mam-gdrive-mcp-server
+</code></pre></div></p>
+<p><strong>2. Enable Google Sheets API:</strong>
+<div class="highlight"><pre><span></span><code>gcloud<span class="w"> </span>services<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>sheets.googleapis.com<span class="w"> </span>--project<span class="o">=</span>mam-gdrive-mcp-server
+</code></pre></div></p>
+<p><strong>3. Create service account:</strong>
+<div class="highlight"><pre><span></span><code>gcloud<span class="w"> </span>iam<span class="w"> </span>service-accounts<span class="w"> </span>create<span class="w"> </span>cmm-sheets-access<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--display-name<span class="o">=</span><span class="s2">&quot;CMM Sheets Access&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--description<span class="o">=</span><span class="s2">&quot;Service account for cmm-ai-automation Google Sheets access&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--project<span class="o">=</span>mam-gdrive-mcp-server
+</code></pre></div></p>
+<p><strong>4. Download credentials:</strong>
+<div class="highlight"><pre><span></span><code>mkdir<span class="w"> </span>-p<span class="w"> </span>~/.config/gspread
+gcloud<span class="w"> </span>iam<span class="w"> </span>service-accounts<span class="w"> </span>keys<span class="w"> </span>create<span class="w"> </span>~/.config/gspread/service_account.json<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--iam-account<span class="o">=</span>cmm-sheets-access@mam-gdrive-mcp-server.iam.gserviceaccount.com<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--project<span class="o">=</span>mam-gdrive-mcp-server
+</code></pre></div></p>
+<p><strong>5. Share spreadsheet with service account:</strong>
+- Open "BER CMM Data for AI - for editing" in Google Sheets
+- Click Share → Add <code>cmm-sheets-access@mam-gdrive-mcp-server.iam.gserviceaccount.com</code>
+- Set permission: <strong>Viewer</strong> (read-only)
+- Uncheck "Notify people"</p>
+<h3 id="service-account-details">Service Account Details</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Email</td>
+<td><code>cmm-sheets-access@mam-gdrive-mcp-server.iam.gserviceaccount.com</code></td>
+</tr>
+<tr>
+<td>Project</td>
+<td><code>mam-gdrive-mcp-server</code></td>
+</tr>
+<tr>
+<td>Access Level</td>
+<td>Viewer (read-only)</td>
+</tr>
+<tr>
+<td>Credentials Location</td>
+<td><code>~/.config/gspread/service_account.json</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="available-worksheets">Available Worksheets</h3>
+<p>Verified access to "BER CMM Data for AI - for editing":</p>
+<table>
+<thead>
+<tr>
+<th>Tab Name</th>
+<th>Records</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>taxa_and_genomes</td>
+<td>215</td>
+</tr>
+<tr>
+<td>strains</td>
+<td>-</td>
+</tr>
+<tr>
+<td>growth_media</td>
+<td>-</td>
+</tr>
+<tr>
+<td>media_ingredients</td>
+<td>76</td>
+</tr>
+<tr>
+<td>growth_preferences</td>
+<td>-</td>
+</tr>
+<tr>
+<td>transcriptomics</td>
+<td>-</td>
+</tr>
+<tr>
+<td>biosamples</td>
+<td>-</td>
+</tr>
+<tr>
+<td>macromolecular_structures</td>
+<td>-</td>
+</tr>
+<tr>
+<td>genes_and_proteins</td>
+<td>-</td>
+</tr>
+<tr>
+<td>pathways</td>
+<td>-</td>
+</tr>
+<tr>
+<td>protocols</td>
+<td>-</td>
+</tr>
+<tr>
+<td>assays</td>
+<td>-</td>
+</tr>
+<tr>
+<td>chemicals</td>
+<td>-</td>
+</tr>
+<tr>
+<td>bioprocesses</td>
+<td>-</td>
+</tr>
+<tr>
+<td>datasets</td>
+<td>-</td>
+</tr>
+<tr>
+<td>publications</td>
+<td>-</td>
+</tr>
+<tr>
+<td>screening_results</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h3 id="usage-example">Usage Example</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.gsheets</span><span class="w"> </span><span class="kn">import</span> <span class="n">list_worksheets</span><span class="p">,</span> <span class="n">get_sheet_records</span><span class="p">,</span> <span class="n">get_sheet_data</span>
+
+<span class="c1"># List all tabs</span>
+<span class="n">tabs</span> <span class="o">=</span> <span class="n">list_worksheets</span><span class="p">(</span><span class="s2">&quot;BER CMM Data for AI - for editing&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get data as list of dicts</span>
+<span class="n">records</span> <span class="o">=</span> <span class="n">get_sheet_records</span><span class="p">(</span><span class="s2">&quot;BER CMM Data for AI - for editing&quot;</span><span class="p">,</span> <span class="s2">&quot;media_ingredients&quot;</span><span class="p">)</span>
+
+<span class="c1"># Get data as pandas DataFrame</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">get_sheet_data</span><span class="p">(</span><span class="s2">&quot;BER CMM Data for AI - for editing&quot;</span><span class="p">,</span> <span class="s2">&quot;taxa_and_genomes&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="security-notes">Security Notes</h3>
+<ul>
+<li>Credentials stored outside repository (<code>~/.config/gspread/</code>)</li>
+<li><code>.gitignore</code> updated to block <code>**/service_account.json</code> and similar patterns</li>
+<li>Service account has read-only access</li>
+<li>No credentials committed to git</li>
+</ul>
+<hr />
+<h2 id="16-references">16. References</h2>
+<ul>
+<li><a href="https://github.com/dalito/linkml-project-copier">linkml-project-copier</a> - Base template</li>
+<li><a href="https://github.com/ai4curation/github-ai-integrations">ai4curation/github-ai-integrations</a> - AI automation template</li>
+<li><a href="https://github.com/CultureBotAI/CMM-AI">CultureBotAI/CMM-AI</a> - Collaborating project for CMM discovery</li>
+<li><a href="https://github.com/Knowledge-Graph-Hub/kg-microbe">kg-microbe</a> - Microbial knowledge graph</li>
+<li><a href="https://github.com/orgs/biolink/repositories">biolink organization</a> - Biolink Model ecosystem</li>
+<li><a href="https://github.com/biolink/kgx">kgx</a> - Knowledge Graph Exchange tools</li>
+<li><a href="https://github.com/biolink/biolink-model">biolink-model</a> - Schema and upper ontology</li>
+<li><a href="https://github.com/biolink/biolink-model-toolkit">biolink-model-toolkit</a> - Python utilities</li>
+<li><a href="https://github.com/berkeleybop/metpo">metpo</a> - Microbial Phenotype Ontology</li>
+<li><a href="https://github.com/biopragmatics">biopragmatics organization</a> - Identifier and ontology tools</li>
+<li><a href="https://github.com/biopragmatics/bioregistry">bioregistry</a> - Integrative registry</li>
+<li><a href="https://github.com/biopragmatics/curies">curies</a> - CURIE/URI conversion</li>
+<li><a href="https://github.com/biopragmatics/pyobo">pyobo</a> - Python ontology tools</li>
+<li><a href="https://docs.gspread.org/">gspread documentation</a></li>
+<li><a href="https://linkml.io/">LinkML documentation</a></li>
+<li><a href="https://github.com/anthropics/claude-code-action">Claude Code GitHub Action</a></li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        
+
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        with emoji by
+        <a href="https://github.com/twitter/twemoji" target="_blank" rel="noopener">
+          Twemoji
+        </a>
+      </div>
+      
+<div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "header.autohide", "navigation.expand", "navigation.instant", "navigation.instant.progress", "navigation.tracking", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../assets/pymdownx-extras/extra-loader-B5CKpNQx.js"></script>
+      
+    
+  </body>
+</html>
