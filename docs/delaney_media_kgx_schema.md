@@ -22,7 +22,14 @@ This document specifies the standardized KGX/Biolink schema for Delaney media da
 | `name` | Human-readable name | `sodium dihydrogenphosphate monohydrate` | Biolink standard |
 | `category` | Biolink Model category | `biolink:ChemicalEntity` | KGX required |
 
-Nodes are kept minimal with only the three required KGX columns. Chemical properties and cross-references are stored on edges to preserve provenance context.
+### Optional Columns
+
+| Column | Description | Example | Notes |
+|--------|-------------|---------|-------|
+| `pH` | Numeric pH value | `6.75` | For solutions/media where pH is controlled |
+| `comments` | Preparation notes | `Adjust to pH 6.75 with KOH; 1 L deionized H2O` | Procedural details, volumes, mixing instructions |
+
+Nodes include the three required KGX columns plus optional pH and comments for procedural/preparation context. Chemical properties and cross-references are stored on edges to preserve provenance context.
 
 ### Category Definitions
 
@@ -30,11 +37,24 @@ Nodes are kept minimal with only the three required KGX columns. Chemical proper
 - **`biolink:ChemicalMixture`**: Stock solutions and defined mixtures (UUID or DOI identifiers)
 - **`biolink:ComplexMolecularMixture`**: Complete culture media (DOI identifiers preferred)
 
-### Example Node
+### Example Nodes
 
+**Simple chemical entity:**
 ```tsv
-id	name	category
+id	name	category	pH	comments
 CHEBI:31440	copper(II) sulfate pentahydrate	biolink:ChemicalEntity
+```
+
+**Stock solution with preparation notes:**
+```tsv
+id	name	category	pH	comments
+uuid:2c015a8c-75e8-43ad-8cf9-a5487d9cf525	PIPES stock 10X	biolink:ChemicalMixture	6.75	Adjust to pH 6.75 with KOH; 1 L deionized H2O
+```
+
+**Complex medium with procedural notes:**
+```tsv
+id	name	category	pH	comments
+doi:10.1371/journal.pone.0062957.s005	MP medium from Delaney et al doi:10.1371/journal.pone.0062957	biolink:ComplexMolecularMixture		885 mL milliQ-H2O for final 1 L; mix all components except CaCl2, autoclave, then add CaCl2
 ```
 
 ## Edge Schema
@@ -47,52 +67,70 @@ CHEBI:31440	copper(II) sulfate pentahydrate	biolink:ChemicalEntity
 | `predicate` | Biolink relationship | `biolink:has_part` | KGX required |
 | `object` | Target node CURIE | `CHEBI:114249` | KGX required |
 | `knowledge_level` | Type of assertion | `knowledge_assertion` | Biolink required |
-| `agent_type` | Source of assertion | `manual_agent` | Biolink required |
+| `agent_type` | Source of assertion | `manual_validation_of_automated_agent` | Biolink required |
 
 ### Provenance Columns (Required)
 
 | Column | Description | Example | Alignment |
 |--------|-------------|---------|-----------|
-| `primary_knowledge_source` | Original data source | `infores:cmm` | Biolink standard |
+| `primary_knowledge_source` | Original data source | `infores:cmm-ai-automation` | Biolink standard |
 | `publications` | Supporting publication | `PMID:23646164` | Biolink standard |
 | `source_specification` | Verbatim source text | `NaH2PO4·H2O` | PROV-O `prov:value` |
 
-### Source-Specified Columns (What PDF/Source Said)
+### Three-Tier Edge Property Structure
 
-| Column | Description | Example | Unit Column | UO Term |
-|--------|-------------|---------|-------------|---------|
-| `source_specification` | Verbatim text from source | `NaH2PO4·H2O` | N/A | N/A |
-| `source_name` | Alternative name if given | `PIPES` | N/A | N/A |
-| `source_concentration_value` | Concentration from source | `1.88` | `source_concentration_unit` | UO:0000063 (mM) |
-| `source_role` | Role from source | `Buffer/Nutrient` | N/A | N/A |
+Edge properties follow a three-tier structure documenting data provenance from source to curation:
 
-**Critical Distinction**: These preserve what the PDF/paper actually specified. Never computed or normalized.
+#### Tier 1: Source-Asserted Columns (What PDF/Source Said)
 
-### Amount/Volume Columns (When Mass Was Given)
+Verbatim data from the original publication, preserving exactly what was specified without normalization or correction.
 
-| Column | Description | Example | Unit Column | UO Term |
-|--------|-------------|---------|-------------|---------|
-| `amount` | Mass or quantity | `25.9` | `amount_unit` | UO:0000021 (gram) |
-| `solution_volume_prepared` | Batch volume | `1` | `solution_volume_unit` | UO:0000099 (liter) |
+| Column | Description | Example | Unit Column | Notes |
+|--------|-------------|---------|-------------|-------|
+| `source_specification` | Verbatim text from source | `NaH2PO4·H2O` | N/A | Free text specification |
+| `source_asserted_formula` | Chemical formula from source | `C8H8N2O6S2` | N/A | May differ from canonical (e.g., PIPES PDF error) |
+| `source_asserted_name` | Alternative name from source | `PIPES` | N/A | Common names |
+| `source_asserted_molecular_weight` | Molecular weight from source | `302.37` | N/A | Daltons |
+| `source_asserted_stock_concentration` | Stock concentration value | `300` | `source_asserted_stock_concentration_units` | As specified in source |
+| `source_asserted_X` | Dilution factor | `10` | N/A | e.g., "10X" means 10-fold |
+| `source_asserted_mass_added` | Mass added value | `90.711` | `source_asserted_mass_added_units` | As specified |
+| `source_asserted_volume_added` | Volume added value | `100` | `source_asserted_volume_added_units` | For stock solutions |
+| `source_asserted_stock_volume` | Stock prep volume | `1` | `source_asserted_stock_volume_unit` | Batch size |
+| `source_asserted_final_concentration` | Final concentration value | `30` | `source_asserted_final_concentration_unit` | In final medium |
+| `source_role` | Functional role from source | `Buffer/Nutrient` | N/A | As categorized by authors |
 
-**When to use**: Source gave mass/volume instead of concentration. Amount + volume allows calculating concentration.
+**Critical Principle**: Never modify source-asserted values. Errors and discrepancies are documented in Tier 2 comments.
 
-### Calculated Columns (Computed from Mass/Volume)
+#### Tier 2: Repo-Asserted Columns (Canonical/Contextual)
 
-| Column | Description | Example | Unit Column | UO Term |
-|--------|-------------|---------|-------------|---------|
-| `calculated_concentration` | Molar concentration | `0.1876934003` | `calculated_concentration_unit` | UO:0000062 (molar) |
+Assertions made by the repository curator about the subject and object in the context of THIS specific edge relationship.
 
-**When present**: Only when concentration was calculated from `amount` and `solution_volume_prepared`. Empty when source specified concentration directly.
+**About the object (chemical being added):**
 
-### Chemical Property Columns (Provenance-Critical)
+| Column | Description | Example | Notes |
+|--------|-------------|---------|-------|
+| `object_molecular_mass` | Canonical molecular mass | `302.37` | From ChEBI/PubChem; what MW was used for calculations |
+| `object_xref` | Cross-reference for grounding | `WIKIDATA:Q27114864` | Documents HOW the object was identified |
+| `object_amount_added` | Amount added (normalized) | `25.9` | With `object_amount_unit` (UO CURIE) |
 
-| Column | Description | Example | Rationale |
-|--------|-------------|---------|-----------|
-| `molecular_mass` | Molecular mass in Daltons | `249.68` | On edges to show what MW was used to ground this assertion |
-| `xref` | Cross-reference identifiers | `WIKIDATA:Q27114864` | On edges to show how this chemical was identified in context |
+**About the subject (solution being prepared):**
 
-**Provenance Rationale**: Molecular mass and xrefs are stored on edges, not nodes, because they document the evidence used to ground each specific assertion. If there's an error or discrepancy in one source (e.g., wrong molecular mass), having these properties on the edge shows exactly what information was available when that grounding decision was made. This enables auditing which facts clarified the identification.
+| Column | Description | Example | Notes |
+|--------|-------------|---------|-------|
+| `subject_volume_prepared` | Volume of subject prepared | `1` | With `subject_volume_unit` (UO CURIE) |
+
+**About the relationship:**
+
+| Column | Description | Example | Notes |
+|--------|-------------|---------|-------|
+| `calculated_concentration` | Molar concentration computed | `0.1876934003` | With `calculated_concentration_unit` (UO CURIE) |
+| `comments` | Curation notes | `ChEBI formula differs from PDF` | Explains discrepancies, grounding decisions |
+
+**Provenance Rationale**: These properties are on edges (not nodes) because they document the evidence and context for THIS specific assertion. If a source has an error (e.g., wrong formula), the edge shows what information was actually available when the grounding decision was made. This enables auditing: "Which facts clarified the identification?" Different edges for the same chemical might have different object_molecular_mass values if sources disagree, preserving the full provenance trail.
+
+#### Tier 3: Unit Standardization
+
+All units use Units Ontology (UO) CURIEs for semantic interoperability.
 
 ### Metadata Columns (Optional)
 
@@ -102,19 +140,41 @@ CHEBI:31440	copper(II) sulfate pentahydrate	biolink:ChemicalEntity
 
 ### Example Edges
 
-**Example 1: Source-specified concentration** (PDF said "1.88 mM"):
+**Example 1: Source-specified final concentration** (PDF said "NaH2PO4·H2O 1.88 mM"):
 ```tsv
-subject	predicate	object	knowledge_level	agent_type	primary_knowledge_source	publications	source_specification	source_name	source_concentration_value	source_concentration_unit	source_role	amount	amount_unit	solution_volume_prepared	solution_volume_unit	calculated_concentration	calculated_concentration_unit	molecular_mass	xref	description
-doi:10.1371/journal.pone.0062957.s005	biolink:has_part	CHEBI:114249	knowledge_assertion	manual_agent	infores:cmm	PMID:23646164	NaH2PO4·H2O		1.88	UO:0000063				UO:0000099			137.99
+subject	predicate	object	source_specification	source_asserted_final_concentration	source_asserted_final_concentration_unit	subject_volume_prepared	subject_volume_unit	object_molecular_mass	comments
+doi:10.1371/journal.pone.0062957.s005	biolink:has_part	CHEBI:114249	NaH2PO4·H2O	1.88	mM	1	L	137.99
 ```
-**Key**: `source_concentration_value` = 1.88, `source_concentration_unit` = UO:0000063 (mM). No calculated concentration - source specified it directly.
+**Tier 1 (source)**: PDF specified final concentration directly as 1.88 mM
+**Tier 2 (repo)**: Canonical molecular mass from ChEBI used for any needed calculations
+**No Tier 3**: No calculation needed since source gave final concentration
 
-**Example 2: Mass-based with calculated concentration** (PDF gave mass, concentration computed):
+**Example 2: Mass-based stock with calculated concentration** (PDF: "NaH2PO4 22.5 g or 25.9 g NaH2PO4·H2O in 1 L"):
 ```tsv
-subject	predicate	object	knowledge_level	agent_type	primary_knowledge_source	publications	source_specification	source_name	source_concentration_value	source_concentration_unit	source_role	amount	amount_unit	solution_volume_prepared	solution_volume_unit	calculated_concentration	calculated_concentration_unit	molecular_mass	xref	description
-uuid:a8a5a509-ba8c-4ae6-a6d3-98583066c984	biolink:has_part	CHEBI:114249	knowledge_assertion	manual_agent	infores:cmm	PMID:23646164	NaH2PO4 22.5 g (or 25.9 g NaH2PO4·H2O)					25.9	UO:0000021	1	UO:0000099	0.1876934003	UO:0000062	137.99		10X P solution stock
+subject	predicate	object	source_specification	source_asserted_mass_added	source_asserted_mass_added_units	source_asserted_stock_volume	source_asserted_stock_volume_unit	source_asserted_X	object_amount_added	object_amount_unit	subject_volume_prepared	subject_volume_unit	calculated_concentration	calculated_concentration_unit	object_molecular_mass	comments
+uuid:a8a5a509-ba8c-4ae6-a6d3-98583066c984	biolink:has_part	CHEBI:114249	NaH2PO4 22.5 g (or 25.9 g NaH2PO4·H2O)	25.9	g	1	L	10	25.9	UO:0000021	1	UO:0000099	0.1876934003	UO:0000062	137.99
 ```
-**Key**: `amount` = 25.9 g, `solution_volume_prepared` = 1 L → `calculated_concentration` = 0.1877 M. Source gave mass, not concentration.
+**Tier 1 (source)**: PDF gave mass (25.9 g hydrated form) and volume (1 L) for 10X stock
+**Tier 2 (repo)**: Normalized to object_amount_added with UO units; subject_volume_prepared documented
+**Tier 3 (calculated)**: Concentration = 25.9 g / 137.99 g/mol / 1 L = 0.1877 M
+
+**Example 3: Source error documented** (PIPES formula discrepancy):
+```tsv
+subject	predicate	object	source_specification	source_asserted_formula	source_asserted_stock_concentration	source_asserted_stock_concentration_units	source_asserted_X	object_molecular_mass	comments
+uuid:2c015a8c-75e8-43ad-8cf9-a5487d9cf525	biolink:has_part	CHEBI:44933	C8H8N2O6S2	C8H8N2O6S2	300	mM	10	302.37	ChEBI and PubChem both say C8H18N2O6S2, which matches the reported molecular mass
+```
+**Tier 1 (source)**: PDF formula C8H8N2O6S2 is WRONG (missing hydrogens)
+**Tier 2 (repo)**: Canonical MW 302.37 from ChEBI matches the correct formula C8H18N2O6S2
+**Comments**: Document the discrepancy - molecular mass is self-consistent even though formula is wrong
+
+**Example 4: Grounding via Wikidata** (K2HPO4 has no ChEBI):
+```tsv
+subject	predicate	object	source_specification	source_asserted_final_concentration	source_asserted_final_concentration_unit	object_molecular_mass	object_xref	comments
+doi:10.1371/journal.pone.0062957.s005	biolink:has_part	PUBCHEM.COMPOUND:16217523	K2HPO4	1.45	mM	228.22	WIKIDATA:Q27288149	WIKIDATA:Q27288149 provides no ChEBI id
+```
+**Tier 1 (source)**: PDF specified K2HPO4 at 1.45 mM
+**Tier 2 (repo)**: Grounded to PubChem (no ChEBI available); Wikidata xref documents the grounding path
+**Comments**: Explain why PubChem was used instead of ChEBI
 
 ## Unit Standardization
 
@@ -152,23 +212,24 @@ The schema addresses specific concerns about data quality:
 
 1. **Experimentalist Claims**: "Taxon T grows in medium M" requires traceable source
 2. **LLM-Generated Data**: Noisy inputs must preserve original specification
-3. **Manual Curation**: Human assertions tagged with `agent_type: manual_agent`
+3. **Manual Curation**: Human assertions tagged with `agent_type: manual_validation_of_automated_agent`
 
 ### Provenance Fields
 
-- **`primary_knowledge_source`**: Links to institutional source (`infores:cmm`)
+- **`primary_knowledge_source`**: Links to institutional source (`infores:cmm-ai-automation`)
 - **`publications`**: Links to peer-reviewed publication (PMID, DOI)
 - **`source_specification`**: Preserves verbatim text from source (e.g., `NaH2PO4·H2O`)
 - **`agent_type`**: Tracks who/what made the assertion:
-  - `manual_agent`: Human curator
-  - `text_mining_agent`: LLM extraction
-  - `manual_validation_of_automated_agent`: Human-verified LLM output
+  - `manual_agent`: Purely human curation with no automated extraction
+  - `text_mining_agent`: LLM/NLP extraction without human verification
+  - `manual_validation_of_automated_agent`: Human-verified automated output (used in this dataset)
+  - See [Biolink AgentTypeEnum](https://biolink.github.io/biolink-model/) for complete list
 
 ### Audit Trail Example
 
 ```tsv
 source_specification	primary_knowledge_source	publications	agent_type
-NaH2PO4·H2O	infores:cmm	PMID:23646164	manual_agent
+NaH2PO4·H2O	infores:cmm-ai-automation	PMID:23646164	manual_validation_of_automated_agent
 ```
 
 This enables:
