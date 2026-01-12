@@ -835,6 +835,106 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#analyzing-build-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analyzing Build Output
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analyzing Build Output">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#extracting-the-merged-archive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extracting the Merged Archive
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analyzing-edge-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analyzing Edge Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Analyzing Edge Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-1-analyze-merged-data-source-information-lost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Analyze Merged Data (Source Information Lost)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-analyze-transformed-data-preserves-source-information" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Analyze Transformed Data (Preserves Source Information)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-script-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which Script to Use?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-output-shows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Output Shows
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#related-documentation" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1473,6 +1573,117 @@ poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </sp
 <li><strong>Schema validation:</strong> Add tests that verify output conforms to Biolink/KGX schemas</li>
 <li><strong>AI context:</strong> Add CLAUDE.md with project conventions (especially custom schema decisions)</li>
 </ol>
+<hr />
+<h2 id="analyzing-build-output">Analyzing Build Output</h2>
+<h3 id="extracting-the-merged-archive">Extracting the Merged Archive</h3>
+<p>The merge step produces a compressed archive in <code>data/merged/merged-kg.tar.gz</code>. To analyze the KGX files, extract them first:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/kg-microbe
+
+<span class="c1"># Extract without deleting the archive</span>
+tar<span class="w"> </span>-xzf<span class="w"> </span>data/merged/merged-kg.tar.gz<span class="w"> </span>-C<span class="w"> </span>data/merged/
+</code></pre></div>
+<p><strong>Flags explained:</strong>
+- <code>-x</code> = extract
+- <code>-z</code> = decompress gzip
+- <code>-f</code> = file to extract
+- <code>-C</code> = directory to extract into</p>
+<p>The <code>tar</code> command extracts by default without removing the original archive.</p>
+<p>After extraction, you'll have:
+<div class="highlight"><pre><span></span><code>data/merged/
+├── merged-kg.tar.gz              # Original archive (preserved)
+└── merged-kg/                    # Extracted directory
+    ├── merged-kg_nodes.tsv       # All nodes
+    └── merged-kg_edges.tsv       # All edges
+</code></pre></div></p>
+<h3 id="analyzing-edge-patterns">Analyzing Edge Patterns</h3>
+<p>Two scripts are available for analyzing edge patterns. The key difference is <strong>which source files contribute to each pattern</strong>:</p>
+<h4 id="option-1-analyze-merged-data-source-information-lost">Option 1: Analyze Merged Data (Source Information Lost)</h4>
+<p>Use <code>analyze_kgx_patterns.py</code> on the merged output. This shows aggregate patterns across all sources but <strong>doesn't show which source contributed each pattern</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/cmm-ai-automation
+
+<span class="c1"># Analyze merged data (all patterns labeled &quot;merged-kg&quot;)</span>
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>../kg-microbe/data/merged/
+
+<span class="c1"># Save to timestamped file</span>
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>../kg-microbe/data/merged/<span class="w"> </span>&gt;<span class="w"> </span>edge_patterns_merged_<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>.tsv
+</code></pre></div>
+<p><strong>Output format:</strong>
+<div class="highlight"><pre><span></span><code>source     subject_category              subject_prefix      predicate              object_category              object_prefix    count
+merged-kg  biolink:OrganismTaxon         NCBITaxon           biolink:subclass_of    biolink:OrganismTaxon        NCBITaxon        882437
+merged-kg  biolink:OrganismTaxon         kgmicrobe.strain    METPO:2000028          biolink:ChemicalEntity       CHEBI            321601
+merged-kg  biolink:ChemicalSubstance     CHEBI               biolink:subclass_of    biolink:ChemicalSubstance    CHEBI            275776
+</code></pre></div></p>
+<p><strong>Limitation:</strong> All patterns show <code>merged-kg</code> as the source. You cannot tell if a pattern came from bacdive, mediadive, ontologies, etc.</p>
+<h4 id="option-2-analyze-transformed-data-preserves-source-information">Option 2: Analyze Transformed Data (Preserves Source Information)</h4>
+<p>Use <code>extract_edge_patterns.py</code> on the <strong>transformed</strong> directory before merging. This shows <strong>which source directory contributes each pattern</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/cmm-ai-automation
+
+<span class="c1"># Analyze transformed data (source breakdown preserved)</span>
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/extract_edge_patterns.py<span class="w"> </span>../kg-microbe/data/transformed/
+
+<span class="c1"># Save to timestamped file</span>
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/extract_edge_patterns.py<span class="w"> </span>../kg-microbe/data/transformed/<span class="w"> </span>&gt;<span class="w"> </span>edge_patterns_by_source_<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>.tsv
+</code></pre></div>
+<p><strong>Output format:</strong>
+<div class="highlight"><pre><span></span><code>source       subject_category              subject_prefix      predicate              object_category              object_prefix    count
+bacdive      biolink:OrganismTaxon         kgmicrobe.strain    METPO:2000028          biolink:ChemicalEntity       CHEBI            321601
+mediadive    biolink:ChemicalEntity        mediadive.solution  biolink:has_part       biolink:ChemicalEntity       CHEBI            38531
+bactotraits  biolink:OrganismTaxon         NCBITaxon           METPO:2000006          biolink:ChemicalEntity       CHEBI            36816
+ontologies   biolink:OrganismTaxon         NCBITaxon           biolink:subclass_of    biolink:OrganismTaxon        NCBITaxon        882437
+</code></pre></div></p>
+<p><strong>Advantage:</strong> You can see exactly which source (bacdive, mediadive, bactotraits, ontologies, etc.) contributes each pattern.</p>
+<h4 id="which-script-to-use">Which Script to Use?</h4>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Script</th>
+<th>Data Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Want to see which source contributes patterns</td>
+<td><code>extract_edge_patterns.py</code></td>
+<td><code>data/transformed/</code></td>
+</tr>
+<tr>
+<td>Already merged and don't need source breakdown</td>
+<td><code>analyze_kgx_patterns.py</code></td>
+<td><code>data/merged/</code></td>
+</tr>
+<tr>
+<td>Debugging transform-specific issues</td>
+<td><code>extract_edge_patterns.py</code></td>
+<td><code>data/transformed/</code></td>
+</tr>
+<tr>
+<td>Quick aggregate statistics</td>
+<td><code>analyze_kgx_patterns.py</code></td>
+<td><code>data/merged/</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="what-the-output-shows">What the Output Shows</h4>
+<p>Both scripts produce the same TSV format with these columns:</p>
+<ul>
+<li><strong>source</strong>: Which file/directory the pattern came from</li>
+<li><strong>subject_category</strong>: Biolink category of the subject node (e.g., <code>biolink:OrganismTaxon</code>)</li>
+<li><strong>subject_prefix</strong>: ID prefix of the subject (e.g., <code>NCBITaxon</code>, <code>kgmicrobe.strain</code>)</li>
+<li><strong>predicate</strong>: Relationship type (e.g., <code>biolink:subclass_of</code>, <code>METPO:2000028</code>)</li>
+<li><strong>object_category</strong>: Biolink category of the object node</li>
+<li><strong>object_prefix</strong>: ID prefix of the object</li>
+<li><strong>count</strong>: Number of edges with this exact pattern</li>
+</ul>
+<h4 id="use-cases">Use Cases</h4>
+<ul>
+<li><strong>Quality checking:</strong> Are the expected relationships present?</li>
+<li><strong>Data exploration:</strong> What kinds of connections exist?</li>
+<li><strong>Source auditing:</strong> Which transform contributes specific patterns?</li>
+<li><strong>Integration planning:</strong> Which prefixes/categories need mapping?</li>
+<li><strong>Bug detection:</strong> Unexpected patterns may indicate transform issues</li>
+<li><strong>Performance analysis:</strong> Which sources create the most edges?</li>
+</ul>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
