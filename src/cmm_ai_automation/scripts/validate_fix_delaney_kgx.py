@@ -177,11 +177,13 @@ def create_missing_nodes(edges: list[dict[str, str]], existing_nodes: set[str]) 
             category = "biolink:ChemicalEntity"
             name = obj_id
 
-        new_nodes.append({
-            "id": obj_id,
-            "category": category,
-            "name": name,
-        })
+        new_nodes.append(
+            {
+                "id": obj_id,
+                "category": category,
+                "name": name,
+            }
+        )
 
     return new_nodes
 
@@ -342,9 +344,9 @@ def main(
 
         # Get fieldnames from original data
         nodes_fieldnames = list(nodes[0].keys()) if nodes else ["id", "category", "name"]
-        edges_fieldnames = list(edges[0].keys()) if edges else [
-            "subject", "predicate", "object", "knowledge_level", "agent_type"
-        ]
+        edges_fieldnames = (
+            list(edges[0].keys()) if edges else ["subject", "predicate", "object", "knowledge_level", "agent_type"]
+        )
 
         # Add required fields if missing
         if "knowledge_level" not in edges_fieldnames:

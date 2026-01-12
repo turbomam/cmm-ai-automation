@@ -64,6 +64,7 @@ repos:
         additional_dependencies:
           - pandas-stubs
           - types-requests
+          - types-PyYAML
         exclude: |
           (?x)^(
             project/.*|

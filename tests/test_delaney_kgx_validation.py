@@ -44,7 +44,7 @@ class TestDelaneyNodesCompliance:
         for node in nodes:
             assert "id" in node, f"Node missing id: {node}"
             assert "category" in node, f"Node {node['id']} missing category"
-            assert node["id"], f"Node has empty id"
+            assert node["id"], "Node has empty id"
             assert node["category"], f"Node {node['id']} has empty category"
 
     def test_all_nodes_validate_against_kgx_model(self, nodes: list[dict[str, str]]) -> None:
@@ -74,8 +74,8 @@ class TestDelaneyNodesCompliance:
 
         if invalid:
             pytest.fail(
-                f"{len(invalid)} nodes have incorrect capitalization:\n" +
-                "\n".join(f"  {node_id}: {cat}" for node_id, cat in invalid[:5])
+                f"{len(invalid)} nodes have incorrect capitalization:\n"
+                + "\n".join(f"  {node_id}: {cat}" for node_id, cat in invalid[:5])
             )
 
     def test_chemical_entities_have_chebi_or_pubchem_ids(self, nodes: list[dict[str, str]]) -> None:
@@ -89,8 +89,8 @@ class TestDelaneyNodesCompliance:
 
         if invalid:
             pytest.fail(
-                f"{len(invalid)} ChemicalEntity nodes have non-CHEBI/PubChem IDs:\n" +
-                "\n".join(f"  {node_id}" for node_id in invalid[:10])
+                f"{len(invalid)} ChemicalEntity nodes have non-CHEBI/PubChem IDs:\n"
+                + "\n".join(f"  {node_id}" for node_id in invalid[:10])
             )
 
     def test_mixtures_have_appropriate_identifiers(self, nodes: list[dict[str, str]]) -> None:
@@ -105,8 +105,8 @@ class TestDelaneyNodesCompliance:
 
         if invalid:
             pytest.fail(
-                f"{len(invalid)} mixture nodes have invalid identifiers:\n" +
-                "\n".join(f"  {node_id} ({cat})" for node_id, cat in invalid[:10])
+                f"{len(invalid)} mixture nodes have invalid identifiers:\n"
+                + "\n".join(f"  {node_id} ({cat})" for node_id, cat in invalid[:10])
             )
 
 
@@ -172,8 +172,8 @@ class TestDelaneyEdgesCompliance:
 
         if missing:
             pytest.fail(
-                f"{len(missing)} edge objects don't have nodes:\n" +
-                "\n".join(f"  {obj_id}" for obj_id in sorted(missing)[:10])
+                f"{len(missing)} edge objects don't have nodes:\n"
+                + "\n".join(f"  {obj_id}" for obj_id in sorted(missing)[:10])
             )
 
     def test_predicates_use_biolink_namespace(self, edges: list[dict[str, str]]) -> None:
@@ -182,15 +182,12 @@ class TestDelaneyEdgesCompliance:
         for edge in edges:
             predicate = edge.get("predicate", "")
             if not predicate.startswith("biolink:"):
-                invalid.append((
-                    f"{edge['subject']} -> {edge['object']}",
-                    predicate
-                ))
+                invalid.append((f"{edge['subject']} -> {edge['object']}", predicate))
 
         if invalid:
             pytest.fail(
-                f"{len(invalid)} edges have invalid predicates:\n" +
-                "\n".join(f"  {edge}: '{pred}'" for edge, pred in invalid[:10])
+                f"{len(invalid)} edges have invalid predicates:\n"
+                + "\n".join(f"  {edge}: '{pred}'" for edge, pred in invalid[:10])
             )
 
     def test_has_part_relationships_are_used(self, edges: list[dict[str, str]]) -> None:
@@ -217,15 +214,12 @@ class TestDelaneyEdgesCompliance:
         for edge in edges:
             level = edge.get("knowledge_level", "")
             if level not in valid_levels:
-                invalid.append((
-                    f"{edge['subject']} -> {edge['object']}",
-                    level
-                ))
+                invalid.append((f"{edge['subject']} -> {edge['object']}", level))
 
         if invalid:
             pytest.fail(
-                f"{len(invalid)} edges have invalid knowledge_level:\n" +
-                "\n".join(f"  {edge}: '{level}'" for edge, level in invalid[:10])
+                f"{len(invalid)} edges have invalid knowledge_level:\n"
+                + "\n".join(f"  {edge}: '{level}'" for edge, level in invalid[:10])
             )
 
     def test_agent_type_values_are_valid(self, edges: list[dict[str, str]]) -> None:
@@ -245,13 +239,10 @@ class TestDelaneyEdgesCompliance:
         for edge in edges:
             agent = edge.get("agent_type", "")
             if agent not in valid_types:
-                invalid.append((
-                    f"{edge['subject']} -> {edge['object']}",
-                    agent
-                ))
+                invalid.append((f"{edge['subject']} -> {edge['object']}", agent))
 
         if invalid:
             pytest.fail(
-                f"{len(invalid)} edges have invalid agent_type:\n" +
-                "\n".join(f"  {edge}: '{agent}'" for edge, agent in invalid[:10])
+                f"{len(invalid)} edges have invalid agent_type:\n"
+                + "\n".join(f"  {edge}: '{agent}'" for edge, agent in invalid[:10])
             )

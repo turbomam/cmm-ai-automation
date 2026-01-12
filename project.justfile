@@ -187,6 +187,20 @@ enrich-to-store-test n='5':
 export-kgx:
   uv run python -c "from cmm_ai_automation.store.enrichment_store import EnrichmentStore; from pathlib import Path; store = EnrichmentStore(); store.export_to_kgx(Path('output/kgx/ingredients')); print('✓ KGX export complete')"
 
+# Standardize KGX files (add provenance, fix prefix casing)
+standardize-kgx nodes edges out_nodes out_edges:
+	uv run python src/cmm_ai_automation/scripts/standardize_kgx.py \
+		--nodes {{nodes}} --edges {{edges}} --out-nodes {{out_nodes}} --out-edges {{out_edges}}
+
+# Validate KGX files using custom prefix configuration
+validate-kgx nodes edges:
+	@echo "Validating KGX files with custom context (DOIs and UUIDs allowed)..."
+	uv run python src/cmm_ai_automation/scripts/validate_kgx.py \
+		--nodes {{nodes}} \
+		--edges {{edges}} \
+		--config config/kgx_validation_config.yaml \
+		--output output/kgx/validation_report.json
+
 # =============================================================================
 # KGX TARGETS - Knowledge Graph Exchange Operations
 # =============================================================================
