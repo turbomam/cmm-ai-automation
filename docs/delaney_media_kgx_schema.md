@@ -57,13 +57,33 @@ CHEBI:31440	copper(II) sulfate pentahydrate	biolink:ChemicalEntity
 | `publications` | Supporting publication | `PMID:23646164` | Biolink standard |
 | `source_specification` | Verbatim source text | `NaH2PO4·H2O` | PROV-O `prov:value` |
 
-### Quantitative Columns (Domain-Specific)
+### Source-Specified Columns (What PDF/Source Said)
 
 | Column | Description | Example | Unit Column | UO Term |
 |--------|-------------|---------|-------------|---------|
-| `concentration` | Final concentration | `0.03` | `concentration_unit` | UO:0000062 (molar) |
-| `amount` | Mass or quantity used | `100` | `amount_unit` | UO:0000021 (gram) |
+| `source_specification` | Verbatim text from source | `NaH2PO4·H2O` | N/A | N/A |
+| `source_name` | Alternative name if given | `PIPES` | N/A | N/A |
+| `source_concentration_value` | Concentration from source | `1.88` | `source_concentration_unit` | UO:0000063 (mM) |
+| `source_role` | Role from source | `Buffer/Nutrient` | N/A | N/A |
+
+**Critical Distinction**: These preserve what the PDF/paper actually specified. Never computed or normalized.
+
+### Amount/Volume Columns (When Mass Was Given)
+
+| Column | Description | Example | Unit Column | UO Term |
+|--------|-------------|---------|-------------|---------|
+| `amount` | Mass or quantity | `25.9` | `amount_unit` | UO:0000021 (gram) |
 | `solution_volume_prepared` | Batch volume | `1` | `solution_volume_unit` | UO:0000099 (liter) |
+
+**When to use**: Source gave mass/volume instead of concentration. Amount + volume allows calculating concentration.
+
+### Calculated Columns (Computed from Mass/Volume)
+
+| Column | Description | Example | Unit Column | UO Term |
+|--------|-------------|---------|-------------|---------|
+| `calculated_concentration` | Molar concentration | `0.1876934003` | `calculated_concentration_unit` | UO:0000062 (molar) |
+
+**When present**: Only when concentration was calculated from `amount` and `solution_volume_prepared`. Empty when source specified concentration directly.
 
 ### Chemical Property Columns (Provenance-Critical)
 
@@ -80,14 +100,21 @@ CHEBI:31440	copper(II) sulfate pentahydrate	biolink:ChemicalEntity
 |--------|-------------|---------|----------|
 | `description` | Contextual notes | `Wikidata Q27288149 has no ChEBI; grounded to PUBCHEM` | Biolink standard |
 
-### Example Edge
+### Example Edges
 
+**Example 1: Source-specified concentration** (PDF said "1.88 mM"):
 ```tsv
-subject	predicate	object	knowledge_level	agent_type	primary_knowledge_source	publications	concentration	concentration_unit	amount	amount_unit	solution_volume_prepared	solution_volume_unit	source_specification	description	molecular_mass	xref
-doi:10.1371/journal.pone.0062957.s005	biolink:has_part	CHEBI:31440	knowledge_assertion	manual_agent	infores:cmm	PMID:23646164	0.000001	UO:0000062				UO:0000099	CuSO4·5H2O	Wikidata Q27114864 confirms CHEBI:31440 and links to PUBCHEM.COMPOUND:24462	249.68	WIKIDATA:Q27114864
+subject	predicate	object	knowledge_level	agent_type	primary_knowledge_source	publications	source_specification	source_name	source_concentration_value	source_concentration_unit	source_role	amount	amount_unit	solution_volume_prepared	solution_volume_unit	calculated_concentration	calculated_concentration_unit	molecular_mass	xref	description
+doi:10.1371/journal.pone.0062957.s005	biolink:has_part	CHEBI:114249	knowledge_assertion	manual_agent	infores:cmm	PMID:23646164	NaH2PO4·H2O		1.88	UO:0000063				UO:0000099			137.99
 ```
+**Key**: `source_concentration_value` = 1.88, `source_concentration_unit` = UO:0000063 (mM). No calculated concentration - source specified it directly.
 
-This example shows how molecular mass (249.68) and Wikidata xref document the grounding decision for this specific assertion about copper sulfate.
+**Example 2: Mass-based with calculated concentration** (PDF gave mass, concentration computed):
+```tsv
+subject	predicate	object	knowledge_level	agent_type	primary_knowledge_source	publications	source_specification	source_name	source_concentration_value	source_concentration_unit	source_role	amount	amount_unit	solution_volume_prepared	solution_volume_unit	calculated_concentration	calculated_concentration_unit	molecular_mass	xref	description
+uuid:a8a5a509-ba8c-4ae6-a6d3-98583066c984	biolink:has_part	CHEBI:114249	knowledge_assertion	manual_agent	infores:cmm	PMID:23646164	NaH2PO4 22.5 g (or 25.9 g NaH2PO4·H2O)					25.9	UO:0000021	1	UO:0000099	0.1876934003	UO:0000062	137.99		10X P solution stock
+```
+**Key**: `amount` = 25.9 g, `solution_volume_prepared` = 1 L → `calculated_concentration` = 0.1877 M. Source gave mass, not concentration.
 
 ## Unit Standardization
 
