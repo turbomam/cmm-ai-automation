@@ -25,7 +25,6 @@ from pydantic import ValidationError
 
 from cmm_ai_automation.transform.kgx import KGXEdge, KGXNode
 
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 # Default paths
@@ -247,6 +246,11 @@ def main(
     validate_only: bool,
 ) -> None:
     """Validate and fix Delaney media KGX files."""
+    # Configure logging if not already configured
+    root_logger = logging.getLogger()
+    if not root_logger.handlers:
+        logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
     logger.info("=" * 80)
     logger.info("Delaney Media KGX Validation and Fix")
     logger.info("=" * 80)

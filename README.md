@@ -89,6 +89,12 @@ CHEBI, GO, ENVO, OBI, NCBITaxon, MIxS, RHEA, BAO
 - **AI Automation**: GitHub Actions with Claude Code for issue triage, summarization, and code assistance
 - **OBO Foundry Tools**: Integration with OLS (Ontology Lookup Service) for ontology term lookup
 
+## Implementation Notes
+
+### Monkey Patching
+
+This project monkey patches `kgx.prefix_manager.PrefixManager.is_curie` in `src/cmm_ai_automation/scripts/validate_kgx.py` to allow slashes in the local part of CURIEs (e.g., `DOI:10.1007/s00203-018-1567-5`). This is necessary because the default regex in the `kgx` library is too strict for certain valid identifiers used in this project. The patch is applied only within the scope of the validation script.
+
 ## Quick Start
 
 ### Prerequisites

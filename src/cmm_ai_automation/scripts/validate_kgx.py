@@ -10,7 +10,6 @@ from kgx.transformer import Transformer
 from kgx.validator import Validator
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -23,10 +22,6 @@ def loose_is_curie(s: str) -> bool:
         m = re.match(r"^[^ <()>:]*:[^ :]+$", s)
         return bool(m)
     return False
-
-
-PrefixManager.is_curie = loose_is_curie
-logger.info("Monkey-patched PrefixManager.is_curie to allow slashes in CURIEs (e.g. DOIs).")
 
 
 def load_config(config_path: Path) -> Any:
@@ -63,6 +58,16 @@ def validate(nodes: Path, edges: Path, config: Path, output: Path) -> None:
     """
     Validate KGX files with custom prefix configuration.
     """
+    # Configure logging if not already configured
+    root_logger = logging.getLogger()
+    if not root_logger.handlers:
+        logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
+    # Apply monkey-patch
+    if PrefixManager.is_curie != loose_is_curie:
+        PrefixManager.is_curie = loose_is_curie
+        logger.info("Monkey-patched PrefixManager.is_curie to allow slashes in CURIEs (e.g. DOIs).")
+
     conf = load_config(config)
     custom_prefixes = conf.get("custom_prefixes", {})
 

@@ -11,7 +11,7 @@ from cmm_ai_automation.scripts.validate_kgx import validate
 
 @pytest.fixture
 def mock_config(tmp_path: Path) -> Path:
-    config = {"custom_prefixes": ["TEST:http://example.org/test/"]}
+    config = {"custom_prefixes": {"TEST": "http://example.org/test/"}}
     config_file = tmp_path / "config.yaml"
     with config_file.open("w") as f:
         yaml.dump(config, f)
@@ -58,7 +58,7 @@ def test_validate_kgx_success(tmp_path: Path, mock_config: Path, caplog: pytest.
             )
 
         # Check that custom prefixes were added
-        assert "TEST:http://example.org/test/" in mock_validator_instance.prefixes
+        assert "TEST" in mock_validator_instance.prefixes
 
         # Check that transform was called
         mock_transformer_instance.transform.assert_called_once()
