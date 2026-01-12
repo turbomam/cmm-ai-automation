@@ -86,6 +86,9 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+# Notebook-generated output files (regenerate by running notebooks)
+notebooks/*_nodes.tsv
+notebooks/*_edges.tsv
 
 # IPython
 profile_default/
