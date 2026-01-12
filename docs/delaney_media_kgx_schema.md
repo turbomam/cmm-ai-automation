@@ -22,12 +22,7 @@ This document specifies the standardized KGX/Biolink schema for Delaney media da
 | `name` | Human-readable name | `sodium dihydrogenphosphate monohydrate` | Biolink standard |
 | `category` | Biolink Model category | `biolink:ChemicalEntity` | KGX required |
 
-### Optional Columns
-
-| Column | Description | Example | Standard |
-|--------|-------------|---------|----------|
-| `molecular_mass` | Molecular mass in Daltons | `249.68` | Domain-specific |
-| `xref` | Cross-reference identifiers | `WIKIDATA:Q27114864` | Biolink standard |
+Nodes are kept minimal with only the three required KGX columns. Chemical properties and cross-references are stored on edges to preserve provenance context.
 
 ### Category Definitions
 
@@ -38,8 +33,8 @@ This document specifies the standardized KGX/Biolink schema for Delaney media da
 ### Example Node
 
 ```tsv
-id	name	category	molecular_mass	xref
-CHEBI:31440	copper(II) sulfate pentahydrate	biolink:ChemicalEntity	249.68	WIKIDATA:Q27114864
+id	name	category
+CHEBI:31440	copper(II) sulfate pentahydrate	biolink:ChemicalEntity
 ```
 
 ## Edge Schema
@@ -70,18 +65,29 @@ CHEBI:31440	copper(II) sulfate pentahydrate	biolink:ChemicalEntity	249.68	WIKIDA
 | `amount` | Mass or quantity used | `100` | `amount_unit` | UO:0000021 (gram) |
 | `solution_volume_prepared` | Batch volume | `1` | `solution_volume_unit` | UO:0000099 (liter) |
 
+### Chemical Property Columns (Provenance-Critical)
+
+| Column | Description | Example | Rationale |
+|--------|-------------|---------|-----------|
+| `molecular_mass` | Molecular mass in Daltons | `249.68` | On edges to show what MW was used to ground this assertion |
+| `xref` | Cross-reference identifiers | `WIKIDATA:Q27114864` | On edges to show how this chemical was identified in context |
+
+**Provenance Rationale**: Molecular mass and xrefs are stored on edges, not nodes, because they document the evidence used to ground each specific assertion. If there's an error or discrepancy in one source (e.g., wrong molecular mass), having these properties on the edge shows exactly what information was available when that grounding decision was made. This enables auditing which facts clarified the identification.
+
 ### Metadata Columns (Optional)
 
 | Column | Description | Example | Standard |
 |--------|-------------|---------|----------|
-| `description` | Contextual notes | `PIPES; ChEBI reports C8H18N2O6S2` | Biolink standard |
+| `description` | Contextual notes | `Wikidata Q27288149 has no ChEBI; grounded to PUBCHEM` | Biolink standard |
 
 ### Example Edge
 
 ```tsv
-subject	predicate	object	knowledge_level	agent_type	primary_knowledge_source	publications	concentration	concentration_unit	amount	amount_unit	solution_volume_prepared	solution_volume_unit	source_specification	description
-doi:10.1371/journal.pone.0062957.s005	biolink:has_part	CHEBI:44933	knowledge_assertion	manual_agent	infores:cmm	PMID:23646164	0.03	UO:0000062				UO:0000099	C8H8N2O6S2	PIPES; ChEBI and PubChem report C8H18N2O6S2 (matches reported MW)
+subject	predicate	object	knowledge_level	agent_type	primary_knowledge_source	publications	concentration	concentration_unit	amount	amount_unit	solution_volume_prepared	solution_volume_unit	source_specification	description	molecular_mass	xref
+doi:10.1371/journal.pone.0062957.s005	biolink:has_part	CHEBI:31440	knowledge_assertion	manual_agent	infores:cmm	PMID:23646164	0.000001	UO:0000062				UO:0000099	CuSO4·5H2O	Wikidata Q27114864 confirms CHEBI:31440 and links to PUBCHEM.COMPOUND:24462	249.68	WIKIDATA:Q27114864
 ```
+
+This example shows how molecular mass (249.68) and Wikidata xref document the grounding decision for this specific assertion about copper sulfate.
 
 ## Unit Standardization
 
@@ -183,19 +189,20 @@ SUCCESS: No validation errors found!
 |------------|------------|-------|
 | `raw_specification` | `source_specification` | PROV-O aligned |
 | `raw_name` | (removed) | Redundant with node `name` |
-| `raw_molar_mass` | `molecular_mass` | Moved to nodes |
+| `raw_molar_mass` | `molecular_mass` | Kept on edges for provenance |
 | `raw_conc` + `raw_conc_units` | `concentration` + `concentration_unit` | UO CURIEs |
 | `raw_role` | `description` | Biolink standard |
 | `comments` | `description` | Biolink standard |
 | `amount` + `units` | `amount` + `amount_unit` | Split and standardized |
 | `liters_made` | `solution_volume_prepared` + `solution_volume_unit` | Split and standardized |
 | `concentration_moles_per_liter` | `concentration` | With `concentration_unit: UO:0000062` |
+| (new) | `xref` | Added to edges for cross-reference provenance |
 
 ### Breaking Changes
 
 1. **No reification**: Quantities stored as flat columns, not QuantityValue objects
 2. **UO CURIEs required**: All units must use Units Ontology identifiers
-3. **Molecular mass on nodes**: Intrinsic property belongs on ChemicalEntity, not edges
+3. **Properties on edges**: molecular_mass and xref stay on edges to preserve provenance context
 4. **Standard Biolink properties**: primary_knowledge_source, publications, description
 
 ## Best Practices
@@ -211,6 +218,9 @@ SUCCESS: No validation errors found!
    - Copy exact specification text to `source_specification`
    - Link to publication via PMID or DOI
    - Tag with correct `agent_type`
+   - Include molecular_mass if available (shows what MW was used for grounding)
+   - Include xref if available (shows how the chemical was verified)
+   - Document in `description` how xref relates to identifier choice
 
 3. **Standardize measurements**:
    - Convert all concentrations to molar units when possible
