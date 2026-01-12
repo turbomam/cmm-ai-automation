@@ -187,7 +187,9 @@ enrich-to-store-test n='5':
 export-kgx:
   uv run python -c "from cmm_ai_automation.store.enrichment_store import EnrichmentStore; from pathlib import Path; store = EnrichmentStore(); store.export_to_kgx(Path('output/kgx/ingredients')); print('✓ KGX export complete')"
 
-# Validate KGX files using custom prefix configuration (defaults to Delaney media files)
+# Validate KGX files using custom prefix configuration
+# Defaults to private Delaney media files (not in git) - provide your own files as arguments
+# Usage: just validate-kgx-custom <nodes.tsv> <edges.tsv>
 validate-kgx-custom nodes='data/private/static/delaney-media-nodes.tsv' edges='data/private/static/delaney-media-edges.tsv':
   @echo "Validating KGX files with custom context (DOIs and UUIDs allowed)..."
   uv run python src/cmm_ai_automation/scripts/validate_kgx_custom.py \

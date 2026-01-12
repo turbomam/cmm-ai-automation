@@ -99,7 +99,7 @@ This project employs a custom KGX validation process to accommodate project-spec
 just validate-kgx-custom [nodes_tsv] [edges_tsv]
 ```
 
-If no arguments are provided, it defaults to validating the Delaney media files in `data/private/static/`.
+**Note:** The script has default file paths (`data/private/static/delaney-media-*.tsv`) for local development convenience, but these files are private and not tracked in git. Users should provide their own KGX node and edge files as arguments.
 
 The primary customizations include:
 
