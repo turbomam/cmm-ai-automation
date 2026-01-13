@@ -4,3 +4,4 @@ custom_prefixes:
   DOI: "http://dx.doi.org/"
   uuid: "urn:uuid:"
   urn: "urn:"
+  bacdive: "https://bacdive.dsmz.de/strain/"

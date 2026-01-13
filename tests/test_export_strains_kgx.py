@@ -32,13 +32,13 @@ class TestStrainRecord:
         assert record.synonyms == []
 
     def test_to_kgx_node_with_ncbi_taxon(self) -> None:
-        """Test KGX node generation prioritizes NCBITaxon ID."""
+        """Test KGX node uses strain-specific NCBITaxon ID when no BacDive."""
         record = StrainRecord(
             source_sheet="strains.tsv",
             source_row=2,
             name="Methylobacterium aquaticum GR16",
             ncbi_taxon_id="270351",
-            species_taxon_id="270351",
+            species_taxon_id="270350",  # Different from strain taxon - makes it strain-specific
             strain_designation="GR16",
         )
         node = record.to_kgx_node()
@@ -47,16 +47,18 @@ class TestStrainRecord:
         assert node["name"] == "Methylobacterium aquaticum GR16"
         assert node["ncbi_taxon_id"] == "270351"
 
-    def test_to_kgx_node_with_bacdive_fallback(self) -> None:
-        """Test KGX node uses BacDive ID when no NCBITaxon."""
+    def test_to_kgx_node_with_bacdive_preferred(self) -> None:
+        """Test KGX node prefers BacDive ID over NCBITaxon."""
         record = StrainRecord(
             source_sheet="strains.tsv",
             source_row=2,
             name="Unknown strain X",
             bacdive_id="12345",
+            ncbi_taxon_id="408",
+            species_taxon_id="382",  # Different species - confirms strain-level
         )
         node = record.to_kgx_node()
-        assert node["id"] == "bacdive:12345"
+        assert node["id"] == "bacdive:12345"  # BacDive preferred even when NCBITaxon available
         assert node["bacdive_id"] == "bacdive:12345"
 
     def test_to_kgx_node_with_collection_fallback(self) -> None:
@@ -345,28 +347,30 @@ class TestCollectionPrefixMap:
 class TestIdPriorityRules:
     """Tests for ID priority rules in _determine_canonical_id."""
 
-    def test_ncbi_taxon_highest_priority(self) -> None:
-        """NCBITaxon should be used when available, even with other IDs."""
+    def test_bacdive_highest_priority(self) -> None:
+        """BacDive should be used when available, even with other IDs."""
         record = StrainRecord(
             source_sheet="test",
             source_row=1,
             ncbi_taxon_id="12345",
-            bacdive_id="67890",
-            primary_collection_id="DSM:16371",
-        )
-        node = record.to_kgx_node()
-        assert node["id"] == "NCBITaxon:12345"
-
-    def test_bacdive_second_priority(self) -> None:
-        """BacDive should be used when no NCBITaxon but collection available."""
-        record = StrainRecord(
-            source_sheet="test",
-            source_row=1,
+            species_taxon_id="12300",  # Different - makes NCBITaxon strain-specific
             bacdive_id="67890",
             primary_collection_id="DSM:16371",
         )
         node = record.to_kgx_node()
         assert node["id"] == "bacdive:67890"
+
+    def test_ncbi_taxon_second_priority(self) -> None:
+        """Strain-specific NCBITaxon should be used when no BacDive but collection available."""
+        record = StrainRecord(
+            source_sheet="test",
+            source_row=1,
+            ncbi_taxon_id="67890",
+            species_taxon_id="67800",  # Different - makes it strain-specific
+            primary_collection_id="DSM:16371",
+        )
+        node = record.to_kgx_node()
+        assert node["id"] == "NCBITaxon:67890"
 
     def test_collection_third_priority(self) -> None:
         """Culture collection should be used as last resort."""

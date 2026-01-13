@@ -287,12 +287,14 @@ class TestDeduplicateByCanonicalId:
             source_sheet="test.tsv",
             source_row=1,
             ncbi_taxon_id="NCBITaxon:100",
+            species_taxon_id="99",  # Different from ncbi_taxon_id - makes it strain-specific
             name="Name from first",
         )
         record2 = StrainRecord(
             source_sheet="test.tsv",
             source_row=2,
             ncbi_taxon_id="NCBITaxon:100",
+            species_taxon_id="99",  # Same as above - same canonical ID
             scientific_name="Scientific name from second",
         )
 
@@ -330,18 +332,21 @@ class TestDeduplicateByCanonicalId:
                 source_sheet="test.tsv",
                 source_row=1,
                 ncbi_taxon_id="NCBITaxon:100",
+                species_taxon_id="99",  # Makes it strain-specific
                 name="Name",
             ),
             StrainRecord(
                 source_sheet="test.tsv",
                 source_row=2,
                 ncbi_taxon_id="NCBITaxon:100",
+                species_taxon_id="99",
                 strain_designation="A1",
             ),
             StrainRecord(
                 source_sheet="test.tsv",
                 source_row=3,
                 ncbi_taxon_id="NCBITaxon:100",
+                species_taxon_id="99",
                 genome_accession="GCA_000000001.1",
             ),
         ]
@@ -359,11 +364,13 @@ class TestDeduplicateByCanonicalId:
             source_sheet="first.tsv",
             source_row=1,
             ncbi_taxon_id="NCBITaxon:100",
+            species_taxon_id="99",  # Makes it strain-specific
         )
         record2 = StrainRecord(
             source_sheet="second.tsv",
             source_row=1,
             ncbi_taxon_id="NCBITaxon:100",
+            species_taxon_id="99",  # Same as above
         )
 
         result = deduplicate_by_canonical_id([record1, record2])
