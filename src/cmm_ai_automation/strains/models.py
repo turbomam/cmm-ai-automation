@@ -156,21 +156,22 @@ class StrainRecord:
         """Determine canonical ID following priority rules.
 
         Priority:
-        1. NCBITaxon (strain-level preferred)
-        2. BacDive
+        1. BacDive (always preferred when available)
+        2. NCBITaxon (strain-level only, not species-level)
         3. Culture collection (prefer DSM)
         4. Generated from available info
         """
-        # Priority 1: NCBITaxon (strain-level preferred)
-        if self.ncbi_taxon_id:
+        # Priority 1: BacDive
+        if self.bacdive_id:
+            return f"bacdive:{self.bacdive_id}"
+
+        # Priority 2: NCBITaxon (strain-level only)
+        # Only use if ncbi_taxon_id differs from species_taxon_id (i.e., strain-specific)
+        if self.ncbi_taxon_id and self.species_taxon_id and self.ncbi_taxon_id != self.species_taxon_id:
             taxon_id = self.ncbi_taxon_id
             if not taxon_id.startswith("NCBITaxon:"):
                 taxon_id = f"NCBITaxon:{taxon_id}"
             return taxon_id
-
-        # Priority 2: BacDive
-        if self.bacdive_id:
-            return f"bacdive:{self.bacdive_id}"
 
         # Priority 3: Culture collection (prefer DSM)
         if self.primary_collection_id:
