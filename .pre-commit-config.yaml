@@ -110,6 +110,14 @@ repos:
   # ==========================================================================
   - repo: local
     hooks:
+      - id: gen-python
+        name: gen-python (generate datamodel before tests)
+        entry: uv run just gen-python
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-push, manual]  # skip on commit, run on push or manual
+
       - id: pytest
         name: pytest (skip integration + MediaDive tests in CI)
         entry: uv run pytest -m 'not integration and not mediadive' --cov --cov-report=term-missing -q
