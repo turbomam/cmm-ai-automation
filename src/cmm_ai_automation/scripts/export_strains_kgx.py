@@ -7,8 +7,8 @@ Consolidates strain data from multiple sheets and exports normalized KGX nodes:
 - growth_preferences.tsv (24 rows) - strain references for linking
 
 Primary identifier strategy:
-1. NCBITaxon:{strain_level_taxon_id} - when strain has its own taxon ID
-2. bacdive:{bacdive_id} - when no strain-level taxon, but in BacDive
+1. bacdive:{bacdive_id} - preferred when available (most strain-specific)
+2. NCBITaxon:{strain_level_taxon_id} - when strain has its own taxon ID (not species-level)
 3. dsmz:DSM-{number} - fallback to culture collection
 
 BacDive Enrichment:

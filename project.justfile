@@ -31,6 +31,25 @@ clean-kgx:
   rm -rf output/kgx/
   @echo "✓ Cleaned KGX outputs"
 
+# Clean NCBI taxonomy cache (synonyms, linkouts)
+# Use this when NCBI data format changes or to force fresh fetches
+# SAFE: Only removes cached NCBI API responses, will be re-fetched on next use
+clean-cache-ncbi:
+  rm -rf ~/.cache/cmm-ai-automation/ncbi/
+  @echo "✓ Cleaned NCBI taxonomy cache"
+
+# Clean PubChem cache (ingredient enrichment data)
+# Use this to force fresh fetches from PubChem API
+# SAFE: Only removes cached PubChem API responses
+clean-cache-pubchem:
+  rm -rf cache/
+  @echo "✓ Cleaned PubChem cache"
+
+# Clean all caches (NCBI, PubChem, etc.)
+# Use this for a complete fresh start with all external APIs
+clean-cache-all: clean-cache-ncbi clean-cache-pubchem
+  @echo "✓ Cleaned all caches"
+
 # Clean enrichment outputs (DuckDB store, KGX files, intermediate files)
 # SAFE: Only removes generated files, not downloaded source data
 clean-enrichment:
@@ -69,19 +88,15 @@ download-sheets:
 download-sheet tab:
   uv run download-sheets --tabs {{tab}}
 
-# Export KGX nodes from enriched strains file (includes NCBI enrichment for NCBI-only strains)
-# READS: data/private/derived/strains_enriched.tsv, NETWORK: yes (NCBI API), WRITES: output/kgx/enriched_strains_nodes.tsv, output/kgx/enriched_strains_edges.tsv
-export-enriched-strains:
+# Export KGX nodes from scoped/curated strains file (growth preferences subset)
+# Enriches with BacDive MongoDB (culture collections, genomes) and NCBI (synonyms, linkouts)
+# Difference from kgx-export-strains: curated input file, focused subset, no taxrank nodes
+# READS: data/private/derived/strains_enriched.tsv, REQUIRES: BacDive MongoDB, NETWORK: yes (NCBI API)
+# WRITES: output/kgx/enriched_strains_nodes.tsv, output/kgx/enriched_strains_edges.tsv
+export-scoped-strains:
   @mkdir -p output/kgx
-  uv run python -m cmm_ai_automation.scripts.export_enriched_strains_kgx
-  @echo "✓ Exported enriched strains to output/kgx/enriched_strains_nodes.tsv and output/kgx/enriched_strains_edges.tsv"
-
-# Export enriched strains without NCBI enrichment (faster, BacDive + manually curated NCBI IDs only)
-# READS: data/private/derived/strains_enriched.tsv, NETWORK: no, WRITES: output/kgx/enriched_strains_nodes.tsv, output/kgx/enriched_strains_edges.tsv
-export-enriched-strains-fast:
-  @mkdir -p output/kgx
-  uv run python -m cmm_ai_automation.scripts.export_enriched_strains_kgx --no-ncbi-enrichment
-  @echo "✓ Exported enriched strains (no NCBI enrichment) to output/kgx/enriched_strains_nodes.tsv and output/kgx/enriched_strains_edges.tsv"
+  uv run python -m cmm_ai_automation.scripts.export_scoped_strains_kgx
+  @echo "✓ Exported scoped strains to output/kgx/enriched_strains_nodes.tsv and output/kgx/enriched_strains_edges.tsv"
 
 # Enrich ingredients with PubChem data (optionally CAS)
 # REQUIRES: PubChem API access, OPTIONAL: CAS API key, NETWORK: yes, WRITES: output file, CACHES: cache/*.json

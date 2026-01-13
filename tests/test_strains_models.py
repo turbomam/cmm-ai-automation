@@ -79,8 +79,8 @@ class TestStrainRecord:
         assert len(record.culture_collection_ids) == 2
         assert record.has_taxonomic_rank == "strain"
 
-    def test_determine_canonical_id_prefers_ncbi(self) -> None:
-        """Test that _determine_canonical_id() prefers NCBI taxon ID."""
+    def test_determine_canonical_id_prefers_bacdive(self) -> None:
+        """Test that _determine_canonical_id() prefers BacDive ID (most strain-specific)."""
         record = StrainRecord(
             source_sheet="test.tsv",
             source_row=1,
@@ -89,22 +89,23 @@ class TestStrainRecord:
             bacdive_id="12345",
         )
         canonical_id = record._determine_canonical_id()
-        assert canonical_id == "NCBITaxon:408"
+        assert canonical_id == "bacdive:12345"
 
-    def test_determine_canonical_id_falls_back_to_bacdive(self) -> None:
-        """Test fallback to BacDive ID when no NCBI ID."""
+    def test_determine_canonical_id_falls_back_to_ncbi(self) -> None:
+        """Test fallback to NCBITaxon ID when no BacDive ID (only if strain-specific)."""
         record = StrainRecord(
             source_sheet="test.tsv",
             source_row=1,
-            ncbi_taxon_id=None,
-            bacdive_id="12345",
+            ncbi_taxon_id="408",
+            species_taxon_id="382",  # Different species - confirms this is strain-level
+            bacdive_id=None,
             primary_collection_id="DSM:16371",
         )
         canonical_id = record._determine_canonical_id()
-        assert canonical_id == "bacdive:12345"
+        assert canonical_id == "NCBITaxon:408"
 
     def test_determine_canonical_id_falls_back_to_collection(self) -> None:
-        """Test fallback to collection ID when no NCBI or BacDive."""
+        """Test fallback to collection ID when no BacDive and no strain-level NCBI."""
         record = StrainRecord(
             source_sheet="test.tsv",
             source_row=1,
@@ -207,7 +208,7 @@ class TestStrainRecord:
 
         node = record.to_kgx_node()
 
-        assert node["id"] == "NCBITaxon:408"
+        assert node["id"] == "bacdive:12345"  # BacDive preferred over NCBITaxon
         assert node["category"] == "biolink:OrganismTaxon"
         assert node["name"] == "Methylobacterium extorquens AM1"
         assert node["ncbi_taxon_id"] == "NCBITaxon:408"

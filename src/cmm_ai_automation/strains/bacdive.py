@@ -206,6 +206,10 @@ def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
         "type_strain": None,
         "culture_collection_ids": [],
         "synonyms": [],
+        "genome_accessions_ncbi": [],
+        "genome_accessions_img": [],
+        "genome_accessions_patric": [],
+        "genome_accessions_other": [],
     }
 
     # BacDive ID
@@ -249,6 +253,31 @@ def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
             cc_id = cc_id.strip()
             if cc_id:
                 result["culture_collection_ids"].append(cc_id)
+
+    # Genome accessions from Sequence information
+    seq_info = doc.get("Sequence information", {})
+    genome_seqs = seq_info.get("Genome sequences")
+
+    # Can be a single dict or a list of dicts
+    if isinstance(genome_seqs, dict):
+        genome_seqs = [genome_seqs]
+    elif not isinstance(genome_seqs, list):
+        genome_seqs = []
+
+    for genome in genome_seqs:
+        if isinstance(genome, dict):
+            accession = genome.get("accession", "")
+            database = genome.get("database", "").lower()
+
+            if accession:
+                if database == "ncbi":
+                    result["genome_accessions_ncbi"].append(accession)
+                elif database == "img":
+                    result["genome_accessions_img"].append(accession)
+                elif database == "patric":
+                    result["genome_accessions_patric"].append(accession)
+                else:
+                    result["genome_accessions_other"].append(accession)
 
     return result
 

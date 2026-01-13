@@ -119,7 +119,13 @@ def validate(nodes: Path, edges: Path, config: Path, output: Path) -> None:
         logger.error(f"Error Type: {error_type} - Count: {count}")
         # Print first few examples
         for msg, instances in list(messages.items())[:3]:
-            logger.error(f"  - {msg} (e.g. {instances[0]})")
+            try:
+                if instances and len(instances) > 0:
+                    logger.error(f"  - {msg} (e.g. {instances[0]})")
+                else:
+                    logger.error(f"  - {msg}")
+            except (KeyError, IndexError, TypeError):
+                logger.error(f"  - {msg}")
 
     if error_count == 0:
         logger.info("SUCCESS: No validation errors found!")
