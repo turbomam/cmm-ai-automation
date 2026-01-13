@@ -191,6 +191,8 @@ export-kgx:
 # Defaults to private Delaney media files (not in git) - provide your own files as arguments
 # Usage: just validate-kgx-custom <nodes.tsv> <edges.tsv>
 validate-kgx-custom nodes='data/private/static/delaney-media-nodes.tsv' edges='data/private/static/delaney-media-edges.tsv':
+  @if [ ! -f "{{nodes}}" ]; then echo "ERROR: Nodes file does not exist: {{nodes}}"; echo "Usage: just validate-kgx-custom <nodes.tsv> <edges.tsv>"; exit 1; fi
+  @if [ ! -f "{{edges}}" ]; then echo "ERROR: Edges file does not exist: {{edges}}"; echo "Usage: just validate-kgx-custom <nodes.tsv> <edges.tsv>"; exit 1; fi
   @echo "Validating KGX files with custom context (DOIs and UUIDs allowed)..."
   uv run python src/cmm_ai_automation/scripts/validate_kgx_custom.py \
     --nodes {{nodes}} \
