@@ -37,6 +37,7 @@ from __future__ import annotations
 import csv
 import logging
 import random
+import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -121,8 +122,6 @@ def normalize_collection_curie(cc_id: str) -> str:
         return f"{canonical_prefix}:{local_id}"
 
     # Parse "DSM 1337" or "DSM-1337" format
-    import re
-
     match = re.match(r"([A-Z]+)[\s\-]*(.+)", cc_id, re.IGNORECASE)
     if match:
         prefix = match.group(1).upper()
