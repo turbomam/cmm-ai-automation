@@ -35,7 +35,7 @@ Get the MediaDive → KGX → Neo4j pipeline production-ready.
 | #97 | Add MongoDB index for culture collection ID lookups |
 | #95 | Add credential validation warnings to Neo4j justfile targets |
 | #88 | Avoid Custom_ prefixes - use resolvable CURIEs only |
-| #93 | Address Copilot code review comments on export_strains_kgx.py |
+| #93 | ~~Address Copilot code review comments on export_strains_kgx.py~~ (superseded: script deleted, replaced by strains_kgx_from_curies.py) |
 
 ---
 
@@ -68,7 +68,7 @@ Align schema with standards and improve data modeling.
 | #101 | Refactor Google Sheets to align with LinkML schema | P1 |
 | #59 | Align LinkML schema elements with kg-microbe, METPO, and data sources | P1 |
 | #77 | Add reconciliation slots to LinkML schema for entity resolution | P2 |
-| #76 | Refactor export_strains_kgx.py to use LinkML-generated Strain class | P2 |
+| #76 | ~~Refactor export_strains_kgx.py to use LinkML-generated Strain class~~ (superseded: script deleted, replaced by strains_kgx_from_curies.py) | P2 |
 | #79 | Define strain record data completeness requirements | P2 |
 | #85 | Avoid semicolon-delimited multi-value fields without metadata | P2 |
 | #61 | Add valid and invalid data examples for schema testing | P2 |

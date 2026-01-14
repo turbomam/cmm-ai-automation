@@ -141,45 +141,13 @@ SELECT ?medium ?xref WHERE {
 
 ## Local Data Infrastructure
 
-### ChromaDB Index
+**Note**: We previously maintained a local ChromaDB index and cache of TogoMedium data, but these were removed because:
 
-We maintain a local ChromaDB index for fuzzy/semantic search:
+1. TogoMedium only provides media names and IDs, not composition data
+2. The semantic search wasn't effective for grounding custom lab media (MP, Hypho)
+3. MediaDive provides better coverage with actual ingredient lists
 
-- **Location**: `data/chroma_togomedium/`
-- **Collection**: `togomedium_media`
-- **Documents**: 2,917 media
-- **Size**: ~11MB
-
-**Indexer script**: `src/cmm_ai_automation/scripts/index_togomedium_chromadb.py`
-
-```bash
-# Run indexer
-uv run python -m cmm_ai_automation.scripts.index_togomedium_chromadb
-
-# Run with tests
-uv run python -m cmm_ai_automation.scripts.index_togomedium_chromadb --test
-
-# Force refresh from API
-uv run python -m cmm_ai_automation.scripts.index_togomedium_chromadb --refresh
-```
-
-### Cached Data
-
-- **Location**: `data/togomedium_cache/media_list.json`
-- **Content**: Basic media info (ID, name, source)
-- **Size**: ~485KB
-
-### What's NOT Cached Locally
-
-The JSON cache only contains basic media info. Missing:
-
-- Full ingredient lists with quantities
-- Cross-references to ChEBI/PubChem
-- Organism-media associations
-- Recipe preparation steps
-- pH values and other metadata
-
-A full RDF dump via SPARQL would be needed for complete local data.
+For TogoMedium data, use the REST API or SPARQL endpoint directly (see "Data Access Methods" above).
 
 ## Integration with Other Data Sources
 

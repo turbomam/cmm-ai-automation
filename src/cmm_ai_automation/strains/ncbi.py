@@ -303,12 +303,13 @@ def fetch_ncbi_batch(taxon_ids: list[str], batch_size: int = 50) -> dict[str, Nc
         ids_param = ",".join(batch)
 
         try:
-            response = requests.get(
+            response = _make_request(
                 NCBI_EFETCH_URL,
                 params={"db": "taxonomy", "id": ids_param, "retmode": "xml"},
-                timeout=30,  # Longer timeout for batch
             )
-            response.raise_for_status()
+            if response is None:
+                logger.warning(f"Failed to fetch NCBI batch starting at {i}")
+                continue
 
             root = ET.fromstring(response.content)
 
@@ -507,12 +508,12 @@ def fetch_ncbi_entrez_links(taxon_ids: list[str], batch_size: int = 50) -> dict[
                 continue
 
             try:
-                response = requests.get(
+                response = _make_request(
                     NCBI_ELINK_URL,
                     params={"dbfrom": "taxonomy", "id": taxid, "cmd": "acheck"},
-                    timeout=15,
                 )
-                response.raise_for_status()
+                if response is None:
+                    continue
 
                 root = ET.fromstring(response.content)
                 links: dict[str, list[str]] = {}
@@ -524,8 +525,8 @@ def fetch_ncbi_entrez_links(taxon_ids: list[str], batch_size: int = 50) -> dict[
 
                 results[taxid] = links
 
-            except (requests.RequestException, ET.ParseError) as e:
-                logger.debug(f"Failed to fetch Entrez links for {taxid}: {e}")
+            except ET.ParseError as e:
+                logger.debug(f"Failed to parse Entrez links for {taxid}: {e}")
 
         # Rate limit between batches
         if i + batch_size < len(taxon_ids):

@@ -203,7 +203,7 @@ Separate from MediaDive, data can also come from Google Sheets:
 just download-sheets
 
 # Export to KGX (strains, growth, media-ingredients)
-just kgx-export-strains
+just strains-kgx-from-curies <input.tsv> <id_column>
 just kgx-export-growth
 just kgx-export-media-ingredients
 
