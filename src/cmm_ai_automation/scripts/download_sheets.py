@@ -14,8 +14,8 @@ from cmm_ai_automation.gsheets import get_sheet_data, list_worksheets
 
 def sanitize_filename(name: str) -> str:
     """Replace whitespace and unsafe characters with underscores."""
-    # Replace each whitespace or unsafe filesystem character with underscore
-    return re.sub(r"[\s/\\:*?\"<>|]", "_", name)
+    # Replace any whitespace or unsafe filesystem characters with underscore
+    return re.sub(r"[\s/\\:*?\"<>|]+", "_", name)
 
 
 # Default output directory (gitignored)
