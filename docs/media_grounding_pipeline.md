@@ -5,7 +5,7 @@
 
 ## Overview
 
-This pipeline transforms growth media data from Google Sheets/TSV into a Biolink-compliant KGX Knowledge Graph. It solves the challenge of grounding "local" or "lab-specific" media (like "Hypho medium") while linking established media to public databases (TogoMedium, MediaDive).
+This pipeline transforms growth media data from Google Sheets/TSV into a Biolink-compliant KGX Knowledge Graph. It solves the challenge of grounding "local" or "lab-specific" media (like "Hypho medium") while linking established media to public databases (MediaDive).
 
 ## Key Features
 
@@ -13,7 +13,7 @@ This pipeline transforms growth media data from Google Sheets/TSV into a Biolink
     *   **Priority 1:** Local Registry (`data/local_media_registry.tsv`) - for stable, minted IDs.
     *   **Priority 2:** Manual Mappings (`data/media_grounding_mappings.tsv`) - for curated links.
     *   **Priority 3:** Verified MediaDive IDs - checks local MongoDB for existence.
-    *   **Priority 4:** Semantic Search - fuzzy matching against local ChromaDB indices (TogoMedium/MediaDive).
+    *   **Priority 4:** Semantic Search - fuzzy matching against local ChromaDB indices (MediaDive).
 
 2.  **Stable ID Minting:**
     *   Uses `BER-CMM-MEDIUM:XXXXXXX` (7-digit zero-padded) for local media.
@@ -63,4 +63,4 @@ Maintained registry for media that do not exist in public databases.
 ## Dependencies
 
 *   **MongoDB:** Requires local instance with `mediadive` database (for verification).
-*   **ChromaDB:** Requires indices in `data/chroma_togomedium` & `data/chroma_mediadive` (for semantic search).
+*   **ChromaDB:** Requires index in `data/chroma_mediadive` (for semantic search).

@@ -4,11 +4,19 @@
 Saves to data/private/ which is gitignored to protect private data.
 """
 
+import re
 from pathlib import Path
 
 import click
 
 from cmm_ai_automation.gsheets import get_sheet_data, list_worksheets
+
+
+def sanitize_filename(name: str) -> str:
+    """Replace whitespace and unsafe characters with underscores."""
+    # Replace each whitespace or unsafe filesystem character with underscore
+    return re.sub(r"[\s/\\:*?\"<>|]", "_", name)
+
 
 # Default output directory (gitignored)
 # __file__ is src/cmm_ai_automation/scripts/download_sheets.py
@@ -55,7 +63,8 @@ def main(output_dir: Path, spreadsheet: str, tabs: tuple[str, ...]) -> None:
             click.echo(f"  SKIP: {tab_name} (not found)")
             continue
 
-        output_file = output_dir / f"{tab_name}.tsv"
+        safe_name = sanitize_filename(tab_name)
+        output_file = output_dir / f"{safe_name}.tsv"
         try:
             df = get_sheet_data(spreadsheet, tab_name)
             df.to_csv(output_file, sep="\t", index=False)

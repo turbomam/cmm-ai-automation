@@ -88,15 +88,49 @@ download-sheets:
 download-sheet tab:
   uv run download-sheets --tabs {{tab}}
 
-# Export KGX nodes from scoped/curated strains file (growth preferences subset)
-# Enriches with BacDive MongoDB (culture collections, genomes) and NCBI (synonyms, linkouts)
-# Difference from kgx-export-strains: curated input file, focused subset, no taxrank nodes
-# READS: data/private/derived/strains_enriched.tsv, REQUIRES: BacDive MongoDB, NETWORK: yes (NCBI API)
-# WRITES: output/kgx/enriched_strains_nodes.tsv, output/kgx/enriched_strains_edges.tsv
-export-scoped-strains:
-  @mkdir -p output/kgx
-  uv run python -m cmm_ai_automation.scripts.export_scoped_strains_kgx
-  @echo "✓ Exported scoped strains to output/kgx/enriched_strains_nodes.tsv and output/kgx/enriched_strains_edges.tsv"
+# Generate KGX nodes and edges for strains from a file of CURIEs
+# Input file must have a column with bacdive: or NCBITaxon: CURIEs
+# Fetches from BacDive MongoDB and/or NCBI API, creates subclass_of edges to species
+# REQUIRES: BacDive MongoDB (for bacdive: CURIEs), NETWORK: yes (NCBI API)
+# Usage: just strains-kgx-from-curies <input.tsv> <id_column> [output_dir]
+strains-kgx-from-curies input id_field output_dir='output/kgx/strains_from_curies':
+  @mkdir -p {{output_dir}}
+  uv run python -m cmm_ai_automation.scripts.strains_kgx_from_curies \
+    --input {{input}} \
+    --id-field {{id_field}} \
+    --output-dir {{output_dir}}
+  @echo "✓ Exported strains to {{output_dir}}/"
+
+# Generate KGX for strains with sampling (for testing)
+# Usage: just strains-kgx-sample <input.tsv> <id_column> <n>
+strains-kgx-sample input id_field n:
+  uv run python -m cmm_ai_automation.scripts.strains_kgx_from_curies \
+    --input {{input}} \
+    --id-field {{id_field}} \
+    --sample-n {{n}} \
+    --output-dir output/kgx/strains_sample
+
+# Generate KGX nodes and edges for chemicals from a file of CURIEs
+# Input file must have a column with CHEBI:, PUBCHEM.COMPOUND:, doi:, or uuid: CURIEs
+# Fetches from ChEBI and PubChem APIs; doi/uuid entries pass through without enrichment
+# REQUIRES: ChEBI API, PubChem API, NETWORK: yes
+# Usage: just chemicals-kgx-from-curies <input.tsv> <id_column> [output_dir]
+chemicals-kgx-from-curies input id_field output_dir='output/kgx/chemicals_from_curies':
+  @mkdir -p {{output_dir}}
+  uv run python -m cmm_ai_automation.scripts.chemicals_kgx_from_curies \
+    --input {{input}} \
+    --id-field {{id_field}} \
+    --output-dir {{output_dir}}
+  @echo "✓ Exported chemicals to {{output_dir}}/"
+
+# Generate KGX for chemicals with sampling (for testing)
+# Usage: just chemicals-kgx-sample <input.tsv> <id_column> <n>
+chemicals-kgx-sample input id_field n:
+  uv run python -m cmm_ai_automation.scripts.chemicals_kgx_from_curies \
+    --input {{input}} \
+    --id-field {{id_field}} \
+    --sample-n {{n}} \
+    --output-dir output/kgx/chemicals_sample
 
 # Enrich ingredients with PubChem data (optionally CAS)
 # REQUIRES: PubChem API access, OPTIONAL: CAS API key, NETWORK: yes, WRITES: output file, CACHES: cache/*.json
@@ -177,11 +211,6 @@ build-ncbitaxon db_path:
 codify-strains input output chroma_path:
   uv run python -m cmm_ai_automation.scripts.codify_strains --input {{input}} --output {{output}} --chroma-path {{chroma_path}}
 
-# Enrich strains with BacDive, NCBI, and semantic data
-# REQUIRES: Multiple APIs (BacDive, NCBI, OpenAI), ChromaDB, EXPENSIVE: many API calls, WRITES: output TSV
-enrich-strains input output:
-  uv run python -m cmm_ai_automation.scripts.enrich_strains --input {{input}} --output {{output}}
-
 # Multi-source enrichment pipeline: enriches ingredients and stores in DuckDB
 # REQUIRES: PubChem, ChEBI, CAS (optional), Node Normalization APIs, NETWORK: yes, WRITES: data/enrichment.duckdb
 enrich-to-store:
@@ -227,16 +256,8 @@ kgx-export-bacdive limit='':
   {{ if limit == '' { 'uv run python -m cmm_ai_automation.scripts.export_bacdive_kgx' } else { 'uv run python -m cmm_ai_automation.scripts.export_bacdive_kgx --limit ' + limit } }}
   @echo "✓ BacDive MongoDB export complete"
 
-# Export strains to KGX format
-# REQUIRES: data/private/strains.tsv, BacDive API, NCBI API, NETWORK: yes
-# WRITES: output/kgx/strains_nodes.tsv, output/kgx/strains_edges.tsv
-kgx-export-strains:
-  @mkdir -p output/kgx
-  uv run python -m cmm_ai_automation.scripts.export_strains_kgx
-  @echo "✓ Strains export complete"
-
 # Export growth preferences (strain-medium relationships) to KGX format
-# REQUIRES: output/kgx/strains_nodes.tsv (run kgx-export-strains first), data/private/growth_*.tsv
+# REQUIRES: output/kgx/strains_nodes.tsv, data/private/growth_*.tsv
 # WRITES: output/kgx/growth_nodes.tsv, output/kgx/growth_edges.tsv
 kgx-export-growth:
   @mkdir -p output/kgx
@@ -251,11 +272,12 @@ kgx-export-media-ingredients:
   uv run python -m cmm_ai_automation.scripts.export_media_ingredients_kgx
   @echo "✓ Media ingredients export complete"
 
-# Export all KGX files (strains, growth, media ingredients)
-# REQUIRES: All source data files, NETWORK: API calls for strains
+# Export growth and media ingredients KGX files
+# NOTE: Strains require parameters - use strains-kgx-from-curies separately
+# REQUIRES: source data files
 # WRITES: output/kgx/*.tsv
-kgx-export-all: kgx-export-strains kgx-export-growth kgx-export-media-ingredients
-  @echo "✓ All KGX exports complete"
+kgx-export-all: kgx-export-growth kgx-export-media-ingredients
+  @echo "✓ KGX exports complete (growth, media-ingredients)"
   @ls -la output/kgx/
 
 # Validate KGX files against Biolink Model

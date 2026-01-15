@@ -89,7 +89,9 @@ This document lists all available `just` targets. Run `just --list` to see this 
 
 | Target | Description | Output |
 |--------|-------------|--------|
-| `kgx-export-strains` | Export strains to KGX format | `output/kgx/strains_*.tsv` |
+| `strains-kgx-from-curies {input} {id_field} [output_dir]` | Generate KGX for strains from CURIEs | `output/kgx/strains_from_curies/` |
+| `strains-kgx-sample {input} {id_field} {n}` | Generate KGX for sampled strains | `output/kgx/strains_sample/` |
+| `chemicals-kgx-from-curies {input} {id_field} [output_dir]` | Generate KGX for chemicals from CURIEs | `output/kgx/chemicals_from_curies/` |
 | `kgx-export-growth` | Export growth preferences to KGX format | `output/kgx/growth_*.tsv` |
 | `kgx-export-media-ingredients` | Export media-ingredient edges to KGX format | `output/kgx/media_ingredients_*.tsv` |
 | `kgx-export-all` | Export all (strains, growth, media ingredients) | `output/kgx/*.tsv` |
@@ -104,7 +106,6 @@ This document lists all available `just` targets. Run `just --list` to see this 
 | `enrich-to-store-test {n}` | Test enrichment with first N ingredients (default: 5) |
 | `export-kgx` | Export existing EnrichmentStore to KGX format |
 | `enrich-ingredients {input} {output}` | Enrich ingredients with PubChem data |
-| `enrich-strains {input} {output}` | Enrich strains with BacDive, NCBI, semantic data |
 
 ---
 

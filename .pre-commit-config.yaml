@@ -142,7 +142,7 @@ repos:
 
       - id: smoke-tests
         name: smoke tests (CLI verification)
-        entry: bash -c 'uv run download-sheets --help > /dev/null && uv run enrich-ingredients --help > /dev/null && uv run enrich-to-store --help > /dev/null && uv run python -m cmm_ai_automation.scripts.enrich_strains --help > /dev/null && uv run python -m cmm_ai_automation.scripts.codify_strains --help > /dev/null && uv run python -m cmm_ai_automation.scripts.build_ncbitaxon_chromadb --help > /dev/null && uv run python -m cmm_ai_automation.scripts.load_bacdive_mongodb --help > /dev/null && uv run python -m cmm_ai_automation.scripts.load_mediadive_details --help > /dev/null && uv run python -m cmm_ai_automation.scripts.export_strains_kgx --help > /dev/null'
+        entry: bash -c 'uv run download-sheets --help > /dev/null && uv run enrich-ingredients --help > /dev/null && uv run enrich-to-store --help > /dev/null && uv run python -m cmm_ai_automation.scripts.codify_strains --help > /dev/null && uv run python -m cmm_ai_automation.scripts.build_ncbitaxon_chromadb --help > /dev/null && uv run python -m cmm_ai_automation.scripts.load_bacdive_mongodb --help > /dev/null && uv run python -m cmm_ai_automation.scripts.load_mediadive_details --help > /dev/null && uv run python -m cmm_ai_automation.scripts.strains_kgx_from_curies --help > /dev/null && uv run python -m cmm_ai_automation.scripts.chemicals_kgx_from_curies --help > /dev/null'
         language: system
         pass_filenames: false
         always_run: true
