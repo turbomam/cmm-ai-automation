@@ -598,6 +598,23 @@
     </span>
   </a>
   
+    <nav class="md-nav" aria-label="KGX Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#edge-pattern-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Edge Pattern Analysis
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
@@ -714,15 +731,19 @@
 </tr>
 <tr>
 <td><strong>Google Sheets</strong></td>
-<td><code>just download-sheets</code>, <code>just kgx-export-all</code></td>
+<td><code>just download-normalized-kgx-sheets</code>, <code>just download-source-sink-sheets</code></td>
 </tr>
 <tr>
 <td><strong>Neo4j</strong></td>
 <td><code>just neo4j-start</code>, <code>just neo4j-clear</code>, <code>just neo4j-status</code></td>
 </tr>
 <tr>
+<td><strong>Edge Patterns</strong></td>
+<td><code>just edge-patterns-merged</code>, <code>just edge-patterns-by-source</code></td>
+</tr>
+<tr>
 <td><strong>Cleanup</strong></td>
-<td><code>just clean-kgx</code>, <code>just clean-all</code></td>
+<td><code>just clean-output-kgx</code>, <code>just clean-edge-patterns</code>, <code>just clean-all</code></td>
 </tr>
 </tbody>
 </table>
@@ -1051,14 +1072,31 @@
 <td><code>output/kgx/merged_*</code></td>
 </tr>
 <tr>
-<td><code>kgx-analyze</code></td>
-<td>Extract edge patterns from KGX files</td>
-<td><code>output/kgx/edge_patterns.tsv</code></td>
-</tr>
-<tr>
 <td><code>kgx-graph-summary</code></td>
 <td>Generate graph summary statistics</td>
 <td><code>output/kgx/summary.yaml</code>, <code>meta-kg.json</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="edge-pattern-analysis">Edge Pattern Analysis</h3>
+<table>
+<thead>
+<tr>
+<th>Target</th>
+<th>Description</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>edge-patterns-merged</code></td>
+<td>Edge patterns from merged KGX (no source breakdown)</td>
+<td><code>output/edge_patterns/edge_patterns_merged.tsv</code></td>
+</tr>
+<tr>
+<td><code>edge-patterns-by-source</code></td>
+<td>Edge patterns with source breakdown</td>
+<td><code>output/edge_patterns/edge_patterns_by_source.tsv</code></td>
 </tr>
 </tbody>
 </table>
@@ -1133,14 +1171,34 @@
 </thead>
 <tbody>
 <tr>
-<td><code>clean-kgx</code></td>
-<td>Clean KGX outputs only</td>
+<td><code>clean-output-kgx</code></td>
+<td>Clean all KGX outputs</td>
 <td>Safe - only removes <code>output/kgx/</code></td>
 </tr>
 <tr>
-<td><code>clean-enrichment</code></td>
-<td>Clean enrichment outputs (DuckDB, KGX, intermediate)</td>
+<td><code>clean-kgx-bacdive</code></td>
+<td>Clean BacDive KGX outputs only</td>
+<td>Safe - only removes BacDive JSONL files</td>
+</tr>
+<tr>
+<td><code>clean-edge-patterns</code></td>
+<td>Clean edge pattern outputs</td>
+<td>Safe - only removes <code>output/edge_patterns/</code></td>
+</tr>
+<tr>
+<td><code>clean-enrichment-db</code></td>
+<td>Clean enrichment database</td>
 <td>Safe - keeps source data</td>
+</tr>
+<tr>
+<td><code>clean-cache-all</code></td>
+<td>Clean all API caches (NCBI, PubChem, CAS)</td>
+<td>Safe - will re-fetch on next use</td>
+</tr>
+<tr>
+<td><code>clean-all-sheets</code></td>
+<td>Clean all Google Sheets TSVs</td>
+<td>Need to re-download</td>
 </tr>
 <tr>
 <td><code>clean-all</code></td>

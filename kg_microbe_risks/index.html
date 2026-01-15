@@ -1519,7 +1519,7 @@ kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w
 </code></pre></div></p>
 <p><strong>Method 2: Using CMM analysis scripts</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Extract edge patterns (subject/predicate/object breakdown)</span>
-python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>/path/to/kgx_dir<span class="w"> </span>&gt;<span class="w"> </span>patterns.tsv
+python<span class="w"> </span>src/cmm_ai_automation/scripts/edge_patterns_merged.py<span class="w"> </span>/path/to/kgx_dir<span class="w"> </span>&gt;<span class="w"> </span>patterns.tsv
 
 <span class="c1"># Output: source | subject_category | subject_prefix | predicate | object_category | object_prefix | count</span>
 </code></pre></div></p>
@@ -1586,7 +1586,7 @@ kgx<span class="w"> </span>graph-summary<span class="w"> </span>-i<span class="w
 <span class="w">  </span>--edge-facet-properties<span class="w"> </span>predicate
 
 <span class="c1"># Or using CMM edge pattern analyzer</span>
-python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>/path/to/kgx_dir<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+python<span class="w"> </span>src/cmm_ai_automation/scripts/edge_patterns_merged.py<span class="w"> </span>/path/to/kgx_dir<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>awk<span class="w"> </span>-F<span class="s1">&#39;\t&#39;</span><span class="w"> </span><span class="s1">&#39;$4==&quot;biolink:capable_of&quot; &amp;&amp; $5~&quot;PhenotypicQuality&quot;&#39;</span>
 </code></pre></div></p>
 <p><strong>Real-World Impact:</strong>
@@ -1633,7 +1633,7 @@ python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns
 </code></pre></div></p>
 <p><strong>To verify false positive rate:</strong>
 <div class="highlight"><pre><span></span><code><span class="c1"># Using CMM analysis tools</span>
-python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>/path/to/data<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+python<span class="w"> </span>src/cmm_ai_automation/scripts/edge_patterns_merged.py<span class="w"> </span>/path/to/data<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>grep<span class="w"> </span><span class="s2">&quot;MP.*medium&quot;</span>
 
 <span class="c1"># Or manually review sample matches (documented in kg_microbe_nodes_analysis.md)</span>

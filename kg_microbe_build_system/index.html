@@ -1596,16 +1596,22 @@ tar<span class="w"> </span>-xzf<span class="w"> </span>data/merged/merged-kg.tar
     └── merged-kg_edges.tsv       # All edges
 </code></pre></div></p>
 <h3 id="analyzing-edge-patterns">Analyzing Edge Patterns</h3>
-<p>Two scripts are available for analyzing edge patterns. The key difference is <strong>which source files contribute to each pattern</strong>:</p>
+<p>Two scripts are available for analyzing edge patterns. The key difference is <strong>which source files contribute to each pattern</strong>.</p>
+<p><strong>Quick usage with just targets:</strong>
+<div class="highlight"><pre><span></span><code>just<span class="w"> </span>edge-patterns-merged<span class="w">      </span><span class="c1"># → output/edge_patterns/edge_patterns_merged.tsv</span>
+just<span class="w"> </span>edge-patterns-by-source<span class="w">   </span><span class="c1"># → output/edge_patterns/edge_patterns_by_source.tsv</span>
+just<span class="w"> </span>clean-edge-patterns<span class="w">       </span><span class="c1"># Clean outputs</span>
+</code></pre></div></p>
+<p><strong>Direct script usage</strong> (for custom paths):</p>
 <h4 id="option-1-analyze-merged-data-source-information-lost">Option 1: Analyze Merged Data (Source Information Lost)</h4>
-<p>Use <code>analyze_kgx_patterns.py</code> on the merged output. This shows aggregate patterns across all sources but <strong>doesn't show which source contributed each pattern</strong>:</p>
+<p>Use <code>edge_patterns_merged.py</code> on the merged output. This shows aggregate patterns across all sources but <strong>doesn't show which source contributed each pattern</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/cmm-ai-automation
 
 <span class="c1"># Analyze merged data (all patterns labeled &quot;merged-kg&quot;)</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>../kg-microbe/data/merged/
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/edge_patterns_merged.py<span class="w"> </span>../kg-microbe/data/merged/
 
 <span class="c1"># Save to timestamped file</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/analyze_kgx_patterns.py<span class="w"> </span>../kg-microbe/data/merged/<span class="w"> </span>&gt;<span class="w"> </span>edge_patterns_merged_<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>.tsv
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/edge_patterns_merged.py<span class="w"> </span>../kg-microbe/data/merged/<span class="w"> </span>&gt;<span class="w"> </span>edge_patterns_merged_<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>.tsv
 </code></pre></div>
 <p><strong>Output format:</strong>
 <div class="highlight"><pre><span></span><code>source     subject_category              subject_prefix      predicate              object_category              object_prefix    count
@@ -1615,14 +1621,14 @@ merged-kg  biolink:ChemicalSubstance     CHEBI               biolink:subclass_of
 </code></pre></div></p>
 <p><strong>Limitation:</strong> All patterns show <code>merged-kg</code> as the source. You cannot tell if a pattern came from bacdive, mediadive, ontologies, etc.</p>
 <h4 id="option-2-analyze-transformed-data-preserves-source-information">Option 2: Analyze Transformed Data (Preserves Source Information)</h4>
-<p>Use <code>extract_edge_patterns.py</code> on the <strong>transformed</strong> directory before merging. This shows <strong>which source directory contributes each pattern</strong>:</p>
+<p>Use <code>edge_patterns_by_source.py</code> on the <strong>transformed</strong> directory before merging. This shows <strong>which source directory contributes each pattern</strong>:</p>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/cmm-ai-automation
 
 <span class="c1"># Analyze transformed data (source breakdown preserved)</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/extract_edge_patterns.py<span class="w"> </span>../kg-microbe/data/transformed/
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/edge_patterns_by_source.py<span class="w"> </span>../kg-microbe/data/transformed/
 
 <span class="c1"># Save to timestamped file</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/extract_edge_patterns.py<span class="w"> </span>../kg-microbe/data/transformed/<span class="w"> </span>&gt;<span class="w"> </span>edge_patterns_by_source_<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>.tsv
+uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/cmm_ai_automation/scripts/edge_patterns_by_source.py<span class="w"> </span>../kg-microbe/data/transformed/<span class="w"> </span>&gt;<span class="w"> </span>edge_patterns_by_source_<span class="k">$(</span>date<span class="w"> </span>+%Y-%m-%d<span class="k">)</span>.tsv
 </code></pre></div>
 <p><strong>Output format:</strong>
 <div class="highlight"><pre><span></span><code>source       subject_category              subject_prefix      predicate              object_category              object_prefix    count
@@ -1644,22 +1650,22 @@ ontologies   biolink:OrganismTaxon         NCBITaxon           biolink:subclass_
 <tbody>
 <tr>
 <td>Want to see which source contributes patterns</td>
-<td><code>extract_edge_patterns.py</code></td>
+<td><code>edge_patterns_by_source.py</code></td>
 <td><code>data/transformed/</code></td>
 </tr>
 <tr>
 <td>Already merged and don't need source breakdown</td>
-<td><code>analyze_kgx_patterns.py</code></td>
+<td><code>edge_patterns_merged.py</code></td>
 <td><code>data/merged/</code></td>
 </tr>
 <tr>
 <td>Debugging transform-specific issues</td>
-<td><code>extract_edge_patterns.py</code></td>
+<td><code>edge_patterns_by_source.py</code></td>
 <td><code>data/transformed/</code></td>
 </tr>
 <tr>
 <td>Quick aggregate statistics</td>
-<td><code>analyze_kgx_patterns.py</code></td>
+<td><code>edge_patterns_merged.py</code></td>
 <td><code>data/merged/</code></td>
 </tr>
 </tbody>
