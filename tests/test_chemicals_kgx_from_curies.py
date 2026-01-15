@@ -13,12 +13,10 @@ from cmm_ai_automation.scripts.chemicals_kgx_from_curies import (
     BIOLINK_CHEMICAL_ENTITY,
     BIOLINK_CHEMICAL_ROLE,
     ChemicalResult,
+    export_kgx,
     parse_curie,
     read_chemicals_from_file,
     sample_entries,
-    write_kgx_edges,
-    write_kgx_nodes,
-    write_role_nodes,
 )
 
 
@@ -87,10 +85,10 @@ class TestChemicalResult:
         node = result.to_kgx_node()
 
         assert node["id"] == "CHEBI:17790"
-        assert node["category"] == BIOLINK_CHEMICAL_ENTITY
+        assert node["category"] == [BIOLINK_CHEMICAL_ENTITY]  # List for KGX Sink
         assert node["name"] == "methanol"
         assert node["formula"] == "CH4O"
-        assert node["mass"] == "32.042"
+        assert node["mass"] == "32.042"  # String for TSV output
         assert node["inchikey"] == "OKKJLVBELUTLKV-UHFFFAOYSA-N"
 
     def test_to_kgx_node_with_cas_numbers(self) -> None:
@@ -106,7 +104,7 @@ class TestChemicalResult:
         assert "casrn:67-56-1" in node["xref"]
 
     def test_to_kgx_node_with_synonyms(self) -> None:
-        """Test that synonyms are pipe-delimited."""
+        """Test that synonyms are returned as a list."""
         result = ChemicalResult(
             input_curie="CHEBI:17790",
             canonical_id="CHEBI:17790",
@@ -117,7 +115,7 @@ class TestChemicalResult:
 
         assert "MeOH" in node["synonym"]
         assert "wood alcohol" in node["synonym"]
-        assert "|" in node["synonym"]
+        assert isinstance(node["synonym"], list)  # Lists for KGX Sink
 
     def test_to_kgx_node_with_xrefs(self) -> None:
         """Test that xrefs are properly formatted."""
@@ -136,7 +134,7 @@ class TestChemicalResult:
         assert "KEGG.COMPOUND:C00132" in node["xref"]
 
     def test_to_kgx_node_empty_mass(self) -> None:
-        """Test that None mass produces empty string."""
+        """Test that None mass is omitted from output."""
         result = ChemicalResult(
             input_curie="CHEBI:17790",
             canonical_id="CHEBI:17790",
@@ -145,7 +143,7 @@ class TestChemicalResult:
         )
         node = result.to_kgx_node()
 
-        assert node["mass"] == ""
+        assert "mass" not in node  # Empty fields are omitted
 
     def test_to_kgx_node_with_roles(self) -> None:
         """Test that roles are stored but not in node output."""
@@ -247,12 +245,11 @@ class TestReadChemicalsFromFile:
         assert entries[1]["curie"] == "CHEBI:31795"
 
 
-class TestWriteKgxNodes:
-    """Tests for write_kgx_nodes function."""
+class TestExportKgx:
+    """Tests for export_kgx function."""
 
-    def test_write_nodes_creates_file(self, tmp_path: Path) -> None:
-        """Test that write_kgx_nodes creates a TSV file."""
-        output_path = tmp_path / "chemicals_nodes.tsv"
+    def test_export_creates_files(self, tmp_path: Path) -> None:
+        """Test that export_kgx creates both nodes and edges files."""
         results = [
             ChemicalResult(
                 input_curie="CHEBI:17790",
@@ -260,95 +257,27 @@ class TestWriteKgxNodes:
                 name="methanol",
                 formula="CH4O",
                 mass=32.042,
-            )
-        ]
-
-        write_kgx_nodes(results, output_path)
-
-        assert output_path.exists()
-        content = output_path.read_text()
-        assert "CHEBI:17790" in content
-        assert "methanol" in content
-        assert "CH4O" in content
-
-    def test_write_nodes_has_header(self, tmp_path: Path) -> None:
-        """Test that output has proper header."""
-        output_path = tmp_path / "chemicals_nodes.tsv"
-        results = [
-            ChemicalResult(
-                input_curie="CHEBI:17790",
-                canonical_id="CHEBI:17790",
-                name="methanol",
-            )
-        ]
-
-        write_kgx_nodes(results, output_path)
-
-        lines = output_path.read_text().strip().split("\n")
-        header = lines[0]
-        assert "id" in header
-        assert "category" in header
-        assert "name" in header
-        assert "formula" in header
-
-
-class TestWriteRoleNodes:
-    """Tests for write_role_nodes function."""
-
-    def test_write_role_nodes_appends(self, tmp_path: Path) -> None:
-        """Test that role nodes are appended to existing file."""
-        output_path = tmp_path / "chemicals_nodes.tsv"
-
-        # First write chemical nodes
-        results = [
-            ChemicalResult(
-                input_curie="CHEBI:17790",
-                canonical_id="CHEBI:17790",
-                name="methanol",
                 chebi_roles=[("CHEBI:33292", "fuel")],
             )
         ]
-        write_kgx_nodes(results, output_path)
 
-        # Then append role nodes
-        count = write_role_nodes(results, output_path)
+        node_count, edge_count = export_kgx(results, tmp_path)
 
-        assert count == 1
-        content = output_path.read_text()
-        assert "CHEBI:33292" in content
-        assert BIOLINK_CHEMICAL_ROLE in content
-        assert "fuel" in content
+        # node_count includes chemical + role nodes (2 total)
+        assert node_count == 2  # 1 chemical + 1 role node
+        assert edge_count == 1
+        nodes_path = tmp_path / "chemicals_nodes.tsv"
+        edges_path = tmp_path / "chemicals_edges.tsv"
+        assert nodes_path.exists()
+        assert edges_path.exists()
 
-    def test_write_role_nodes_deduplicates(self, tmp_path: Path) -> None:
-        """Test that duplicate roles are not written twice."""
-        output_path = tmp_path / "chemicals_nodes.tsv"
+        nodes_content = nodes_path.read_text()
+        assert "CHEBI:17790" in nodes_content
+        assert "methanol" in nodes_content
+        assert "CH4O" in nodes_content
 
-        results = [
-            ChemicalResult(
-                input_curie="CHEBI:17790",
-                canonical_id="CHEBI:17790",
-                name="methanol",
-                chebi_roles=[("CHEBI:33292", "fuel")],
-            ),
-            ChemicalResult(
-                input_curie="CHEBI:31795",
-                canonical_id="CHEBI:31795",
-                name="magnesium sulfate",
-                chebi_roles=[("CHEBI:33292", "fuel")],  # Same role
-            ),
-        ]
-        write_kgx_nodes(results, output_path)
-        count = write_role_nodes(results, output_path)
-
-        assert count == 1  # Only one role node despite two chemicals having it
-
-
-class TestWriteKgxEdges:
-    """Tests for write_kgx_edges function."""
-
-    def test_write_edges_creates_file(self, tmp_path: Path) -> None:
-        """Test that write_kgx_edges creates a TSV file."""
-        output_path = tmp_path / "chemicals_edges.tsv"
+    def test_export_includes_roles(self, tmp_path: Path) -> None:
+        """Test that role nodes and edges are created."""
         results = [
             ChemicalResult(
                 input_curie="CHEBI:17790",
@@ -358,19 +287,20 @@ class TestWriteKgxEdges:
             )
         ]
 
-        edge_count = write_kgx_edges(results, output_path)
+        chemical_count, edge_count = export_kgx(results, tmp_path)
 
-        assert edge_count == 2
-        assert output_path.exists()
-        content = output_path.read_text()
-        assert "CHEBI:17790" in content
-        assert "biolink:has_role" in content
-        assert "CHEBI:33292" in content
-        assert "CHEBI:77746" in content
+        assert edge_count == 2  # Two role edges
+        edges_content = (tmp_path / "chemicals_edges.tsv").read_text()
+        assert "biolink:has_role" in edges_content
+        assert "CHEBI:33292" in edges_content
+        assert "CHEBI:77746" in edges_content
 
-    def test_write_edges_has_provenance(self, tmp_path: Path) -> None:
+        # Role nodes should be in nodes file
+        nodes_content = (tmp_path / "chemicals_nodes.tsv").read_text()
+        assert BIOLINK_CHEMICAL_ROLE in nodes_content
+
+    def test_export_has_provenance(self, tmp_path: Path) -> None:
         """Test that edges have proper provenance fields."""
-        output_path = tmp_path / "chemicals_edges.tsv"
         results = [
             ChemicalResult(
                 input_curie="CHEBI:17790",
@@ -380,16 +310,15 @@ class TestWriteKgxEdges:
             )
         ]
 
-        write_kgx_edges(results, output_path)
+        export_kgx(results, tmp_path)
 
-        content = output_path.read_text()
-        assert "knowledge_assertion" in content
-        assert "manual_agent" in content
-        assert "infores:cmm-ai-automation" in content
+        edges_content = (tmp_path / "chemicals_edges.tsv").read_text()
+        assert "knowledge_assertion" in edges_content
+        assert "manual_agent" in edges_content
+        assert "infores:cmm-ai-automation" in edges_content
 
-    def test_write_edges_no_roles(self, tmp_path: Path) -> None:
+    def test_export_no_edges_without_roles(self, tmp_path: Path) -> None:
         """Test that chemicals without roles produce no edges."""
-        output_path = tmp_path / "chemicals_edges.tsv"
         results = [
             ChemicalResult(
                 input_curie="CHEBI:17790",
@@ -399,6 +328,6 @@ class TestWriteKgxEdges:
             )
         ]
 
-        edge_count = write_kgx_edges(results, output_path)
+        chemical_count, edge_count = export_kgx(results, tmp_path)
 
         assert edge_count == 0

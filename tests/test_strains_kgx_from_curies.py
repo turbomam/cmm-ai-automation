@@ -14,12 +14,11 @@ from cmm_ai_automation.scripts.strains_kgx_from_curies import (
     COLLECTION_PREFIX_MAP,
     RANK_TO_TAXRANK,
     StrainResult,
+    export_kgx,
     normalize_collection_curie,
     parse_curie,
     read_curies_from_file,
     sample_entries,
-    write_kgx_edges,
-    write_kgx_nodes,
 )
 
 
@@ -148,7 +147,7 @@ class TestStrainResult:
         node = result.to_kgx_node()
 
         assert node["id"] == "bacdive:7142"
-        assert node["category"] == BIOLINK_ORGANISM_TAXON
+        assert node["category"] == [BIOLINK_ORGANISM_TAXON]  # List for KGX Sink
         assert "Methylobacterium extorquens" in node["name"]
         assert "AM1" in node["name"]
         assert node["ncbi_taxon_id"] == "NCBITaxon:408"
@@ -196,7 +195,7 @@ class TestStrainResult:
         assert "2509276011" in node["genome_accessions_img"]
 
     def test_to_kgx_node_with_synonyms(self) -> None:
-        """Test that synonyms are pipe-delimited."""
+        """Test that synonyms are returned as a list."""
         result = StrainResult(
             input_curie="bacdive:7142",
             canonical_id="bacdive:7142",
@@ -205,7 +204,7 @@ class TestStrainResult:
         node = result.to_kgx_node()
 
         assert "M. extorquens" in node["synonym"]
-        assert "|" in node["synonym"]
+        assert isinstance(node["synonym"], list)  # Lists for KGX Sink
 
     def test_to_kgx_node_name_from_binomial_and_strain(self) -> None:
         """Test that name is constructed from binomial + strain."""
@@ -311,75 +310,40 @@ class TestReadCuriesFromFile:
         assert entries[1]["curie"] == "NCBITaxon:408"
 
 
-class TestWriteKgxNodes:
-    """Tests for write_kgx_nodes function."""
+class TestExportKgx:
+    """Tests for export_kgx function."""
 
-    def test_write_nodes_creates_file(self, tmp_path: Path) -> None:
-        """Test that write_kgx_nodes creates a TSV file."""
-        output_path = tmp_path / "strains_nodes.tsv"
+    def test_export_creates_files(self, tmp_path: Path) -> None:
+        """Test that export_kgx creates both nodes and edges files."""
         results = [
             StrainResult(
                 input_curie="bacdive:7142",
                 canonical_id="bacdive:7142",
                 binomial_name="Methylobacterium extorquens",
                 strain_designation="AM1",
-            )
-        ]
-
-        write_kgx_nodes(results, output_path)
-
-        assert output_path.exists()
-        content = output_path.read_text()
-        assert "bacdive:7142" in content
-        assert "Methylobacterium extorquens" in content
-
-    def test_write_nodes_has_header(self, tmp_path: Path) -> None:
-        """Test that output has proper header."""
-        output_path = tmp_path / "strains_nodes.tsv"
-        results = [
-            StrainResult(
-                input_curie="bacdive:7142",
-                canonical_id="bacdive:7142",
-            )
-        ]
-
-        write_kgx_nodes(results, output_path)
-
-        lines = output_path.read_text().strip().split("\n")
-        header = lines[0]
-        assert "id" in header
-        assert "category" in header
-        assert "name" in header
-        assert "ncbi_taxon_id" in header
-        assert "species_taxon_id" in header
-
-
-class TestWriteKgxEdges:
-    """Tests for write_kgx_edges function."""
-
-    def test_write_edges_creates_file(self, tmp_path: Path) -> None:
-        """Test that write_kgx_edges creates a TSV file."""
-        output_path = tmp_path / "strains_edges.tsv"
-        results = [
-            StrainResult(
-                input_curie="bacdive:7142",
-                canonical_id="bacdive:7142",
                 species_taxon_id="382",
             )
         ]
 
-        edge_count = write_kgx_edges(results, output_path)
+        strain_count, species_count, edge_count = export_kgx(results, tmp_path)
 
+        assert strain_count == 1
         assert edge_count == 1
-        assert output_path.exists()
-        content = output_path.read_text()
-        assert "bacdive:7142" in content
-        assert "biolink:in_taxon" in content
-        assert "NCBITaxon:382" in content
+        nodes_path = tmp_path / "strains_nodes.tsv"
+        edges_path = tmp_path / "strains_edges.tsv"
+        assert nodes_path.exists()
+        assert edges_path.exists()
 
-    def test_write_edges_has_provenance(self, tmp_path: Path) -> None:
+        nodes_content = nodes_path.read_text()
+        assert "bacdive:7142" in nodes_content
+        assert "Methylobacterium extorquens" in nodes_content
+
+        edges_content = edges_path.read_text()
+        assert "bacdive:7142" in edges_content
+        assert "biolink:in_taxon" in edges_content
+
+    def test_export_has_provenance(self, tmp_path: Path) -> None:
         """Test that edges have proper provenance fields."""
-        output_path = tmp_path / "strains_edges.tsv"
         results = [
             StrainResult(
                 input_curie="bacdive:7142",
@@ -388,16 +352,15 @@ class TestWriteKgxEdges:
             )
         ]
 
-        write_kgx_edges(results, output_path)
+        export_kgx(results, tmp_path)
 
-        content = output_path.read_text()
-        assert "knowledge_assertion" in content
-        assert "manual_agent" in content
-        assert "infores:cmm-ai-automation" in content
+        edges_content = (tmp_path / "strains_edges.tsv").read_text()
+        assert "knowledge_assertion" in edges_content
+        assert "manual_agent" in edges_content
+        assert "infores:cmm-ai-automation" in edges_content
 
-    def test_write_edges_no_species(self, tmp_path: Path) -> None:
+    def test_export_no_edges_without_species(self, tmp_path: Path) -> None:
         """Test that strains without species produce no edges."""
-        output_path = tmp_path / "strains_edges.tsv"
         results = [
             StrainResult(
                 input_curie="bacdive:7142",
@@ -406,13 +369,12 @@ class TestWriteKgxEdges:
             )
         ]
 
-        edge_count = write_kgx_edges(results, output_path)
+        strain_count, species_count, edge_count = export_kgx(results, tmp_path)
 
         assert edge_count == 0
 
-    def test_write_edges_no_self_loops(self, tmp_path: Path) -> None:
+    def test_export_no_self_loops(self, tmp_path: Path) -> None:
         """Test that self-loops are not created."""
-        output_path = tmp_path / "strains_edges.tsv"
         results = [
             StrainResult(
                 input_curie="NCBITaxon:382",
@@ -421,6 +383,6 @@ class TestWriteKgxEdges:
             )
         ]
 
-        edge_count = write_kgx_edges(results, output_path)
+        strain_count, species_count, edge_count = export_kgx(results, tmp_path)
 
         assert edge_count == 0
