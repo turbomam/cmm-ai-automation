@@ -235,9 +235,9 @@ def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
     taxonomy = doc.get("Name and taxonomic classification", {})
     result["species"] = taxonomy.get("species")
     # Normalize strain designation to sorted, pipe-delimited format
+    # Sorting ensures deterministic output for testing and deduplication
     raw_designation = taxonomy.get("strain designation", "")
     if raw_designation:
-        # Split on comma, strip whitespace, sort, rejoin with pipe
         designations = [d.strip() for d in raw_designation.split(",") if d.strip()]
         result["strain_designation"] = "|".join(sorted(designations))
     else:

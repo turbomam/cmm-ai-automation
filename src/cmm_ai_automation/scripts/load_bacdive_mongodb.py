@@ -173,7 +173,8 @@ def load_bacdive_to_mongodb(
                 result = client.do_api_call(f"fetch/{id_str}")
 
                 if not result or "results" not in result:
-                    # Empty batch - all IDs in this batch don't exist
+                    # Empty batch - all IDs in this batch don't exist (or API error)
+                    logger.debug(f"Batch {batch_ids[0]}-{batch_ids[-1]}: no results returned")
                     total_missing += len(batch_ids)
                     pbar.update(len(batch_ids))
                     time.sleep(REQUEST_DELAY)

@@ -41,7 +41,8 @@ pubchem_cache_dir := "{{cache_root}}/pubchem"
 ncbi_cache_dir := "{{cache_root}}/ncbi"
 cas_cache_dir := "{{cache_root}}/cas"
 
-# BacDive MongoDB defaults (override with: just bacdive_database=test load-bacdive)
+# BacDive MongoDB defaults
+# Override: just bacdive_max_id=300 bacdive_database=bdtest bacdive_collection=bdtest load-bacdive
 bacdive_max_id := "200000"
 bacdive_min_id := "1"
 bacdive_database := "bacdive"
