@@ -536,7 +536,7 @@
 <p><strong>Date:</strong> 2026-01-06<br />
 <strong>Status:</strong> Complete</p>
 <h2 id="overview">Overview</h2>
-<p>This pipeline transforms growth media data from Google Sheets/TSV into a Biolink-compliant KGX Knowledge Graph. It solves the challenge of grounding "local" or "lab-specific" media (like "Hypho medium") while linking established media to public databases (TogoMedium, MediaDive).</p>
+<p>This pipeline transforms growth media data from Google Sheets/TSV into a Biolink-compliant KGX Knowledge Graph. It solves the challenge of grounding "local" or "lab-specific" media (like "Hypho medium") while linking established media to public databases (MediaDive).</p>
 <h2 id="key-features">Key Features</h2>
 <ol>
 <li>
@@ -545,7 +545,7 @@
 <li><strong>Priority 1:</strong> Local Registry (<code>data/local_media_registry.tsv</code>) - for stable, minted IDs.</li>
 <li><strong>Priority 2:</strong> Manual Mappings (<code>data/media_grounding_mappings.tsv</code>) - for curated links.</li>
 <li><strong>Priority 3:</strong> Verified MediaDive IDs - checks local MongoDB for existence.</li>
-<li><strong>Priority 4:</strong> Semantic Search - fuzzy matching against local ChromaDB indices (TogoMedium/MediaDive).</li>
+<li><strong>Priority 4:</strong> Semantic Search - fuzzy matching against local ChromaDB indices (MediaDive).</li>
 </ul>
 </li>
 <li>
@@ -654,7 +654,7 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 <h2 id="dependencies">Dependencies</h2>
 <ul>
 <li><strong>MongoDB:</strong> Requires local instance with <code>mediadive</code> database (for verification).</li>
-<li><strong>ChromaDB:</strong> Requires indices in <code>data/chroma_togomedium</code> &amp; <code>data/chroma_mediadive</code> (for semantic search).</li>
+<li><strong>ChromaDB:</strong> Requires index in <code>data/chroma_mediadive</code> (for semantic search).</li>
 </ul>
 
 

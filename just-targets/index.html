@@ -948,9 +948,19 @@
 </thead>
 <tbody>
 <tr>
-<td><code>kgx-export-strains</code></td>
-<td>Export strains to KGX format</td>
-<td><code>output/kgx/strains_*.tsv</code></td>
+<td><code>strains-kgx-from-curies {input} {id_field} [output_dir]</code></td>
+<td>Generate KGX for strains from CURIEs</td>
+<td><code>output/kgx/strains_from_curies/</code></td>
+</tr>
+<tr>
+<td><code>strains-kgx-sample {input} {id_field} {n}</code></td>
+<td>Generate KGX for sampled strains</td>
+<td><code>output/kgx/strains_sample/</code></td>
+</tr>
+<tr>
+<td><code>chemicals-kgx-from-curies {input} {id_field} [output_dir]</code></td>
+<td>Generate KGX for chemicals from CURIEs</td>
+<td><code>output/kgx/chemicals_from_curies/</code></td>
 </tr>
 <tr>
 <td><code>kgx-export-growth</code></td>
@@ -1001,10 +1011,6 @@
 <tr>
 <td><code>enrich-ingredients {input} {output}</code></td>
 <td>Enrich ingredients with PubChem data</td>
-</tr>
-<tr>
-<td><code>enrich-strains {input} {output}</code></td>
-<td>Enrich strains with BacDive, NCBI, semantic data</td>
 </tr>
 </tbody>
 </table>

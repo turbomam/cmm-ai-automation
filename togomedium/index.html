@@ -616,45 +616,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Local Data Infrastructure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#chromadb-index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ChromaDB Index
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cached-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cached Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#whats-not-cached-locally" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What's NOT Cached Locally
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1010,45 +971,6 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Local Data Infrastructure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#chromadb-index" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ChromaDB Index
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#cached-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Cached Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#whats-not-cached-locally" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What's NOT Cached Locally
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
 </li>
       
         <li class="md-nav__item">
@@ -1402,40 +1324,13 @@ curl<span class="w"> </span><span class="s2">&quot;https://togomedium.org/sparql
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="local-data-infrastructure">Local Data Infrastructure</h2>
-<h3 id="chromadb-index">ChromaDB Index</h3>
-<p>We maintain a local ChromaDB index for fuzzy/semantic search:</p>
-<ul>
-<li><strong>Location</strong>: <code>data/chroma_togomedium/</code></li>
-<li><strong>Collection</strong>: <code>togomedium_media</code></li>
-<li><strong>Documents</strong>: 2,917 media</li>
-<li><strong>Size</strong>: ~11MB</li>
-</ul>
-<p><strong>Indexer script</strong>: <code>src/cmm_ai_automation/scripts/index_togomedium_chromadb.py</code></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run indexer</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.index_togomedium_chromadb
-
-<span class="c1"># Run with tests</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.index_togomedium_chromadb<span class="w"> </span>--test
-
-<span class="c1"># Force refresh from API</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.index_togomedium_chromadb<span class="w"> </span>--refresh
-</code></pre></div>
-<h3 id="cached-data">Cached Data</h3>
-<ul>
-<li><strong>Location</strong>: <code>data/togomedium_cache/media_list.json</code></li>
-<li><strong>Content</strong>: Basic media info (ID, name, source)</li>
-<li><strong>Size</strong>: ~485KB</li>
-</ul>
-<h3 id="whats-not-cached-locally">What's NOT Cached Locally</h3>
-<p>The JSON cache only contains basic media info. Missing:</p>
-<ul>
-<li>Full ingredient lists with quantities</li>
-<li>Cross-references to ChEBI/PubChem</li>
-<li>Organism-media associations</li>
-<li>Recipe preparation steps</li>
-<li>pH values and other metadata</li>
-</ul>
-<p>A full RDF dump via SPARQL would be needed for complete local data.</p>
+<p><strong>Note</strong>: We previously maintained a local ChromaDB index and cache of TogoMedium data, but these were removed because:</p>
+<ol>
+<li>TogoMedium only provides media names and IDs, not composition data</li>
+<li>The semantic search wasn't effective for grounding custom lab media (MP, Hypho)</li>
+<li>MediaDive provides better coverage with actual ingredient lists</li>
+</ol>
+<p>For TogoMedium data, use the REST API or SPARQL endpoint directly (see "Data Access Methods" above).</p>
 <h2 id="integration-with-other-data-sources">Integration with Other Data Sources</h2>
 <h3 id="mediadive-comparison">MediaDive Comparison</h3>
 <table>
