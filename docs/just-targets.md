@@ -8,9 +8,10 @@ This document lists all available `just` targets. Run `just --list` to see this 
 |----------|----------------|
 | **Getting Started** | `just install`, `just test`, `just qa` |
 | **MediaDive Pipeline** | `just load-mediadive`, `just mediadive-kgx-clean-export`, `just neo4j-upload-kgx` |
-| **Google Sheets** | `just download-sheets`, `just kgx-export-all` |
+| **Google Sheets** | `just download-normalized-kgx-sheets`, `just download-source-sink-sheets` |
 | **Neo4j** | `just neo4j-start`, `just neo4j-clear`, `just neo4j-status` |
-| **Cleanup** | `just clean-kgx`, `just clean-all` |
+| **Edge Patterns** | `just edge-patterns-merged`, `just edge-patterns-by-source` |
+| **Cleanup** | `just clean-output-kgx`, `just clean-edge-patterns`, `just clean-all` |
 
 ---
 
@@ -118,8 +119,14 @@ This document lists all available `just` targets. Run `just --list` to see this 
 | `kgx-to-rdf` | Transform KGX to N-Triples RDF format | `output/kgx/*.nt` |
 | `kgx-to-jsonl` | Transform KGX to JSONL format | `output/kgx/*.jsonl` |
 | `kgx-merge` | Merge multiple KGX graphs into one | `output/kgx/merged_*` |
-| `kgx-analyze` | Extract edge patterns from KGX files | `output/kgx/edge_patterns.tsv` |
 | `kgx-graph-summary` | Generate graph summary statistics | `output/kgx/summary.yaml`, `meta-kg.json` |
+
+### Edge Pattern Analysis
+
+| Target | Description | Output |
+|--------|-------------|--------|
+| `edge-patterns-merged` | Edge patterns from merged KGX (no source breakdown) | `output/edge_patterns/edge_patterns_merged.tsv` |
+| `edge-patterns-by-source` | Edge patterns with source breakdown | `output/edge_patterns/edge_patterns_by_source.tsv` |
 
 ---
 
@@ -150,8 +157,12 @@ This document lists all available `just` targets. Run `just --list` to see this 
 
 | Target | Description | Safety |
 |--------|-------------|--------|
-| `clean-kgx` | Clean KGX outputs only | Safe - only removes `output/kgx/` |
-| `clean-enrichment` | Clean enrichment outputs (DuckDB, KGX, intermediate) | Safe - keeps source data |
+| `clean-output-kgx` | Clean all KGX outputs | Safe - only removes `output/kgx/` |
+| `clean-kgx-bacdive` | Clean BacDive KGX outputs only | Safe - only removes BacDive JSONL files |
+| `clean-edge-patterns` | Clean edge pattern outputs | Safe - only removes `output/edge_patterns/` |
+| `clean-enrichment-db` | Clean enrichment database | Safe - keeps source data |
+| `clean-cache-all` | Clean all API caches (NCBI, PubChem, CAS) | Safe - will re-fetch on next use |
+| `clean-all-sheets` | Clean all Google Sheets TSVs | Need to re-download |
 | `clean-all` | Clean everything including downloaded sheets | **Warning** - need to re-download |
 | `clean` | Clean all generated files | Removes generated Python/docs |
 

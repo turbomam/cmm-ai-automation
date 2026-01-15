@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """
-Extract edge patterns from KGX files with flat naming convention.
+Extract edge patterns from merged KGX output.
 
-For files named *_nodes.tsv and *_edges.tsv in a single directory.
-Output format matches extract_edge_patterns.py:
+For files named *_nodes.tsv and *_edges.tsv in a single directory (e.g., kg-microbe/data/merged/).
+Source breakdown is NOT preserved - all patterns are labeled by their edge file stem.
+
+Output format:
     source | subject_category | subject_prefix | predicate | object_category | object_prefix | count
 """
 
@@ -66,9 +68,9 @@ def analyze_edges(edges_file: Path, node_categories: dict[str, str], source: str
 
 
 def main() -> None:
-    """Main function to analyze KGX files."""
+    """Main function to analyze KGX files in a flat directory."""
     if len(sys.argv) < 2:
-        print("Usage: python analyze_kgx_patterns.py <kgx_dir>", file=sys.stderr)
+        print("Usage: python edge_patterns_merged.py <merged_dir>", file=sys.stderr)
         sys.exit(1)
 
     kgx_dir = Path(sys.argv[1])
@@ -98,7 +100,7 @@ def main() -> None:
         patterns = analyze_edges(edges_file, node_categories, source)
         all_patterns.update(patterns)
 
-    # Output as TSV (same format as extract_edge_patterns.py)
+    # Output as TSV (same format as edge_patterns_by_source.py)
     writer = csv.writer(sys.stdout, delimiter="\t")
     writer.writerow(
         ["source", "subject_category", "subject_prefix", "predicate", "object_category", "object_prefix", "count"]

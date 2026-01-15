@@ -505,20 +505,29 @@ data/merged/
 
 ### Analyzing Edge Patterns
 
-Two scripts are available for analyzing edge patterns. The key difference is **which source files contribute to each pattern**:
+Two scripts are available for analyzing edge patterns. The key difference is **which source files contribute to each pattern**.
+
+**Quick usage with just targets:**
+```bash
+just edge-patterns-merged      # → output/edge_patterns/edge_patterns_merged.tsv
+just edge-patterns-by-source   # → output/edge_patterns/edge_patterns_by_source.tsv
+just clean-edge-patterns       # Clean outputs
+```
+
+**Direct script usage** (for custom paths):
 
 #### Option 1: Analyze Merged Data (Source Information Lost)
 
-Use `analyze_kgx_patterns.py` on the merged output. This shows aggregate patterns across all sources but **doesn't show which source contributed each pattern**:
+Use `edge_patterns_merged.py` on the merged output. This shows aggregate patterns across all sources but **doesn't show which source contributed each pattern**:
 
 ```bash
 cd ~/gitrepos/cmm-ai-automation
 
 # Analyze merged data (all patterns labeled "merged-kg")
-uv run python src/cmm_ai_automation/scripts/analyze_kgx_patterns.py ../kg-microbe/data/merged/
+uv run python src/cmm_ai_automation/scripts/edge_patterns_merged.py ../kg-microbe/data/merged/
 
 # Save to timestamped file
-uv run python src/cmm_ai_automation/scripts/analyze_kgx_patterns.py ../kg-microbe/data/merged/ > edge_patterns_merged_$(date +%Y-%m-%d).tsv
+uv run python src/cmm_ai_automation/scripts/edge_patterns_merged.py ../kg-microbe/data/merged/ > edge_patterns_merged_$(date +%Y-%m-%d).tsv
 ```
 
 **Output format:**
@@ -533,16 +542,16 @@ merged-kg  biolink:ChemicalSubstance     CHEBI               biolink:subclass_of
 
 #### Option 2: Analyze Transformed Data (Preserves Source Information)
 
-Use `extract_edge_patterns.py` on the **transformed** directory before merging. This shows **which source directory contributes each pattern**:
+Use `edge_patterns_by_source.py` on the **transformed** directory before merging. This shows **which source directory contributes each pattern**:
 
 ```bash
 cd ~/gitrepos/cmm-ai-automation
 
 # Analyze transformed data (source breakdown preserved)
-uv run python src/cmm_ai_automation/scripts/extract_edge_patterns.py ../kg-microbe/data/transformed/
+uv run python src/cmm_ai_automation/scripts/edge_patterns_by_source.py ../kg-microbe/data/transformed/
 
 # Save to timestamped file
-uv run python src/cmm_ai_automation/scripts/extract_edge_patterns.py ../kg-microbe/data/transformed/ > edge_patterns_by_source_$(date +%Y-%m-%d).tsv
+uv run python src/cmm_ai_automation/scripts/edge_patterns_by_source.py ../kg-microbe/data/transformed/ > edge_patterns_by_source_$(date +%Y-%m-%d).tsv
 ```
 
 **Output format:**
@@ -560,10 +569,10 @@ ontologies   biolink:OrganismTaxon         NCBITaxon           biolink:subclass_
 
 | Use Case | Script | Data Location |
 |----------|--------|---------------|
-| Want to see which source contributes patterns | `extract_edge_patterns.py` | `data/transformed/` |
-| Already merged and don't need source breakdown | `analyze_kgx_patterns.py` | `data/merged/` |
-| Debugging transform-specific issues | `extract_edge_patterns.py` | `data/transformed/` |
-| Quick aggregate statistics | `analyze_kgx_patterns.py` | `data/merged/` |
+| Want to see which source contributes patterns | `edge_patterns_by_source.py` | `data/transformed/` |
+| Already merged and don't need source breakdown | `edge_patterns_merged.py` | `data/merged/` |
+| Debugging transform-specific issues | `edge_patterns_by_source.py` | `data/transformed/` |
+| Quick aggregate statistics | `edge_patterns_merged.py` | `data/merged/` |
 
 #### What the Output Shows
 

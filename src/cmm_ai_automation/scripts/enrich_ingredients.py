@@ -34,8 +34,9 @@ load_dotenv()
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 DEFAULT_INPUT = PROJECT_ROOT / "data" / "private" / "derived" / "ingredients.tsv"
 DEFAULT_OUTPUT = PROJECT_ROOT / "data" / "private" / "derived" / "ingredients_enriched.tsv"
-DEFAULT_CACHE = PROJECT_ROOT / "data" / "private" / "derived" / "pubchem_cache.json"
-DEFAULT_CAS_CACHE = PROJECT_ROOT / "data" / "private" / "derived" / "cas_cache.json"
+CACHE_ROOT = PROJECT_ROOT / "cache"
+DEFAULT_CACHE = CACHE_ROOT / "pubchem" / "pubchem_cache.json"
+DEFAULT_CAS_CACHE = CACHE_ROOT / "cas" / "cas_cache.json"
 
 logger = logging.getLogger(__name__)
 

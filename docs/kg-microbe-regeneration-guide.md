@@ -191,7 +191,7 @@ make neo4j-upload         # Upload to Neo4j
 
 After transform, analyze edge patterns:
 ```bash
-python ~/gitrepos/cmm-ai-automation/src/cmm_ai_automation/scripts/extract_edge_patterns.py \
+python ~/gitrepos/cmm-ai-automation/src/cmm_ai_automation/scripts/edge_patterns_by_source.py \
   ~/gitrepos/kg-microbe/data/transformed > edge_patterns.tsv
 ```
 

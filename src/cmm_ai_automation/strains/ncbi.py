@@ -38,7 +38,7 @@ NCBI_REQUEST_TIMEOUT = 10  # seconds
 NCBI_API_KEY = os.getenv("NCBI_API_KEY")
 
 # Cache directory for NCBI responses
-CACHE_DIR = Path.home() / ".cache" / "cmm-ai-automation" / "ncbi"
+CACHE_DIR = Path(__file__).parent.parent.parent.parent / "cache" / "ncbi"
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
 

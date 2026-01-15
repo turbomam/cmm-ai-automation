@@ -12,8 +12,9 @@ import re
 
 import chromadb
 import click
-from pymongo import MongoClient
 from tqdm import tqdm
+
+from cmm_ai_automation.strains.bacdive import get_bacdive_collection
 
 logging.basicConfig(
     level=logging.INFO,
@@ -248,14 +249,20 @@ def index_bacdive_to_chromadb(
     limit: int | None = None,
     batch_size: int = 500,
     clear: bool = False,
+    database: str | None = None,
+    collection: str | None = None,
 ) -> None:
     """Index BacDive strains into ChromaDB."""
 
     # Connect to MongoDB
-    logger.info("Connecting to MongoDB...")
-    mongo_client: MongoClient = MongoClient("mongodb://localhost:27017/")
-    db = mongo_client["bacdive"]
-    strains = db["strains"]
+    db_name = database or "bacdive"
+    coll_name = collection or "strains"
+    logger.info(f"Connecting to MongoDB ({db_name}.{coll_name})...")
+    strains = get_bacdive_collection(database=database, collection=collection)
+
+    if strains is None:
+        logger.error("Failed to connect to BacDive MongoDB")
+        return
 
     total_count = strains.count_documents({})
     logger.info(f"Found {total_count:,} strains in BacDive")
@@ -410,11 +417,27 @@ def demo_searches(n_results: int = 5) -> None:
 @click.option("--clear/--no-clear", default=False, help="Clear existing collection before indexing")
 @click.option("--demo/--no-demo", default=False, help="Run demo searches after indexing")
 @click.option("--demo-only", is_flag=True, help="Only run demo searches (skip indexing)")
-def main(limit: int | None, batch_size: int, clear: bool, demo: bool, demo_only: bool) -> None:
+@click.option("--database", type=str, default=None, help="MongoDB database name (default: bacdive)")
+@click.option("--collection", type=str, default=None, help="MongoDB collection name (default: strains)")
+def main(
+    limit: int | None,
+    batch_size: int,
+    clear: bool,
+    demo: bool,
+    demo_only: bool,
+    database: str | None,
+    collection: str | None,
+) -> None:
     """Index BacDive strains into ChromaDB for semantic search."""
 
     if not demo_only:
-        index_bacdive_to_chromadb(limit=limit, batch_size=batch_size, clear=clear)
+        index_bacdive_to_chromadb(
+            limit=limit,
+            batch_size=batch_size,
+            clear=clear,
+            database=database,
+            collection=collection,
+        )
 
     if demo or demo_only:
         demo_searches()

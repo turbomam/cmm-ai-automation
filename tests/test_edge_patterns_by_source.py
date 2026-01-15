@@ -1,4 +1,4 @@
-"""Tests for extract_edge_patterns.py script."""
+"""Tests for edge_patterns_by_source.py script."""
 
 from collections.abc import Generator
 from io import StringIO
@@ -8,7 +8,7 @@ from unittest.mock import patch
 
 import pytest
 
-from cmm_ai_automation.scripts.extract_edge_patterns import (
+from cmm_ai_automation.scripts.edge_patterns_by_source import (
     CURIE_PATTERN,
     analyze_edges,
     extract_prefix,
@@ -155,7 +155,7 @@ class TestMain:
 
     def test_main_no_args(self) -> None:
         """Test main with no arguments exits with error."""
-        with patch("sys.argv", ["extract_edge_patterns.py"]):
+        with patch("sys.argv", ["edge_patterns_by_source.py"]):
             with pytest.raises(SystemExit) as exc_info:
                 main()
             assert exc_info.value.code == 1
@@ -180,7 +180,7 @@ class TestMain:
             stdout_capture = StringIO()
 
             with (
-                patch("sys.argv", ["extract_edge_patterns.py", str(tmpdir_path)]),
+                patch("sys.argv", ["edge_patterns_by_source.py", str(tmpdir_path)]),
                 patch("sys.stdout", stdout_capture),
             ):
                 main()
@@ -208,7 +208,7 @@ class TestMain:
             stdout_capture = StringIO()
 
             with (
-                patch("sys.argv", ["extract_edge_patterns.py", str(tmpdir_path)]),
+                patch("sys.argv", ["edge_patterns_by_source.py", str(tmpdir_path)]),
                 patch("sys.stdout", stdout_capture),
             ):
                 main()
@@ -232,7 +232,7 @@ class TestMain:
             stdout_capture = StringIO()
 
             with (
-                patch("sys.argv", ["extract_edge_patterns.py", str(tmpdir_path)]),
+                patch("sys.argv", ["edge_patterns_by_source.py", str(tmpdir_path)]),
                 patch("sys.stdout", stdout_capture),
             ):
                 main()

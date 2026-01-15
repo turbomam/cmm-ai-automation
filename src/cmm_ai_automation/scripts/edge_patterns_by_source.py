@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """
-Extract edge patterns from kg-microbe transformed data.
+Extract edge patterns from transformed data with per-source subdirectories.
 
-Pattern: subject_category | subject_prefix | predicate | object_category | object_prefix
+For directory structure like kg-microbe/data/transformed/<source>/nodes.tsv, edges.tsv.
+Source breakdown IS preserved - each pattern is labeled by its source directory name.
+
+Output format:
+    source | subject_category | subject_prefix | predicate | object_category | object_prefix | count
 """
 
 import csv
@@ -63,7 +67,7 @@ def analyze_edges(edges_file: Path, nodes_file: Path, source: str) -> Counter[Ed
 def main() -> None:
     """Main function to analyze all sources."""
     if len(sys.argv) < 2:
-        print("Usage: python extract_edge_patterns.py <transformed_data_dir>", file=sys.stderr)
+        print("Usage: python edge_patterns_by_source.py <transformed_dir>", file=sys.stderr)
         sys.exit(1)
 
     transformed_dir = Path(sys.argv[1])

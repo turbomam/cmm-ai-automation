@@ -182,6 +182,86 @@ open http://localhost:7474    # Neo4j Browser
 
 See [docs/pipeline.md](docs/pipeline.md) for detailed pipeline documentation.
 
+### KGX Rebuild Pipeline
+
+The `kgx-rebuild-all` target builds the **merged CMM Growth Knowledge Graph** - an integrated KGX dataset combining microbial strain data, growth media compositions, and chemical information enriched from multiple databases.
+
+```bash
+just kgx-rebuild-all
+```
+
+**Pipeline steps:**
+
+| Step | Target | Description |
+|------|--------|-------------|
+| 1 | `clean-normalized-kgx-sheets` | Remove downloaded TSVs from `data/private/normalized-kgx-downloads/` |
+| 2 | `clean-output-kgx` | Remove generated KGX outputs from `output/kgx/` |
+| 3 | `download-normalized-kgx-sheets` | Download growth and medium TSVs from Google Sheets |
+| 4 | `strains-kgx-from-curies` | Enrich strain CURIEs with BacDive/NCBI data |
+| 5 | `chemicals-kgx-from-curies` | Enrich chemical CURIEs with PubChem/ChEBI data |
+| 6 | `kgx-merge-all` | Merge all sources into final KGX files |
+
+**Output: Merged CMM Growth Knowledge Graph**
+- `output/kgx/merged/merged_nodes.tsv` - All nodes (strains, species, chemicals, media, roles)
+- `output/kgx/merged/merged_edges.tsv` - All edges (in_taxon, has_role, has_part relationships)
+
+**Data sources enriched:**
+- **Strains**: BacDive (culture collection IDs, synonyms, genome accessions), NCBI Taxonomy (rank, parent taxon)
+- **Chemicals**: ChEBI and PubChem (formula, mass, InChIKey, synonyms, xrefs, CAS numbers); ChEBI also provides functional role annotations
+
+**Requirements:**
+- MongoDB running locally with BacDive data loaded (see below)
+- Google Sheets credentials configured
+- Network access for PubChem/ChEBI/NCBI APIs
+
+**One-time BacDive setup:**
+```bash
+# 1. Register for free BacDive API credentials at https://bacdive.dsmz.de/
+# 2. Add credentials to .env:
+#    BACDIVE_EMAIL=your@email.com
+#    BACDIVE_PASSWORD=your-password
+
+# 3. Ensure MongoDB is running (mongod or via Docker)
+
+# 4. Load BacDive data (iterates IDs 1-200000, ~100k strains exist)
+just load-bacdive                         # Full load (several hours)
+just bacdive_max_id=1000 load-bacdive     # Test with first 1000 IDs
+
+# 5. Incremental update (fetch only new IDs)
+just bacdive_min_id=176393 load-bacdive   # From current max+1
+```
+
+### KGX Edge Pattern Analysis
+
+Two scripts analyze edge patterns (subject-predicate-object triples) in KGX data. These are useful for understanding the structure of kg-microbe or any KGX dataset.
+
+```bash
+# Analyze merged KGX output (source breakdown NOT preserved)
+# Default: ../kg-microbe/data/merged → output/edge_patterns/edge_patterns_merged.tsv
+just edge-patterns-merged
+
+# Analyze transformed data (source breakdown IS preserved)
+# Default: ../kg-microbe/data/transformed → output/edge_patterns/edge_patterns_by_source.tsv
+just edge-patterns-by-source
+
+# Clean edge pattern outputs
+just clean-edge-patterns
+```
+
+**Output format** (TSV to `output/edge_patterns/`):
+```
+source | subject_category | subject_prefix | predicate | object_category | object_prefix | count
+```
+
+| Target | Input Structure | Use Case |
+|--------|-----------------|----------|
+| `edge-patterns-merged` | Single dir with `*_nodes.tsv`, `*_edges.tsv` | Quick aggregate stats from merged output |
+| `edge-patterns-by-source` | Subdirs with `<source>/nodes.tsv`, `edges.tsv` | See which source contributes each pattern |
+
+**Requirements:**
+- Clone [kg-microbe](https://github.com/Knowledge-Graph-Hub/kg-microbe) as a sibling directory (`../kg-microbe`)
+- Or provide custom paths: `just kg_microbe_merged=/path/to/merged edge-patterns-merged`
+
 ## Google Sheets Usage
 
 ```python

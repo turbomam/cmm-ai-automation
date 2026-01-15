@@ -1,4 +1,4 @@
-"""Tests for analyze_kgx_patterns.py script."""
+"""Tests for edge_patterns_merged.py script."""
 
 from io import StringIO
 from pathlib import Path
@@ -7,7 +7,7 @@ from unittest.mock import patch
 
 import pytest
 
-from cmm_ai_automation.scripts.analyze_kgx_patterns import (
+from cmm_ai_automation.scripts.edge_patterns_merged import (
     analyze_edges,
     extract_prefix,
     load_node_categories,
@@ -125,14 +125,14 @@ class TestMain:
 
     def test_main_no_args(self) -> None:
         """Test main with no arguments exits with error."""
-        with patch("sys.argv", ["analyze_kgx_patterns.py"]):
+        with patch("sys.argv", ["edge_patterns_merged.py"]):
             with pytest.raises(SystemExit) as exc_info:
                 main()
             assert exc_info.value.code == 1
 
     def test_main_invalid_directory(self) -> None:
         """Test main with invalid directory exits with error."""
-        with patch("sys.argv", ["analyze_kgx_patterns.py", "/nonexistent/path"]):
+        with patch("sys.argv", ["edge_patterns_merged.py", "/nonexistent/path"]):
             with pytest.raises(SystemExit) as exc_info:
                 main()
             assert exc_info.value.code == 1
@@ -144,7 +144,7 @@ class TestMain:
             edges_file = Path(tmpdir) / "test_edges.tsv"
             edges_file.write_text("subject\tpredicate\tobject\n")
 
-            with patch("sys.argv", ["analyze_kgx_patterns.py", tmpdir]):
+            with patch("sys.argv", ["edge_patterns_merged.py", tmpdir]):
                 with pytest.raises(SystemExit) as exc_info:
                     main()
                 assert exc_info.value.code == 1
@@ -156,7 +156,7 @@ class TestMain:
             nodes_file = Path(tmpdir) / "test_nodes.tsv"
             nodes_file.write_text("id\tcategory\n")
 
-            with patch("sys.argv", ["analyze_kgx_patterns.py", tmpdir]):
+            with patch("sys.argv", ["edge_patterns_merged.py", tmpdir]):
                 with pytest.raises(SystemExit) as exc_info:
                     main()
                 assert exc_info.value.code == 1
@@ -174,7 +174,7 @@ class TestMain:
             stdout_capture = StringIO()
 
             with (
-                patch("sys.argv", ["analyze_kgx_patterns.py", tmpdir]),
+                patch("sys.argv", ["edge_patterns_merged.py", tmpdir]),
                 patch("sys.stdout", stdout_capture),
             ):
                 main()
@@ -202,7 +202,7 @@ class TestMain:
             stdout_capture = StringIO()
 
             with (
-                patch("sys.argv", ["analyze_kgx_patterns.py", tmpdir]),
+                patch("sys.argv", ["edge_patterns_merged.py", tmpdir]),
                 patch("sys.stdout", stdout_capture),
             ):
                 main()
@@ -225,7 +225,7 @@ class TestMain:
             stdout_capture = StringIO()
 
             with (
-                patch("sys.argv", ["analyze_kgx_patterns.py", tmpdir]),
+                patch("sys.argv", ["edge_patterns_merged.py", tmpdir]),
                 patch("sys.stdout", stdout_capture),
             ):
                 main()
