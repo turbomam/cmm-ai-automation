@@ -44,6 +44,8 @@ from pathlib import Path
 from typing import Any
 
 import click
+from kgx.sink import TsvSink
+from kgx.transformer import Transformer
 
 from cmm_ai_automation.strains.bacdive import (
     extract_bacdive_data,
@@ -157,8 +159,8 @@ class StrainResult:
     genome_accessions_patric: list[str] = field(default_factory=list)
     genome_accessions_other: list[str] = field(default_factory=list)
 
-    def to_kgx_node(self) -> dict[str, str]:
-        """Convert to KGX node row."""
+    def to_kgx_node(self) -> dict:
+        """Convert to KGX node dict for use with KGX Sink.write_node()."""
         # Build display name
         display_name = self.name
         if not display_name:
@@ -188,29 +190,39 @@ class StrainResult:
             rank = "strain"  # Override any NCBI-derived rank for BacDive entries
         taxrank_curie = RANK_TO_TAXRANK.get(rank, "")
 
-        return {
+        node: dict = {
             "id": self.canonical_id,
-            "category": BIOLINK_ORGANISM_TAXON,
+            "category": [BIOLINK_ORGANISM_TAXON],  # KGX expects list for category
             "name": display_name,
-            "binomial_name": self.binomial_name,
-            "ncbi_taxon_id": f"NCBITaxon:{self.ncbi_taxon_id}" if self.ncbi_taxon_id else "",
-            "species_taxon_id": f"NCBITaxon:{self.species_taxon_id}" if self.species_taxon_id else "",
-            "parent_taxon_id": f"NCBITaxon:{self.parent_taxon_id}" if self.parent_taxon_id else "",
-            "has_taxonomic_rank": taxrank_curie,
-            "strain_designation": self.strain_designation,
-            "xref": "|".join(sorted(set(all_xrefs))) if all_xrefs else "",
-            "synonym": "|".join(sorted(set(self.synonyms))) if self.synonyms else "",
-            "genome_accessions_ncbi": "|".join(sorted(self.genome_accessions_ncbi))
-            if self.genome_accessions_ncbi
-            else "",
-            "genome_accessions_img": "|".join(sorted(self.genome_accessions_img)) if self.genome_accessions_img else "",
-            "genome_accessions_patric": "|".join(sorted(self.genome_accessions_patric))
-            if self.genome_accessions_patric
-            else "",
-            "genome_accessions_other": "|".join(sorted(self.genome_accessions_other))
-            if self.genome_accessions_other
-            else "",
         }
+
+        # Only include non-empty optional fields
+        if self.binomial_name:
+            node["binomial_name"] = self.binomial_name
+        if self.ncbi_taxon_id:
+            node["ncbi_taxon_id"] = f"NCBITaxon:{self.ncbi_taxon_id}"
+        if self.species_taxon_id:
+            node["species_taxon_id"] = f"NCBITaxon:{self.species_taxon_id}"
+        if self.parent_taxon_id:
+            node["parent_taxon_id"] = f"NCBITaxon:{self.parent_taxon_id}"
+        if taxrank_curie:
+            node["has_taxonomic_rank"] = taxrank_curie
+        if self.strain_designation:
+            node["strain_designation"] = self.strain_designation
+        if all_xrefs:
+            node["xref"] = sorted(set(all_xrefs))
+        if self.synonyms:
+            node["synonym"] = sorted(set(self.synonyms))
+        if self.genome_accessions_ncbi:
+            node["genome_accessions_ncbi"] = sorted(self.genome_accessions_ncbi)
+        if self.genome_accessions_img:
+            node["genome_accessions_img"] = sorted(self.genome_accessions_img)
+        if self.genome_accessions_patric:
+            node["genome_accessions_patric"] = sorted(self.genome_accessions_patric)
+        if self.genome_accessions_other:
+            node["genome_accessions_other"] = sorted(self.genome_accessions_other)
+
+        return node
 
 
 def parse_curie(curie: str) -> tuple[str, str]:
@@ -233,24 +245,41 @@ def parse_curie(curie: str) -> tuple[str, str]:
     return prefix.strip(), local_id.strip()
 
 
-def lookup_bacdive_by_id(bacdive_id: int) -> dict[str, Any] | None:
+# Module-level MongoDB collection cache (set by main())
+_bacdive_collection: Any = None
+
+
+def lookup_bacdive_by_id(
+    bacdive_id: int,
+    database: str | None = None,
+    collection: str | None = None,
+) -> dict[str, Any] | None:
     """Look up a BacDive record by BacDive ID.
 
     Args:
         bacdive_id: BacDive numeric ID
+        database: MongoDB database name (default: bacdive)
+        collection: MongoDB collection name (default: strains)
 
     Returns:
         BacDive document or None
     """
-    collection = get_bacdive_collection()
-    if collection is None:
+    global _bacdive_collection
+
+    # Use cached collection if available and no overrides specified
+    if _bacdive_collection is not None and database is None and collection is None:
+        mongo_coll = _bacdive_collection
+    else:
+        mongo_coll = get_bacdive_collection(database=database, collection=collection)
+
+    if mongo_coll is None:
         logger.warning("BacDive MongoDB not available")
         return None
 
     # BacDive ID can be in _id or General.BacDive-ID
-    doc: dict[str, Any] | None = collection.find_one({"General.BacDive-ID": bacdive_id})
+    doc: dict[str, Any] | None = mongo_coll.find_one({"General.BacDive-ID": bacdive_id})
     if doc is None:
-        doc = collection.find_one({"_id": bacdive_id})
+        doc = mongo_coll.find_one({"_id": bacdive_id})
     return doc
 
 
@@ -487,46 +516,19 @@ def sample_entries(
     return entries
 
 
-def write_kgx_nodes(results: list[StrainResult], output_path: Path) -> None:
-    """Write strain nodes to KGX TSV file."""
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+def export_kgx(results: list[StrainResult], output_dir: Path) -> tuple[int, int, int]:
+    """Export strain nodes and edges using KGX Sink classes.
 
-    fieldnames = [
-        "id",
-        "category",
-        "name",
-        "binomial_name",
-        "ncbi_taxon_id",
-        "species_taxon_id",
-        "parent_taxon_id",
-        "has_taxonomic_rank",
-        "strain_designation",
-        "xref",
-        "synonym",
-        "genome_accessions_ncbi",
-        "genome_accessions_img",
-        "genome_accessions_patric",
-        "genome_accessions_other",
-    ]
+    Args:
+        results: List of StrainResult objects
+        output_dir: Output directory for KGX files
 
-    with output_path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter="\t")
-        writer.writeheader()
-
-        for result in results:
-            writer.writerow(result.to_kgx_node())
-
-    logger.info(f"Wrote {len(results)} strain nodes to {output_path}")
-
-
-def write_species_nodes(results: list[StrainResult], output_path: Path) -> int:
-    """Write species nodes referenced by strains.
-
-    Creates nodes for species that are referenced in edges but might not
-    have their own strain entries. Fetches all available properties but
-    does not recursively pursue parent taxa.
+    Returns:
+        Tuple of (strain_nodes_count, species_nodes_count, edges_count)
     """
-    # Collect unique species taxon IDs
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Collect unique species taxon IDs for species nodes
     species_ids: set[str] = set()
     for result in results:
         if result.species_taxon_id:
@@ -536,17 +538,19 @@ def write_species_nodes(results: list[StrainResult], output_path: Path) -> int:
     strain_ids = {r.canonical_id for r in results}
     species_ids = {sid for sid in species_ids if f"NCBITaxon:{sid}" not in strain_ids}
 
-    if not species_ids:
-        return 0
+    # Fetch species data from NCBI if needed
+    species_data: dict = {}
+    species_linkouts: dict = {}
+    if species_ids:
+        species_id_list = list(species_ids)
+        species_data = fetch_ncbi_batch(species_id_list)
+        species_linkouts = fetch_ncbi_linkouts(species_id_list)
 
-    # Fetch species data from NCBI
-    species_id_list = list(species_ids)
-    species_data = fetch_ncbi_batch(species_id_list)
+    # Create KGX transformer and sink
+    transformer = Transformer()
 
-    # Fetch linkouts for xrefs and genome accessions
-    linkouts = fetch_ncbi_linkouts(species_id_list)
-
-    fieldnames = [
+    # Specify which properties to include in output
+    node_props = {
         "id",
         "category",
         "name",
@@ -562,104 +566,96 @@ def write_species_nodes(results: list[StrainResult], output_path: Path) -> int:
         "genome_accessions_img",
         "genome_accessions_patric",
         "genome_accessions_other",
-    ]
+    }
+    edge_props = {"subject", "predicate", "object", "knowledge_level", "agent_type", "primary_knowledge_source"}
 
-    # Append to existing file (header already written by write_kgx_nodes)
-    with output_path.open("a", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter="\t")
+    output_base = output_dir / "strains"
+    sink = TsvSink(
+        owner=transformer,
+        filename=str(output_base),
+        format="tsv",
+        node_properties=node_props,
+        edge_properties=edge_props,
+    )
 
-        for species_id, data in species_data.items():
-            # Get xrefs and genome accessions from linkouts
-            xrefs: list[str] = []
-            genome_accessions_img: list[str] = []
-            genome_accessions_other: list[str] = []
+    # Write strain nodes
+    for result in results:
+        sink.write_node(result.to_kgx_node())
 
-            if species_id in linkouts:
-                xrefs = extract_xrefs_from_linkouts(linkouts[species_id])
-                # Normalize collection CURIEs
-                xrefs = [normalize_collection_curie(x) for x in xrefs]
+    # Write species nodes
+    species_count = 0
+    for species_id, data in species_data.items():
+        # Get xrefs and genome accessions from linkouts
+        xrefs: list[str] = []
+        genome_accessions_img: list[str] = []
+        genome_accessions_other: list[str] = []
 
-                # Extract genome accessions
-                genome_data = extract_genome_accessions_from_linkouts(linkouts[species_id])
-                genome_accessions_img = genome_data.get("genome_accessions_img", [])
-                genome_accessions_other = genome_data.get("genome_accessions_other", [])
+        if species_id in species_linkouts:
+            xrefs = extract_xrefs_from_linkouts(species_linkouts[species_id])
+            xrefs = [normalize_collection_curie(x) for x in xrefs]
+            genome_data = extract_genome_accessions_from_linkouts(species_linkouts[species_id])
+            genome_accessions_img = genome_data.get("genome_accessions_img", [])
+            genome_accessions_other = genome_data.get("genome_accessions_other", [])
 
-            scientific_name = data.get("scientific_name", "")
+        scientific_name = data.get("scientific_name", "")
 
-            writer.writerow(
-                {
-                    "id": f"NCBITaxon:{species_id}",
-                    "category": BIOLINK_ORGANISM_TAXON,
-                    "name": scientific_name,
-                    "binomial_name": scientific_name,  # For species, scientific name IS the binomial
-                    "ncbi_taxon_id": f"NCBITaxon:{species_id}",
-                    "species_taxon_id": f"NCBITaxon:{species_id}",
-                    "parent_taxon_id": f"NCBITaxon:{data.get('parent_taxon_id', '')}"
-                    if data.get("parent_taxon_id")
-                    else "",
-                    "has_taxonomic_rank": RANK_TO_TAXRANK.get(data.get("rank", ""), ""),
-                    "strain_designation": "",
-                    "xref": "|".join(sorted(set(xrefs))) if xrefs else "",
-                    "synonym": "|".join(data.get("synonyms", [])),
-                    "genome_accessions_ncbi": "",  # NCBI linkouts don't provide NCBI genome accessions directly
-                    "genome_accessions_img": "|".join(sorted(genome_accessions_img)) if genome_accessions_img else "",
-                    "genome_accessions_patric": "",  # NCBI linkouts don't provide PATRIC accessions
-                    "genome_accessions_other": "|".join(sorted(genome_accessions_other))
-                    if genome_accessions_other
-                    else "",
-                }
-            )
+        species_node: dict = {
+            "id": f"NCBITaxon:{species_id}",
+            "category": [BIOLINK_ORGANISM_TAXON],
+            "name": scientific_name,
+            "binomial_name": scientific_name,
+            "ncbi_taxon_id": f"NCBITaxon:{species_id}",
+            "species_taxon_id": f"NCBITaxon:{species_id}",
+        }
 
-    logger.info(f"Wrote {len(species_data)} species nodes to {output_path}")
-    return len(species_data)
+        if data.get("parent_taxon_id"):
+            species_node["parent_taxon_id"] = f"NCBITaxon:{data['parent_taxon_id']}"
+        if data.get("rank"):
+            species_node["has_taxonomic_rank"] = RANK_TO_TAXRANK.get(data["rank"], "")
+        if xrefs:
+            species_node["xref"] = sorted(set(xrefs))
+        if data.get("synonyms"):
+            species_node["synonym"] = data["synonyms"]
+        if genome_accessions_img:
+            species_node["genome_accessions_img"] = sorted(genome_accessions_img)
+        if genome_accessions_other:
+            species_node["genome_accessions_other"] = sorted(genome_accessions_other)
 
+        sink.write_node(species_node)
+        species_count += 1
 
-def write_kgx_edges(results: list[StrainResult], output_path: Path) -> int:
-    """Write taxonomic hierarchy edges to KGX TSV file.
-
-    Creates in_taxon edges from strains to their parent species.
-    """
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    fieldnames = [
-        "subject",
-        "predicate",
-        "object",
-        "knowledge_level",
-        "agent_type",
-        "primary_knowledge_source",
-    ]
-
+    # Write in_taxon edges
     edge_count = 0
-    with output_path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter="\t")
-        writer.writeheader()
+    for result in results:
+        if not result.species_taxon_id:
+            continue
 
-        for result in results:
-            if not result.species_taxon_id:
-                continue
+        subject_id = result.canonical_id
+        object_id = f"NCBITaxon:{result.species_taxon_id}"
 
-            subject_id = result.canonical_id
-            object_id = f"NCBITaxon:{result.species_taxon_id}"
+        # Don't create self-loops
+        if subject_id == object_id:
+            continue
 
-            # Don't create self-loops
-            if subject_id == object_id:
-                continue
+        sink.write_edge(
+            {
+                "subject": subject_id,
+                "predicate": TAXONOMY_PREDICATE,
+                "object": object_id,
+                "knowledge_level": KNOWLEDGE_LEVEL,
+                "agent_type": AGENT_TYPE,
+                "primary_knowledge_source": PRIMARY_KNOWLEDGE_SOURCE,
+            }
+        )
+        edge_count += 1
 
-            writer.writerow(
-                {
-                    "subject": subject_id,
-                    "predicate": TAXONOMY_PREDICATE,
-                    "object": object_id,
-                    "knowledge_level": KNOWLEDGE_LEVEL,
-                    "agent_type": AGENT_TYPE,
-                    "primary_knowledge_source": PRIMARY_KNOWLEDGE_SOURCE,
-                }
-            )
-            edge_count += 1
+    # Finalize to flush and close files
+    sink.finalize()
 
-    logger.info(f"Wrote {edge_count} edges to {output_path}")
-    return edge_count
+    logger.info(f"Wrote {len(results)} strain nodes and {species_count} species nodes to {output_base}_nodes.tsv")
+    logger.info(f"Wrote {edge_count} edges to {output_base}_edges.tsv")
+
+    return len(results), species_count, edge_count
 
 
 @click.command()
@@ -720,6 +716,18 @@ def write_kgx_edges(results: list[StrainResult], output_path: Path) -> int:
     is_flag=True,
     help="Show what would be fetched without making API calls",
 )
+@click.option(
+    "--database",
+    type=str,
+    default=None,
+    help="MongoDB database name for BacDive lookups (default: bacdive)",
+)
+@click.option(
+    "--collection",
+    type=str,
+    default=None,
+    help="MongoDB collection name for BacDive lookups (default: strains)",
+)
 def main(
     input_path: Path,
     id_field: str,
@@ -730,6 +738,8 @@ def main(
     sample_fraction: float | None,
     seed: int | None,
     dry_run: bool,
+    database: str | None,
+    collection: str | None,
 ) -> None:
     """Generate KGX nodes and edges for strains from CURIEs.
 
@@ -747,6 +757,16 @@ def main(
     """
     if seed is not None:
         random.seed(seed)
+
+    # Initialize BacDive MongoDB collection (cached for efficiency)
+    global _bacdive_collection
+    db_name = database or "bacdive"
+    coll_name = collection or "strains"
+    _bacdive_collection = get_bacdive_collection(database=database, collection=collection)
+    if _bacdive_collection is not None:
+        click.echo(f"Connected to BacDive MongoDB ({db_name}.{coll_name})")
+    else:
+        click.echo(f"Warning: BacDive MongoDB ({db_name}.{coll_name}) not available")
 
     # Read input
     click.echo(f"Reading CURIEs from {input_path}, column '{id_field}'")
@@ -840,17 +860,13 @@ def main(
         click.echo("No results to export")
         sys.exit(1)
 
-    # Write outputs
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    nodes_path = output_dir / "strains_nodes.tsv"
-    edges_path = output_dir / "strains_edges.tsv"
-
-    write_kgx_nodes(results, nodes_path)
-    write_species_nodes(results, nodes_path)  # Append species nodes
-    write_kgx_edges(results, edges_path)
+    # Write outputs using KGX sink
+    strain_count, species_count, edge_count = export_kgx(results, output_dir)
 
     click.echo(f"\nOutput written to {output_dir}/")
+    click.echo(f"  - {strain_count} strain nodes")
+    click.echo(f"  - {species_count} species nodes")
+    click.echo(f"  - {edge_count} edges (in_taxon relationships)")
 
 
 if __name__ == "__main__":

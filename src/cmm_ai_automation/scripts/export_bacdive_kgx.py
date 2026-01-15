@@ -62,7 +62,7 @@ load_dotenv()
 
 # Default paths
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
-DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output" / "kgx"
+DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output" / "kgx" / "bacdive"
 DEFAULT_BASENAME = "cmm_strains_bacdive"
 
 
@@ -111,6 +111,18 @@ DEFAULT_BASENAME = "cmm_strains_bacdive"
     is_flag=True,
     help="Disable automatic edge ID generation",
 )
+@click.option(
+    "--database",
+    type=str,
+    default=None,
+    help="MongoDB database name (default: bacdive)",
+)
+@click.option(
+    "--collection",
+    type=str,
+    default=None,
+    help="MongoDB collection name (default: strains)",
+)
 def main(
     output: Path,
     basename: str,
@@ -119,6 +131,8 @@ def main(
     ids: str | None,
     no_deduplicate: bool,
     no_generate_ids: bool,
+    database: str | None,
+    collection: str | None,
 ) -> None:
     """Export BacDive strains from MongoDB to KGX JSON Lines."""
     logger.info("=== BacDive → KGX Export ===")
@@ -130,10 +144,12 @@ def main(
         return
 
     # Connect to MongoDB
-    logger.info("Connecting to BacDive MongoDB...")
-    collection = get_bacdive_collection()
+    db_name = database or "bacdive"
+    coll_name = collection or "strains"
+    logger.info(f"Connecting to BacDive MongoDB ({db_name}.{coll_name})...")
+    mongo_collection = get_bacdive_collection(database=database, collection=collection)
 
-    if collection is None:
+    if mongo_collection is None:
         logger.error("Failed to connect to MongoDB. Check MONGODB_URI environment variable.")
         return
 
@@ -142,18 +158,18 @@ def main(
         # Parse comma-separated IDs
         bacdive_ids = [int(id_str.strip()) for id_str in ids.split(",")]
         logger.info(f"Querying {len(bacdive_ids)} specific BacDive IDs: {bacdive_ids}")
-        results = query_bacdive_by_ids(collection, bacdive_ids)
+        results = query_bacdive_by_ids(mongo_collection, bacdive_ids)
     elif sample:
         # Random sample
         logger.info(f"Sampling {sample} random BacDive strains...")
-        results = query_random_sample(collection, sample_size=sample)
+        results = query_random_sample(mongo_collection, sample_size=sample)
     else:
         # Query all or limited
         if limit:
             logger.info(f"Querying first {limit} BacDive strains...")
         else:
             logger.info("Querying ALL BacDive strains...")
-        results = query_all_strains(collection, limit=limit)
+        results = query_all_strains(mongo_collection, limit=limit)
 
     if not results:
         logger.warning("No strains found in MongoDB")

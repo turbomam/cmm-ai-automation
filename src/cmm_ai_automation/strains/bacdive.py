@@ -19,16 +19,26 @@ logger = logging.getLogger(__name__)
 
 # MongoDB connection settings for BacDive
 MONGODB_URI = "mongodb://localhost:27017"
-BACDIVE_DB = "bacdive"
-BACDIVE_COLLECTION = "strains"
+DEFAULT_BACDIVE_DB = "bacdive"
+DEFAULT_BACDIVE_COLLECTION = "strains"
 
 
-def get_bacdive_collection() -> Collection[dict[str, Any]] | None:
+def get_bacdive_collection(
+    database: str | None = None,
+    collection: str | None = None,
+) -> Collection[dict[str, Any]] | None:
     """Get MongoDB collection for BacDive strains.
+
+    Args:
+        database: MongoDB database name (default: "bacdive")
+        collection: MongoDB collection name (default: "strains")
 
     Returns:
         MongoDB collection or None if connection fails
     """
+    db_name = database or DEFAULT_BACDIVE_DB
+    coll_name = collection or DEFAULT_BACDIVE_COLLECTION
+
     try:
         from pymongo import MongoClient
         from pymongo.errors import ConnectionFailure
@@ -36,7 +46,7 @@ def get_bacdive_collection() -> Collection[dict[str, Any]] | None:
         client: MongoClient[dict[str, Any]] = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
         # Test connection
         client.admin.command("ping")
-        return client[BACDIVE_DB][BACDIVE_COLLECTION]
+        return client[db_name][coll_name]
     except (ImportError, ConnectionFailure) as e:
         logger.warning(f"Could not connect to BacDive MongoDB: {e}")
         return None
@@ -224,7 +234,14 @@ def extract_bacdive_data(doc: dict[str, Any]) -> dict[str, Any]:
     # Taxonomy info
     taxonomy = doc.get("Name and taxonomic classification", {})
     result["species"] = taxonomy.get("species")
-    result["strain_designation"] = taxonomy.get("strain designation")
+    # Normalize strain designation to sorted, pipe-delimited format
+    # Sorting ensures deterministic output for testing and deduplication
+    raw_designation = taxonomy.get("strain designation", "")
+    if raw_designation:
+        designations = [d.strip() for d in raw_designation.split(",") if d.strip()]
+        result["strain_designation"] = "|".join(sorted(designations))
+    else:
+        result["strain_designation"] = None
     # Type strain: "yes" or "no" in BacDive
     type_strain_str = taxonomy.get("type strain", "")
     if type_strain_str:

@@ -36,6 +36,8 @@ from dataclasses import dataclass, field
 from pathlib import Path
 
 import click
+from kgx.sink import TsvSink
+from kgx.transformer import Transformer
 
 from cmm_ai_automation.clients.chebi import (
     ChEBIClient,
@@ -83,8 +85,8 @@ class ChemicalResult:
     chebi_roles: list[tuple[str, str]] = field(default_factory=list)  # (ChEBI ID, name) tuples
     comments: str = ""
 
-    def to_kgx_node(self) -> dict[str, str]:
-        """Convert to KGX node row."""
+    def to_kgx_node(self) -> dict:
+        """Convert to KGX node dict for use with KGX Sink.write_node()."""
         # Collect xrefs with proper CURIE formatting
         all_xrefs: list[str] = list(self.xrefs)
 
@@ -94,17 +96,27 @@ class ChemicalResult:
             if cas_curie not in all_xrefs:
                 all_xrefs.append(cas_curie)
 
-        return {
+        node: dict = {
             "id": self.canonical_id,
-            "category": self.category,
+            "category": [self.category],  # KGX expects list for category
             "name": self.name,
-            "formula": self.formula,
-            "mass": str(self.mass) if self.mass is not None else "",
-            "inchikey": self.inchikey,
-            "xref": "|".join(sorted(set(all_xrefs))) if all_xrefs else "",
-            "synonym": "|".join(sorted(set(self.synonyms))) if self.synonyms else "",
-            "comments": self.comments,
         }
+
+        # Only include non-empty optional fields
+        if self.formula:
+            node["formula"] = self.formula
+        if self.mass is not None:
+            node["mass"] = str(self.mass)
+        if self.inchikey:
+            node["inchikey"] = self.inchikey
+        if all_xrefs:
+            node["xref"] = sorted(set(all_xrefs))
+        if self.synonyms:
+            node["synonym"] = sorted(set(self.synonyms))
+        if self.comments:
+            node["comments"] = self.comments
+
+        return node
 
 
 def parse_curie(curie: str) -> tuple[str, str]:
@@ -325,117 +337,79 @@ def sample_entries(
     return entries
 
 
-def write_kgx_nodes(results: list[ChemicalResult], output_path: Path) -> None:
-    """Write chemical nodes to KGX TSV file."""
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+def export_kgx(results: list[ChemicalResult], output_dir: Path) -> tuple[int, int]:
+    """Export chemical nodes and edges using KGX Sink classes.
 
-    fieldnames = [
-        "id",
-        "category",
-        "name",
-        "formula",
-        "mass",
-        "inchikey",
-        "xref",
-        "synonym",
-        "comments",
-    ]
+    Args:
+        results: List of ChemicalResult objects
+        output_dir: Output directory for KGX files
 
-    with output_path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter="\t")
-        writer.writeheader()
-
-        for result in results:
-            writer.writerow(result.to_kgx_node())
-
-    logger.info(f"Wrote {len(results)} chemical nodes to {output_path}")
-
-
-def write_role_nodes(results: list[ChemicalResult], output_path: Path) -> int:
-    """Write role nodes to KGX TSV file (appending).
-
-    Collects all unique roles from the chemical results and writes them as nodes.
+    Returns:
+        Tuple of (nodes_count, edges_count)
     """
-    # Collect unique roles from all results
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    # Collect unique roles from all results for role nodes
     unique_roles: dict[str, str] = {}  # role_id -> role_name
     for result in results:
         for role_id, role_name in result.chebi_roles:
             if role_id not in unique_roles:
                 unique_roles[role_id] = role_name
 
-    if not unique_roles:
-        return 0
+    # Create KGX transformer and sink
+    transformer = Transformer()
 
-    fieldnames = [
-        "id",
-        "category",
-        "name",
-        "formula",
-        "mass",
-        "inchikey",
-        "xref",
-        "synonym",
-        "comments",
-    ]
+    # Specify which properties to include in output
+    node_props = {"id", "category", "name", "formula", "mass", "inchikey", "xref", "synonym", "comments"}
+    edge_props = {"subject", "predicate", "object", "knowledge_level", "agent_type", "primary_knowledge_source"}
 
-    # Append to existing file
-    with output_path.open("a", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter="\t")
+    output_base = output_dir / "chemicals"
+    sink = TsvSink(
+        owner=transformer,
+        filename=str(output_base),
+        format="tsv",
+        node_properties=node_props,
+        edge_properties=edge_props,
+    )
 
-        for role_id, role_name in sorted(unique_roles.items()):
-            writer.writerow(
+    # Write chemical nodes
+    for result in results:
+        sink.write_node(result.to_kgx_node())
+
+    # Write role nodes
+    for role_id, role_name in sorted(unique_roles.items()):
+        sink.write_node(
+            {
+                "id": role_id,
+                "category": [BIOLINK_CHEMICAL_ROLE],
+                "name": role_name,
+            }
+        )
+
+    # Write has_role edges
+    edge_count = 0
+    for result in results:
+        for role_id, _role_name in result.chebi_roles:
+            sink.write_edge(
                 {
-                    "id": role_id,
-                    "category": BIOLINK_CHEMICAL_ROLE,
-                    "name": role_name,
-                    "formula": "",
-                    "mass": "",
-                    "inchikey": "",
-                    "xref": "",
-                    "synonym": "",
-                    "comments": "",
+                    "subject": result.canonical_id,
+                    "predicate": HAS_ROLE_PREDICATE,
+                    "object": role_id,
+                    "knowledge_level": KNOWLEDGE_LEVEL,
+                    "agent_type": AGENT_TYPE,
+                    "primary_knowledge_source": PRIMARY_KNOWLEDGE_SOURCE,
                 }
             )
+            edge_count += 1
 
-    logger.info(f"Wrote {len(unique_roles)} role nodes to {output_path}")
-    return len(unique_roles)
+    # Finalize to flush and close files
+    sink.finalize()
 
+    total_nodes = len(results) + len(unique_roles)
+    logger.info(f"Wrote {len(results)} chemical nodes and {len(unique_roles)} role nodes to {output_base}_nodes.tsv")
+    logger.info(f"Wrote {edge_count} edges to {output_base}_edges.tsv")
 
-def write_kgx_edges(results: list[ChemicalResult], output_path: Path) -> int:
-    """Write has_role edges to KGX TSV file."""
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-
-    fieldnames = [
-        "subject",
-        "predicate",
-        "object",
-        "knowledge_level",
-        "agent_type",
-        "primary_knowledge_source",
-    ]
-
-    edge_count = 0
-    with output_path.open("w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=fieldnames, delimiter="\t")
-        writer.writeheader()
-
-        for result in results:
-            # Write has_role edges
-            for role_id, _role_name in result.chebi_roles:
-                writer.writerow(
-                    {
-                        "subject": result.canonical_id,
-                        "predicate": HAS_ROLE_PREDICATE,
-                        "object": role_id,
-                        "knowledge_level": KNOWLEDGE_LEVEL,
-                        "agent_type": AGENT_TYPE,
-                        "primary_knowledge_source": PRIMARY_KNOWLEDGE_SOURCE,
-                    }
-                )
-                edge_count += 1
-
-    logger.info(f"Wrote {edge_count} edges to {output_path}")
-    return edge_count
+    return total_nodes, edge_count
 
 
 @click.command()
@@ -616,17 +590,12 @@ def main(
         click.echo("No results to export")
         sys.exit(1)
 
-    # Write outputs
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    nodes_path = output_dir / "chemicals_nodes.tsv"
-    edges_path = output_dir / "chemicals_edges.tsv"
-
-    write_kgx_nodes(results, nodes_path)
-    write_role_nodes(results, nodes_path)  # Append role nodes
-    write_kgx_edges(results, edges_path)
+    # Write outputs using KGX sink
+    nodes_count, edges_count = export_kgx(results, output_dir)
 
     click.echo(f"\nOutput written to {output_dir}/")
+    click.echo(f"  - {nodes_count} nodes (chemicals + roles)")
+    click.echo(f"  - {edges_count} edges (has_role relationships)")
 
 
 if __name__ == "__main__":

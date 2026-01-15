@@ -38,7 +38,7 @@ kgx graph-summary -i tsv nodes.tsv edges.tsv -o summary.yaml \
 **Method 2: Using CMM analysis scripts**
 ```bash
 # Extract edge patterns (subject/predicate/object breakdown)
-python src/cmm_ai_automation/scripts/analyze_kgx_patterns.py /path/to/kgx_dir > patterns.tsv
+python src/cmm_ai_automation/scripts/edge_patterns_merged.py /path/to/kgx_dir > patterns.tsv
 
 # Output: source | subject_category | subject_prefix | predicate | object_category | object_prefix | count
 ```
@@ -131,7 +131,7 @@ kgx graph-summary -i tsv nodes.tsv edges.tsv -o summary.yaml \
   --edge-facet-properties predicate
 
 # Or using CMM edge pattern analyzer
-python src/cmm_ai_automation/scripts/analyze_kgx_patterns.py /path/to/kgx_dir | \
+python src/cmm_ai_automation/scripts/edge_patterns_merged.py /path/to/kgx_dir | \
   awk -F'\t' '$4=="biolink:capable_of" && $5~"PhenotypicQuality"'
 ```
 
@@ -187,7 +187,7 @@ testpaths = ["tests"]
 **To verify false positive rate:**
 ```bash
 # Using CMM analysis tools
-python src/cmm_ai_automation/scripts/analyze_kgx_patterns.py /path/to/data | \
+python src/cmm_ai_automation/scripts/edge_patterns_merged.py /path/to/data | \
   grep "MP.*medium"
 
 # Or manually review sample matches (documented in kg_microbe_nodes_analysis.md)
