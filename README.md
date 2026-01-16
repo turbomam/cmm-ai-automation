@@ -137,11 +137,16 @@ just --list
 
 ### Environment Setup
 
-Create a `.env` file with required credentials:
+Copy the example environment file and fill in your values:
 
 ```bash
-# .env
-# Google Sheets (service account JSON path)
+cp .env.example .env
+```
+
+The `.env` file contains credentials for various services. Key variables:
+
+```bash
+# Google Sheets (see "Google Sheets Authentication" section below)
 GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
 
 # Neo4j (local Docker instance)
@@ -149,12 +154,72 @@ NEO4J_URI=bolt://localhost:7687
 NEO4J_USER=neo4j
 NEO4J_PASSWORD=your-password
 
-# Optional: BacDive API credentials
+# BacDive API (register at https://api.bacdive.dsmz.de/)
 BACDIVE_EMAIL=your@email.com
 BACDIVE_PASSWORD=your-password
 
-# Optional: CAS API key
+# NCBI Entrez API (get key at https://www.ncbi.nlm.nih.gov/account/settings/)
+# Optional but recommended to avoid rate limits
+NCBI_API_KEY=your-ncbi-api-key
+
+# CAS Common Chemistry API (get key at https://commonchemistry.cas.org/api)
 CAS_API_KEY=your-cas-key
+
+# OpenAI API (for ChromaDB embeddings, get key at https://platform.openai.com/api-keys)
+OPENAI_API_KEY=your-openai-key
+```
+
+See `.env.example` for the complete list with documentation.
+
+### Google Sheets Authentication
+
+Google Sheets access uses **service account authentication** (not OAuth user flow). This requires a one-time setup:
+
+**1. Create a Google Cloud Project:**
+- Go to [Google Cloud Console](https://console.cloud.google.com/)
+- Create a new project (or use an existing one)
+
+**2. Enable APIs:**
+- Navigate to "APIs & Services" > "Library"
+- Enable **Google Sheets API**
+- Enable **Google Drive API**
+
+**3. Create a Service Account:**
+- Go to "APIs & Services" > "Credentials"
+- Click "Create Credentials" > "Service account"
+- Give it a name (e.g., "cmm-sheets-reader")
+- No additional permissions needed for basic access
+- Click "Done"
+
+**4. Download the JSON Key:**
+- Click on the service account you just created
+- Go to "Keys" tab > "Add Key" > "Create new key"
+- Choose JSON format and download
+- Save to a secure location (e.g., `~/.config/gspread/service_account.json`)
+
+**5. Share Spreadsheets with the Service Account:**
+- Copy the service account email (looks like `name@project.iam.gserviceaccount.com`)
+- Open each Google Sheet you want to access
+- Click "Share" and add the service account email as a Viewer (or Editor if write access needed)
+
+**6. Configure the Credential Path:**
+
+Either set the environment variable:
+```bash
+export GOOGLE_APPLICATION_CREDENTIALS=/path/to/service_account.json
+```
+
+Or place the file at the default gspread location:
+```bash
+mkdir -p ~/.config/gspread
+cp /path/to/downloaded-key.json ~/.config/gspread/service_account.json
+```
+
+**Verify setup:**
+
+Use a spreadsheet ID for a Google Sheet that has been shared with your service account (replace `<YOUR_SPREADSHEET_ID>` below):
+```bash
+uv run download-sheets --spreadsheet "<YOUR_SPREADSHEET_ID>" --output-dir /tmp/test
 ```
 
 ### Run the Data Pipeline
