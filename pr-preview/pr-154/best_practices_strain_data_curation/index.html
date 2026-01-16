@@ -1,0 +1,1540 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/best_practices_strain_data_curation/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Best Practices for Bacterial Strain Data Curation - cmm-ai-automation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+
+      
+    
+<script src="../assets/pymdownx-extras/material-extra-theme-2ek1P7jT.js" type="text/javascript"></script>
+<script src="../assets/pymdownx-extras/material-extra-3rdparty-BUCF4rjN.js" type="text/javascript"></script>
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+    
+      <link rel="stylesheet" href="../assets/pymdownx-extras/extra-c6ab11540a.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#best-practices-for-bacterial-strain-data-curation" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+<header class="md-header" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="header.title"
+  >
+    <a
+      href="https://turbomam.github.io/cmm-ai-automation/"
+      title="cmm-ai-automation"
+      class="md-header__button md-logo"
+      aria-label="cmm-ai-automation"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            cmm-ai-automation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Best Practices for Bacterial Strain Data Curation
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      <div class="md-header-nav__scheme md-header-nav__button md-source__icon md-icon">
+          <a
+            href="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+          </a>
+           <a
+            href="javascript:toggleScheme();"
+            title="Unknown scheme"
+            class="unknown-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.07 11.25-.9.92C13.45 12.89 13 13.5 13 15h-2v-.5c0-1.11.45-2.11 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2 2 0 0 0-2-2 2 2 0 0 0-2 2H8a4 4 0 0 1 4-4 4 4 0 0 1 4 4 3.2 3.2 0 0 1-.93 2.25M13 19h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg>
+          </a>
+      </div>
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="cmm-ai-automation" class="md-nav__button md-logo" aria-label="cmm-ai-automation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    cmm-ai-automation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../togomedium/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TogoMedium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#executive-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Executive Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-fair-data-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. FAIR Data Principles
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identifier-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifier Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Identifier Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#2-use-curies-for-all-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Use CURIEs for All Entities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-reconcile-identifiers-against-authoritative-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Reconcile Identifiers Against Authoritative Sources
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-consistent-identifier-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Consistent Identifier Formatting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-structure-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Structure Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Structure Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#5-row-integrity-all-columns-must-refer-to-the-same-entity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Row Integrity: All Columns Must Refer to the Same Entity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-single-vs-multi-valued-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Single vs Multi-Valued Columns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-remove-duplicative-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Remove Duplicative Columns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-deduplicate-rows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Deduplicate Rows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provenance-and-curation-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provenance and Curation Metadata
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Provenance and Curation Metadata">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#9-document-data-provenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        9. Document Data Provenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#10-mark-auto-populatedextended-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        10. Mark Auto-Populated/Extended Columns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relationship-tables-edge-lists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relationship Tables (Edge Lists)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Relationship Tables (Edge Lists)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#11-name-tables-by-their-content" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        11. Name Tables by Their Content
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#12-design-decision-needed-multi-dimensional-experimental-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        12. Design Decision Needed: Multi-Dimensional Experimental Data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#13-relationship-tables-must-have-s-p-o-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        13. Relationship Tables Must Have S-P-O Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#14-use-real-kgx-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        14. Use Real KGX Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-quality-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Quality Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Quality Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#15-validate-taxonomic-concordance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        15. Validate Taxonomic Concordance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#16-handle-taxonomic-reclassifications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        16. Handle Taxonomic Reclassifications
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#17-anti-pattern-substring-searches-for-identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        17. Anti-Pattern: Substring Searches for Identifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#18-detect-spelling-errors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        18. Detect Spelling Errors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#19-quality-assurance-via-controlled-error-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        19. Quality Assurance via Controlled Error Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#schema-and-documentation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Schema and Documentation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Schema and Documentation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#20-define-all-columns-in-schema" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        20. Define All Columns in Schema
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-you-align-vs-conflict-with-standards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where You Align vs Conflict with Standards
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Where You Align vs Conflict with Standards">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#strong-alignment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✓ Strong Alignment:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minor-conflictsextensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚠️ Minor Conflicts/Extensions:
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#implementation-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Implementation Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="References">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#standards-and-authorities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standards and Authorities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#machine-learning-and-data-quality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Machine Learning and Data Quality
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#glossary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Glossary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#acknowledgments" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Acknowledgments
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="best-practices-for-bacterial-strain-data-curation">Best Practices for Bacterial Strain Data Curation</h1>
+<p><strong>Project</strong>: Critical Minerals and Materials (CMM)
+<strong>Version</strong>: 2.0
+<strong>Date</strong>: 2026-01-06</p>
+<hr />
+<h2 id="executive-summary">Executive Summary</h2>
+<p>This document establishes data curation best practices for bacterial strain datasets based on observations from the CMM project's strains.tsv validation and reconciliation efforts. These practices align with established standards from the knowledge graph, semantic web, and culture collection communities while addressing practical data quality issues encountered during curation.</p>
+<hr />
+<h2 id="core-principles">Core Principles</h2>
+<h3 id="1-fair-data-principles">1. <strong>FAIR Data Principles</strong></h3>
+<p>All strain data should be:
+- <strong>Findable</strong>: Use globally unique identifiers (CURIEs/URIs)
+- <strong>Accessible</strong>: Link to authoritative databases (BacDive, NCBI, culture collections)
+- <strong>Interoperable</strong>: Follow KGX/Biolink standards for knowledge graphs
+- <strong>Reusable</strong>: Document provenance and use machine-readable formats</p>
+<p><strong>Authority</strong>: Wilkinson et al. (2016) "The FAIR Guiding Principles for scientific data management and stewardship" - <em>Scientific Data</em></p>
+<hr />
+<h2 id="identifier-best-practices">Identifier Best Practices</h2>
+<h3 id="2-use-curies-for-all-entities">2. <strong>Use CURIEs for All Entities</strong></h3>
+<p><strong>Practice</strong>: All subject, predicate, and object columns in relationship tables must use CURIEs (Compact URIs) with defined prefix expansions registered in the Bioregistry.</p>
+<p><strong>Rationale</strong>: CURIEs provide:
+- Global uniqueness without namespace conflicts
+- Human-readable prefixes (e.g., <code>NCBITaxon:408</code>, <code>DSM:1337</code>)
+- Compatibility with Linked Data and Semantic Web standards
+- Standardized prefix resolution via Bioregistry</p>
+<p><strong>Standards</strong>:
+- <strong>W3C CURIE Syntax 1.0</strong> (https://www.w3.org/TR/curie/)
+- <strong>Bioregistry</strong> (https://bioregistry.io/) - Central registry for namespace prefixes</p>
+<p><strong>Examples</strong>:
+<div class="highlight"><pre><span></span><code>✓ GOOD: NCBITaxon:408, BacDive:7143, DSM:1337
+✗ BAD:  408, 7143, &quot;DSM 1337&quot; (without prefix)
+✗ BAD:  CustomDB:123 (prefix not in Bioregistry)
+</code></pre></div></p>
+<p><strong>Note</strong>: URIs (e.g., <code>http://purl.obolibrary.org/obo/NCBITaxon_408</code>) are acceptable when the definitive namespace hasn't been established, but KGX requires conversion to CURIEs for final export.</p>
+<p><strong>Bioregistry Compliance</strong>: Before introducing a new prefix, check if it exists in the Bioregistry. If not, consider submitting a prefix registration request or using an existing alternative.</p>
+<hr />
+<h3 id="3-reconcile-identifiers-against-authoritative-sources">3. <strong>Reconcile Identifiers Against Authoritative Sources</strong></h3>
+<p><strong>Practice</strong>: Verify all culture collection IDs, NCBI taxon IDs, and species names against authoritative databases (BacDive, NCBI Taxonomy, LPSN).</p>
+<p><strong>Issues Observed</strong>:
+- Gross mismatches between binomial names, strain names, and culture collection IDs
+- <strong>DSM:1337 is NOT the AM-1 strain</strong> (it's TK 0001; AM-1 is DSM:1338)
+- Bad external links (NCBI's AM1 linkouts point to wrong strains)
+- Substring search errors causing false matches</p>
+<p><strong>Authority</strong>:
+- <strong>WFCC</strong> (World Federation for Culture Collections) Guidelines for the Establishment and Operation of Collections of Microorganisms
+- <strong>MIRIAM Guidelines</strong> (Minimum Information Required In the Annotation of Models) - requires unambiguous identifiers</p>
+<p><strong>Implementation</strong>: Use exact matching with word boundaries, not substring searches. Validate cross-references bidirectionally.</p>
+<hr />
+<h3 id="4-consistent-identifier-formatting">4. <strong>Consistent Identifier Formatting</strong></h3>
+<p><strong>Practice</strong>: Standardize formatting of culture collection IDs, strain designations, and accessions.</p>
+<p><strong>Issues Observed</strong>:
+- <code>AM1</code> vs <code>AM-1</code> vs <code>AM 1</code>
+- <code>ORS 2060</code> vs <code>ORS2060</code>
+- <code>DSM:1337</code> vs <code>DSM 1337</code> vs <code>DSMZ:1337</code></p>
+<p><strong>Standard</strong>:
+- <strong>BacDive convention</strong>: Space-separated (e.g., <code>DSM 1337</code>)
+- <strong>CURIE convention</strong>: Colon-separated (e.g., <code>DSM:1337</code>)
+- <strong>Internal recommendation</strong>: Use CURIE format for data storage, document BacDive's format for reconciliation</p>
+<p><strong>Authority</strong>: Global Genome Biodiversity Network (GGBN) Data Standard - Specimen identifiers should follow institutional conventions consistently.</p>
+<hr />
+<h2 id="data-structure-best-practices">Data Structure Best Practices</h2>
+<h3 id="5-row-integrity-all-columns-must-refer-to-the-same-entity">5. <strong>Row Integrity: All Columns Must Refer to the Same Entity</strong></h3>
+<p><strong>Practice</strong>: Every column in a row must describe the same biological entity. Auto-populated columns must not introduce identifiers for different organisms.</p>
+<p><strong>Rationale</strong>: Data tables represent assertions about individual entities. When different columns contain identifiers for different organisms, the row loses semantic coherence and becomes unusable for knowledge graph construction.</p>
+<p><strong>Issues Observed</strong>:
+- Auto-populated columns (e.g., <code>kg_microbe_nodes</code>) violating row integrity when lookups use substring matching or other fuzzy methods
+- BacDive ID substring matching (e.g., searching for "1337" matches both BacDive:1337 and BacDive:13378, which are different strains)
+- NCBI taxon ID mismatches where auto-lookup retrieves IDs for completely different organisms (Streptomyces, protozoa instead of Methylorubrum)</p>
+<p><strong>Challenge</strong>: Without clear documentation of which columns are hand-entered versus auto-populated, it becomes difficult to determine which values are authoritative when conflicts arise.</p>
+<p><strong>Best Practice</strong>:
+1. <strong>Document provenance</strong>: Mark which columns are manually curated vs auto-populated (see §9)
+2. <strong>Validate cross-references</strong>: When auto-populating, verify that retrieved identifiers genuinely refer to the same organism described in manually-entered columns
+3. <strong>Use exact matching</strong>: Avoid substring searches that can retrieve unrelated identifiers (see §17)
+4. <strong>Establish authority hierarchy</strong>: Define which columns are authoritative (typically manually-entered ones) and which are derived</p>
+<p><strong>Standard</strong>: <strong>RDF semantics</strong> - Each row corresponds to an RDF resource; all properties must describe that resource, not multiple different resources.</p>
+<hr />
+<h3 id="6-single-vs-multi-valued-columns">6. <strong>Single vs Multi-Valued Columns</strong></h3>
+<p><strong>Practice</strong>: Decide in advance whether each column is single-valued or multi-valued, and document this in the schema.</p>
+<p><strong>Rationale</strong>: Prevents ambiguity in data interpretation and enables proper normalization.</p>
+<p><strong>Standards</strong>:
+- <strong>LinkML</strong>: Use <code>multivalued: true</code> in schema definitions
+- <strong>KGX</strong>: Multi-valued attributes should use list serialization (e.g., <code>["value1", "value2"]</code>)</p>
+<p><strong>Examples</strong>:
+<div class="highlight"><pre><span></span><code><span class="c1"># LinkML Schema</span>
+<span class="nt">slots</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">culture_collection_ids</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">All culture collection identifiers for this strain</span>
+
+<span class="w">  </span><span class="nt">species_name</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Binomial species name (single value)</span>
+</code></pre></div></p>
+<hr />
+<h3 id="7-remove-duplicative-columns">7. <strong>Remove Duplicative Columns</strong></h3>
+<p><strong>Practice</strong>: Eliminate redundant columns with overlapping semantics.</p>
+<p><strong>Issues Observed</strong>:
+- <code>name_synonyms</code> and <code>alternative_names</code> columns both contain synonyms
+- Multiple "species" columns with slightly different values</p>
+<p><strong>Solution</strong>: Consolidate into a single well-defined column (e.g., <code>species_synonyms</code>) with clear documentation of what qualifies as a synonym.</p>
+<p><strong>Authority</strong>: <strong>Darwin Core</strong> (biodiversity data standard) - Avoid term redundancy; use <code>scientificName</code>, <code>acceptedNameUsage</code>, and <code>nameAccordingTo</code> for taxonomic names.</p>
+<hr />
+<h3 id="8-deduplicate-rows">8. <strong>Deduplicate Rows</strong></h3>
+<p><strong>Practice</strong>: Remove duplicate rows before data integration or KGX export.</p>
+<p><strong>Detection</strong>:
+- Identical primary keys (e.g., same <code>strain_id</code>)
+- Duplicate culture collection IDs mapping to same strain</p>
+<p><strong>Standard</strong>: <strong>OBO Foundry Principle 6</strong>: Textual definitions should be unique within an ontology (extended here: entity definitions should be unique within a dataset).</p>
+<hr />
+<h2 id="provenance-and-curation-metadata">Provenance and Curation Metadata</h2>
+<h3 id="9-document-data-provenance">9. <strong>Document Data Provenance</strong></h3>
+<p><strong>Practice</strong>: Clearly indicate the source and method for every data value:
+- <strong>Human expert entry</strong> (manually curated)
+- <strong>Computational mapping</strong> (automated lookup from BacDive, NCBI, etc.)
+- <strong>AI inference/speculation</strong> (e.g., predicted chemical roles)</p>
+<p><strong>Standard</strong>: <strong>W3C PROV-O</strong> (Provenance Ontology) - provides classes for Entity, Activity, Agent</p>
+<p><strong>Implementation</strong>:
+<div class="highlight"><pre><span></span><code># Add provenance columns:
+species_name    species_name_source    species_name_method
+Methylorubrum extorquens    BacDive:7143    automated_lookup
+</code></pre></div></p>
+<p><strong>Authority</strong>:
+- <strong>GO Consortium Evidence Codes</strong> - Distinguish between different types of evidence (IEA = Inferred from Electronic Annotation, TAS = Traceable Author Statement, etc.)
+- <strong>Gene Ontology Annotation Guidelines</strong> - Require provenance for all annotations</p>
+<hr />
+<h3 id="10-mark-auto-populatedextended-columns">10. <strong>Mark Auto-Populated/Extended Columns</strong></h3>
+<p><strong>Practice</strong>: Define which columns are manually entered vs auto-populated from lookups, and document this in column headers or schema.</p>
+<p><strong>Suggested Convention</strong>:
+<div class="highlight"><pre><span></span><code># Column naming:
+strain_id              # Manual entry (PRIMARY KEY)
+species_name           # Manual entry
+ncbi_taxon_species     # AUTO-POPULATED from NCBI API
+bacdive_id             # AUTO-POPULATED from BacDive search
+genome_accession       # AUTO-POPULATED from BacDive.Sequence_information
+</code></pre></div></p>
+<p><strong>Authority</strong>: <strong>Bioschemas</strong> - Recommends explicit provenance properties for computed vs asserted values.</p>
+<hr />
+<h2 id="relationship-tables-edge-lists">Relationship Tables (Edge Lists)</h2>
+<h3 id="11-name-tables-by-their-content">11. <strong>Name Tables by Their Content</strong></h3>
+<p><strong>Practice</strong>: Relationship tables should be named by the relationship they represent, not vague descriptions.</p>
+<p><strong>Issues Observed</strong>:
+- <code>growth_preferences</code> table contains "grows in" relationships but also shake speed, temperature, etc.</p>
+<p><strong>Solution</strong>: Either:
+1. <strong>Single relationship per table</strong>: <code>grows_in_media.tsv</code>, <code>cultivated_at_temperature.tsv</code>
+2. <strong>Generic edge list</strong>: <code>strain_relationships.tsv</code> with explicit <code>predicate</code> column</p>
+<p><strong>Authority</strong>: <strong>Biolink Model</strong> - Defines specific relationship types (predicates) like <code>capable_of</code>, <code>has_phenotype</code>, <code>located_in</code></p>
+<hr />
+<h3 id="12-design-decision-needed-multi-dimensional-experimental-data">12. <strong>Design Decision Needed: Multi-Dimensional Experimental Data</strong></h3>
+<p><strong>Issue</strong>: Experimental datasets often involve multi-dimensional observations where a biological phenomenon is tested across multiple conditions (e.g., strain S grown in medium M at various temperatures, shake speeds, and plate types). Current relationship tables may be underspecified for representing these complex experimental designs.</p>
+<p><strong>Scenario</strong>: When experiments test strain growth across:
+- 100 different media formulations
+- 5 temperature conditions
+- 3 RPM settings
+- 2 plate types</p>
+<p>...how should this be represented in a knowledge graph?</p>
+<p><strong>Standard Approaches and Their Limitations</strong>:</p>
+<ol>
+<li><strong>One edge per combination</strong>: Create individual edges for each permutation</li>
+<li><strong>Issue</strong>: 100 × 5 × 3 × 2 = 3,000 edges for a single strain</li>
+<li>
+<p><strong>Authority</strong>: This follows KGX/RDF triple structure but becomes unwieldy</p>
+</li>
+<li>
+<p><strong>Reification</strong>: Create intermediate "observation" or "experiment" nodes</p>
+</li>
+<li><strong>Example</strong>: Strain → participated_in → Experiment123 → has_medium → M, has_temperature → T</li>
+<li><strong>Authority</strong>: RDF reification pattern, also used in SIO (Semantic Science Integrated Ontology)</li>
+<li>
+<p><strong>Issue</strong>: Adds complexity and indirection</p>
+</li>
+<li>
+<p><strong>Edge properties/qualifiers</strong>: Attach conditions as edge qualifiers</p>
+</li>
+<li><strong>Example</strong>: Strain --[grows_in]--&gt; Medium (temperature: 30C, RPM: 200)</li>
+<li><strong>Authority</strong>: Biolink Model supports qualifiers; Wikidata uses this extensively</li>
+<li>
+<p><strong>Issue</strong>: Not all graph databases support rich edge properties</p>
+</li>
+<li>
+<p><strong>Separate tables for each dimension</strong>: <code>strain_media.tsv</code>, <code>strain_temperature.tsv</code></p>
+</li>
+<li><strong>Issue</strong>: Loses the connection between co-varied experimental conditions</li>
+</ol>
+<p><strong>Recommendation</strong>: The team should decide on the semantic model and explicitly document it <strong>before</strong> experimentalists begin populating growth condition data. The choice depends on:
+- Query patterns (how will data be retrieved?)
+- Graph database capabilities
+- Desired granularity of provenance tracking
+- Ease of data entry for experimentalists</p>
+<p><strong>Authority</strong>:
+- <strong>STATO</strong> (Statistics Ontology) - For representing experimental designs
+- <strong>OBI</strong> (Ontology for Biomedical Investigations) - For describing experimental protocols
+- <strong>RO</strong> (Relation Ontology) - For qualified relations in biological contexts</p>
+<p><strong>Next Step</strong>: Convene a design discussion to select an approach and document it in the schema before data collection proceeds.</p>
+<hr />
+<h3 id="13-relationship-tables-must-have-s-p-o-structure">13. <strong>Relationship Tables Must Have S-P-O Structure</strong></h3>
+<p><strong>Practice</strong>: All relationship/edge tables must contain:
+- <strong>Subject</strong>: CURIE for the entity (e.g., <code>strain_id</code>)
+- <strong>Predicate</strong>: CURIE for the relationship type (e.g., <code>biolink:capable_of</code>)
+- <strong>Object</strong>: CURIE for the related entity (e.g., <code>CHEBI:16411</code>)</p>
+<p><strong>Standard</strong>: <strong>KGX (Knowledge Graph Exchange)</strong> format requires:
+<div class="highlight"><pre><span></span><code>subject    predicate    object    (optional: qualifiers, evidence, sources)
+DSM:1337   biolink:in_taxon   NCBITaxon:408
+DSM:1337   grows_in    MediaDive:123
+</code></pre></div></p>
+<p><strong>Authority</strong>:
+- <strong>RDF (Resource Description Framework)</strong> - Triple structure is fundamental to Linked Data
+- <strong>Biolink Model</strong> - Standardized predicates for biomedical knowledge graphs</p>
+<hr />
+<h3 id="14-use-real-kgx-methods">14. <strong>Use Real KGX Methods</strong></h3>
+<p><strong>Practice</strong>: Don't reinvent serialization. Use established KGX libraries and methods for export.</p>
+<p><strong>Tools</strong>:
+- <code>kgx</code> Python package (https://github.com/biolink/kgx)
+- Biolink Model Toolkit</p>
+<p><strong>Anti-pattern</strong>: Writing custom CSV-to-KGX converters without following KGX schema validation.</p>
+<p><strong>Authority</strong>: <strong>Monarch Initiative</strong> - Maintains KGX standard and provides reference implementation.</p>
+<hr />
+<h2 id="data-quality-standards">Data Quality Standards</h2>
+<h3 id="15-validate-taxonomic-concordance">15. <strong>Validate Taxonomic Concordance</strong></h3>
+<p><strong>Practice</strong>: Ensure binomial names, strain designations, and culture collection IDs all refer to the same organism.</p>
+<p><strong>Validation Checks</strong>:
+1. <strong>Species name ↔ NCBI taxon</strong>: Use <code>search_species_with_synonyms()</code> to handle reclassifications
+2. <strong>Culture collection ID ↔ BacDive</strong>: Verify strain designation matches
+3. <strong>Cross-database consistency</strong>: NCBI Assembly → BacDive → Culture Collections should agree</p>
+<p><strong>Issue</strong>: "Binomial to strain (culture collection ID) usually agree" - This should be <strong>always</strong>, not usually!</p>
+<p><strong>Authority</strong>: <strong>INSDC</strong> (International Nucleotide Sequence Database Collaboration) - Requires taxonomic consistency between sequence records and strain metadata.</p>
+<hr />
+<h3 id="16-handle-taxonomic-reclassifications">16. <strong>Handle Taxonomic Reclassifications</strong></h3>
+<p><strong>Practice</strong>: Search by both current and historical taxonomic names (synonyms).</p>
+<p><strong>Examples</strong>:
+- <em>Sinorhizobium meliloti</em> → <em>Ensifer meliloti</em>
+- <em>Methylobacterium extorquens</em> → <em>Methylorubrum extorquens</em></p>
+<p><strong>Implementation</strong>: Use 3-stage search (current name, LPSN name, synonyms array).</p>
+<p><strong>Authority</strong>: <strong>LPSN</strong> (List of Prokaryotic names with Standing in Nomenclature) - Authoritative source for validly published bacterial names and their synonyms.</p>
+<hr />
+<h3 id="17-anti-pattern-substring-searches-for-identifiers">17. <strong>Anti-Pattern: Substring Searches for Identifiers</strong></h3>
+<p><strong>Problem</strong>: Substring searches are a primary cause of data quality issues in strain data curation. They lead to false matches that violate row integrity and introduce identifiers for completely unrelated organisms.</p>
+<p><strong>Why Substring Matching Fails</strong>:</p>
+<ol>
+<li><strong>Culture collection IDs</strong>: Searching for "DSM 1337" as a substring matches:</li>
+<li>DSM 1337 (correct)</li>
+<li>DSM 13378 (wrong strain!)</li>
+<li>DSM 1337<strong>4</strong> (wrong strain!)</li>
+<li>
+<p>Any text containing "DSM 1337" anywhere</p>
+</li>
+<li>
+<p><strong>Intermediate identifiers</strong>: When a lookup column contains a CURIE as a substring of a longer string, substring searches can match unintended entries:</p>
+</li>
+<li>Searching for "BacDive:7143" might match "related_to: BacDive:7143, BacDive:71430"</li>
+<li>
+<p>Returns data for BacDive:71430 (wrong organism)</p>
+</li>
+<li>
+<p><strong>Numeric IDs</strong>: Searching for "408" matches:</p>
+</li>
+<li>NCBITaxon:408 (<em>Methylorubrum extorquens</em>)</li>
+<li>NCBITaxon:408004 (<em>Streptomyces</em> sp. - wrong genus, wrong phylum!)</li>
+<li>NCBITaxon:40805 (ciliate protozoa - not even bacteria!)</li>
+</ol>
+<p><strong>Real Impact Observed</strong>:
+- During reconciliation, substring searches for NCBI taxon IDs returned Streptomyces and protozoan identifiers instead of Methylorubrum
+- Culture collection lookups matched wrong strains (e.g., DSM:13378 when searching for DSM:1337)
+- Auto-populated columns violated row integrity due to false matches</p>
+<p><strong>Correct Approach</strong>: Use word-boundary regex or exact matching:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># ✗ WRONG: Substring search</span>
+<span class="k">if</span> <span class="n">search_id</span> <span class="ow">in</span> <span class="n">full_string</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">match</span>  <span class="c1"># Will match &quot;1337&quot; inside &quot;13378&quot;</span>
+
+<span class="c1"># ✓ CORRECT: Word-boundary regex</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="n">pattern</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;(^|,\s*)</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span><span class="si">}</span><span class="s2">[\s:-]*</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">number</span><span class="p">)</span><span class="si">}</span><span class="s2">(\s*,|$)&quot;</span>
+<span class="k">if</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">pattern</span><span class="p">,</span> <span class="n">full_string</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">match</span>  <span class="c1"># Only matches exact &quot;DSM:1337&quot;, not &quot;DSM:13378&quot;</span>
+
+<span class="c1"># ✓ ALSO CORRECT: Exact matching after normalization</span>
+<span class="k">if</span> <span class="n">normalize</span><span class="p">(</span><span class="n">search_id</span><span class="p">)</span> <span class="o">==</span> <span class="n">normalize</span><span class="p">(</span><span class="n">database_id</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">match</span>
+</code></pre></div>
+<p><strong>Implementation Guidelines</strong>:
+1. Always use word boundaries or exact matching for identifier lookups
+2. Normalize identifiers before comparison (e.g., strip whitespace, convert to uppercase)
+3. Validate that returned identifiers match the expected format (prefix + number)
+4. When auto-populating columns, verify that retrieved data refers to the same organism as manually-entered fields</p>
+<p><strong>Authority</strong>:
+- <strong>Regular Expression Best Practices</strong> - Use <code>\b</code> word boundaries or anchors (<code>^</code>, <code>$</code>) for identifier matching
+- <strong>MIRIAM Guidelines</strong> - Identifiers must be matched exactly against registry patterns</p>
+<p><strong>Testing</strong>: Include test cases with near-matches (e.g., "1337" vs "13378") to ensure substring searches don't cause false positives.</p>
+<hr />
+<h3 id="18-detect-spelling-errors">18. <strong>Detect Spelling Errors</strong></h3>
+<p><strong>Practice</strong>: Implement automated spell-checking against authoritative taxonomic databases.</p>
+<p><strong>Tools</strong>:
+- BacDive species list
+- NCBI Taxonomy dump
+- LPSN validated names</p>
+<p><strong>Example Error Found</strong>: <code>Methylobrum nodulans</code> → should be <code>Methylobacterium nodulans</code></p>
+<p><strong>Authority</strong>: <strong>Catalogue of Life</strong> - Global species checklist for spelling validation.</p>
+<hr />
+<h3 id="19-quality-assurance-via-controlled-error-injection">19. <strong>Quality Assurance via Controlled Error Injection</strong></h3>
+<p><strong>Practice</strong>: Test the robustness of data pipelines, validation scripts, and ML models by intentionally introducing known errors in a controlled, traceable manner. This ensures that quality checks actually detect problems before production use.</p>
+<p><strong>Rationale</strong>: Data quality tools and ML models can give false confidence if they haven't been tested against realistic error scenarios. Controlled error injection (also called "adversarial validation" in ML contexts) verifies that:
+- Validation scripts catch common data entry mistakes
+- Reconciliation pipelines handle edge cases
+- ML models don't overfit to dataset artifacts
+- Human reviewers notice anomalies</p>
+<p><strong>Implementation</strong>:</p>
+<ol>
+<li><strong>Create a contaminated test dataset</strong>:</li>
+<li>Copy a subset of production data</li>
+<li>Inject known errors with tracking metadata</li>
+<li>
+<p>Examples: swap species names, introduce typos, duplicate rows, mismatch identifiers</p>
+</li>
+<li>
+<p><strong>Document injected errors</strong>:
+   <div class="highlight"><pre><span></span><code><span class="c1"># test_data_errors.yml</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">row</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">15</span>
+<span class="w">  </span><span class="nt">column</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">species_name</span>
+<span class="w">  </span><span class="nt">error_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">taxonomic_synonym</span>
+<span class="w">  </span><span class="nt">original</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Methylorubrum extorquens</span>
+<span class="w">  </span><span class="nt">injected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Methylobacterium extorquens</span>
+<span class="w">  </span><span class="nt">expected_behavior</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">validation should flag or auto-correct</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>Run validation pipeline</strong>:</p>
+</li>
+<li>Execute data quality checks on contaminated dataset</li>
+<li>Measure detection rate (recall): did it catch all injected errors?</li>
+<li>
+<p>Measure false positive rate: did it flag correct data?</p>
+</li>
+<li>
+<p><strong>Test ML model robustness</strong>:</p>
+</li>
+<li>Train on clean data, test on contaminated data</li>
+<li>Measure performance degradation</li>
+<li>Verify that model doesn't learn to exploit systematic errors (e.g., always predicting based on column position rather than content)</li>
+</ol>
+<p><strong>Examples of Errors to Inject</strong>:
+- Taxonomic: Use deprecated species names, swap genus/species
+- Identifiers: Substring matches (DSM:1337 ↔ DSM:13378), formatting variants (AM1 vs AM-1)
+- Duplicates: Exact row duplicates, same strain with different IDs
+- Missing data: Strategic NULLs in required fields
+- Row integrity violations: Mismatch between species_name and ncbi_taxon_id</p>
+<p><strong>Standards and Authorities</strong>:
+- <strong>Adversarial Validation</strong> (Kaggle ML competition practice) - Testing model robustness to train/test distribution shift
+- <strong>Google's TensorFlow Data Validation (TFDV)</strong> - Framework for detecting data anomalies
+- <strong>Breck et al. (2019)</strong> "Data Validation for Machine Learning" - <em>SysML Conference</em> - Describes production ML data validation at scale
+- <strong>Chaos Engineering for Data</strong> - Adapting chaos engineering principles (intentional failure injection) to data pipelines</p>
+<p><strong>Benefits</strong>:
+- Increases confidence in data quality tools
+- Reveals blind spots in validation logic
+- Documents expected behavior for edge cases
+- Prevents overfitting in ML workflows
+- Serves as regression tests when modifying pipelines</p>
+<p><strong>Caution</strong>: Always maintain a clear audit trail of which datasets contain injected errors. Never let contaminated data leak into production knowledge graphs.</p>
+<hr />
+<h2 id="schema-and-documentation">Schema and Documentation</h2>
+<h3 id="20-define-all-columns-in-schema">20. <strong>Define All Columns in Schema</strong></h3>
+<p><strong>Practice</strong>: Use LinkML or similar schema language to formally define:
+- Column names
+- Data types
+- Single vs multi-valued
+- Allowed values (enumerations)
+- Mappings to ontology terms</p>
+<p><strong>Standard</strong>: <strong>LinkML</strong> (Linked Data Modeling Language) - Schema language designed for knowledge graphs</p>
+<p><strong>Example</strong>:
+<div class="highlight"><pre><span></span><code><span class="nt">classes</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">Strain</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">slots</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strain_id</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">species_name</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">type_strain</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">culture_collection_ids</span>
+
+<span class="nt">slots</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">strain_id</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">identifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Primary culture collection identifier</span>
+
+<span class="w">  </span><span class="nt">type_strain</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Whether this is the nomenclatural type strain for the species</span>
+</code></pre></div></p>
+<p><strong>Authority</strong>:
+- <strong>LinkML</strong> (https://linkml.io/)
+- <strong>Biolink Model</strong> - Uses LinkML for schema definition</p>
+<hr />
+<h2 id="where-you-align-vs-conflict-with-standards">Where You Align vs Conflict with Standards</h2>
+<h3 id="strong-alignment">✓ <strong>Strong Alignment</strong>:</h3>
+<ol>
+<li><strong>CURIEs for identifiers</strong> - Fully aligned with W3C, Semantic Web, OBO Foundry</li>
+<li><strong>Provenance tracking</strong> - Aligned with PROV-O, GO annotation standards</li>
+<li><strong>KGX structure</strong> - Following Monarch Initiative standards</li>
+<li><strong>Taxonomic validation</strong> - Following LPSN, NCBI Taxonomy best practices</li>
+<li><strong>FAIR principles</strong> - Implicit in all recommendations</li>
+<li><strong>Error injection testing</strong> - Aligned with ML best practices (TFDV, adversarial validation)</li>
+</ol>
+<h3 id="minor-conflictsextensions">⚠️ <strong>Minor Conflicts/Extensions</strong>:</h3>
+<ol>
+<li><strong>URIs vs CURIEs</strong>: This document suggests "URIs are handy when namespace isn't established" but then requires CURIEs for KGX</li>
+<li><strong>Resolution</strong>: This is fine - use URIs during exploration/development, convert to CURIEs for final KGX export</li>
+<li>
+<p><strong>Standard</strong>: KGX allows both but prefers CURIEs with registered prefixes</p>
+</li>
+<li>
+<p><strong>Relationship table naming</strong>: "Named by what they contain" could conflict with database normalization principles</p>
+</li>
+<li><strong>Resolution</strong>: For KGX, use generic <code>edges.tsv</code> with explicit <code>predicate</code> column rather than per-predicate tables</li>
+<li>
+<p><strong>Standard</strong>: KGX typically uses unified edge files, not per-relationship tables</p>
+</li>
+<li>
+<p><strong>"Real KGX methods"</strong>: Clarified to mean both using <code>kgx</code> library for transformations AND following Biolink Model predicates</p>
+</li>
+<li>
+<p><strong>Multi-dimensional experimental data</strong>: Identified as an open design decision requiring team discussion before implementation</p>
+</li>
+</ol>
+<hr />
+<h2 id="implementation-checklist">Implementation Checklist</h2>
+<ul>
+<li>[ ] Adopt LinkML schema for <code>strains.tsv</code></li>
+<li>[ ] Add provenance columns (<code>_source</code>, <code>_method</code>, <code>_date</code>)</li>
+<li>[ ] Implement reconciliation pipeline with BacDive + NCBI</li>
+<li>[ ] Use exact matching (word boundaries) instead of substring searches</li>
+<li>[ ] Audit existing auto-populated columns for row integrity violations</li>
+<li>[ ] Standardize identifier formats (document BacDive vs CURIE conventions)</li>
+<li>[ ] Remove duplicate columns (<code>name_synonyms</code> vs <code>alternative_names</code>)</li>
+<li>[ ] Deduplicate rows</li>
+<li>[ ] Validate taxonomic concordance across all columns</li>
+<li>[ ] Convert relationship tables to S-P-O format</li>
+<li>[ ] Define single vs multi-valued columns in schema</li>
+<li>[ ] Use <code>kgx</code> library for KGX export</li>
+<li>[ ] Register custom prefixes in Bioregistry (or use existing alternatives)</li>
+<li>[ ] Convene design discussion for multi-dimensional experimental data representation</li>
+<li>[ ] Create contaminated test dataset with injected errors for quality assurance testing</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<h3 id="standards-and-authorities">Standards and Authorities</h3>
+<ol>
+<li>
+<p><strong>FAIR Principles</strong>: Wilkinson et al. (2016) <em>Scientific Data</em> 3:160018 - https://doi.org/10.1038/sdata.2016.18</p>
+</li>
+<li>
+<p><strong>W3C CURIE Syntax</strong>: https://www.w3.org/TR/curie/</p>
+</li>
+<li>
+<p><strong>Bioregistry</strong>: https://bioregistry.io/</p>
+</li>
+<li>
+<p><strong>KGX (Knowledge Graph Exchange)</strong>: https://github.com/biolink/kgx</p>
+</li>
+<li>
+<p><strong>Biolink Model</strong>: https://biolink.github.io/biolink-model/</p>
+</li>
+<li>
+<p><strong>LinkML</strong>: https://linkml.io/</p>
+</li>
+<li>
+<p><strong>W3C PROV-O</strong>: https://www.w3.org/TR/prov-o/</p>
+</li>
+<li>
+<p><strong>LPSN</strong> (List of Prokaryotic names): https://lpsn.dsmz.de/</p>
+</li>
+<li>
+<p><strong>WFCC Guidelines</strong>: World Federation for Culture Collections - http://www.wfcc.info/</p>
+</li>
+<li>
+<p><strong>MIRIAM Guidelines</strong>: https://www.nature.com/articles/nbt1156</p>
+</li>
+<li>
+<p><strong>Darwin Core</strong>: https://dwc.tdwg.org/</p>
+</li>
+<li>
+<p><strong>OBO Foundry Principles</strong>: http://obofoundry.org/principles/</p>
+</li>
+<li>
+<p><strong>GO Annotation Guidelines</strong>: http://geneontology.org/docs/go-annotation-policies/</p>
+</li>
+<li>
+<p><strong>INSDC Standards</strong>: https://www.insdc.org/</p>
+</li>
+<li>
+<p><strong>Global Genome Biodiversity Network (GGBN)</strong>: https://www.ggbn.org/</p>
+</li>
+<li>
+<p><strong>Bioschemas</strong>: https://bioschemas.org/</p>
+</li>
+<li>
+<p><strong>STATO</strong> (Statistics Ontology): http://stato-ontology.org/</p>
+</li>
+<li>
+<p><strong>OBI</strong> (Ontology for Biomedical Investigations): http://obi-ontology.org/</p>
+</li>
+<li>
+<p><strong>RO</strong> (Relation Ontology): http://obofoundry.org/ontology/ro.html</p>
+</li>
+<li>
+<p><strong>SIO</strong> (Semantic Science Integrated Ontology): https://github.com/MaastrichtU-IDS/semanticscience</p>
+</li>
+</ol>
+<h3 id="machine-learning-and-data-quality">Machine Learning and Data Quality</h3>
+<ol>
+<li>
+<p><strong>Breck et al. (2019)</strong>: "Data Validation for Machine Learning" - <em>SysML Conference</em> - https://mlsys.org/Conferences/2019/doc/2019/167.pdf</p>
+</li>
+<li>
+<p><strong>TensorFlow Data Validation (TFDV)</strong>: https://www.tensorflow.org/tfx/guide/tfdv</p>
+</li>
+<li>
+<p><strong>Kaggle Adversarial Validation</strong>: https://www.kaggle.com/code/carlmcbrideellis/what-is-adversarial-validation</p>
+</li>
+<li>
+<p><strong>Chaos Engineering for Data</strong>: Adapted from Netflix Chaos Engineering principles - https://principlesofchaos.org/</p>
+</li>
+</ol>
+<hr />
+<h2 id="glossary">Glossary</h2>
+<ul>
+<li><strong>CURIE</strong>: Compact URI - <code>prefix:local_id</code> (e.g., <code>NCBITaxon:408</code>)</li>
+<li><strong>KGX</strong>: Knowledge Graph Exchange format</li>
+<li><strong>S-P-O</strong>: Subject-Predicate-Object (RDF triple structure)</li>
+<li><strong>LPSN</strong>: List of Prokaryotic names with Standing in Nomenclature</li>
+<li><strong>Type Strain</strong>: Nomenclatural type strain used to define a species</li>
+<li><strong>Provenance</strong>: The origin and history of a data value</li>
+<li><strong>Row Integrity</strong>: Principle that all columns in a row describe the same entity</li>
+<li><strong>Bioregistry</strong>: Central registry for standardized namespace prefixes</li>
+<li><strong>Reification</strong>: Creating intermediate nodes to represent n-ary relationships</li>
+<li><strong>Adversarial Validation</strong>: Testing robustness by introducing controlled errors</li>
+</ul>
+<hr />
+<h2 id="acknowledgments">Acknowledgments</h2>
+<p>These best practices were developed based on observations during reconciliation of the CMM strains dataset against BacDive, NCBI Taxonomy, and culture collection databases. Issues identified include identifier mismatches (DSM:1337/AM-1), formatting inconsistencies (AM1 vs AM-1), taxonomic reclassifications (Sinorhizobium → Ensifer), row integrity violations from substring-based auto-population, and the need for multi-dimensional experimental data representation.</p>
+<p>Special thanks to the BBOP team for collaborative development of these practices.</p>
+<hr />
+<p><strong>Document Status</strong>: Living document - update as new issues are identified and standards evolve.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        
+
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        with emoji by
+        <a href="https://github.com/twitter/twemoji" target="_blank" rel="noopener">
+          Twemoji
+        </a>
+      </div>
+      
+<div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "header.autohide", "navigation.expand", "navigation.instant", "navigation.instant.progress", "navigation.tracking", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../assets/pymdownx-extras/extra-loader-B5CKpNQx.js"></script>
+      
+    
+  </body>
+</html>
