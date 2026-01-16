@@ -34,12 +34,6 @@ mediadive	solution_details	5844	4341760
 mediadive	solutions	5844	147456
 mediadive	stats	1	20480
 mediadive	strains	47264	3268608
-ncbi_cache	ncbi_assembly_cache	190	385024
-ncbi_cache	ncbi_assembly_entrez_cache	190	61440
-ncbi_cache	ncbi_assembly_linkouts_cache	190	65536
-ncbi_cache	ncbi_taxonomy_cache	265	569344
-ncbi_cache	ncbi_taxonomy_entrez_cache	265	11513856
-ncbi_cache	ncbi_taxonomy_linkouts_cache	265	552960
 ncbi_metadata	attribute_harmonized_pairings	92752	2863104
 ncbi_metadata	attributes	960	487424
 ncbi_metadata	bioprojects	970757	614981632

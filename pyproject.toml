@@ -174,7 +174,6 @@ exclude = [
   "src/cmm_ai_automation/datamodel/cmm_ai_automation\\.py$",
   "src/cmm_ai_automation/datamodel/cmm_ai_automation_pydantic\\.py$",
   # Utility scripts - type annotations to be added later
-  "src/cmm_ai_automation/scripts/cache_ncbi_searches\\.py$",
   "src/cmm_ai_automation/scripts/edge_patterns_by_source\\.py$",
   "src/cmm_ai_automation/scripts/edge_patterns_merged\\.py$",
   "src/cmm_ai_automation/scripts/index_.*\\.py$",
