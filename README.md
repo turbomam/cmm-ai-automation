@@ -216,8 +216,10 @@ cp /path/to/downloaded-key.json ~/.config/gspread/service_account.json
 ```
 
 **Verify setup:**
+
+Use a spreadsheet ID for a Google Sheet that has been shared with your service account (replace `<YOUR_SPREADSHEET_ID>` below):
 ```bash
-uv run download-sheets --spreadsheet "1h-kOdyvVb1EJPqgTiklTN9Z8br_8bP8KGmxA19clo7Q" --output-dir /tmp/test
+uv run download-sheets --spreadsheet "<YOUR_SPREADSHEET_ID>" --output-dir /tmp/test
 ```
 
 ### Run the Data Pipeline
