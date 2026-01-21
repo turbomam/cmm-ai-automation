@@ -476,10 +476,92 @@ Found in `CMM-AI/data/`:
 
 ---
 
+## Chemical Identifier Mapping Resources
+
+When chemicals lack ChEBI IDs but have PubChem IDs (or vice versa), these systems can help find cross-references:
+
+### UniChem (Recommended)
+
+EBI's unified cross-referencing system for chemical structures.
+
+| Aspect | Details |
+|--------|---------|
+| URL | [https://www.ebi.ac.uk/unichem/](https://www.ebi.ac.uk/unichem/) |
+| Coverage | ChEBI, PubChem, ChEMBL, DrugBank, KEGG, 40+ sources |
+| Method | InChI key-based structure matching |
+| API | `https://www.ebi.ac.uk/unichem/rest/src_compound_id/{id}/{src_id}` |
+| Docs | [UniChem 2.0 Documentation](https://chembl.gitbook.io/unichem) |
+
+**Source IDs for API:**
+- ChEBI: `src_id=7`
+- PubChem: `src_id=22`
+- ChEMBL: `src_id=1`
+
+### BridgeDb
+
+Framework for gene, protein, and metabolite ID mapping.
+
+| Aspect | Details |
+|--------|---------|
+| URL | [https://www.bridgedb.org/](https://www.bridgedb.org/mapping-databases/metabolite-mappings.html) |
+| Coverage | PubChem ↔ ChEBI ↔ HMDB ↔ KEGG ↔ Wikidata |
+| Format | Pre-built Derby files for local use |
+| Download | [Figshare metabolite mappings](https://figshare.com/projects/BridgeDb_metabolites/28500) |
+
+### Direct Cross-References
+
+- **ChEBI entries** include PubChem links in "Database Links" section
+- **PubChem entries** show ChEBI in "Depositor-Supplied Identifiers"
+- **Wikidata** often has both PubChem and ChEBI properties
+
+---
+
+## Chemicals Without ChEBI IDs (Gap Analysis)
+
+**Date:** 2026-01-21
+
+Some chemicals in our media formulations lack ChEBI IDs. This section documents known gaps.
+
+### Lanthanide Chloride Hexahydrates
+
+These rare earth salts are used in methylotroph growth media (MP medium) but have no ChEBI entries:
+
+| Compound | ChEBI | PubChem CID | CAS |
+|----------|-------|-------------|-----|
+| Dysprosium(III) chloride hexahydrate | ❌ None | [71311204](https://pubchem.ncbi.nlm.nih.gov/compound/71311204) | 15059-52-6 |
+| Neodymium(III) chloride hexahydrate | ❌ None | [18355679](https://pubchem.ncbi.nlm.nih.gov/compound/18355679) | 13477-89-9 |
+| Praseodymium(III) chloride hexahydrate | ❌ None | [91886610](https://pubchem.ncbi.nlm.nih.gov/compound/91886610) | 17272-46-7 |
+
+**ChEBI has entries for the elements only:**
+- Dysprosium atom: [CHEBI:33377](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:33377)
+- Praseodymium atom: [CHEBI:49828](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:49828)
+- Praseodymium acetate: [CHEBI:63078](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:63078) (only Pr salt)
+
+**For comparison**, lanthanum trichloride (anhydrous) has [CHEBI:231515](https://www.ebi.ac.uk/chebi/searchId.do?chebiId=231515).
+
+### Options for KGX Representation
+
+1. **Use PubChem IDs**: `PUBCHEM.COMPOUND:71311204` (registered prefix)
+2. **Submit to ChEBI**: Request new entries for these compounds
+3. **Use UUIDs**: Mint local IDs with chemical names as labels
+
+**Recommendation:** Use `PUBCHEM.COMPOUND:` prefix since it's registered in Bioregistry and PubChem has comprehensive coverage of these compounds.
+
+### Submitting to ChEBI
+
+ChEBI accepts submissions for new compounds:
+- [ChEBI submission form](https://www.ebi.ac.uk/chebi/submissions/login.do)
+- Requires: structure, name, synonyms, literature references
+- Turnaround: typically 2-4 weeks
+
+---
+
 ## References
 
 - [Bioregistry](https://bioregistry.io/) - Prefix registration
 - [w3id.org](https://w3id.org/) - Persistent URI service
 - [Biolink information-resource-registry](https://github.com/biolink/information-resource-registry) - infores: registration
+- [UniChem](https://www.ebi.ac.uk/unichem/) - Chemical cross-referencing
+- [BridgeDb](https://www.bridgedb.org/) - Identifier mapping framework
 - Issue #53 - Standardize CURIE prefixes
 - Issue #98 - Canonical namespace policy
