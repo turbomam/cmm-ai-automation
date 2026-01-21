@@ -9,6 +9,31 @@ These guidelines help keep our data normalized, machine-readable, and ready for 
 
 ---
 
+## Critical Rule: No Semantic Formatting
+
+**NEVER use colors, fonts, bold, italic, or any visual formatting to convey meaning.**
+
+| Don't | Why It's Wrong | Do Instead |
+|-------|----------------|------------|
+| Red text = "needs review" | Lost on export to TSV/CSV | Add `status` column with value `needs_review` |
+| Yellow highlight = "uncertain" | Not machine-readable | Add `confidence` column: `high`, `medium`, `low` |
+| Bold = "important" | Invisible to code | Add `priority` column or `is_primary` boolean |
+| Strikethrough = "deprecated" | Lost on export | Add `deprecated` column: `TRUE`/`FALSE` |
+| Green background = "validated" | Can't be queried | Add `validation_status` column |
+
+**Why this matters:**
+- TSV/CSV exports strip all formatting
+- Automated pipelines can't see colors
+- Different people interpret colors differently
+- Colorblind users can't distinguish red/green
+
+**Allowed uses of formatting:**
+- Header row styling (for human readability only)
+- Conditional formatting that DUPLICATES a column value (not replaces it)
+- Frozen rows/columns for navigation
+
+---
+
 ## Quick Checklist
 
 Before submitting changes, verify:
@@ -301,8 +326,230 @@ Our `download-sheets` tool will report:
 
 ---
 
+---
+
+## Data Dictionary
+
+Legend for "Source" column:
+- **H** = Human-populated (manual entry)
+- **S** = Software-populated (automated enrichment)
+- **H→S** = Human enters initial value, software may validate/enrich
+- **S→H** = Software generates, human reviews/corrects
+
+---
+
+### BER CMM Data for AI Sheets
+
+#### `medium_kgx_nodes` - Media definitions for KGX export
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `id` | CURIE | H→S | Identifier (CHEBI:, uuid:, doi:, PUBCHEM.COMPOUND:) |
+| `name` | text | H | Human-readable name |
+| `category` | CURIE | H | Biolink category (biolink:ChemicalEntity, biolink:ChemicalMixture, etc.) |
+| `pH` | number | H | pH value if applicable |
+| `medium_prep_notes` | text | H | Preparation instructions |
+
+#### `medium_kgx_edges` - Media composition relationships
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `subject` | CURIE | H | Medium ID (from medium_kgx_nodes) |
+| `predicate` | CURIE | H | Relationship type (biolink:has_part) |
+| `object` | CURIE | H→S | Ingredient ID (CHEBI:, PUBCHEM.COMPOUND:) |
+| `knowledge_level` | enum | H | knowledge_assertion, not_provided |
+| `agent_type` | enum | H | manual_agent, manual_validation_of_automated_agent |
+| `primary_knowledge_source` | CURIE | H | infores: identifier |
+| `publications` | CURIE | H | PMID: reference |
+| `source_asserted_*` | various | H | Original values from source document |
+| `calculated_*` | various | S | Computed from source values |
+| `object_molecular_mass` | number | S | Looked up from ChEBI/PubChem |
+
+#### `growth_kgx_nodes` - Growth-related entities
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `id` | CURIE | H→S | Entity identifier |
+| `category` | CURIE | H | Biolink category |
+| `name` | text | H | Human-readable name |
+| `strain_notes` | text | H | Notes about strain |
+| `synonym` | text | H | Alternative names |
+
+#### `growth_kgx_edges` - Growth relationships
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `subject` | CURIE | H | Strain ID (bacdive:) |
+| `predicate` | CURIE | H | METPO:2000517 (grows_in) |
+| `object` | CURIE | H | Medium ID |
+| `knowledge_level` | enum | H | knowledge_assertion |
+| `agent_type` | enum | H | manual_agent |
+| `primary_knowledge_source` | CURIE | H | infores: identifier |
+
+#### `strains` - Strain submission data
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `strain_id_submitted` | text | H | User-submitted strain identifier |
+| `bacdive_id` | integer | S | BacDive database ID |
+| `bacdive_url` | URL | S | Link to BacDive entry |
+| `ncbi_url` | URL | S | Link to NCBI Taxonomy |
+| `ncbi_taxon_strain` | integer | S | NCBI taxon ID for strain |
+| `species_taxon_id_submitted` | integer | H | User-submitted species taxon |
+| `ncbi_taxon_species_from_bacdive` | integer | S | Species taxon from BacDive lookup |
+| `scientific_name_submitted` | text | H | User-submitted scientific name |
+| `bacdive_name` | text | S | Name from BacDive |
+| `name_agreement` | boolean | S | Whether names match |
+| `strain_designation_submitted` | text | H | User strain designation |
+| `strain_confirmed` | text | H | Curator confirmation |
+| `type_strain_submitted` | boolean | H | Is this a type strain? |
+| `bacdive_type_strain` | boolean | S | Type strain status from BacDive |
+| `XoxF/ExaF/GDH` | boolean | H | Has XoxF gene? |
+| `LutH/MluA` | boolean | H | Has LutH gene? |
+| `lanM`, `lanP` | boolean | H | Lanthanide-related genes |
+| `culture_collection_ids` | text | H→S | Collection IDs (DSM:, ATCC:, etc.) |
+| `procurement_urls` | URL | H | Where to obtain strain |
+| `biosafety_level` | integer | H→S | BSL-1, BSL-2, etc. |
+| `kg_microbe_nodes` | CURIE | S | Matching kg-microbe node IDs |
+
+#### `strains_assessed` - Strain validation results
+
+All columns from `strains` plus comparison columns:
+- `*_fresh_lookup` = S (new API lookup)
+- `*_agreement` = S (computed comparison)
+- `*_sub_only` / `*_lookup_only` = S (set differences)
+
+#### `media_ingredients` - Ingredient library
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `ingredient_id` | text | H | Local identifier |
+| `ingredient_name` | text | H | Human-readable name |
+| `media_id` | text | H | Which medium uses this |
+| `media_name` | text | H | Medium name |
+| `ontology_id` | CURIE | H→S | CHEBI: or PUBCHEM.COMPOUND: ID |
+| `ontology_label` | text | S | Name from ontology |
+| `chemical_formula` | text | H→S | Chemical formula |
+| `concentration` | number | H | Amount |
+| `unit` | text | H | Unit of concentration |
+| `role` | text | H | Function (buffer, mineral, carbon source) |
+| `kg_microbe_nodes` | CURIE | S | Matching kg-microbe IDs |
+| `notes` | text | H | Additional notes |
+| `source` | text | H | Data provenance |
+
+#### `growth_media` - Media catalog
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `placeholder URI` | URI | S | Temporary identifier (to be replaced) |
+| `media_id` | text | H | Short identifier |
+| `media_name` | text | H | Full name |
+| `media_type` | enum | H | minimal, complex, defined |
+| `alternative_names` | text | H | Synonyms |
+| `description` | text | H | Purpose/description |
+| `target_organisms` | text | H | What grows on this |
+| `ph` | number | H | Target pH |
+| `sterilization_method` | text | H | Autoclave, filter, etc. |
+| `references` | text | H | Literature citations |
+| `kg_microbe_nodes` | CURIE | S | Matching kg-microbe IDs |
+| `source` | enum | H | extend, curate, etc. |
+
+#### `genes_and_proteins` - Gene/protein catalog
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `gene or protein id` | text | H→S | UniProt or gene ID |
+| `organism` | text | H | Source organism |
+| `alternative name` | text | H | Synonyms |
+| `annotation` | text | H→S | Functional annotation |
+| `EC` | CURIE | S | EC number |
+| `GO` | CURIE | S | GO terms |
+| `CHEBI` | CURIE | S | Associated chemicals |
+| `Source` | text | H | Data source |
+| `Download URL` | URL | H | Data download link |
+
+---
+
+### Media Components Sheets
+
+#### `MP_media` / `MP_media_extended` - MP medium formulation
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `Component` | text | H | Chemical name (use standard spelling!) |
+| `Concentration` | text | H | Amount with unit (e.g., "30 mM") |
+| `Solubility` | text | H→S | Solubility limit |
+| `Lower bound` | text | H | Minimum effective concentration |
+| `Upper bound` | text | H | Maximum safe concentration |
+| `Limit of toxicity` | text | H | Toxicity threshold |
+| `Bacteria` | text | H | Test organism |
+| `link` | URL | H | Source reference |
+
+**Note:** `MP_media_extended` has the same structure but with enriched data from literature.
+
+#### `design1` / `design2` - Experimental design parameters
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `Component` | text | H | Chemical/parameter name |
+| `Lower Bound` / `Min` | number | H | Minimum value to test |
+| `Upper Bound` / `Max` | number | H | Maximum value to test |
+| `Solubility` | text | H | Physical limit |
+| `Limit of Toxicity` | text | H | Biological limit |
+| `Physiological Concentration` | text | H | Typical in vivo level |
+| `Bacteria/Organism` | text | H | Target organism |
+| `Notes` | text | H | Additional context |
+| `Source Link` | URL | H | Reference |
+
+#### `Sheet3_IUPAC_NAMES_TO_SMILES_AND_MORFEUS_` - Chemical descriptors
+
+| Column | Type | Source | Description |
+|--------|------|--------|-------------|
+| `compound` | text | H | IUPAC name (input) |
+| `activity` | number | H | Biological activity |
+| `SMILES` | text | S | SMILES string (from OPSIN) |
+| `source` | text | S | Conversion source |
+| `error` | text | S | Conversion errors |
+| `mass` | number | S | Molecular mass |
+| `radius` | number | S | Molecular radius |
+| `charge` | number | S | Formal charge |
+| `ip`, `ea` | number | S | Ionization potential, electron affinity |
+| `homo`, `lumo` | number | S | Frontier orbital energies |
+| `electrophilicity`, `nucleophilicity` | number | S | Morfeus descriptors |
+| `sasa_*` | number | S | Solvent-accessible surface area |
+| `disp_*` | number | S | Dispersion descriptors |
+| `status` | enum | S | Conversion status (ok, error) |
+| `pubchem_cid` | integer | S | PubChem compound ID |
+| `inchi`, `inchikey` | text | S | InChI identifiers |
+| `molecular_formula` | text | S | Chemical formula |
+
+---
+
+## Column Ownership Summary
+
+### Human-Owned Columns (do not overwrite)
+- Names, descriptions, notes
+- Experimental parameters (concentrations, bounds)
+- Curator assessments and confirmations
+- Source/provenance information
+
+### Software-Owned Columns (do not manually edit)
+- `*_fresh_lookup` - API lookup results
+- `*_agreement` - Computed comparisons
+- `kg_microbe_nodes` - Cross-reference matches
+- Morfeus descriptors, SMILES conversions
+- `calculated_*` columns
+
+### Shared Columns (human enters, software validates)
+- `ontology_id` - Human enters CHEBI:, software may suggest corrections
+- `culture_collection_ids` - Human enters, software validates format
+- `ncbi_taxon_*` - Human may enter, software looks up authoritative value
+
+---
+
 ## Changelog
 
 | Date | Change |
 |------|--------|
 | 2026-01-21 | Initial version |
+| 2026-01-21 | Added semantic formatting rule, data dictionary |
