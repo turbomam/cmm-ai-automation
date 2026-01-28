@@ -156,18 +156,23 @@ just mediadive-kgx-clean-export
 
 ### Step 4: Load into Neo4j
 
-Two loading approaches available:
+Multiple data sources available:
 
 ```bash
-# Option A: KGX tool (recommended)
-# - Proper list handling (xref, synonym as arrays)
-# - Generic "Node" labels
-just neo4j-upload-kgx
+# Option A: Merged KGX (curated Google Sheets data)
+# - Experimental strains, media, growth results
+# - Requires: just kgx-merge-all
+just neo4j-upload-merged
 
-# Option B: Custom loader
+# Option B: MediaDive KGX (reference database)
+# - Full MediaDive growth media collection
+# - Proper list handling (xref, synonym as arrays)
+just neo4j-upload-mediadive
+
+# Option C: MediaDive with custom labels
 # - Custom labels (GrowthMedium, Strain, Ingredient, Solution)
 # - Lists stored as pipe-delimited strings
-just neo4j-upload-custom
+just neo4j-upload-mediadive-custom
 ```
 
 ### Step 5: Query and Explore

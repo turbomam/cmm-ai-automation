@@ -144,12 +144,13 @@ This document lists all available `just` targets. Run `just --list` to see this 
 
 ### Data Loading
 
-| Target | Description | Labels | List Handling |
-|--------|-------------|--------|---------------|
-| `neo4j-upload-kgx` | Upload using `kgx neo4j-upload` tool | Generic "Node" | Proper arrays |
-| `neo4j-upload-custom` | Upload using custom Python loader | GrowthMedium, Strain, etc. | Pipe-delimited strings |
+| Target | Data Source | Description | Labels | List Handling |
+|--------|-------------|-------------|--------|---------------|
+| `neo4j-upload-merged` | Merged KGX (Google Sheets curation) | Upload via `kgx` tool | Generic "Node" | Proper arrays |
+| `neo4j-upload-mediadive` | MediaDive KGX | Upload via `kgx` tool | Generic "Node" | Proper arrays |
+| `neo4j-upload-mediadive-custom` | MediaDive KGX | Upload via custom Python loader | GrowthMedium, Strain, etc. | Pipe-delimited strings |
 
-**Recommendation:** Use `neo4j-upload-kgx` for proper list handling (xref, synonym as arrays).
+**Recommendation:** Use `neo4j-upload-merged` for curated experimental data, `neo4j-upload-mediadive` for MediaDive reference data.
 
 ---
 

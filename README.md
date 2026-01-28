@@ -237,9 +237,9 @@ just load-mediadive-details   # Fetch detailed data (~3-4 hours)
 just mediadive-kgx-clean-export
 
 # 4. Load into Neo4j
-just neo4j-upload-kgx         # Uses kgx tool (proper list handling)
+just neo4j-upload-mediadive         # MediaDive data (kgx tool)
 # OR
-just neo4j-upload-custom      # Custom loader (custom labels)
+just neo4j-upload-mediadive-custom  # MediaDive with custom labels
 
 # 5. Browse results
 open http://localhost:7474    # Neo4j Browser
@@ -269,6 +269,13 @@ just kgx-rebuild-all
 **Output: Merged CMM Growth Knowledge Graph**
 - `output/kgx/merged/merged_nodes.tsv` - All nodes (strains, species, chemicals, media, roles)
 - `output/kgx/merged/merged_edges.tsv` - All edges (in_taxon, has_role, has_part relationships)
+
+**Load into Neo4j:**
+```bash
+just neo4j-start              # Start Neo4j (wait ~30s)
+just neo4j-upload-merged      # Upload merged KGX
+open http://localhost:7474    # Browse graph
+```
 
 **Data sources enriched:**
 - **Strains**: BacDive (culture collection IDs, synonyms, genome accessions), NCBI Taxonomy (rank, parent taxon)
