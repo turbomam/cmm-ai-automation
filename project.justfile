@@ -128,9 +128,12 @@ neo4j-clear:
   uv run python -m cmm_ai_automation.scripts.neo4j_clear
 
 # =============================================================================
-# FUNCTIONAL TARGETS - Data Pipeline Operations
+# KGX EXPORT -- CURIE-based enrichment to KGX TSV
 # =============================================================================
 
+# INPUT: TSV with CURIEs + BacDive MongoDB + NCBI API
+# OUTPUT: KGX TSV (strains + in_taxon edges)
+# PLATFORM: MongoDB, NCBI API
 # Generate KGX nodes and edges for strains from a file containing strain id CURIEs
 # Fetches from BacDive MongoDB and/or NCBI API, creates in_taxon edges to species
 # REQUIRES: BacDive MongoDB (for bacdive: CURIEs), NETWORK: yes (NCBI API)
@@ -145,6 +148,9 @@ strains-kgx-from-curies input='data/private/normalized-kgx-downloads/growth_kgx_
     --output-dir {{output_dir}}
   @echo "✓ Exported strains to {{output_dir}}/"
 
+# INPUT: TSV with CHEBI:/PUBCHEM.COMPOUND:/doi:/uuid: CURIEs
+# OUTPUT: KGX TSV (chemicals with formula, mass, InChIKey, etc.)
+# PLATFORM: ChEBI API, PubChem API
 # Generate KGX nodes and edges for chemicals from a file of CURIEs
 # Input file must have a column with CHEBI:, PUBCHEM.COMPOUND:, doi:, or uuid: CURIEs
 # Fetches from ChEBI and PubChem APIs; doi/uuid entries are not passed forward
@@ -157,6 +163,8 @@ chemicals-kgx-from-curies input='data/private/normalized-kgx-downloads/medium_kg
       --output-dir "{{output_dir}}"
     @echo "✓ Exported chemicals to {{output_dir}}/"
 
+# INPUT: TSV with CURIEs (sampled), OUTPUT: KGX TSV
+# PLATFORM: ChEBI API, PubChem API
 # Generate KGX for chemicals with sampling (for testing)
 chemicals-kgx-sample input='data/private/normalized-kgx-downloads/medium_kgx_nodes.tsv' id_field='id' n='10' output_dir='output/kgx/chemicals_sample':
   @mkdir -p "{{output_dir}}"
@@ -168,9 +176,12 @@ chemicals-kgx-sample input='data/private/normalized-kgx-downloads/medium_kgx_nod
   @echo "✓ Exported sampled chemicals to {{output_dir}}/"
 
 # =============================================================================
-# Google Sheets TARGETS
+# DATA ACQUISITION -- Google Sheets downloads
 # =============================================================================
 
+# INPUT: Google Sheets (experimentalist source/sink)
+# OUTPUT: {{experimentalist_source_sink_dir}}/*.tsv
+# PLATFORM: Google Sheets API (gspread)
 # Download all tabs from the experimentalist source/sink sheet
 # REQUIRES: Google Sheets API credentials, NETWORK: yes, WRITES: {{experimentalist_source_sink_dir}}/*.tsv
 download-source-sink-sheets:
@@ -178,8 +189,11 @@ download-source-sink-sheets:
   @echo "Output dir:     {{experimentalist_source_sink_dir}}"
   uv run download-sheets --spreadsheet "{{experimentalist_source_sink_sheet_id}}" --output-dir {{experimentalist_source_sink_dir}}
 
+# INPUT: Google Sheets (normalized KGX, restricted)
+# OUTPUT: {{normalized_kgx_dir}}/*.tsv
+# PLATFORM: Google Sheets API (gspread)
 # Download normalized KGX tabs from the restricted sheet
-# REQUIRES: Google Sheets API credentials, NETWORK: yes, WRITES: {{normalized_kgx_dir}}/*.tsv
+# REQUIRES: Google Sheets API credentials, NETWORK: yes
 download-normalized-kgx-sheets:
   @echo "Spreadsheet ID: {{normalized_kgx_sheet_id}}"
   @echo "Output dir:     {{normalized_kgx_dir}}"
@@ -190,39 +204,53 @@ download-normalized-kgx-sheets:
     --tabs medium_kgx_edges
 
 # =============================================================================
-# MediaDive TARGETS
+# DATA ACQUISITION -- MediaDive API to MongoDB
 # =============================================================================
 
-
+# INPUT: MediaDive REST API
+# OUTPUT: MongoDB mediadive.{media,solutions,ingredients} collections
+# PLATFORM: MongoDB, MediaDive API
 # Load MediaDive base data (media, solutions, ingredients) into MongoDB
 # REQUIRES: MongoDB running on localhost:27017, NETWORK: yes, DESTRUCTIVE: drops/recreates collections
 # TIME: ~10 seconds (3 bulk API calls)
 load-mediadive:
   uv run python -m cmm_ai_automation.scripts.load_mediadive_mongodb
 
+# INPUT: MediaDive REST API (per-item detail endpoints)
+# OUTPUT: MongoDB mediadive.{media_details,solution_details,ingredient_details,strains} collections
+# PLATFORM: MongoDB, MediaDive API
 # Fetch detailed MediaDive data into MongoDB (media, solutions, ingredients, strains)
 # REQUIRES: MongoDB with mediadive.media collection, NETWORK: yes, DESTRUCTIVE: drops/recreates detail collections
 # TIME: 3-4+ hours (~64,000 API calls; 0.1s rate limit + API latency)
 load-mediadive-details:
   uv run python -m cmm_ai_automation.scripts.load_mediadive_details
 
+# INPUT/OUTPUT: MongoDB mediadive collections (in-place merge)
+# PLATFORM: MongoDB (mongosh)
 # Merge reference field from media into media_details.medium.reference
 # REQUIRES: Both media and media_details collections populated
 # Run this before dropping the media collection
 mediadive-merge-references:
   mongosh mediadive --eval 'let n=0; db.media.find({reference: {$ne: null}}).forEach(doc => { if(db.media_details.updateOne({_id: doc.id}, {$set: {"medium.reference": doc.reference}}).modifiedCount) n++; }); print("Merged", n, "references")'
 
+# INPUT/OUTPUT: MongoDB mediadive collections (in-place merge)
+# PLATFORM: MongoDB (mongosh)
 # Merge bacdive_id from medium_strains into strains collection
 # REQUIRES: Both medium_strains and strains collections populated
 # Run this before dropping medium_strains
 mediadive-merge-bacdive-ids:
   mongosh mediadive --eval 'const m = {}; db.medium_strains.find().forEach(doc => doc.strains.forEach(s => { if (s.bacdive_id) m[s.id] = s.bacdive_id; })); let u = 0; Object.entries(m).forEach(([id, bid]) => { if (db.strains.updateOne({_id: parseInt(id)}, {$set: {bacdive_id: bid}}).modifiedCount) u++; }); print("Merged", u, "bacdive_ids into strains")'
 
+# INPUT/OUTPUT: MongoDB mediadive collections (destructive drop)
+# PLATFORM: MongoDB (mongosh)
 # Drop redundant MediaDive collections (ingredients, media, solutions, medium_strains)
 # Runs merge targets first to preserve unique data
 mediadive-drop-redundant: mediadive-merge-references mediadive-merge-bacdive-ids
   mongosh mediadive --eval 'db.ingredients.drop(); db.solutions.drop(); db.media.drop(); db.medium_strains.drop(); print("Dropped: ingredients, solutions, media, medium_strains")'
 
+# INPUT: MongoDB mediadive collections
+# OUTPUT: output/kgx/mediadive_nodes.tsv, output/kgx/mediadive_edges.tsv
+# PLATFORM: MongoDB
 # Export MediaDive data to KGX format
 # REQUIRES: MediaDive MongoDB populated, WRITES: output/kgx/mediadive_nodes.tsv, output/kgx/mediadive_edges.tsv
 mediadive-kgx-export:
@@ -232,12 +260,18 @@ mediadive-kgx-export:
   @echo "✓ Exported MediaDive to KGX"
 
 
+# INPUT: MongoDB mediadive database
+# OUTPUT: data/mongodb_backups/{date}/mediadive/
+# PLATFORM: MongoDB (mongodump)
 # Backup MediaDive MongoDB to data/mongodb_backups/{date}/
 # SAFE: read-only, creates timestamped backup
 mediadive-backup:
   mongodump --db mediadive --out data/mongodb_backups/$(date +%Y%m%d)
   @echo "✓ Backup saved to data/mongodb_backups/$(date +%Y%m%d)/mediadive/"
 
+# INPUT: data/mongodb_backups/{date}/mediadive/
+# OUTPUT: MongoDB mediadive database
+# PLATFORM: MongoDB (mongorestore)
 # Restore MediaDive MongoDB from a backup
 # DESTRUCTIVE: drops and recreates all collections
 # Usage: just mediadive-restore 20251219
@@ -247,18 +281,24 @@ mediadive-restore date:
 
 
 # =============================================================================
-# ChromaDB TARGETS
+# ENRICHMENT -- ChromaDB vector stores
 # =============================================================================
 
+# INPUT: NCBITaxon OWL file
+# OUTPUT: ChromaDB vector store
+# PLATFORM: ChromaDB, OpenAI API (embeddings)
 # Build NCBITaxon ChromaDB for semantic search
 # REQUIRES: NCBITaxon OWL file, OpenAI API key, EXPENSIVE: OpenAI embeddings, WRITES: ChromaDB
 build-ncbitaxon db_path:
   uv run python -m cmm_ai_automation.scripts.build_ncbitaxon_chromadb --db-path {{db_path}}
 
 # =============================================================================
-# BacDive TARGETS
+# DATA ACQUISITION -- BacDive API to MongoDB
 # =============================================================================
 
+# INPUT: BacDive REST API (ID range scan)
+# OUTPUT: MongoDB bacdive.strains collection
+# PLATFORM: MongoDB, BacDive API
 # Load BacDive strain data into MongoDB by iterating over ID range
 # REQUIRES: MongoDB running, BACDIVE_EMAIL and BACDIVE_PASSWORD in .env
 # NETWORK: yes (BacDive API)
@@ -275,9 +315,10 @@ load-bacdive:
     --min-id {{bacdive_min_id}} \
     --database {{bacdive_database}} \
     --collection {{bacdive_collection}}
-# Codify strains using NCBITaxon ChromaDB semantic search
-# REQUIRES: ChromaDB built, input TSV, NETWORK: OpenAI API, WRITES: output TSV
 
+# INPUT: MongoDB bacdive.strains collection
+# OUTPUT: output/kgx/bacdive/*.jsonl
+# PLATFORM: MongoDB
 # Export BacDive strains directly from MongoDB to KGX JSON Lines format
 # REQUIRES: BacDive MongoDB populated (via load-bacdive), NETWORK: no (MongoDB local)
 # WRITES: output/kgx/bacdive/cmm_strains_bacdive_nodes.jsonl, output/kgx/bacdive/cmm_strains_bacdive_edges.jsonl
@@ -296,9 +337,11 @@ clean-kgx-bacdive:
   @echo "✓ Cleaned BacDive KGX outputs"
 
 # =============================================================================
-# NEO4J TARGETS - Local Graph Database
+# GRAPH LOADING -- Neo4j (Docker)
 # =============================================================================
 
+# OUTPUT: Neo4j container (Docker)
+# PLATFORM: Docker, Neo4j
 # Start local Neo4j instance (Docker)
 # REQUIRES: Docker running, NETWORK: pulls neo4j image if needed
 # ACCESS: http://localhost:7474 (browser), bolt://localhost:7687 (driver)
@@ -321,6 +364,9 @@ neo4j-start:
 neo4j-status:
   @docker ps --filter name=cmm-neo4j || echo "Neo4j not running"
 
+# INPUT: output/kgx/mediadive_nodes.tsv, output/kgx/mediadive_edges.tsv
+# OUTPUT: Neo4j graph (generic Node labels)
+# PLATFORM: Neo4j, Docker, kgx tool
 # Upload MediaDive KGX to Neo4j using kgx tool (recommended)
 # PROS: Proper list handling (xref, synonym as arrays)
 # CONS: Generic Node labels only
@@ -337,6 +383,9 @@ neo4j-upload-mediadive:
     output/kgx/mediadive_nodes.tsv output/kgx/mediadive_edges.tsv
   echo "✓ Upload complete - browse at http://localhost:7474"
 
+# INPUT: output/kgx/mediadive_nodes.tsv, output/kgx/mediadive_edges.tsv
+# OUTPUT: Neo4j graph (custom labels: GrowthMedium, Strain, etc.)
+# PLATFORM: Neo4j, Docker
 # Upload MediaDive KGX to Neo4j using custom Python loader
 # PROS: Custom labels (GrowthMedium, Strain, Ingredient, Solution)
 # CONS: List properties stored as pipe-delimited strings
@@ -344,8 +393,10 @@ neo4j-upload-mediadive:
 neo4j-upload-mediadive-custom:
   uv run python -m cmm_ai_automation.scripts.neo4j_load
 
+# INPUT: output/kgx/merged/merged_nodes.tsv, merged_edges.tsv
+# OUTPUT: Neo4j graph (generic Node labels)
+# PLATFORM: Neo4j, Docker, kgx tool
 # Upload merged KGX (from Google Sheets curation) to Neo4j
-# SOURCE: output/kgx/merged/merged_nodes.tsv, merged_edges.tsv
 # REQUIRES: Neo4j running, run `just kgx-merge-all` first
 neo4j-upload-merged:
   #!/usr/bin/env bash
@@ -366,9 +417,12 @@ neo4j-stop:
   @echo "✓ Neo4j stopped (data preserved in volume)"
 
 # =============================================================================
-# KGX Merge TARGETS
+# KGX MERGE -- combining multiple KGX sources
 # =============================================================================
 
+# INPUT: Google Sheets + BacDive MongoDB + ChEBI/PubChem/NCBI APIs
+# OUTPUT: output/kgx/merged/merged_nodes.tsv, merged_edges.tsv
+# PLATFORM: Google Sheets API, MongoDB, ChEBI/PubChem/NCBI APIs, kgx tool
 # Full KGX pipeline: clean, download, enrich, merge
 # This is the main entry point for rebuilding the normalized KGX graph from scratch
 # REQUIRES: Google Sheets API credentials, BacDive MongoDB, ChEBI/PubChem/NCBI APIs
@@ -383,6 +437,9 @@ kgx-rebuild-all: clean-normalized-kgx-sheets clean-output-kgx download-normalize
   @echo "  Output: output/kgx/merged/merged_nodes.tsv"
   @echo "  Output: output/kgx/merged/merged_edges.tsv"
 
+# INPUT: KGX TSV files from multiple sources + config/kgx_merge_config.yaml
+# OUTPUT: output/kgx/merged/merged_nodes.tsv, merged_edges.tsv
+# PLATFORM: kgx tool (local)
 # Merge normalized KGX sheets with strains/chemicals KGX exports into one graph
 # WRITES:
 # - output/kgx/merged/merged_nodes.tsv
@@ -399,7 +456,7 @@ kgx-merge-all:
   @echo "✓ Wrote output/kgx/merged/merged_nodes.tsv and output/kgx/merged/merged_edges.tsv"
 
 # =============================================================================
-# KGX Edge Pattern Analysis TARGETS
+# KGX ANALYSIS -- edge pattern extraction (kg-microbe)
 # =============================================================================
 
 # Default paths for kg-microbe analysis
@@ -407,6 +464,9 @@ kg_microbe_merged := "../kg-microbe/data/merged"
 kg_microbe_transformed := "../kg-microbe/data/transformed"
 edge_patterns_output := "output/edge_patterns"
 
+# INPUT: kg-microbe merged KGX directory
+# OUTPUT: edge_patterns/edge_patterns_merged.tsv
+# PLATFORM: local (custom script)
 # Extract edge patterns from merged KGX output (source breakdown NOT preserved)
 # For *_nodes.tsv and *_edges.tsv in a flat directory
 # REQUIRES: Merged KGX files exist
@@ -417,6 +477,9 @@ edge-patterns-merged:
   uv run python -m cmm_ai_automation.scripts.edge_patterns_merged "{{kg_microbe_merged}}" > "{{edge_patterns_output}}/edge_patterns_merged.tsv"
   @echo "✓ Wrote {{edge_patterns_output}}/edge_patterns_merged.tsv"
 
+# INPUT: kg-microbe transformed KGX subdirectories
+# OUTPUT: edge_patterns/edge_patterns_by_source.tsv
+# PLATFORM: local (custom script)
 # Extract edge patterns from transformed data (source breakdown IS preserved)
 # For <source>/nodes.tsv and <source>/edges.tsv subdirectories
 # REQUIRES: Transformed KGX directories exist
