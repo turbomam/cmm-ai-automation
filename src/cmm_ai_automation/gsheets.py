@@ -106,6 +106,9 @@ def get_sheet_records(
 ) -> list[dict[str, str | int | float]]:
     """Read data from a Google Sheets worksheet as a list of dicts.
 
+    Handles sheets with trailing empty columns (which cause duplicate header errors
+    in gspread's get_all_records).
+
     Args:
         spreadsheet_name: Name or ID of the spreadsheet
         worksheet_name: Name of the worksheet/tab. If None, uses the first sheet.
@@ -116,8 +119,56 @@ def get_sheet_records(
     """
     spreadsheet = get_spreadsheet(spreadsheet_name, credentials_path)
     worksheet = spreadsheet.worksheet(worksheet_name) if worksheet_name else spreadsheet.sheet1
-    raw_records = worksheet.get_all_records()
-    records: list[dict[str, str | int | float]] = raw_records
+
+    # Use get_all_values to avoid errors from trailing empty columns that would
+    # cause duplicate header issues in get_all_records
+    all_values = worksheet.get_all_values()
+    if not all_values:
+        return []
+
+    # Get headers and strip trailing empty columns
+    headers = all_values[0]
+    # Find last non-empty header
+    last_valid_idx = len(headers) - 1
+    while last_valid_idx >= 0 and not headers[last_valid_idx].strip():
+        last_valid_idx -= 1
+
+    if last_valid_idx < 0:
+        return []  # No valid headers
+
+    # Trim headers to valid columns
+    headers = headers[: last_valid_idx + 1]
+
+    # Validate: check for empty or duplicate headers in the trimmed set
+    # (empty/duplicate headers would cause silent data loss with dict())
+    empty_header_positions = [i for i, h in enumerate(headers) if not h.strip()]
+    if empty_header_positions:
+        raise ValueError(
+            f"Empty column header(s) at position(s) {empty_header_positions}. "
+            "Please add column names or remove empty columns from the spreadsheet."
+        )
+
+    seen_headers: dict[str, int] = {}
+    duplicate_headers: list[tuple[str, int, int]] = []
+    for i, h in enumerate(headers):
+        if h in seen_headers:
+            duplicate_headers.append((h, seen_headers[h], i))
+        else:
+            seen_headers[h] = i
+
+    if duplicate_headers:
+        details = ", ".join(f"'{h}' at columns {first} and {second}" for h, first, second in duplicate_headers)
+        raise ValueError(f"Duplicate column header(s): {details}. Please rename duplicate columns in the spreadsheet.")
+
+    # Build records from trimmed data
+    records: list[dict[str, str | int | float]] = []
+    for row in all_values[1:]:
+        trimmed_row = row[: last_valid_idx + 1]
+        # Pad row if shorter than headers
+        while len(trimmed_row) < len(headers):
+            trimmed_row.append("")
+        records.append(dict(zip(headers, trimmed_row, strict=False)))
+
     return records
 
 
