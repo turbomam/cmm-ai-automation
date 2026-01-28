@@ -779,16 +779,21 @@ just<span class="w"> </span>mediadive-kgx-clean-export
 | METPO:2000517 | grows_in (strain→medium) | ~72,000 |
 | RO:0001019 | contains (medium/solution→ingredient) | ~53,000 |</p>
 <h3 id="step-4-load-into-neo4j">Step 4: Load into Neo4j</h3>
-<p>Two loading approaches available:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Option A: KGX tool (recommended)</span>
-<span class="c1"># - Proper list handling (xref, synonym as arrays)</span>
-<span class="c1"># - Generic &quot;Node&quot; labels</span>
-just<span class="w"> </span>neo4j-upload-kgx
+<p>Multiple data sources available:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Option A: Merged KGX (curated Google Sheets data)</span>
+<span class="c1"># - Experimental strains, media, growth results</span>
+<span class="c1"># - Requires: just kgx-merge-all</span>
+just<span class="w"> </span>neo4j-upload-merged
 
-<span class="c1"># Option B: Custom loader</span>
+<span class="c1"># Option B: MediaDive KGX (reference database)</span>
+<span class="c1"># - Full MediaDive growth media collection</span>
+<span class="c1"># - Proper list handling (xref, synonym as arrays)</span>
+just<span class="w"> </span>neo4j-upload-mediadive
+
+<span class="c1"># Option C: MediaDive with custom labels</span>
 <span class="c1"># - Custom labels (GrowthMedium, Strain, Ingredient, Solution)</span>
 <span class="c1"># - Lists stored as pipe-delimited strings</span>
-just<span class="w"> </span>neo4j-upload-custom
+just<span class="w"> </span>neo4j-upload-mediadive-custom
 </code></pre></div>
 <h3 id="step-5-query-and-explore">Step 5: Query and Explore</h3>
 <p><strong>Neo4j Browser:</strong> http://localhost:7474</p>

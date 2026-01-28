@@ -1138,6 +1138,7 @@
 <thead>
 <tr>
 <th>Target</th>
+<th>Data Source</th>
 <th>Description</th>
 <th>Labels</th>
 <th>List Handling</th>
@@ -1145,20 +1146,29 @@
 </thead>
 <tbody>
 <tr>
-<td><code>neo4j-upload-kgx</code></td>
-<td>Upload using <code>kgx neo4j-upload</code> tool</td>
+<td><code>neo4j-upload-merged</code></td>
+<td>Merged KGX (Google Sheets curation)</td>
+<td>Upload via <code>kgx</code> tool</td>
 <td>Generic "Node"</td>
 <td>Proper arrays</td>
 </tr>
 <tr>
-<td><code>neo4j-upload-custom</code></td>
-<td>Upload using custom Python loader</td>
+<td><code>neo4j-upload-mediadive</code></td>
+<td>MediaDive KGX</td>
+<td>Upload via <code>kgx</code> tool</td>
+<td>Generic "Node"</td>
+<td>Proper arrays</td>
+</tr>
+<tr>
+<td><code>neo4j-upload-mediadive-custom</code></td>
+<td>MediaDive KGX</td>
+<td>Upload via custom Python loader</td>
 <td>GrowthMedium, Strain, etc.</td>
 <td>Pipe-delimited strings</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Recommendation:</strong> Use <code>neo4j-upload-kgx</code> for proper list handling (xref, synonym as arrays).</p>
+<p><strong>Recommendation:</strong> Use <code>neo4j-upload-merged</code> for curated experimental data, <code>neo4j-upload-mediadive</code> for MediaDive reference data.</p>
 <hr />
 <h2 id="cleanup">Cleanup</h2>
 <table>
