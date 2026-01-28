@@ -196,6 +196,12 @@ data/ontologies/
 /strains_merged.tsv
 /strains_enriched.tsv
 
+# Local cache directories (NCBI taxonomy, etc.)
+cache/
+
+# Downloaded KG snapshots - large, refetch as needed
+kg-microbe-*/
+
 # Generated datamodel - do not commit
 src/cmm_ai_automation/datamodel/cmm_ai_automation.py
 src/cmm_ai_automation/datamodel/cmm_ai_automation_pydantic.py

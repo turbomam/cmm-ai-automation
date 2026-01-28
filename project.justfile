@@ -365,23 +365,13 @@ neo4j-status:
   @docker ps --filter name=cmm-neo4j || echo "Neo4j not running"
 
 # INPUT: output/kgx/mediadive_nodes.tsv, output/kgx/mediadive_edges.tsv
-# OUTPUT: Neo4j graph (custom labels: GrowthMedium, Strain, etc.)
-# PLATFORM: Neo4j, Docker
-# Upload MediaDive KGX to Neo4j using custom loader
-# PROS: Custom labels (GrowthMedium, Strain, Ingredient, Solution)
-# CONS: List properties stored as pipe-delimited strings
-# REQUIRES: Neo4j running, MediaDive KGX files exist
-neo4j-upload-custom:
-  uv run python -m cmm_ai_automation.scripts.neo4j_load
-
-# INPUT: output/kgx/mediadive_nodes.tsv, output/kgx/mediadive_edges.tsv
 # OUTPUT: Neo4j graph (generic Node labels)
 # PLATFORM: Neo4j, Docker, kgx tool
-# Upload MediaDive KGX to Neo4j using kgx neo4j-upload
+# Upload MediaDive KGX to Neo4j using kgx tool (recommended)
 # PROS: Proper list handling (xref, synonym as arrays)
 # CONS: Generic Node labels only
 # REQUIRES: Neo4j running, MediaDive KGX files exist
-neo4j-upload-kgx:
+neo4j-upload-mediadive:
   #!/usr/bin/env bash
   set -a; source .env; set +a
   echo "Uploading MediaDive KGX to Neo4j via kgx..."
@@ -391,6 +381,33 @@ neo4j-upload-kgx:
     -u ${NEO4J_USER:-neo4j} \
     -p ${NEO4J_PASSWORD:-neo4j} \
     output/kgx/mediadive_nodes.tsv output/kgx/mediadive_edges.tsv
+  echo "✓ Upload complete - browse at http://localhost:7474"
+
+# INPUT: output/kgx/mediadive_nodes.tsv, output/kgx/mediadive_edges.tsv
+# OUTPUT: Neo4j graph (custom labels: GrowthMedium, Strain, etc.)
+# PLATFORM: Neo4j, Docker
+# Upload MediaDive KGX to Neo4j using custom Python loader
+# PROS: Custom labels (GrowthMedium, Strain, Ingredient, Solution)
+# CONS: List properties stored as pipe-delimited strings
+# REQUIRES: Neo4j running, MediaDive KGX files exist
+neo4j-upload-mediadive-custom:
+  uv run python -m cmm_ai_automation.scripts.neo4j_load
+
+# INPUT: output/kgx/merged/merged_nodes.tsv, merged_edges.tsv
+# OUTPUT: Neo4j graph (generic Node labels)
+# PLATFORM: Neo4j, Docker, kgx tool
+# Upload merged KGX (from Google Sheets curation) to Neo4j
+# REQUIRES: Neo4j running, run `just kgx-merge-all` first
+neo4j-upload-merged:
+  #!/usr/bin/env bash
+  set -a; source .env; set +a
+  echo "Uploading merged KGX to Neo4j via kgx..."
+  uv run kgx neo4j-upload \
+    -i tsv \
+    -l ${NEO4J_URI:-bolt://localhost:7687} \
+    -u ${NEO4J_USER:-neo4j} \
+    -p ${NEO4J_PASSWORD:-neo4j} \
+    output/kgx/merged/merged_nodes.tsv output/kgx/merged/merged_edges.tsv
   echo "✓ Upload complete - browse at http://localhost:7474"
 
 # Stop Neo4j container (preserves data)
