@@ -315,8 +315,6 @@ load-bacdive:
     --min-id {{bacdive_min_id}} \
     --database {{bacdive_database}} \
     --collection {{bacdive_collection}}
-# Codify strains using NCBITaxon ChromaDB semantic search
-# REQUIRES: ChromaDB built, input TSV, NETWORK: OpenAI API, WRITES: output TSV
 
 # INPUT: MongoDB bacdive.strains collection
 # OUTPUT: output/kgx/bacdive/*.jsonl
