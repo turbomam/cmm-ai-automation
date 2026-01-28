@@ -912,6 +912,106 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#chemical-identifier-mapping-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chemical Identifier Mapping Resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Chemical Identifier Mapping Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#unichem-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UniChem (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bridgedb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BridgeDb
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#direct-cross-references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Direct Cross-References
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chemicals-without-chebi-ids-gap-analysis" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chemicals Without ChEBI IDs (Gap Analysis)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Chemicals Without ChEBI IDs (Gap Analysis)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lanthanide-chloride-hexahydrates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lanthanide Chloride Hexahydrates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#options-for-kgx-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Options for KGX Representation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#submitting-to-chebi" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Submitting to ChEBI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#references" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1744,11 +1844,139 @@ Type visible, still mostly numeric.</p>
 <li>[ ] Prioritize which unregistered prefixes to formalize</li>
 </ul>
 <hr />
+<h2 id="chemical-identifier-mapping-resources">Chemical Identifier Mapping Resources</h2>
+<p>When chemicals lack ChEBI IDs but have PubChem IDs (or vice versa), these systems can help find cross-references:</p>
+<h3 id="unichem-recommended">UniChem (Recommended)</h3>
+<p>EBI's unified cross-referencing system for chemical structures.</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL</td>
+<td><a href="https://www.ebi.ac.uk/unichem/">https://www.ebi.ac.uk/unichem/</a></td>
+</tr>
+<tr>
+<td>Coverage</td>
+<td>ChEBI, PubChem, ChEMBL, DrugBank, KEGG, 40+ sources</td>
+</tr>
+<tr>
+<td>Method</td>
+<td>InChI key-based structure matching</td>
+</tr>
+<tr>
+<td>API</td>
+<td><code>https://www.ebi.ac.uk/unichem/rest/src_compound_id/{id}/{src_id}</code></td>
+</tr>
+<tr>
+<td>Docs</td>
+<td><a href="https://chembl.gitbook.io/unichem">UniChem 2.0 Documentation</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Source IDs for API:</strong>
+- ChEBI: <code>src_id=7</code>
+- PubChem: <code>src_id=22</code>
+- ChEMBL: <code>src_id=1</code></p>
+<h3 id="bridgedb">BridgeDb</h3>
+<p>Framework for gene, protein, and metabolite ID mapping.</p>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>URL</td>
+<td><a href="https://www.bridgedb.org/mapping-databases/metabolite-mappings.html">https://www.bridgedb.org/</a></td>
+</tr>
+<tr>
+<td>Coverage</td>
+<td>PubChem ↔ ChEBI ↔ HMDB ↔ KEGG ↔ Wikidata</td>
+</tr>
+<tr>
+<td>Format</td>
+<td>Pre-built Derby files for local use</td>
+</tr>
+<tr>
+<td>Download</td>
+<td><a href="https://figshare.com/projects/BridgeDb_metabolites/28500">Figshare metabolite mappings</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="direct-cross-references">Direct Cross-References</h3>
+<ul>
+<li><strong>ChEBI entries</strong> include PubChem links in "Database Links" section</li>
+<li><strong>PubChem entries</strong> show ChEBI in "Depositor-Supplied Identifiers"</li>
+<li><strong>Wikidata</strong> often has both PubChem and ChEBI properties</li>
+</ul>
+<hr />
+<h2 id="chemicals-without-chebi-ids-gap-analysis">Chemicals Without ChEBI IDs (Gap Analysis)</h2>
+<p><strong>Date:</strong> 2026-01-21</p>
+<p>Some chemicals in our media formulations lack ChEBI IDs. This section documents known gaps.</p>
+<h3 id="lanthanide-chloride-hexahydrates">Lanthanide Chloride Hexahydrates</h3>
+<p>These rare earth salts are used in methylotroph growth media (MP medium) but have no ChEBI entries:</p>
+<table>
+<thead>
+<tr>
+<th>Compound</th>
+<th>ChEBI</th>
+<th>PubChem CID</th>
+<th>CAS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dysprosium(III) chloride hexahydrate</td>
+<td>❌ None</td>
+<td><a href="https://pubchem.ncbi.nlm.nih.gov/compound/71311204">71311204</a></td>
+<td>15059-52-6</td>
+</tr>
+<tr>
+<td>Neodymium(III) chloride hexahydrate</td>
+<td>❌ None</td>
+<td><a href="https://pubchem.ncbi.nlm.nih.gov/compound/18355679">18355679</a></td>
+<td>13477-89-9</td>
+</tr>
+<tr>
+<td>Praseodymium(III) chloride hexahydrate</td>
+<td>❌ None</td>
+<td><a href="https://pubchem.ncbi.nlm.nih.gov/compound/91886610">91886610</a></td>
+<td>17272-46-7</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ChEBI has entries for the elements only:</strong>
+- Dysprosium atom: <a href="https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:33377">CHEBI:33377</a>
+- Praseodymium atom: <a href="https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:49828">CHEBI:49828</a>
+- Praseodymium acetate: <a href="https://www.ebi.ac.uk/chebi/searchId.do?chebiId=CHEBI:63078">CHEBI:63078</a> (only Pr salt)</p>
+<p><strong>For comparison</strong>, lanthanum trichloride (anhydrous) has <a href="https://www.ebi.ac.uk/chebi/searchId.do?chebiId=231515">CHEBI:231515</a>.</p>
+<h3 id="options-for-kgx-representation">Options for KGX Representation</h3>
+<ol>
+<li><strong>Use PubChem IDs</strong>: <code>PUBCHEM.COMPOUND:71311204</code> (registered prefix)</li>
+<li><strong>Submit to ChEBI</strong>: Request new entries for these compounds</li>
+<li><strong>Use UUIDs</strong>: Mint local IDs with chemical names as labels</li>
+</ol>
+<p><strong>Recommendation:</strong> Use <code>PUBCHEM.COMPOUND:</code> prefix since it's registered in Bioregistry and PubChem has comprehensive coverage of these compounds.</p>
+<h3 id="submitting-to-chebi">Submitting to ChEBI</h3>
+<p>ChEBI accepts submissions for new compounds:
+- <a href="https://www.ebi.ac.uk/chebi/submissions/login.do">ChEBI submission form</a>
+- Requires: structure, name, synonyms, literature references
+- Turnaround: typically 2-4 weeks</p>
+<hr />
 <h2 id="references">References</h2>
 <ul>
 <li><a href="https://bioregistry.io/">Bioregistry</a> - Prefix registration</li>
 <li><a href="https://w3id.org/">w3id.org</a> - Persistent URI service</li>
 <li><a href="https://github.com/biolink/information-resource-registry">Biolink information-resource-registry</a> - infores: registration</li>
+<li><a href="https://www.ebi.ac.uk/unichem/">UniChem</a> - Chemical cross-referencing</li>
+<li><a href="https://www.bridgedb.org/">BridgeDb</a> - Identifier mapping framework</li>
 <li>Issue #53 - Standardize CURIE prefixes</li>
 <li>Issue #98 - Canonical namespace policy</li>
 </ul>

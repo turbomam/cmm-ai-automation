@@ -1,0 +1,2614 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/spreadsheet_contributor_guidelines/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Spreadsheet Contributor Guidelines - cmm-ai-automation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+
+      
+    
+<script src="../assets/pymdownx-extras/material-extra-theme-2ek1P7jT.js" type="text/javascript"></script>
+<script src="../assets/pymdownx-extras/material-extra-3rdparty-BUCF4rjN.js" type="text/javascript"></script>
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../css/pandas-dataframe.css">
+    
+      <link rel="stylesheet" href="../assets/pymdownx-extras/extra-c6ab11540a.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spreadsheet-contributor-guidelines" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+<header class="md-header" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="header.title"
+  >
+    <a
+      href="https://turbomam.github.io/cmm-ai-automation/"
+      title="cmm-ai-automation"
+      class="md-header__button md-logo"
+      aria-label="cmm-ai-automation"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            cmm-ai-automation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spreadsheet Contributor Guidelines
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      <div class="md-header-nav__scheme md-header-nav__button md-source__icon md-icon">
+          <a
+            href="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+          </a>
+           <a
+            href="javascript:toggleScheme();"
+            title="Unknown scheme"
+            class="unknown-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.07 11.25-.9.92C13.45 12.89 13 13.5 13 15h-2v-.5c0-1.11.45-2.11 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2 2 0 0 0-2-2 2 2 0 0 0-2 2H8a4 4 0 0 1 4-4 4 4 0 0 1 4 4 3.2 3.2 0 0 1-.93 2.25M13 19h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg>
+          </a>
+      </div>
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="cmm-ai-automation" class="md-nav__button md-logo" aria-label="cmm-ai-automation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    cmm-ai-automation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../togomedium/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TogoMedium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#critical-rule-no-semantic-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Critical Rule: No Semantic Formatting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#column-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Headers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Column Headers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Don't
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#identifiers-and-curies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Identifiers and CURIEs
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Identifiers and CURIEs">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#preferred-id-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preferred ID Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#do_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Don't
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#chemical-names-and-formulas" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Chemical Names and Formulas
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Chemical Names and Formulas">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spelling-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spelling Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#finding-correct-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Finding Correct Names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hydration-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hydration States
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#units-and-concentrations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Units and Concentrations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Units and Concentrations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#consistency-within-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consistency Within Columns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standard-unit-abbreviations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standard Unit Abbreviations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#put-units-in-column-headers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Put Units in Column Headers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#empty-cells-and-missing-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Empty Cells and Missing Data
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Empty Cells and Missing Data">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conventions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Don't Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provenance-and-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provenance and Sources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Provenance and Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#always-include-source" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Always Include Source
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#source-column-examples" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Source Column Examples
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tabsheet-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tab/Sheet Organization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tab/Sheet Organization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#naming-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Conventions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#avoid-duplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Avoid Duplication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kgx-tabs-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        KGX Tabs Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#numbers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numbers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#booleans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Booleans
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-mistakes-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Mistakes to Avoid
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Mistakes to Avoid">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-merged-cells" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Merged Cells
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-notes-in-data-cells" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Notes in Data Cells
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-formulas-in-export-columns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Formulas in Export Columns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-hidden-rowscolumns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Hidden Rows/Columns
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-inconsistent-row-ordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Inconsistent Row Ordering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#validation-tools" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Validation Tools
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Validation Tools">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#before-submitting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before Submitting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Validation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#getting-help" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Getting Help
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#data-dictionary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Data Dictionary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Data Dictionary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#ber-cmm-data-for-ai-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BER CMM Data for AI Sheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BER CMM Data for AI Sheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#medium_kgx_nodes-media-definitions-for-kgx-export" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        medium_kgx_nodes - Media definitions for KGX export
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium_kgx_edges-media-composition-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        medium_kgx_edges - Media composition relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#growth_kgx_nodes-growth-related-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        growth_kgx_nodes - Growth-related entities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#growth_kgx_edges-growth-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        growth_kgx_edges - Growth relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strains-strain-submission-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strains - Strain submission data
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strains_assessed-strain-validation-results" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        strains_assessed - Strain validation results
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#media_ingredients-ingredient-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        media_ingredients - Ingredient library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#growth_media-media-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        growth_media - Media catalog
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#genes_and_proteins-geneprotein-catalog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        genes_and_proteins - Gene/protein catalog
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#media-components-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Media Components Sheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Media Components Sheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mp_media-mp_media_extended-mp-medium-formulation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MP_media / MP_media_extended - MP medium formulation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design1-design2-experimental-design-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        design1 / design2 - Experimental design parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sheet3_iupac_names_to_smiles_and_morfeus_-chemical-descriptors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sheet3_IUPAC_NAMES_TO_SMILES_AND_MORFEUS_ - Chemical descriptors
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#column-ownership-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Column Ownership Summary
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Column Ownership Summary">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#human-owned-columns-do-not-overwrite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Human-Owned Columns (do not overwrite)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#software-owned-columns-do-not-manually-edit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Software-Owned Columns (do not manually edit)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-columns-human-enters-software-validates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Columns (human enters, software validates)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#changelog" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Changelog
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="spreadsheet-contributor-guidelines">Spreadsheet Contributor Guidelines</h1>
+<p><strong>Date:</strong> 2026-01-21
+<strong>Applies to:</strong>
+- <a href="https://docs.google.com/spreadsheets/d/1h-kOdyvVb1EJPqgTiklTN9Z8br_8bP8KGmxA19clo7Q">BER CMM Data for AI</a>
+- <a href="https://docs.google.com/spreadsheets/d/1wzVvifG0a5MhcAynjSUAtaxIOWG4hmvyUy7NAbI4Ohc">Media Components</a></p>
+<p>These guidelines help keep our data normalized, machine-readable, and ready for knowledge graph construction.</p>
+<hr />
+<h2 id="critical-rule-no-semantic-formatting">Critical Rule: No Semantic Formatting</h2>
+<p><strong>NEVER use colors, fonts, bold, italic, or any visual formatting to convey meaning.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Don't</th>
+<th>Why It's Wrong</th>
+<th>Do Instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Red text = "needs review"</td>
+<td>Lost on export to TSV/CSV</td>
+<td>Add <code>status</code> column with value <code>needs_review</code></td>
+</tr>
+<tr>
+<td>Yellow highlight = "uncertain"</td>
+<td>Not machine-readable</td>
+<td>Add <code>confidence</code> column: <code>high</code>, <code>medium</code>, <code>low</code></td>
+</tr>
+<tr>
+<td>Bold = "important"</td>
+<td>Invisible to code</td>
+<td>Add <code>priority</code> column or <code>is_primary</code> boolean</td>
+</tr>
+<tr>
+<td>Strikethrough = "deprecated"</td>
+<td>Lost on export</td>
+<td>Add <code>deprecated</code> column: <code>TRUE</code>/<code>FALSE</code></td>
+</tr>
+<tr>
+<td>Green background = "validated"</td>
+<td>Can't be queried</td>
+<td>Add <code>validation_status</code> column</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why this matters:</strong>
+- TSV/CSV exports strip all formatting
+- Automated pipelines can't see colors
+- Different people interpret colors differently
+- Colorblind users can't distinguish red/green</p>
+<p><strong>Allowed uses of formatting:</strong>
+- Header row styling (for human readability only)
+- Conditional formatting that DUPLICATES a column value (not replaces it)
+- Frozen rows/columns for navigation</p>
+<hr />
+<h2 id="quick-checklist">Quick Checklist</h2>
+<p>Before submitting changes, verify:</p>
+<ul>
+<li>[ ] Every column has a non-empty, unique header name</li>
+<li>[ ] No trailing empty columns or rows</li>
+<li>[ ] Chemical names are spelled correctly (check PubChem/ChEBI)</li>
+<li>[ ] IDs use standard prefixes (CHEBI:, PUBCHEM.COMPOUND:, bacdive:, etc.)</li>
+<li>[ ] Units are consistent within each column</li>
+<li>[ ] No merged cells</li>
+<li>[ ] Provenance/source links are included for new data</li>
+</ul>
+<hr />
+<h2 id="column-headers">Column Headers</h2>
+<h3 id="do">Do</h3>
+<div class="highlight"><pre><span></span><code>id | name | concentration_mM | source_url
+</code></pre></div>
+<ul>
+<li>Use lowercase with underscores (<code>snake_case</code>)</li>
+<li>Be specific: <code>concentration_mM</code> not just <code>concentration</code></li>
+<li>Include units in header if all values share the same unit</li>
+<li>Every column MUST have a unique, non-empty header</li>
+</ul>
+<h3 id="dont">Don't</h3>
+<div class="highlight"><pre><span></span><code>  | Name | Concentration | link |   |   |
+</code></pre></div>
+<ul>
+<li>Empty column headers (causes parsing errors)</li>
+<li>Trailing empty columns (causes duplicate header errors)</li>
+<li>Spaces in header names (use underscores)</li>
+<li>Duplicate header names (data will be lost)</li>
+</ul>
+<hr />
+<h2 id="identifiers-and-curies">Identifiers and CURIEs</h2>
+<h3 id="preferred-id-formats">Preferred ID Formats</h3>
+<table>
+<thead>
+<tr>
+<th>Entity Type</th>
+<th>Prefix</th>
+<th>Example</th>
+<th>Where to Find</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chemicals</td>
+<td><code>CHEBI:</code></td>
+<td><code>CHEBI:17790</code></td>
+<td><a href="https://www.ebi.ac.uk/chebi/">ChEBI</a></td>
+</tr>
+<tr>
+<td>Chemicals (no ChEBI)</td>
+<td><code>PUBCHEM.COMPOUND:</code></td>
+<td><code>PUBCHEM.COMPOUND:887</code></td>
+<td><a href="https://pubchem.ncbi.nlm.nih.gov/">PubChem</a></td>
+</tr>
+<tr>
+<td>Taxa</td>
+<td><code>NCBITaxon:</code></td>
+<td><code>NCBITaxon:408</code></td>
+<td><a href="https://www.ncbi.nlm.nih.gov/taxonomy">NCBI Taxonomy</a></td>
+</tr>
+<tr>
+<td>Strains</td>
+<td><code>bacdive:</code></td>
+<td><code>bacdive:12896</code></td>
+<td><a href="https://bacdive.dsmz.de/">BacDive</a></td>
+</tr>
+<tr>
+<td>Publications</td>
+<td><code>PMID:</code> or <code>doi:</code></td>
+<td><code>PMID:23646164</code></td>
+<td><a href="https://pubmed.ncbi.nlm.nih.gov/">PubMed</a></td>
+</tr>
+<tr>
+<td>Media</td>
+<td><code>mediadive.medium:</code></td>
+<td><code>mediadive.medium:104c</code></td>
+<td><a href="https://mediadive.dsmz.de/">MediaDive</a></td>
+</tr>
+</tbody>
+</table>
+<h3 id="do_1">Do</h3>
+<div class="highlight"><pre><span></span><code>CHEBI:17790
+PUBCHEM.COMPOUND:887
+NCBITaxon:408
+bacdive:12896
+doi:10.1371/journal.pone.0062957
+</code></pre></div>
+<h3 id="dont_1">Don't</h3>
+<div class="highlight"><pre><span></span><code>17790                    (missing prefix)
+ChEBI:17790              (wrong case - use CHEBI)
+https://www.ebi.ac.uk/chebi/searchId.do?chebiId=17790  (full URL instead of CURIE)
+methanol                 (name instead of ID)
+</code></pre></div>
+<hr />
+<h2 id="chemical-names-and-formulas">Chemical Names and Formulas</h2>
+<h3 id="spelling-matters">Spelling Matters</h3>
+<p>Chemical names must be spelled correctly for automated lookups to work.</p>
+<table>
+<thead>
+<tr>
+<th>Wrong</th>
+<th>Correct</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prosydium chloride</td>
+<td>Praseodymium chloride</td>
+</tr>
+<tr>
+<td>Calcium Chloride</td>
+<td>calcium chloride (or CaCl₂)</td>
+</tr>
+<tr>
+<td>MgSO4.7H2O</td>
+<td>MgSO₄·7H₂O (use proper subscripts and middle dot)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="finding-correct-names">Finding Correct Names</h3>
+<ol>
+<li>Search <a href="https://pubchem.ncbi.nlm.nih.gov/">PubChem</a> for the chemical</li>
+<li>Use the "IUPAC Name" or "Depositor-Supplied Synonyms"</li>
+<li>Copy the ChEBI or PubChem ID for the <code>id</code> column</li>
+</ol>
+<h3 id="hydration-states">Hydration States</h3>
+<p>Be specific about hydration:
+- <code>calcium chloride</code> (anhydrous)
+- <code>calcium chloride dihydrate</code> (CaCl₂·2H₂O)
+- <code>calcium chloride hexahydrate</code> (CaCl₂·6H₂O)</p>
+<p>These are different compounds with different molecular weights!</p>
+<hr />
+<h2 id="units-and-concentrations">Units and Concentrations</h2>
+<h3 id="consistency-within-columns">Consistency Within Columns</h3>
+<p>All values in a column should use the same unit:</p>
+<table>
+<thead>
+<tr>
+<th>concentration_mM</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30</td>
+</tr>
+<tr>
+<td>1.45</td>
+</tr>
+<tr>
+<td>0.5</td>
+</tr>
+</tbody>
+</table>
+<p>NOT:</p>
+<table>
+<thead>
+<tr>
+<th>concentration</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>30 mM</td>
+</tr>
+<tr>
+<td>1.45 mM</td>
+</tr>
+<tr>
+<td>500 µM</td>
+</tr>
+</tbody>
+</table>
+<h3 id="standard-unit-abbreviations">Standard Unit Abbreviations</h3>
+<table>
+<thead>
+<tr>
+<th>Unit</th>
+<th>Abbreviation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>millimolar</td>
+<td>mM</td>
+</tr>
+<tr>
+<td>micromolar</td>
+<td>µM (or uM)</td>
+</tr>
+<tr>
+<td>nanomolar</td>
+<td>nM</td>
+</tr>
+<tr>
+<td>grams per liter</td>
+<td>g/L</td>
+</tr>
+<tr>
+<td>milligrams per liter</td>
+<td>mg/L</td>
+</tr>
+<tr>
+<td>percent weight/volume</td>
+<td>% w/v</td>
+</tr>
+</tbody>
+</table>
+<h3 id="put-units-in-column-headers">Put Units in Column Headers</h3>
+<p>If all values share a unit, put it in the header:</p>
+<div class="highlight"><pre><span></span><code>concentration_mM | lower_bound_mM | upper_bound_mM
+</code></pre></div>
+<hr />
+<h2 id="empty-cells-and-missing-data">Empty Cells and Missing Data</h2>
+<h3 id="conventions">Conventions</h3>
+<table>
+<thead>
+<tr>
+<th>Meaning</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Data not yet entered</td>
+<td>Leave cell empty</td>
+</tr>
+<tr>
+<td>Value is known to be zero</td>
+<td><code>0</code></td>
+</tr>
+<tr>
+<td>Value is not applicable</td>
+<td><code>N/A</code></td>
+</tr>
+<tr>
+<td>Value is unknown</td>
+<td><code>unknown</code> or leave empty</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dont-use">Don't Use</h3>
+<ul>
+<li><code>?</code> (ambiguous)</li>
+<li><code>-</code> (could be confused with negative number)</li>
+<li><code>TBD</code> (use empty instead)</li>
+<li>Notes in data cells like "Amino acids?"</li>
+</ul>
+<hr />
+<h2 id="provenance-and-sources">Provenance and Sources</h2>
+<h3 id="always-include-source">Always Include Source</h3>
+<p>Every new data point should have a source. Add columns like:</p>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>source_url</code></td>
+<td>Link to original source</td>
+<td><code>https://pmc.ncbi.nlm.nih.gov/articles/PMC3639900/</code></td>
+</tr>
+<tr>
+<td><code>source_pmid</code></td>
+<td>PubMed ID</td>
+<td><code>PMID:23646164</code></td>
+</tr>
+<tr>
+<td><code>source_doi</code></td>
+<td>DOI</td>
+<td><code>doi:10.1371/journal.pone.0062957</code></td>
+</tr>
+<tr>
+<td><code>source_notes</code></td>
+<td>How value was obtained</td>
+<td><code>Extracted from Table 2</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="source-column-examples">Source Column Examples</h3>
+<div class="highlight"><pre><span></span><code># Good
+source_url: https://pmc.ncbi.nlm.nih.gov/articles/PMC3639900/
+source_pmid: PMID:23646164
+
+# Acceptable for internal data
+source_notes: Lab measurement by [Name], 2026-01-15
+
+# Not useful
+source_url: (empty)
+source_notes: found online
+</code></pre></div>
+<hr />
+<h2 id="tabsheet-organization">Tab/Sheet Organization</h2>
+<h3 id="naming-conventions">Naming Conventions</h3>
+<ul>
+<li>Use descriptive names: <code>medium_kgx_nodes</code> not <code>Sheet3</code></li>
+<li>Indicate relationship: <code>MP_media</code> and <code>MP_media_extended</code></li>
+<li>Use underscores, not spaces: <code>growth_preferences</code> not <code>Growth Preferences</code></li>
+</ul>
+<h3 id="avoid-duplication">Avoid Duplication</h3>
+<p>If two tabs have overlapping data (e.g., <code>MP_media</code> and <code>MP_media_extended</code>):
+- Keep ONE authoritative tab
+- Archive or delete the incomplete version
+- Or clearly document the relationship in a <code>_notes</code> tab</p>
+<h3 id="kgx-tabs-pattern">KGX Tabs Pattern</h3>
+<p>For knowledge graph export, use paired tabs:
+- <code>{domain}_kgx_nodes</code> - Node definitions (id, category, name, ...)
+- <code>{domain}_kgx_edges</code> - Relationships (subject, predicate, object, ...)</p>
+<hr />
+<h2 id="data-types">Data Types</h2>
+<h3 id="numbers">Numbers</h3>
+<ul>
+<li>Store numbers as numbers, not text</li>
+<li>Don't include units in numeric cells (put units in header)</li>
+<li>Use period for decimal: <code>1.45</code> not <code>1,45</code></li>
+</ul>
+<h3 id="text">Text</h3>
+<ul>
+<li>Avoid leading/trailing spaces</li>
+<li>Be consistent with capitalization</li>
+</ul>
+<h3 id="booleans">Booleans</h3>
+<p>Use consistent values:
+- <code>TRUE</code> / <code>FALSE</code> (preferred)
+- <code>1</code> / <code>0</code>
+- <code>yes</code> / <code>no</code></p>
+<p>NOT: <code>Yes</code>, <code>Y</code>, <code>true</code>, <code>True</code> (inconsistent)</p>
+<hr />
+<h2 id="common-mistakes-to-avoid">Common Mistakes to Avoid</h2>
+<h3 id="1-merged-cells">1. Merged Cells</h3>
+<p>Never merge cells. They break CSV/TSV export and parsing.</p>
+<h3 id="2-notes-in-data-cells">2. Notes in Data Cells</h3>
+<div class="highlight"><pre><span></span><code># Wrong
+Component: &quot;Amino acids? limit 5-10 components&quot;
+
+# Right
+Component: &quot;Amino acids&quot;
+notes: &quot;limit 5-10 components&quot;
+</code></pre></div>
+<h3 id="3-formulas-in-export-columns">3. Formulas in Export Columns</h3>
+<p>If a column will be exported, use values not formulas.</p>
+<h3 id="4-hidden-rowscolumns">4. Hidden Rows/Columns</h3>
+<p>Hidden data will still be exported and may cause confusion.</p>
+<h3 id="5-inconsistent-row-ordering">5. Inconsistent Row Ordering</h3>
+<p>If tabs relate to each other, keep rows in the same order or use explicit IDs to link them.</p>
+<hr />
+<h2 id="validation-tools">Validation Tools</h2>
+<h3 id="before-submitting">Before Submitting</h3>
+<ol>
+<li><strong>Download as TSV</strong> and open in a text editor to check for issues</li>
+<li><strong>Check for trailing columns</strong>: In Google Sheets, click the last column header and verify there's no data to the right</li>
+<li><strong>Search for empty headers</strong>: Ctrl+F for tab characters in the header row</li>
+</ol>
+<h3 id="automated-validation">Automated Validation</h3>
+<p>Our <code>download-sheets</code> tool will report:
+- Duplicate column headers
+- Empty column headers (in non-trailing positions)
+- Tabs that fail to parse</p>
+<hr />
+<h2 id="getting-help">Getting Help</h2>
+<ul>
+<li><strong>Chemical ID lookup</strong>: <a href="https://www.ebi.ac.uk/unichem/">UniChem</a> maps between ChEBI, PubChem, and other databases</li>
+<li><strong>Strain ID lookup</strong>: <a href="https://bacdive.dsmz.de/">BacDive</a> is authoritative for bacterial strains</li>
+<li><strong>Ontology terms</strong>: <a href="https://www.ebi.ac.uk/ols/">OLS</a> searches across ontologies</li>
+</ul>
+<hr />
+<hr />
+<h2 id="data-dictionary">Data Dictionary</h2>
+<p>Legend for "Source" column:
+- <strong>H</strong> = Human-populated (manual entry)
+- <strong>S</strong> = Software-populated (automated enrichment)
+- <strong>H→S</strong> = Human enters initial value, software may validate/enrich
+- <strong>S→H</strong> = Software generates, human reviews/corrects</p>
+<hr />
+<h3 id="ber-cmm-data-for-ai-sheets">BER CMM Data for AI Sheets</h3>
+<h4 id="medium_kgx_nodes-media-definitions-for-kgx-export"><code>medium_kgx_nodes</code> - Media definitions for KGX export</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>CURIE</td>
+<td>H→S</td>
+<td>Identifier (CHEBI:, uuid:, doi:, PUBCHEM.COMPOUND:)</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>text</td>
+<td>H</td>
+<td>Human-readable name</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>Biolink category (biolink:ChemicalEntity, biolink:ChemicalMixture, etc.)</td>
+</tr>
+<tr>
+<td><code>pH</code></td>
+<td>number</td>
+<td>H</td>
+<td>pH value if applicable</td>
+</tr>
+<tr>
+<td><code>medium_prep_notes</code></td>
+<td>text</td>
+<td>H</td>
+<td>Preparation instructions</td>
+</tr>
+</tbody>
+</table>
+<h4 id="medium_kgx_edges-media-composition-relationships"><code>medium_kgx_edges</code> - Media composition relationships</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>subject</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>Medium ID (from medium_kgx_nodes)</td>
+</tr>
+<tr>
+<td><code>predicate</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>Relationship type (biolink:has_part)</td>
+</tr>
+<tr>
+<td><code>object</code></td>
+<td>CURIE</td>
+<td>H→S</td>
+<td>Ingredient ID (CHEBI:, PUBCHEM.COMPOUND:)</td>
+</tr>
+<tr>
+<td><code>knowledge_level</code></td>
+<td>enum</td>
+<td>H</td>
+<td>knowledge_assertion, not_provided</td>
+</tr>
+<tr>
+<td><code>agent_type</code></td>
+<td>enum</td>
+<td>H</td>
+<td>manual_agent, manual_validation_of_automated_agent</td>
+</tr>
+<tr>
+<td><code>primary_knowledge_source</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>infores: identifier</td>
+</tr>
+<tr>
+<td><code>publications</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>PMID: reference</td>
+</tr>
+<tr>
+<td><code>source_asserted_*</code></td>
+<td>various</td>
+<td>H</td>
+<td>Original values from source document</td>
+</tr>
+<tr>
+<td><code>calculated_*</code></td>
+<td>various</td>
+<td>S</td>
+<td>Computed from source values</td>
+</tr>
+<tr>
+<td><code>object_molecular_mass</code></td>
+<td>number</td>
+<td>S</td>
+<td>Looked up from ChEBI/PubChem</td>
+</tr>
+</tbody>
+</table>
+<h4 id="growth_kgx_nodes-growth-related-entities"><code>growth_kgx_nodes</code> - Growth-related entities</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>CURIE</td>
+<td>H→S</td>
+<td>Entity identifier</td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>Biolink category</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>text</td>
+<td>H</td>
+<td>Human-readable name</td>
+</tr>
+<tr>
+<td><code>strain_notes</code></td>
+<td>text</td>
+<td>H</td>
+<td>Notes about strain</td>
+</tr>
+<tr>
+<td><code>synonym</code></td>
+<td>text</td>
+<td>H</td>
+<td>Alternative names</td>
+</tr>
+</tbody>
+</table>
+<h4 id="growth_kgx_edges-growth-relationships"><code>growth_kgx_edges</code> - Growth relationships</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>subject</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>Strain ID (bacdive:)</td>
+</tr>
+<tr>
+<td><code>predicate</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>METPO:2000517 (grows_in)</td>
+</tr>
+<tr>
+<td><code>object</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>Medium ID</td>
+</tr>
+<tr>
+<td><code>knowledge_level</code></td>
+<td>enum</td>
+<td>H</td>
+<td>knowledge_assertion</td>
+</tr>
+<tr>
+<td><code>agent_type</code></td>
+<td>enum</td>
+<td>H</td>
+<td>manual_agent</td>
+</tr>
+<tr>
+<td><code>primary_knowledge_source</code></td>
+<td>CURIE</td>
+<td>H</td>
+<td>infores: identifier</td>
+</tr>
+</tbody>
+</table>
+<h4 id="strains-strain-submission-data"><code>strains</code> - Strain submission data</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>strain_id_submitted</code></td>
+<td>text</td>
+<td>H</td>
+<td>User-submitted strain identifier</td>
+</tr>
+<tr>
+<td><code>bacdive_id</code></td>
+<td>integer</td>
+<td>S</td>
+<td>BacDive database ID</td>
+</tr>
+<tr>
+<td><code>bacdive_url</code></td>
+<td>URL</td>
+<td>S</td>
+<td>Link to BacDive entry</td>
+</tr>
+<tr>
+<td><code>ncbi_url</code></td>
+<td>URL</td>
+<td>S</td>
+<td>Link to NCBI Taxonomy</td>
+</tr>
+<tr>
+<td><code>ncbi_taxon_strain</code></td>
+<td>integer</td>
+<td>S</td>
+<td>NCBI taxon ID for strain</td>
+</tr>
+<tr>
+<td><code>species_taxon_id_submitted</code></td>
+<td>integer</td>
+<td>H</td>
+<td>User-submitted species taxon</td>
+</tr>
+<tr>
+<td><code>ncbi_taxon_species_from_bacdive</code></td>
+<td>integer</td>
+<td>S</td>
+<td>Species taxon from BacDive lookup</td>
+</tr>
+<tr>
+<td><code>scientific_name_submitted</code></td>
+<td>text</td>
+<td>H</td>
+<td>User-submitted scientific name</td>
+</tr>
+<tr>
+<td><code>bacdive_name</code></td>
+<td>text</td>
+<td>S</td>
+<td>Name from BacDive</td>
+</tr>
+<tr>
+<td><code>name_agreement</code></td>
+<td>boolean</td>
+<td>S</td>
+<td>Whether names match</td>
+</tr>
+<tr>
+<td><code>strain_designation_submitted</code></td>
+<td>text</td>
+<td>H</td>
+<td>User strain designation</td>
+</tr>
+<tr>
+<td><code>strain_confirmed</code></td>
+<td>text</td>
+<td>H</td>
+<td>Curator confirmation</td>
+</tr>
+<tr>
+<td><code>type_strain_submitted</code></td>
+<td>boolean</td>
+<td>H</td>
+<td>Is this a type strain?</td>
+</tr>
+<tr>
+<td><code>bacdive_type_strain</code></td>
+<td>boolean</td>
+<td>S</td>
+<td>Type strain status from BacDive</td>
+</tr>
+<tr>
+<td><code>XoxF/ExaF/GDH</code></td>
+<td>boolean</td>
+<td>H</td>
+<td>Has XoxF gene?</td>
+</tr>
+<tr>
+<td><code>LutH/MluA</code></td>
+<td>boolean</td>
+<td>H</td>
+<td>Has LutH gene?</td>
+</tr>
+<tr>
+<td><code>lanM</code>, <code>lanP</code></td>
+<td>boolean</td>
+<td>H</td>
+<td>Lanthanide-related genes</td>
+</tr>
+<tr>
+<td><code>culture_collection_ids</code></td>
+<td>text</td>
+<td>H→S</td>
+<td>Collection IDs (DSM:, ATCC:, etc.)</td>
+</tr>
+<tr>
+<td><code>procurement_urls</code></td>
+<td>URL</td>
+<td>H</td>
+<td>Where to obtain strain</td>
+</tr>
+<tr>
+<td><code>biosafety_level</code></td>
+<td>integer</td>
+<td>H→S</td>
+<td>BSL-1, BSL-2, etc.</td>
+</tr>
+<tr>
+<td><code>kg_microbe_nodes</code></td>
+<td>CURIE</td>
+<td>S</td>
+<td>Matching kg-microbe node IDs</td>
+</tr>
+</tbody>
+</table>
+<h4 id="strains_assessed-strain-validation-results"><code>strains_assessed</code> - Strain validation results</h4>
+<p>All columns from <code>strains</code> plus comparison columns:
+- <code>*_fresh_lookup</code> = S (new API lookup)
+- <code>*_agreement</code> = S (computed comparison)
+- <code>*_sub_only</code> / <code>*_lookup_only</code> = S (set differences)</p>
+<h4 id="media_ingredients-ingredient-library"><code>media_ingredients</code> - Ingredient library</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ingredient_id</code></td>
+<td>text</td>
+<td>H</td>
+<td>Local identifier</td>
+</tr>
+<tr>
+<td><code>ingredient_name</code></td>
+<td>text</td>
+<td>H</td>
+<td>Human-readable name</td>
+</tr>
+<tr>
+<td><code>media_id</code></td>
+<td>text</td>
+<td>H</td>
+<td>Which medium uses this</td>
+</tr>
+<tr>
+<td><code>media_name</code></td>
+<td>text</td>
+<td>H</td>
+<td>Medium name</td>
+</tr>
+<tr>
+<td><code>ontology_id</code></td>
+<td>CURIE</td>
+<td>H→S</td>
+<td>CHEBI: or PUBCHEM.COMPOUND: ID</td>
+</tr>
+<tr>
+<td><code>ontology_label</code></td>
+<td>text</td>
+<td>S</td>
+<td>Name from ontology</td>
+</tr>
+<tr>
+<td><code>chemical_formula</code></td>
+<td>text</td>
+<td>H→S</td>
+<td>Chemical formula</td>
+</tr>
+<tr>
+<td><code>concentration</code></td>
+<td>number</td>
+<td>H</td>
+<td>Amount</td>
+</tr>
+<tr>
+<td><code>unit</code></td>
+<td>text</td>
+<td>H</td>
+<td>Unit of concentration</td>
+</tr>
+<tr>
+<td><code>role</code></td>
+<td>text</td>
+<td>H</td>
+<td>Function (buffer, mineral, carbon source)</td>
+</tr>
+<tr>
+<td><code>kg_microbe_nodes</code></td>
+<td>CURIE</td>
+<td>S</td>
+<td>Matching kg-microbe IDs</td>
+</tr>
+<tr>
+<td><code>notes</code></td>
+<td>text</td>
+<td>H</td>
+<td>Additional notes</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>text</td>
+<td>H</td>
+<td>Data provenance</td>
+</tr>
+</tbody>
+</table>
+<h4 id="growth_media-media-catalog"><code>growth_media</code> - Media catalog</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>placeholder URI</code></td>
+<td>URI</td>
+<td>S</td>
+<td>Temporary identifier (to be replaced)</td>
+</tr>
+<tr>
+<td><code>media_id</code></td>
+<td>text</td>
+<td>H</td>
+<td>Short identifier</td>
+</tr>
+<tr>
+<td><code>media_name</code></td>
+<td>text</td>
+<td>H</td>
+<td>Full name</td>
+</tr>
+<tr>
+<td><code>media_type</code></td>
+<td>enum</td>
+<td>H</td>
+<td>minimal, complex, defined</td>
+</tr>
+<tr>
+<td><code>alternative_names</code></td>
+<td>text</td>
+<td>H</td>
+<td>Synonyms</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>text</td>
+<td>H</td>
+<td>Purpose/description</td>
+</tr>
+<tr>
+<td><code>target_organisms</code></td>
+<td>text</td>
+<td>H</td>
+<td>What grows on this</td>
+</tr>
+<tr>
+<td><code>ph</code></td>
+<td>number</td>
+<td>H</td>
+<td>Target pH</td>
+</tr>
+<tr>
+<td><code>sterilization_method</code></td>
+<td>text</td>
+<td>H</td>
+<td>Autoclave, filter, etc.</td>
+</tr>
+<tr>
+<td><code>references</code></td>
+<td>text</td>
+<td>H</td>
+<td>Literature citations</td>
+</tr>
+<tr>
+<td><code>kg_microbe_nodes</code></td>
+<td>CURIE</td>
+<td>S</td>
+<td>Matching kg-microbe IDs</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>enum</td>
+<td>H</td>
+<td>extend, curate, etc.</td>
+</tr>
+</tbody>
+</table>
+<h4 id="genes_and_proteins-geneprotein-catalog"><code>genes_and_proteins</code> - Gene/protein catalog</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>gene or protein id</code></td>
+<td>text</td>
+<td>H→S</td>
+<td>UniProt or gene ID</td>
+</tr>
+<tr>
+<td><code>organism</code></td>
+<td>text</td>
+<td>H</td>
+<td>Source organism</td>
+</tr>
+<tr>
+<td><code>alternative name</code></td>
+<td>text</td>
+<td>H</td>
+<td>Synonyms</td>
+</tr>
+<tr>
+<td><code>annotation</code></td>
+<td>text</td>
+<td>H→S</td>
+<td>Functional annotation</td>
+</tr>
+<tr>
+<td><code>EC</code></td>
+<td>CURIE</td>
+<td>S</td>
+<td>EC number</td>
+</tr>
+<tr>
+<td><code>GO</code></td>
+<td>CURIE</td>
+<td>S</td>
+<td>GO terms</td>
+</tr>
+<tr>
+<td><code>CHEBI</code></td>
+<td>CURIE</td>
+<td>S</td>
+<td>Associated chemicals</td>
+</tr>
+<tr>
+<td><code>Source</code></td>
+<td>text</td>
+<td>H</td>
+<td>Data source</td>
+</tr>
+<tr>
+<td><code>Download URL</code></td>
+<td>URL</td>
+<td>H</td>
+<td>Data download link</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="media-components-sheets">Media Components Sheets</h3>
+<h4 id="mp_media-mp_media_extended-mp-medium-formulation"><code>MP_media</code> / <code>MP_media_extended</code> - MP medium formulation</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Component</code></td>
+<td>text</td>
+<td>H</td>
+<td>Chemical name (use standard spelling!)</td>
+</tr>
+<tr>
+<td><code>Concentration</code></td>
+<td>text</td>
+<td>H</td>
+<td>Amount with unit (e.g., "30 mM")</td>
+</tr>
+<tr>
+<td><code>Solubility</code></td>
+<td>text</td>
+<td>H→S</td>
+<td>Solubility limit</td>
+</tr>
+<tr>
+<td><code>Lower bound</code></td>
+<td>text</td>
+<td>H</td>
+<td>Minimum effective concentration</td>
+</tr>
+<tr>
+<td><code>Upper bound</code></td>
+<td>text</td>
+<td>H</td>
+<td>Maximum safe concentration</td>
+</tr>
+<tr>
+<td><code>Limit of toxicity</code></td>
+<td>text</td>
+<td>H</td>
+<td>Toxicity threshold</td>
+</tr>
+<tr>
+<td><code>Bacteria</code></td>
+<td>text</td>
+<td>H</td>
+<td>Test organism</td>
+</tr>
+<tr>
+<td><code>link</code></td>
+<td>URL</td>
+<td>H</td>
+<td>Source reference</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note:</strong> <code>MP_media_extended</code> has the same structure but with enriched data from literature.</p>
+<h4 id="design1-design2-experimental-design-parameters"><code>design1</code> / <code>design2</code> - Experimental design parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Component</code></td>
+<td>text</td>
+<td>H</td>
+<td>Chemical/parameter name</td>
+</tr>
+<tr>
+<td><code>Lower Bound</code> / <code>Min</code></td>
+<td>number</td>
+<td>H</td>
+<td>Minimum value to test</td>
+</tr>
+<tr>
+<td><code>Upper Bound</code> / <code>Max</code></td>
+<td>number</td>
+<td>H</td>
+<td>Maximum value to test</td>
+</tr>
+<tr>
+<td><code>Solubility</code></td>
+<td>text</td>
+<td>H</td>
+<td>Physical limit</td>
+</tr>
+<tr>
+<td><code>Limit of Toxicity</code></td>
+<td>text</td>
+<td>H</td>
+<td>Biological limit</td>
+</tr>
+<tr>
+<td><code>Physiological Concentration</code></td>
+<td>text</td>
+<td>H</td>
+<td>Typical in vivo level</td>
+</tr>
+<tr>
+<td><code>Bacteria/Organism</code></td>
+<td>text</td>
+<td>H</td>
+<td>Target organism</td>
+</tr>
+<tr>
+<td><code>Notes</code></td>
+<td>text</td>
+<td>H</td>
+<td>Additional context</td>
+</tr>
+<tr>
+<td><code>Source Link</code></td>
+<td>URL</td>
+<td>H</td>
+<td>Reference</td>
+</tr>
+</tbody>
+</table>
+<h4 id="sheet3_iupac_names_to_smiles_and_morfeus_-chemical-descriptors"><code>Sheet3_IUPAC_NAMES_TO_SMILES_AND_MORFEUS_</code> - Chemical descriptors</h4>
+<table>
+<thead>
+<tr>
+<th>Column</th>
+<th>Type</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compound</code></td>
+<td>text</td>
+<td>H</td>
+<td>IUPAC name (input)</td>
+</tr>
+<tr>
+<td><code>activity</code></td>
+<td>number</td>
+<td>H</td>
+<td>Biological activity</td>
+</tr>
+<tr>
+<td><code>SMILES</code></td>
+<td>text</td>
+<td>S</td>
+<td>SMILES string (from OPSIN)</td>
+</tr>
+<tr>
+<td><code>source</code></td>
+<td>text</td>
+<td>S</td>
+<td>Conversion source</td>
+</tr>
+<tr>
+<td><code>error</code></td>
+<td>text</td>
+<td>S</td>
+<td>Conversion errors</td>
+</tr>
+<tr>
+<td><code>mass</code></td>
+<td>number</td>
+<td>S</td>
+<td>Molecular mass</td>
+</tr>
+<tr>
+<td><code>radius</code></td>
+<td>number</td>
+<td>S</td>
+<td>Molecular radius</td>
+</tr>
+<tr>
+<td><code>charge</code></td>
+<td>number</td>
+<td>S</td>
+<td>Formal charge</td>
+</tr>
+<tr>
+<td><code>ip</code>, <code>ea</code></td>
+<td>number</td>
+<td>S</td>
+<td>Ionization potential, electron affinity</td>
+</tr>
+<tr>
+<td><code>homo</code>, <code>lumo</code></td>
+<td>number</td>
+<td>S</td>
+<td>Frontier orbital energies</td>
+</tr>
+<tr>
+<td><code>electrophilicity</code>, <code>nucleophilicity</code></td>
+<td>number</td>
+<td>S</td>
+<td>Morfeus descriptors</td>
+</tr>
+<tr>
+<td><code>sasa_*</code></td>
+<td>number</td>
+<td>S</td>
+<td>Solvent-accessible surface area</td>
+</tr>
+<tr>
+<td><code>disp_*</code></td>
+<td>number</td>
+<td>S</td>
+<td>Dispersion descriptors</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td>enum</td>
+<td>S</td>
+<td>Conversion status (ok, error)</td>
+</tr>
+<tr>
+<td><code>pubchem_cid</code></td>
+<td>integer</td>
+<td>S</td>
+<td>PubChem compound ID</td>
+</tr>
+<tr>
+<td><code>inchi</code>, <code>inchikey</code></td>
+<td>text</td>
+<td>S</td>
+<td>InChI identifiers</td>
+</tr>
+<tr>
+<td><code>molecular_formula</code></td>
+<td>text</td>
+<td>S</td>
+<td>Chemical formula</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="column-ownership-summary">Column Ownership Summary</h2>
+<h3 id="human-owned-columns-do-not-overwrite">Human-Owned Columns (do not overwrite)</h3>
+<ul>
+<li>Names, descriptions, notes</li>
+<li>Experimental parameters (concentrations, bounds)</li>
+<li>Curator assessments and confirmations</li>
+<li>Source/provenance information</li>
+</ul>
+<h3 id="software-owned-columns-do-not-manually-edit">Software-Owned Columns (do not manually edit)</h3>
+<ul>
+<li><code>*_fresh_lookup</code> - API lookup results</li>
+<li><code>*_agreement</code> - Computed comparisons</li>
+<li><code>kg_microbe_nodes</code> - Cross-reference matches</li>
+<li>Morfeus descriptors, SMILES conversions</li>
+<li><code>calculated_*</code> columns</li>
+</ul>
+<h3 id="shared-columns-human-enters-software-validates">Shared Columns (human enters, software validates)</h3>
+<ul>
+<li><code>ontology_id</code> - Human enters CHEBI:, software may suggest corrections</li>
+<li><code>culture_collection_ids</code> - Human enters, software validates format</li>
+<li><code>ncbi_taxon_*</code> - Human may enter, software looks up authoritative value</li>
+</ul>
+<hr />
+<h2 id="changelog">Changelog</h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-01-21</td>
+<td>Initial version</td>
+</tr>
+<tr>
+<td>2026-01-21</td>
+<td>Added semantic formatting rule, data dictionary</td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        
+
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        with emoji by
+        <a href="https://github.com/twitter/twemoji" target="_blank" rel="noopener">
+          Twemoji
+        </a>
+      </div>
+      
+<div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.tabs.link", "header.autohide", "navigation.expand", "navigation.instant", "navigation.instant.progress", "navigation.tracking", "search.suggest", "content.code.copy"], "search": "../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../assets/pymdownx-extras/extra-loader-B5CKpNQx.js"></script>
+      
+    
+  </body>
+</html>
