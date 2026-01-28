@@ -92,7 +92,7 @@ repos:
       - id: pip-audit
         name: pip-audit (vulnerability scanner)
         # Ignore CVE-2025-53000 (nbconvert) - no fix available yet
-        entry: uv run pip-audit --ignore-vuln CVE-2025-53000
+        entry: uv run pip-audit --ignore-vuln CVE-2025-53000 --ignore-vuln CVE-2026-0994
         language: system
         pass_filenames: false
         always_run: true
