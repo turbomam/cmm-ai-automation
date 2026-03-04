@@ -91,8 +91,11 @@ repos:
     hooks:
       - id: pip-audit
         name: pip-audit (vulnerability scanner)
-        # Ignore CVE-2025-53000 (nbconvert) and CVE-2026-0994 (protobuf) - no fixes available yet
-        entry: uv run pip-audit --ignore-vuln CVE-2025-53000 --ignore-vuln CVE-2026-0994
+        # Ignore CVE-2025-69872 (diskcache 5.6.3, pickle deserialization) — no fix available.
+        # diskcache is pulled in by fastmcp → py-key-value-aio[disk].
+        # Track: https://github.com/PrefectHQ/fastmcp/issues/3239 (make diskcache optional)
+        # Remove this ignore once fastmcp drops the diskcache dependency or diskcache is patched.
+        entry: uv run pip-audit --ignore-vuln CVE-2025-69872
         language: system
         pass_filenames: false
         always_run: true
