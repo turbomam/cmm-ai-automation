@@ -69,7 +69,8 @@ just strains-kgx-from-curies           # NCBI/BacDive → strain KGX
 just kgx-merge-all                     # Merge all KGX into single graph
 
 # Neo4j
-just neo4j-start / neo4j-stop         # Docker lifecycle
+just neo4j-start                      # Start Neo4j Docker container
+just neo4j-stop                       # Stop Neo4j Docker container
 just neo4j-upload-merged               # Load merged KGX into Neo4j
 
 # Quality
