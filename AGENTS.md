@@ -18,7 +18,7 @@ src/cmm_ai_automation/
 ├── schema/           # LinkML schema (edit this)
 ├── datamodel/        # Generated Python datamodel (do not edit)
 ├── clients/          # API clients: CAS, ChEBI, OLS, PubChem, MediaDive, NCBI node_normalization
-├── scripts/          # Click CLI scripts (~25 commands for data pipeline)
+├── scripts/          # CLI scripts for the data pipeline (primarily Click, some argparse)
 ├── store/            # Enrichment store (MongoDB-backed)
 ├── strains/          # Strain data: BacDive, culture collections, NCBI, consolidation, inference
 ├── transform/        # KGX transforms: growth media, growth preferences, BacDive source
