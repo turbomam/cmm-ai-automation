@@ -43,7 +43,7 @@ load_dotenv()
 PROJECT_ROOT = Path(__file__).parent.parent.parent.parent
 DATA_DIR = PROJECT_ROOT / "data"
 CHROMA_TOGOMEDIUM = DATA_DIR / "chroma_togomedium"
-CHROMA_MEDIADIVE = DATA_DIR / "chroma_mediadive"
+CHROMA_MEDIADIVE = Path("/media/mark/990PRO-2TB/chromadb/cmm-ai-automation/chroma_mediadive")
 MAPPINGS_FILE = DATA_DIR / "media_grounding_mappings.tsv"
 DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "output" / "kgx"
 MONGODB_URI = "mongodb://localhost:27017/"

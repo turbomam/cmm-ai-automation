@@ -23,7 +23,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-CHROMA_PATH = "data/chroma_bacdive_media"
+CHROMA_PATH = "/media/mark/990PRO-2TB/chromadb/cmm-ai-automation/chroma_bacdive_media"
 BACDIVE_TSV = "data/bacdive_strain_medium_edges.tsv"
 
 # Ungrounded media from growth_media sheet (from media_grounding_analysis.yaml)
