@@ -578,37 +578,39 @@
 </ul>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataSource</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Names of data sources used for enrichment. Each source is authoritative</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">for its own ID type.</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">permissible_values</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">pubchem</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pubchem</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PubChem (authoritative for pubchem_cid)</span>
-<span class="w">  </span><span class="nt">chebi</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chebi</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ChEBI 2.0 (authoritative for chebi_id, biological/chemical roles)</span>
-<span class="w">  </span><span class="nt">cas</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cas</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CAS Common Chemistry (authoritative for cas_rn)</span>
-<span class="w">  </span><span class="nt">mediadive</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mediadive</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MediaDive (authoritative for mediadive_id)</span>
-<span class="w">  </span><span class="nt">node_normalization</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">node_normalization</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NCATS Translator NodeNormalization API (identifier bridging)</span>
-<span class="w">  </span><span class="nt">kg_microbe</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kg_microbe</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KG-Microbe knowledge graph</span>
-<span class="w">  </span><span class="nt">bacdive</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bacdive</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">BacDive (authoritative for bacdive_id and strain metadata)</span>
-<span class="w">  </span><span class="nt">ncbi_taxonomy</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ncbi_taxonomy</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NCBI Taxonomy (authoritative for ncbi_taxon_id)</span>
-</code></pre></div>
+```yaml
+name: DataSource
+description: Names of data sources used for enrichment. Each source is authoritative
+  for its own ID type.
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+permissible_values:
+  pubchem:
+    text: pubchem
+    description: PubChem (authoritative for pubchem_cid)
+  chebi:
+    text: chebi
+    description: ChEBI 2.0 (authoritative for chebi_id, biological/chemical roles)
+  cas:
+    text: cas
+    description: CAS Common Chemistry (authoritative for cas_rn)
+  mediadive:
+    text: mediadive
+    description: MediaDive (authoritative for mediadive_id)
+  node_normalization:
+    text: node_normalization
+    description: NCATS Translator NodeNormalization API (identifier bridging)
+  kg_microbe:
+    text: kg_microbe
+    description: KG-Microbe knowledge graph
+  bacdive:
+    text: bacdive
+    description: BacDive (authoritative for bacdive_id and strain metadata)
+  ncbi_taxonomy:
+    text: ncbi_taxonomy
+    description: NCBI Taxonomy (authoritative for ncbi_taxon_id)
+
+```
 </details>
 
 

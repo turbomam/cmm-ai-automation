@@ -596,17 +596,19 @@ Alias: roles</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">roles</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Functional roles of this ingredient in this specific mixture. An ingredient</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">can have multiple roles, and roles are context-dependent.</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">roles</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IngredientComponent</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IngredientRole</span>
-<span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
+```yaml
+name: roles
+description: Functional roles of this ingredient in this specific mixture. An ingredient
+  can have multiple roles, and roles are context-dependent.
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: roles
+domain_of:
+- IngredientComponent
+range: IngredientRole
+multivalued: true
+
+```
 </details>
 
 

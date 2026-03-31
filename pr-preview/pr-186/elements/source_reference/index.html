@@ -596,19 +596,21 @@ Alias: source_reference</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_reference</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Authoritative</span><span class="nv"> </span><span class="s">reference</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">this</span><span class="nv"> </span><span class="s">medium</span><span class="nv"> </span><span class="s">formulation.</span><span class="nv"> </span><span class="s">Must</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">resolvable</span>
-<span class="w">  </span><span class="s">CURIE</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">allowed</span><span class="nv"> </span><span class="s">prefix.</span><span class="nv"> </span><span class="s">For</span><span class="nv"> </span><span class="s">database</span><span class="nv"> </span><span class="s">media:</span><span class="nv"> </span><span class="s">mediadive.medium:381,</span><span class="nv"> </span><span class="s">togomedium:M1871,</span>
-<span class="w">  </span><span class="s">DSMZ:576,</span><span class="nv"> </span><span class="s">ATCC:1306,</span><span class="nv"> </span><span class="s">JCM:M89</span><span class="nv"> </span><span class="s">For</span><span class="nv"> </span><span class="s">literature-defined</span><span class="nv"> </span><span class="s">media:</span><span class="nv"> </span><span class="s">doi:10.1371/journal.pone.0062957,</span>
-<span class="w">  </span><span class="s">PMID:23658750&#39;</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_reference</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uriorcurie</span>
-<span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$</span>
-</code></pre></div>
+```yaml
+name: source_reference
+description: 'Authoritative reference for this medium formulation. Must be a resolvable
+  CURIE from an allowed prefix. For database media: mediadive.medium:381, togomedium:M1871,
+  DSMZ:576, ATCC:1306, JCM:M89 For literature-defined media: doi:10.1371/journal.pone.0062957,
+  PMID:23658750'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: source_reference
+domain_of:
+- GrowthMedium
+range: uriorcurie
+pattern: ^(doi|PMID|mediadive\.medium|togomedium|DSMZ|ATCC|JCM):\S+$
+
+```
 </details>
 
 

@@ -684,111 +684,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#what-will-work-without-kg-databases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Will Work Without KG Databases
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#what-will-not-work-without-kg-databases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What Will NOT Work Without KG Databases
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#how-to-convert-kg-tsv-files-to-duckdb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        How to Convert KG TSV Files to DuckDB
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="How to Convert KG TSV Files to DuckDB">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#expected-file-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Expected File Locations
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#commands-to-create-duckdb-databases" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Commands to Create DuckDB Databases
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#if-tsv-files-are-in-a-different-location" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        If TSV Files Are in a Different Location
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-the-conversion-does" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What the Conversion Does
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#output-files-created" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Files Created
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#local-databases-queried" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local Databases Queried
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -851,8 +746,8 @@
 <h3 id="2-broken-ncbi-entrez-email-configuration">2. Broken NCBI Entrez Email Configuration</h3>
 <p><strong>Impact</strong>: All NCBI API calls will fail or be rate-limited aggressively</p>
 <p>4 files have placeholder email that MUST be changed:</p>
-<div class="highlight"><pre><span></span><code><span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="s2">&quot;your.email@example.com&quot;</span>  <span class="c1"># PLACEHOLDER - WILL NOT WORK</span>
-</code></pre></div>
+<p><code>python
+Entrez.email = "your.email@example.com"  # PLACEHOLDER - WILL NOT WORK</code></p>
 <p><strong>Files affected</strong>:
 - <code>src/ncbi_search.py:14</code>
 - <code>src/transcriptomics_search.py:16</code>
@@ -865,11 +760,11 @@
 - <code>update-transcriptomics</code>
 - <code>add-organisms</code></p>
 <p><strong>Fix</strong>: Either edit the files directly, or set an environment variable and modify the code:
-<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NCBI_EMAIL&quot;</span><span class="p">,</span> <span class="s2">&quot;your.email@example.com&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">&quot;your.email@example.com&quot;</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Set NCBI_EMAIL environment variable&quot;</span><span class="p">)</span>
-</code></pre></div></p>
+<code>python
+import os
+Entrez.email = os.environ.get("NCBI_EMAIL", "your.email@example.com")
+if Entrez.email == "your.email@example.com":
+    raise ValueError("Set NCBI_EMAIL environment variable")</code></p>
 <h3 id="3-broken-makefile-paths-7-targets">3. Broken Makefile Paths (7 targets)</h3>
 <p><strong>Impact</strong>: Commands will fail with "file not found"</p>
 <p>These targets reference scripts without the <code>src/</code> prefix:</p>
@@ -982,7 +877,7 @@
 <hr />
 <h2 id="python-dependencies">Python Dependencies</h2>
 <h3 id="9-required-packages-from-pyprojecttoml">9. Required Packages (from pyproject.toml)</h3>
-<div class="highlight"><pre><span></span><code>pandas&gt;=2.0.0
+<p><code>pandas&gt;=2.0.0
 openpyxl&gt;=3.0.0      # Excel reading
 python-docx&gt;=0.8.0   # Word documents
 PyPDF2&gt;=3.0.0        # PDF text extraction
@@ -991,19 +886,17 @@ biopython&gt;=1.80      # NCBI Entrez
 requests&gt;=2.28.0     # HTTP calls
 linkml-runtime&gt;=1.7.0
 linkml&gt;=1.7.0
-duckdb&gt;=0.9.0        # KG database
-</code></pre></div>
+duckdb&gt;=0.9.0        # KG database</code></p>
 <p><strong>Install with</strong>: <code>uv sync</code> or <code>make install</code></p>
 <h3 id="10-optional-but-recommended">10. Optional but Recommended</h3>
-<div class="highlight"><pre><span></span><code>pytest&gt;=7.0.0
-ruff&gt;=0.1.0
-</code></pre></div>
+<p><code>pytest&gt;=7.0.0
+ruff&gt;=0.1.0</code></p>
 <hr />
 <h2 id="runtime-assumptions">Runtime Assumptions</h2>
 <h3 id="11-working-directory">11. Working Directory</h3>
 <p>Scripts assume they are run from repository root:
-<div class="highlight"><pre><span></span><code><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;data/txt/sheet/BER_CMM_Data_for_AI_*.tsv&quot;</span><span class="p">)</span>
-</code></pre></div></p>
+<code>python
+Path("data/txt/sheet/BER_CMM_Data_for_AI_*.tsv")</code></p>
 <p>Running from a different directory will cause path resolution failures.</p>
 <h3 id="12-internet-connectivity">12. Internet Connectivity</h3>
 <p>Required for:
@@ -1022,25 +915,22 @@ ruff&gt;=0.1.0
 <hr />
 <h2 id="quick-start-checklist">Quick Start Checklist</h2>
 <p>To run the basic pipeline from scratch:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># 1. Install dependencies</span>
-make<span class="w"> </span>install<span class="w">  </span><span class="c1"># or: uv sync</span>
-
-<span class="c1"># 2. Fix NCBI email (manual edit required)</span>
-<span class="c1"># Edit these files and replace &quot;your.email@example.com&quot;:</span>
-<span class="c1">#   - src/ncbi_search.py</span>
-<span class="c1">#   - src/transcriptomics_search.py</span>
-<span class="c1">#   - src/strain_search.py</span>
-<span class="c1">#   - src/add_missing_organisms.py</span>
-
-<span class="c1"># 3. Convert Excel to TSV</span>
-make<span class="w"> </span>convert-excel
-
-<span class="c1"># 4. Check what&#39;s available</span>
-make<span class="w"> </span>status
-
-<span class="c1"># 5. Run basic extension (will skip KG features)</span>
-make<span class="w"> </span>update-all
-</code></pre></div>
+<p>```bash</p>
+<h1 id="1-install-dependencies">1. Install dependencies</h1>
+<p>make install  # or: uv sync</p>
+<h1 id="2-fix-ncbi-email-manual-edit-required">2. Fix NCBI email (manual edit required)</h1>
+<h1 id="edit-these-files-and-replace-youremailexamplecom">Edit these files and replace "your.email@example.com":</h1>
+<h1 id="-srcncbi_searchpy">- src/ncbi_search.py</h1>
+<h1 id="-srctranscriptomics_searchpy">- src/transcriptomics_search.py</h1>
+<h1 id="-srcstrain_searchpy">- src/strain_search.py</h1>
+<h1 id="-srcadd_missing_organismspy">- src/add_missing_organisms.py</h1>
+<h1 id="3-convert-excel-to-tsv">3. Convert Excel to TSV</h1>
+<p>make convert-excel</p>
+<h1 id="4-check-whats-available">4. Check what's available</h1>
+<p>make status</p>
+<h1 id="5-run-basic-extension-will-skip-kg-features">5. Run basic extension (will skip KG features)</h1>
+<p>make update-all
+```</p>
 <hr />
 <h2 id="what-will-work-without-kg-databases">What Will Work Without KG Databases</h2>
 <p>These should work with just the basic setup:
@@ -1061,32 +951,28 @@ make<span class="w"> </span>update-all
 <h3 id="expected-file-locations">Expected File Locations</h3>
 <p>The scripts expect TSV files at these paths (relative to repo root):</p>
 <p><strong>kg-microbe (phenotypic, smaller):</strong>
-<div class="highlight"><pre><span></span><code>data/kgm/kg-microbe_nodes.tsv
-data/kgm/kg-microbe_edges.tsv
-</code></pre></div></p>
+<code>data/kgm/kg-microbe_nodes.tsv
+data/kgm/kg-microbe_edges.tsv</code></p>
 <p><strong>kg-microbe-function (protein functions, larger ~44GB):</strong>
-<div class="highlight"><pre><span></span><code>data/kgm/kg-microbe-function_nodes.tsv   # 15GB, 151M nodes
-data/kgm/kg-microbe-function_edges.tsv   # 29GB, 555M edges
-</code></pre></div></p>
+<code>data/kgm/kg-microbe-function_nodes.tsv   # 15GB, 151M nodes
+data/kgm/kg-microbe-function_edges.tsv   # 29GB, 555M edges</code></p>
 <h3 id="commands-to-create-duckdb-databases">Commands to Create DuckDB Databases</h3>
 <p>Once TSV files are in place:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Create the kgm directory if needed</span>
-mkdir<span class="w"> </span>-p<span class="w"> </span>data/kgm
-
-<span class="c1"># For kg-microbe (smaller, should be quick):</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>src.kg_analysis.kg_database<span class="w"> </span>--create<span class="w"> </span>--stats
-
-<span class="c1"># For kg-microbe-function (larger, 15-30 min):</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>src.kg_analysis.kg_function_database<span class="w"> </span>--create<span class="w"> </span>--stats
-
-<span class="c1"># Or test with a sample first (1M rows only):</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>src.kg_analysis.kg_function_database<span class="w"> </span>--create<span class="w"> </span>--sample
-</code></pre></div>
+<p>```bash</p>
+<h1 id="create-the-kgm-directory-if-needed">Create the kgm directory if needed</h1>
+<p>mkdir -p data/kgm</p>
+<h1 id="for-kg-microbe-smaller-should-be-quick">For kg-microbe (smaller, should be quick):</h1>
+<p>uv run python -m src.kg_analysis.kg_database --create --stats</p>
+<h1 id="for-kg-microbe-function-larger-15-30-min">For kg-microbe-function (larger, 15-30 min):</h1>
+<p>uv run python -m src.kg_analysis.kg_function_database --create --stats</p>
+<h1 id="or-test-with-a-sample-first-1m-rows-only">Or test with a sample first (1M rows only):</h1>
+<p>uv run python -m src.kg_analysis.kg_function_database --create --sample
+```</p>
 <h3 id="if-tsv-files-are-in-a-different-location">If TSV Files Are in a Different Location</h3>
 <p><strong>Option 1: Symlink to expected location</strong>
-<div class="highlight"><pre><span></span><code>ln<span class="w"> </span>-s<span class="w"> </span>/path/to/your/kg-microbe_nodes.tsv<span class="w"> </span>data/kgm/kg-microbe_nodes.tsv
-ln<span class="w"> </span>-s<span class="w"> </span>/path/to/your/kg-microbe_edges.tsv<span class="w"> </span>data/kgm/kg-microbe_edges.tsv
-</code></pre></div></p>
+<code>bash
+ln -s /path/to/your/kg-microbe_nodes.tsv data/kgm/kg-microbe_nodes.tsv
+ln -s /path/to/your/kg-microbe_edges.tsv data/kgm/kg-microbe_edges.tsv</code></p>
 <p><strong>Option 2: Modify the Python class instantiation</strong> (requires code changes or CLI args not currently exposed)</p>
 <h3 id="what-the-conversion-does">What the Conversion Does</h3>
 <p>From <code>src/kg_analysis/kg_database.py</code> (lines 43-94):</p>
@@ -1099,9 +985,8 @@ ln<span class="w"> </span>-s<span class="w"> </span>/path/to/your/kg-microbe_edg
 </ol>
 <p>The function KG version (<code>kg_function_database.py</code>) is similar but warns about the 15-30 minute load time for the larger files.</p>
 <h3 id="output-files-created">Output Files Created</h3>
-<div class="highlight"><pre><span></span><code>data/kgm/kg-microbe.duckdb          # ~smaller, phenotypic data
-data/kgm/kg-microbe-function.duckdb  # ~larger, protein functions
-</code></pre></div>
+<p><code>data/kgm/kg-microbe.duckdb          # ~smaller, phenotypic data
+data/kgm/kg-microbe-function.duckdb  # ~larger, protein functions</code></p>
 <hr />
 <h2 id="local-databases-queried">Local Databases Queried</h2>
 <table>

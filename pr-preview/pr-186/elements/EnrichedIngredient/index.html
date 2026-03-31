@@ -598,376 +598,380 @@
 <!-- TODO: investigate https://stackoverflow.com/questions/37606292/how-to-create-tabbed-code-blocks-in-mkdocs-or-sphinx -->
 <h3 id="direct">Direct</h3>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="nt">id_prefixes</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmm</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHEBI</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'A</span><span class="nv"> </span><span class="s">chemical</span><span class="nv"> </span><span class="s">entity</span><span class="nv"> </span><span class="s">enriched</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">multiple</span><span class="nv"> </span><span class="s">sources.</span><span class="nv"> </span><span class="s">Uses</span><span class="nv"> </span><span class="s">(inchikey,</span>
-<span class="w">  </span><span class="s">cas_rn)</span><span class="nv"> </span><span class="s">tuple</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">primary</span><span class="nv"> </span><span class="s">key</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">entity</span><span class="nv"> </span><span class="s">resolution.</span><span class="nv"> </span><span class="s">Each</span><span class="nv"> </span><span class="s">primary</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span>
-<span class="w">  </span><span class="s">for</span><span class="nv"> </span><span class="s">its</span><span class="nv"> </span><span class="s">own</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">type:</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">PubChem</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">pubchem_cid</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">ChEBI</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span>
-<span class="w">  </span><span class="s">for</span><span class="nv"> </span><span class="s">chebi_id</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">biological/chemical</span><span class="nv"> </span><span class="s">roles</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">CAS</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">cas_rn</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">MediaDive</span>
-<span class="w">  </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">mediadive_id'</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">slots</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">id</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchikey</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cas_rn</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">synonyms</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">description</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chemical_formula</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chebi_id</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pubchem_cid</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mediadive_id</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kegg_id</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mesh_id</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drugbank_id</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchi</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smiles</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">molecular_mass</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monoisotopic_mass</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">charge</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biological_roles</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chemical_roles</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application_roles</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xrefs</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_records</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conflicts</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last_enriched</span>
-<span class="nt">class_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biolink:SmallMolecule</span>
-<span class="nt">unique_keys</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">inchikey_cas_key</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">unique_key_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchikey_cas_key</span>
-<span class="w">    </span><span class="nt">unique_key_slots</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchikey</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cas_rn</span>
-</code></pre></div>
+```yaml
+name: EnrichedIngredient
+id_prefixes:
+- cmm
+- CHEBI
+description: 'A chemical entity enriched with data from multiple sources. Uses (inchikey,
+  cas_rn) tuple as the primary key for entity resolution. Each primary API is authoritative
+  for its own ID type: - PubChem is authoritative for pubchem_cid - ChEBI is authoritative
+  for chebi_id and biological/chemical roles - CAS is authoritative for cas_rn - MediaDive
+  is authoritative for mediadive_id'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+slots:
+- id
+- inchikey
+- cas_rn
+- name
+- synonyms
+- description
+- chemical_formula
+- chebi_id
+- pubchem_cid
+- mediadive_id
+- kegg_id
+- mesh_id
+- drugbank_id
+- inchi
+- smiles
+- molecular_mass
+- monoisotopic_mass
+- charge
+- biological_roles
+- chemical_roles
+- application_roles
+- xrefs
+- source_records
+- conflicts
+- last_enriched
+class_uri: biolink:SmallMolecule
+unique_keys:
+  inchikey_cas_key:
+    unique_key_name: inchikey_cas_key
+    unique_key_slots:
+    - inchikey
+    - cas_rn
+
+```
 </details>
 <h3 id="induced">Induced</h3>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="nt">id_prefixes</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cmm</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHEBI</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'A</span><span class="nv"> </span><span class="s">chemical</span><span class="nv"> </span><span class="s">entity</span><span class="nv"> </span><span class="s">enriched</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">data</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">multiple</span><span class="nv"> </span><span class="s">sources.</span><span class="nv"> </span><span class="s">Uses</span><span class="nv"> </span><span class="s">(inchikey,</span>
-<span class="w">  </span><span class="s">cas_rn)</span><span class="nv"> </span><span class="s">tuple</span><span class="nv"> </span><span class="s">as</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">primary</span><span class="nv"> </span><span class="s">key</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">entity</span><span class="nv"> </span><span class="s">resolution.</span><span class="nv"> </span><span class="s">Each</span><span class="nv"> </span><span class="s">primary</span><span class="nv"> </span><span class="s">API</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span>
-<span class="w">  </span><span class="s">for</span><span class="nv"> </span><span class="s">its</span><span class="nv"> </span><span class="s">own</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">type:</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">PubChem</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">pubchem_cid</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">ChEBI</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span>
-<span class="w">  </span><span class="s">for</span><span class="nv"> </span><span class="s">chebi_id</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">biological/chemical</span><span class="nv"> </span><span class="s">roles</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">CAS</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">cas_rn</span><span class="nv"> </span><span class="s">-</span><span class="nv"> </span><span class="s">MediaDive</span>
-<span class="w">  </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">mediadive_id'</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">attributes</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">id</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">id</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A unique identifier for a thing</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:identifier</span>
-<span class="w">    </span><span class="nt">identifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">id</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NamedThing</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Genome</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uriorcurie</span>
-<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">inchikey</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchikey</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InChIKey for structural identification</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchikey</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">    </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^[A-Z]{14}-[A-Z]{10}-[A-Z]$</span>
-<span class="w">  </span><span class="nt">cas_rn</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cas_rn</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CAS Registry Number</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cas_rn</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">    </span><span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^\d{2,7}-\d{2}-\d$</span>
-<span class="w">  </span><span class="nt">name</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A human-readable name for a thing</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:name</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">name</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NamedThing</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Genome</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">synonyms</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">synonyms</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Alternative names for this entity</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">synonyms</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NamedThing</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">description</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">description</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">A human-readable description for a thing</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">schema:description</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">description</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NamedThing</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Genome</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">chemical_formula</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chemical_formula</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Chemical formula (e.g., NaCl, MgSO4·7H2O)</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chemical_formula</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">chebi_id</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chebi_id</span>
-<span class="w">    </span><span class="nt">id_prefixes</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHEBI</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ChEBI identifier</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chebi_id</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uriorcurie</span>
-<span class="w">  </span><span class="nt">pubchem_cid</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pubchem_cid</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PubChem Compound ID</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pubchem_cid</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
-<span class="w">  </span><span class="nt">mediadive_id</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mediadive_id</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MediaDive ingredient ID (MediaDive is authoritative)</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mediadive_id</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
-<span class="w">  </span><span class="nt">kegg_id</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kegg_id</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">KEGG Compound ID (e.g., C00031)</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kegg_id</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">mesh_id</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mesh_id</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MeSH identifier</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mesh_id</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">drugbank_id</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drugbank_id</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DrugBank identifier</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drugbank_id</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">inchi</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchi</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">InChI string for structural identification</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchi</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">smiles</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smiles</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SMILES string for structural representation</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smiles</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">molecular_mass</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">molecular_mass</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Average molecular mass in Daltons</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">molecular_mass</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
-<span class="w">  </span><span class="nt">monoisotopic_mass</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monoisotopic_mass</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Monoisotopic mass in Daltons</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">monoisotopic_mass</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
-<span class="w">  </span><span class="nt">charge</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">charge</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Formal charge of the molecule</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">charge</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integer</span>
-<span class="w">  </span><span class="nt">biological_roles</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biological_roles</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Biological</span><span class="nv"> </span><span class="s">roles</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">ChEBI</span><span class="nv"> </span><span class="s">(ChEBI</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative).</span><span class="nv"> </span><span class="s">Examples:</span>
-<span class="w">      </span><span class="s">nutrient,</span><span class="nv"> </span><span class="s">metabolite,</span><span class="nv"> </span><span class="s">cofactor.'</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biological_roles</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">chemical_roles</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chemical_roles</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Chemical</span><span class="nv"> </span><span class="s">roles</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">ChEBI</span><span class="nv"> </span><span class="s">(ChEBI</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative).</span><span class="nv"> </span><span class="s">Examples:</span><span class="nv"> </span><span class="s">acid,</span>
-<span class="w">      </span><span class="s">base,</span><span class="nv"> </span><span class="s">reducing</span><span class="nv"> </span><span class="s">agent.'</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">chemical_roles</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">application_roles</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application_roles</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Application</span><span class="nv"> </span><span class="s">roles</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">ChEBI.</span><span class="nv"> </span><span class="s">Examples:</span><span class="nv"> </span><span class="s">drug,</span><span class="nv"> </span><span class="s">pesticide,</span><span class="nv"> </span><span class="s">food</span><span class="nv"> </span><span class="s">additive.'</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">application_roles</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">xrefs</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xrefs</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cross-references to external databases</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xrefs</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CrossReference</span>
-<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">inlined</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">inlined_as_list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">source_records</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_records</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Records tracking which source provided which data</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_records</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Genome</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SourceRecord</span>
-<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">inlined</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">inlined_as_list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">conflicts</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conflicts</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recorded conflicts between data sources</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conflicts</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataConflict</span>
-<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">inlined</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">inlined_as_list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">last_enriched</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last_enriched</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timestamp of last enrichment run</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">last_enriched</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Genome</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">datetime</span>
-<span class="nt">class_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biolink:SmallMolecule</span>
-<span class="nt">unique_keys</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">inchikey_cas_key</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">unique_key_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchikey_cas_key</span>
-<span class="w">    </span><span class="nt">unique_key_slots</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">inchikey</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cas_rn</span>
-</code></pre></div>
+```yaml
+name: EnrichedIngredient
+id_prefixes:
+- cmm
+- CHEBI
+description: 'A chemical entity enriched with data from multiple sources. Uses (inchikey,
+  cas_rn) tuple as the primary key for entity resolution. Each primary API is authoritative
+  for its own ID type: - PubChem is authoritative for pubchem_cid - ChEBI is authoritative
+  for chebi_id and biological/chemical roles - CAS is authoritative for cas_rn - MediaDive
+  is authoritative for mediadive_id'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+attributes:
+  id:
+    name: id
+    description: A unique identifier for a thing
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    slot_uri: schema:identifier
+    identifier: true
+    alias: id
+    owner: EnrichedIngredient
+    domain_of:
+    - NamedThing
+    - EnrichedIngredient
+    - Taxon
+    - Genome
+    - Strain
+    range: uriorcurie
+    required: true
+  inchikey:
+    name: inchikey
+    description: InChIKey for structural identification
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: inchikey
+    owner: EnrichedIngredient
+    domain_of:
+    - Ingredient
+    - EnrichedIngredient
+    range: string
+    pattern: ^[A-Z]{14}-[A-Z]{10}-[A-Z]$
+  cas_rn:
+    name: cas_rn
+    description: CAS Registry Number
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: cas_rn
+    owner: EnrichedIngredient
+    domain_of:
+    - Ingredient
+    - EnrichedIngredient
+    range: string
+    pattern: ^\d{2,7}-\d{2}-\d$
+  name:
+    name: name
+    description: A human-readable name for a thing
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    slot_uri: schema:name
+    alias: name
+    owner: EnrichedIngredient
+    domain_of:
+    - NamedThing
+    - EnrichedIngredient
+    - Taxon
+    - Genome
+    - Strain
+    range: string
+  synonyms:
+    name: synonyms
+    description: Alternative names for this entity
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: synonyms
+    owner: EnrichedIngredient
+    domain_of:
+    - NamedThing
+    - EnrichedIngredient
+    - Taxon
+    - Strain
+    range: string
+    multivalued: true
+  description:
+    name: description
+    description: A human-readable description for a thing
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    slot_uri: schema:description
+    alias: description
+    owner: EnrichedIngredient
+    domain_of:
+    - NamedThing
+    - EnrichedIngredient
+    - Taxon
+    - Genome
+    - Strain
+    range: string
+  chemical_formula:
+    name: chemical_formula
+    description: Chemical formula (e.g., NaCl, MgSO4·7H2O)
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: chemical_formula
+    owner: EnrichedIngredient
+    domain_of:
+    - Ingredient
+    - EnrichedIngredient
+    range: string
+  chebi_id:
+    name: chebi_id
+    id_prefixes:
+    - CHEBI
+    description: ChEBI identifier
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: chebi_id
+    owner: EnrichedIngredient
+    domain_of:
+    - Ingredient
+    - EnrichedIngredient
+    range: uriorcurie
+  pubchem_cid:
+    name: pubchem_cid
+    description: PubChem Compound ID
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: pubchem_cid
+    owner: EnrichedIngredient
+    domain_of:
+    - Ingredient
+    - EnrichedIngredient
+    range: integer
+  mediadive_id:
+    name: mediadive_id
+    description: MediaDive ingredient ID (MediaDive is authoritative)
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: mediadive_id
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: integer
+  kegg_id:
+    name: kegg_id
+    description: KEGG Compound ID (e.g., C00031)
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: kegg_id
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: string
+  mesh_id:
+    name: mesh_id
+    description: MeSH identifier
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: mesh_id
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: string
+  drugbank_id:
+    name: drugbank_id
+    description: DrugBank identifier
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: drugbank_id
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: string
+  inchi:
+    name: inchi
+    description: InChI string for structural identification
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: inchi
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: string
+  smiles:
+    name: smiles
+    description: SMILES string for structural representation
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: smiles
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: string
+  molecular_mass:
+    name: molecular_mass
+    description: Average molecular mass in Daltons
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: molecular_mass
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: float
+  monoisotopic_mass:
+    name: monoisotopic_mass
+    description: Monoisotopic mass in Daltons
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: monoisotopic_mass
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: float
+  charge:
+    name: charge
+    description: Formal charge of the molecule
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: charge
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: integer
+  biological_roles:
+    name: biological_roles
+    description: 'Biological roles from ChEBI (ChEBI is authoritative). Examples:
+      nutrient, metabolite, cofactor.'
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: biological_roles
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: string
+    multivalued: true
+  chemical_roles:
+    name: chemical_roles
+    description: 'Chemical roles from ChEBI (ChEBI is authoritative). Examples: acid,
+      base, reducing agent.'
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: chemical_roles
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: string
+    multivalued: true
+  application_roles:
+    name: application_roles
+    description: 'Application roles from ChEBI. Examples: drug, pesticide, food additive.'
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: application_roles
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    range: string
+    multivalued: true
+  xrefs:
+    name: xrefs
+    description: Cross-references to external databases
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: xrefs
+    owner: EnrichedIngredient
+    domain_of:
+    - Ingredient
+    - EnrichedIngredient
+    - Strain
+    range: CrossReference
+    multivalued: true
+    inlined: true
+    inlined_as_list: true
+  source_records:
+    name: source_records
+    description: Records tracking which source provided which data
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: source_records
+    owner: EnrichedIngredient
+    domain_of:
+    - GrowthPreference
+    - EnrichedIngredient
+    - Taxon
+    - Genome
+    - Strain
+    range: SourceRecord
+    multivalued: true
+    inlined: true
+    inlined_as_list: true
+  conflicts:
+    name: conflicts
+    description: Recorded conflicts between data sources
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: conflicts
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    - Strain
+    range: DataConflict
+    multivalued: true
+    inlined: true
+    inlined_as_list: true
+  last_enriched:
+    name: last_enriched
+    description: Timestamp of last enrichment run
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: last_enriched
+    owner: EnrichedIngredient
+    domain_of:
+    - EnrichedIngredient
+    - Taxon
+    - Genome
+    - Strain
+    range: datetime
+class_uri: biolink:SmallMolecule
+unique_keys:
+  inchikey_cas_key:
+    unique_key_name: inchikey_cas_key
+    unique_key_slots:
+    - inchikey
+    - cas_rn
+
+```
 </details>
 </article>
 </div>

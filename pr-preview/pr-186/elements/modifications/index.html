@@ -599,19 +599,21 @@ Alias: modifications</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modifications</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;List</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">modifications</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">parent</span><span class="nv"> </span><span class="s">medium</span><span class="nv"> </span><span class="s">(derived_from).</span><span class="nv"> </span><span class="s">Each</span><span class="nv"> </span><span class="s">entry\</span>
-<span class="w">  </span><span class="s">\ describes</span><span class="nv"> </span><span class="s">one</span><span class="nv"> </span><span class="s">change:</span><span class="nv"> </span><span class="s">added</span><span class="nv"> </span><span class="s">ingredient,</span><span class="nv"> </span><span class="s">removed</span><span class="nv"> </span><span class="s">ingredient,</span><span class="nv"> </span><span class="s">concentration</span><span class="nv"> </span><span class="s">change,\</span>
-<span class="w">  </span><span class="s">\ or</span><span class="nv"> </span><span class="s">buffer</span><span class="nv"> </span><span class="s">substitution.</span><span class="nv"> </span><span class="s">Examples:\n</span><span class="nv">  </span><span class="s">-</span><span class="nv"> </span><span class="s">\&quot;Added</span><span class="nv"> </span><span class="s">PIPES</span><span class="nv"> </span><span class="s">buffer</span><span class="nv"> </span><span class="s">30mM</span><span class="nv"> </span><span class="s">pH</span><span class="nv"> </span><span class="s">6.8\&quot;\n</span><span class="nv">  </span><span class="s">-\</span>
-<span class="w">  </span><span class="s">\ \&quot;Replaced</span><span class="nv"> </span><span class="s">methanol</span><span class="nv"> </span><span class="s">with</span><span class="nv"> </span><span class="s">succinate</span><span class="nv"> </span><span class="s">15mM\&quot;\n</span><span class="nv">  </span><span class="s">-</span><span class="nv"> </span><span class="s">\&quot;Removed</span><span class="nv"> </span><span class="s">agar</span><span class="nv"> </span><span class="s">for</span><span class="nv"> </span><span class="s">liquid</span><span class="nv"> </span><span class="s">culture\&quot;&quot;</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">modifications</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
+```yaml
+name: modifications
+description: "List of modifications from the parent medium (derived_from). Each entry\
+  \ describes one change: added ingredient, removed ingredient, concentration change,\
+  \ or buffer substitution. Examples:\n  - \"Added PIPES buffer 30mM pH 6.8\"\n  -\
+  \ \"Replaced methanol with succinate 15mM\"\n  - \"Removed agar for liquid culture\""
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: modifications
+domain_of:
+- GrowthMedium
+range: string
+multivalued: true
+
+```
 </details>
 
 

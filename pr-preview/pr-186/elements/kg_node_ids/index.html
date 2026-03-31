@@ -555,13 +555,13 @@ Alias: kg_node_ids</p>
 </thead>
 <tbody>
 <tr>
-<td><a href="../Genome/">Genome</a></td>
-<td>A genome assembly from NCBI GenBank/RefSeq or other sources</td>
+<td><a href="../Taxon/">Taxon</a></td>
+<td>A taxonomic entity from NCBI Taxonomy</td>
 <td>no</td>
 </tr>
 <tr>
-<td><a href="../Taxon/">Taxon</a></td>
-<td>A taxonomic entity from NCBI Taxonomy</td>
+<td><a href="../Genome/">Genome</a></td>
+<td>A genome assembly from NCBI GenBank/RefSeq or other sources</td>
 <td>no</td>
 </tr>
 </tbody>
@@ -601,17 +601,19 @@ Alias: kg_node_ids</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kg_node_ids</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Node</span><span class="nv"> </span><span class="s">IDs</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">external</span><span class="nv"> </span><span class="s">knowledge</span><span class="nv"> </span><span class="s">graphs</span><span class="nv"> </span><span class="s">(e.g.,</span><span class="nv"> </span><span class="s">kg-microbe).</span><span class="nv"> </span><span class="s">Format:</span><span class="nv"> </span><span class="s">&quot;NCBITaxon:12345|kg-microbe&quot;&#39;</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kg_node_ids</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Genome</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
+```yaml
+name: kg_node_ids
+description: 'Node IDs in external knowledge graphs (e.g., kg-microbe). Format: "NCBITaxon:12345|kg-microbe"'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: kg_node_ids
+domain_of:
+- Taxon
+- Genome
+range: string
+multivalued: true
+
+```
 </details>
 
 

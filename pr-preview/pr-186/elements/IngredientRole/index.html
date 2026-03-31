@@ -619,50 +619,52 @@
 </ul>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IngredientRole</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Functional</span><span class="nv"> </span><span class="s">role</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">ingredient</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">growth</span><span class="nv"> </span><span class="s">medium.</span><span class="nv"> </span><span class="s">TODO:</span><span class="nv"> </span><span class="s">Map</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">grounded</span>
-<span class="w">  </span><span class="s">ontology</span><span class="nv"> </span><span class="s">terms</span><span class="nv"> </span><span class="s">(METPO,</span><span class="nv"> </span><span class="s">OBI,</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">custom).</span><span class="nv"> </span><span class="s">See</span><span class="nv"> </span><span class="s">issue</span><span class="nv"> </span><span class="s">#11.&#39;</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">permissible_values</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">carbon_source</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">carbon_source</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provides carbon for biosynthesis and/or energy</span>
-<span class="w">    </span><span class="nt">todos</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Map to appropriate ontology term</span>
-<span class="w">  </span><span class="nt">nitrogen_source</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nitrogen_source</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provides nitrogen for biosynthesis</span>
-<span class="w">  </span><span class="nt">phosphorus_source</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phosphorus_source</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provides phosphorus</span>
-<span class="w">  </span><span class="nt">sulfur_source</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sulfur_source</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provides sulfur</span>
-<span class="w">  </span><span class="nt">trace_element</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trace_element</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Micronutrient required in small amounts</span>
-<span class="w">  </span><span class="nt">mineral</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mineral</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Macro-mineral component</span>
-<span class="w">  </span><span class="nt">buffer</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buffer</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pH buffering agent</span>
-<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHEBI:35225</span>
-<span class="w">  </span><span class="nt">vitamin</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vitamin</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Essential vitamin or growth factor</span>
-<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CHEBI:33229</span>
-<span class="w">  </span><span class="nt">solidifying_agent</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">solidifying_agent</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Agent for solid media (e.g., agar)</span>
-<span class="w">  </span><span class="nt">selective_agent</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">selective_agent</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Antibiotic or other selective compound</span>
-<span class="w">  </span><span class="nt">osmotic_stabilizer</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">osmotic_stabilizer</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Maintains osmotic balance</span>
-</code></pre></div>
+```yaml
+name: IngredientRole
+description: 'Functional role of an ingredient in a growth medium. TODO: Map to grounded
+  ontology terms (METPO, OBI, or custom). See issue #11.'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+permissible_values:
+  carbon_source:
+    text: carbon_source
+    description: Provides carbon for biosynthesis and/or energy
+    todos:
+    - Map to appropriate ontology term
+  nitrogen_source:
+    text: nitrogen_source
+    description: Provides nitrogen for biosynthesis
+  phosphorus_source:
+    text: phosphorus_source
+    description: Provides phosphorus
+  sulfur_source:
+    text: sulfur_source
+    description: Provides sulfur
+  trace_element:
+    text: trace_element
+    description: Micronutrient required in small amounts
+  mineral:
+    text: mineral
+    description: Macro-mineral component
+  buffer:
+    text: buffer
+    description: pH buffering agent
+    meaning: CHEBI:35225
+  vitamin:
+    text: vitamin
+    description: Essential vitamin or growth factor
+    meaning: CHEBI:33229
+  solidifying_agent:
+    text: solidifying_agent
+    description: Agent for solid media (e.g., agar)
+  selective_agent:
+    text: selective_agent
+    description: Antibiotic or other selective compound
+  osmotic_stabilizer:
+    text: osmotic_stabilizer
+    description: Maintains osmotic balance
+
+```
 </details>
 
 

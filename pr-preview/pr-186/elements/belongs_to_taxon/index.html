@@ -591,17 +591,19 @@ Alias: belongs_to_taxon</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">belongs_to_taxon</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Links</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">strain</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">its</span><span class="nv"> </span><span class="s">taxonomic</span><span class="nv"> </span><span class="s">classification.</span><span class="nv"> </span><span class="s">Predicate:</span><span class="nv"> </span><span class="s">RO:0002162</span>
-<span class="w">  </span><span class="s">(in</span><span class="nv"> </span><span class="s">taxon)</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">similar.&#39;</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">slot_uri</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RO:0002162</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">belongs_to_taxon</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-</code></pre></div>
+```yaml
+name: belongs_to_taxon
+description: 'Links a strain to its taxonomic classification. Predicate: RO:0002162
+  (in taxon) or similar.'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+slot_uri: RO:0002162
+alias: belongs_to_taxon
+domain_of:
+- Strain
+range: Taxon
+
+```
 </details>
 
 

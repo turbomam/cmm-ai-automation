@@ -677,333 +677,311 @@
 <p><strong>Why critical</strong>: Primary identifier for DSMZ strains, most reliable lookup
 <strong>Data type</strong>: Integer (NOT string)</p>
 <p><strong>MongoDB queries</strong>:
-<div class="highlight"><pre><span></span><code><span class="c1">// Exact match (fastest, indexed)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1338</span><span class="p">})</span>
-
-<span class="c1">// IMPORTANT: This will FAIL - DSM-Number is an integer, not a string</span>
-<span class="c1">// db.strains.findOne({&quot;General.DSM-Number&quot;: &quot;1338&quot;})  // ❌ WRONG</span>
-
-<span class="c1">// Find all DSM strains in a range</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$gte</span><span class="o">:</span><span class="w"> </span><span class="mf">1330</span><span class="p">,</span><span class="w"> </span><span class="nx">$lte</span><span class="o">:</span><span class="w"> </span><span class="mf">1340</span><span class="p">}})</span>
-
-<span class="c1">// Convert string input to integer for search</span>
-<span class="c1">// In JavaScript</span>
-<span class="kd">let</span><span class="w"> </span><span class="nx">dsmInput</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1338&quot;</span><span class="p">;</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="o">:</span><span class="w"> </span><span class="nb">parseInt</span><span class="p">(</span><span class="nx">dsmInput</span><span class="p">)})</span>
-
-<span class="c1">// In Python</span>
-<span class="nx">dsm_input</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;1338&quot;</span>
-<span class="nx">collection</span><span class="p">.</span><span class="nx">find_one</span><span class="p">({</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="o">:</span><span class="w"> </span><span class="kr">int</span><span class="p">(</span><span class="nx">dsm_input</span><span class="p">)})</span>
-</code></pre></div></p>
+```javascript
+// Exact match (fastest, indexed)
+db.strains.findOne({"General.DSM-Number": 1338})</p>
+<p>// IMPORTANT: This will FAIL - DSM-Number is an integer, not a string
+// db.strains.findOne({"General.DSM-Number": "1338"})  // ❌ WRONG</p>
+<p>// Find all DSM strains in a range
+db.strains.find({"General.DSM-Number": {$gte: 1330, $lte: 1340}})</p>
+<p>// Convert string input to integer for search
+// In JavaScript
+let dsmInput = "1338";
+db.strains.findOne({"General.DSM-Number": parseInt(dsmInput)})</p>
+<p>// In Python
+dsm_input = "1338"
+collection.find_one({"General.DSM-Number": int(dsm_input)})
+```</p>
 <h3 id="2-bacdive-id-generalbacdive-id-or-_id">2. <strong>BacDive ID</strong> (<code>General.BacDive-ID</code> or <code>_id</code>)</h3>
 <p><strong>Why critical</strong>: Unique identifier across entire BacDive database</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// By BacDive ID</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span><span class="s2">&quot;General.BacDive-ID&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">7143</span><span class="p">})</span>
-
-<span class="c1">// By MongoDB _id (usually same as BacDive-ID)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span><span class="s2">&quot;_id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">7143</span><span class="p">})</span>
-
-<span class="c1">// Find multiple BacDive IDs at once</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;General.BacDive-ID&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$in</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="mf">7143</span><span class="p">,</span><span class="w"> </span><span class="mf">7144</span><span class="p">,</span><span class="w"> </span><span class="mf">7145</span><span class="p">]}})</span>
-</code></pre></div>
+<p>```javascript
+// By BacDive ID
+db.strains.findOne({"General.BacDive-ID": 7143})</p>
+<p>// By MongoDB _id (usually same as BacDive-ID)
+db.strains.findOne({"_id": 7143})</p>
+<p>// Find multiple BacDive IDs at once
+db.strains.find({"General.BacDive-ID": {$in: [7143, 7144, 7145]}})
+```</p>
 <h3 id="3-ncbi-taxonomy-id-generalncbi-tax-idncbi-tax-id">3. <strong>NCBI Taxonomy ID</strong> (<code>General.NCBI tax id.NCBI tax id</code>)</h3>
 <p><strong>Why critical</strong>: Links to NCBI Taxonomy, but <strong>NOT unique</strong> - many strains can share same species-level taxon</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// By NCBI taxon ID</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;General.NCBI tax id.NCBI tax id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">408</span><span class="p">})</span>
-
-<span class="c1">// With matching level filter (species vs strain)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;General.NCBI tax id.NCBI tax id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">408</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;General.NCBI tax id.Matching level&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;species&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Find strain-level taxon matches (more specific)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;General.NCBI tax id.Matching level&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;strain&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Alternative path if structure differs</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;NCBI tax id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">408</span><span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// By NCBI taxon ID
+db.strains.find({"General.NCBI tax id.NCBI tax id": 408})</p>
+<p>// With matching level filter (species vs strain)
+db.strains.find({
+  "General.NCBI tax id.NCBI tax id": 408,
+  "General.NCBI tax id.Matching level": "species"
+})</p>
+<p>// Find strain-level taxon matches (more specific)
+db.strains.find({
+  "General.NCBI tax id.Matching level": "strain"
+})</p>
+<p>// Alternative path if structure differs
+db.strains.find({"NCBI tax id": 408})
+```</p>
 <h3 id="4-culture-collection-ids-external-linksculture-collection-no">4. <strong>Culture Collection IDs</strong> (<code>External links.culture collection no.</code>)</h3>
 <p><strong>Why critical</strong>: Cross-references to other culture collections - <strong>STRING FIELD</strong> with comma-separated list</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Exact substring match for ATCC 14718</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/ATCC 14718/</span>
-<span class="p">})</span>
-
-<span class="c1">// Word boundary regex (prevents &quot;DSM 1&quot; from matching &quot;DSM 11&quot;)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/(^|,\s*)ATCC 14718(\s*,|$)/</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Case-insensitive search for any NCIMB entry</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/NCIMB/i</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Find strains in multiple collections</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/DSM 1338|JCM 2805/</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// All strains with ATCC numbers</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/\bATCC\s+\d+/</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// Exact substring match for ATCC 14718
+db.strains.findOne({
+  "External links.culture collection no.": /ATCC 14718/
+})</p>
+<p>// Word boundary regex (prevents "DSM 1" from matching "DSM 11")
+db.strains.findOne({
+  "External links.culture collection no.": {
+    $regex: /(^|,\s<em>)ATCC 14718(\s</em>,|$)/
+  }
+})</p>
+<p>// Case-insensitive search for any NCIMB entry
+db.strains.find({
+  "External links.culture collection no.": {
+    $regex: /NCIMB/i
+  }
+})</p>
+<p>// Find strains in multiple collections
+db.strains.find({
+  "External links.culture collection no.": {
+    $regex: /DSM 1338|JCM 2805/
+  }
+})</p>
+<p>// All strains with ATCC numbers
+db.strains.find({
+  "External links.culture collection no.": {
+    $regex: /\bATCC\s+\d+/
+  }
+})
+```</p>
 <h3 id="5-strain-designation-name-and-taxonomic-classificationstrain-designation">5. <strong>Strain Designation</strong> (<code>Name and taxonomic classification.strain designation</code>)</h3>
 <p><strong>Why critical</strong>: Human-readable strain identifier (e.g., "AM1", "KT2440"), but can have <strong>multiple comma-separated values</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Exact match for single designation</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.strain designation&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;AM1&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Partial match (handles &quot;0355, D355, AM1&quot;)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.strain designation&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/AM1/</span>
-<span class="p">})</span>
-
-<span class="c1">// Word boundary match (prevents &quot;AM1&quot; from matching &quot;AM10&quot;)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.strain designation&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/\bAM1\b/</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Case-insensitive</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.strain designation&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/am-1/i</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Alternative field path</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;strain designation&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/KT2440/</span><span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// Exact match for single designation
+db.strains.findOne({
+  "Name and taxonomic classification.strain designation": "AM1"
+})</p>
+<p>// Partial match (handles "0355, D355, AM1")
+db.strains.find({
+  "Name and taxonomic classification.strain designation": /AM1/
+})</p>
+<p>// Word boundary match (prevents "AM1" from matching "AM10")
+db.strains.find({
+  "Name and taxonomic classification.strain designation": {
+    $regex: /\bAM1\b/
+  }
+})</p>
+<p>// Case-insensitive
+db.strains.find({
+  "Name and taxonomic classification.strain designation": {
+    $regex: /am-1/i
+  }
+})</p>
+<p>// Alternative field path
+db.strains.find({"strain designation": /KT2440/})
+```</p>
 <h3 id="6-species-name-name-and-taxonomic-classificationspecies">6. <strong>Species Name</strong> (<code>Name and taxonomic classification.species</code>)</h3>
 <p><strong>Why critical</strong>: Binomial name, but <strong>NOT unique</strong> - returns ALL strains of that species</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Exact species match</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.species&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Methylorubrum extorquens&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Case-insensitive</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.species&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/^Methylorubrum extorquens$/i</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Genus-level search</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.genus&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Methylorubrum&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Partial species name</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.species&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/Methylo.*extorquens/i</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Alternative paths (older records)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;species&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Methylorubrum extorquens&quot;</span><span class="p">})</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span><span class="s2">&quot;Name and taxonomic classification.LPSN.species&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Methylorubrum extorquens&quot;</span><span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// Exact species match
+db.strains.find({
+  "Name and taxonomic classification.species": "Methylorubrum extorquens"
+})</p>
+<p>// Case-insensitive
+db.strains.find({
+  "Name and taxonomic classification.species": {
+    $regex: /^Methylorubrum extorquens$/i
+  }
+})</p>
+<p>// Genus-level search
+db.strains.find({
+  "Name and taxonomic classification.genus": "Methylorubrum"
+})</p>
+<p>// Partial species name
+db.strains.find({
+  "Name and taxonomic classification.species": {
+    $regex: /Methylo.*extorquens/i
+  }
+})</p>
+<p>// Alternative paths (older records)
+db.strains.find({"species": "Methylorubrum extorquens"})
+db.strains.find({"Name and taxonomic classification.LPSN.species": "Methylorubrum extorquens"})
+```</p>
 <h3 id="7-synonyms-name-and-taxonomic-classificationlpsnsynonyms">7. <strong>Synonyms</strong> (<code>Name and taxonomic classification.LPSN.synonyms</code>)</h3>
 <p><strong>Why critical</strong>: Finds strains by old/alternative scientific names, <strong>ARRAY field</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Find by synonym (exact match in array)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.LPSN.synonyms.synonym&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Methylobacterium extorquens&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Case-insensitive synonym search</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.LPSN.synonyms.synonym&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/Protomonas extorquens/i</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Find any strain with &quot;Methylobacterium&quot; synonym</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.LPSN.synonyms.synonym&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/Methylobacterium/</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Check if synonyms array exists and is not empty</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.LPSN.synonyms&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$exists</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">$ne</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// Find by synonym (exact match in array)
+db.strains.find({
+  "Name and taxonomic classification.LPSN.synonyms.synonym": "Methylobacterium extorquens"
+})</p>
+<p>// Case-insensitive synonym search
+db.strains.find({
+  "Name and taxonomic classification.LPSN.synonyms.synonym": {
+    $regex: /Protomonas extorquens/i
+  }
+})</p>
+<p>// Find any strain with "Methylobacterium" synonym
+db.strains.find({
+  "Name and taxonomic classification.LPSN.synonyms.synonym": {
+    $regex: /Methylobacterium/
+  }
+})</p>
+<p>// Check if synonyms array exists and is not empty
+db.strains.find({
+  "Name and taxonomic classification.LPSN.synonyms": {
+    $exists: true,
+    $ne: []
+  }
+})
+```</p>
 <h3 id="8-genome-accession-sequence-informationgenome-sequencesaccession">8. <strong>Genome Accession</strong> (<code>Sequence information.Genome sequences.accession</code>)</h3>
 <p><strong>Why critical</strong>: Links to NCBI GenBank genome assembly, <strong>unique identifier</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Exact genome accession</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Sequence information.Genome sequences.accession&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GCA_000022685&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Partial accession (GCA_ or GCF_)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Sequence information.Genome sequences.accession&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/^GCA_000022/</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// All strains with genomes</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Sequence information.Genome sequences&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$exists</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Alternative path for arrays</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Sequence information.Genome sequences.0.accession&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GCA_000022685&quot;</span>
-<span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// Exact genome accession
+db.strains.findOne({
+  "Sequence information.Genome sequences.accession": "GCA_000022685"
+})</p>
+<p>// Partial accession (GCA_ or GCF_)
+db.strains.find({
+  "Sequence information.Genome sequences.accession": {
+    $regex: /^GCA_000022/
+  }
+})</p>
+<p>// All strains with genomes
+db.strains.find({
+  "Sequence information.Genome sequences": {
+    $exists: true
+  }
+})</p>
+<p>// Alternative path for arrays
+db.strains.findOne({
+  "Sequence information.Genome sequences.0.accession": "GCA_000022685"
+})
+```</p>
 <h3 id="9-16s-rrna-sequences-sequence-information16s-sequences">9. <strong>16S rRNA Sequences</strong> (<code>Sequence information.16S sequences</code>)</h3>
 <p><strong>Why critical</strong>: Links to NCBI nucleotide sequences, <strong>ARRAY field</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1">// By 16S accession</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Sequence information.16S sequences.accession&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;AF293375&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Find strains with 16S sequences</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Sequence information.16S sequences&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$exists</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
-<span class="w">    </span><span class="nx">$ne</span><span class="o">:</span><span class="w"> </span><span class="p">[]</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// By 16S sequence NCBI tax ID</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Sequence information.16S sequences.NCBI tax ID&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">408</span>
-<span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// By 16S accession
+db.strains.find({
+  "Sequence information.16S sequences.accession": "AF293375"
+})</p>
+<p>// Find strains with 16S sequences
+db.strains.find({
+  "Sequence information.16S sequences": {
+    $exists: true,
+    $ne: []
+  }
+})</p>
+<p>// By 16S sequence NCBI tax ID
+db.strains.find({
+  "Sequence information.16S sequences.NCBI tax ID": 408
+})
+```</p>
 <h3 id="10-full-scientific-name-name-and-taxonomic-classificationfull-scientific-name">10. <strong>Full Scientific Name</strong> (<code>Name and taxonomic classification.full scientific name</code>)</h3>
 <p><strong>Why critical</strong>: Complete name with author/year, good for disambiguation</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Exact match</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.full scientific name&quot;</span><span class="o">:</span>
-<span class="w">    </span><span class="s2">&quot;Methylorubrum extorquens (Urakami and Komagata 1984) Green and Ardley 2018&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Partial match (ignore author/year)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.full scientific name&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/^Methylorubrum extorquens/</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Also check LPSN full name (may differ)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.LPSN.full scientific name&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/Methylorubrum extorquens/</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// Exact match
+db.strains.find({
+  "Name and taxonomic classification.full scientific name":
+    "Methylorubrum extorquens (Urakami and Komagata 1984) Green and Ardley 2018"
+})</p>
+<p>// Partial match (ignore author/year)
+db.strains.find({
+  "Name and taxonomic classification.full scientific name": {
+    $regex: /^Methylorubrum extorquens/
+  }
+})</p>
+<p>// Also check LPSN full name (may differ)
+db.strains.find({
+  "Name and taxonomic classification.LPSN.full scientific name": {
+    $regex: /Methylorubrum extorquens/
+  }
+})
+```</p>
 <h3 id="11-type-strain-status-name-and-taxonomic-classificationtype-strain">11. <strong>Type Strain Status</strong> (<code>Name and taxonomic classification.type strain</code>)</h3>
 <p><strong>Why critical</strong>: Identifies authoritative reference strains</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Find type strains only</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.type strain&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;yes&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Find non-type strains</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.type strain&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;no&quot;</span>
-<span class="p">})</span>
-
-<span class="c1">// Type strains of specific species</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.species&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Methylorubrum extorquens&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="s2">&quot;Name and taxonomic classification.type strain&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;yes&quot;</span>
-<span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// Find type strains only
+db.strains.find({
+  "Name and taxonomic classification.type strain": "yes"
+})</p>
+<p>// Find non-type strains
+db.strains.find({
+  "Name and taxonomic classification.type strain": "no"
+})</p>
+<p>// Type strains of specific species
+db.strains.find({
+  "Name and taxonomic classification.species": "Methylorubrum extorquens",
+  "Name and taxonomic classification.type strain": "yes"
+})
+```</p>
 <h3 id="12-strain-history-generalstrain-history">12. <strong>Strain History</strong> (<code>General.strain history</code>)</h3>
 <p><strong>Why critical</strong>: Tracks strain provenance, may mention alternative designations</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Search in strain history text</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;General.strain history.history&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/NCIB 9133/i</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1">// Find strains with provenance from specific source</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;General.strain history.history&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="sr">/Quayle/</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// Search in strain history text
+db.strains.find({
+  "General.strain history.history": {
+    $regex: /NCIB 9133/i
+  }
+})</p>
+<p>// Find strains with provenance from specific source
+db.strains.find({
+  "General.strain history.history": {
+    $regex: /Quayle/
+  }
+})
+```</p>
 <h3 id="13-straininfo-links-external-linksstraininfo-linkstraininfo">13. <strong>StrainInfo Links</strong> (<code>External links.straininfo link.straininfo</code>)</h3>
 <p><strong>Why critical</strong>: Cross-reference to StrainInfo database</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// By StrainInfo ID</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;External links.straininfo link.straininfo&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">45565</span>
-<span class="p">})</span>
-
-<span class="c1">// All strains with StrainInfo entries</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;External links.straininfo link&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$exists</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">})</span>
-</code></pre></div>
+<p>```javascript
+// By StrainInfo ID
+db.strains.findOne({
+  "External links.straininfo link.straininfo": 45565
+})</p>
+<p>// All strains with StrainInfo entries
+db.strains.find({
+  "External links.straininfo link": {
+    $exists: true
+  }
+})
+```</p>
 <hr />
 <h2 id="multi-field-reconciliation-query"><strong>Multi-field Reconciliation Query</strong></h2>
 <p>Combine multiple fields for comprehensive search:</p>
-<div class="highlight"><pre><span></span><code><span class="c1">// Find strain by ANY identifier</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">$or</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1338</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;General.BacDive-ID&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">7143</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;General.NCBI tax id.NCBI tax id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">408</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/ATCC 14718/</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;Name and taxonomic classification.strain designation&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/AM1/</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;Sequence information.Genome sequences.accession&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GCA_000022685&quot;</span><span class="p">}</span>
-<span class="w">  </span><span class="p">]</span>
-<span class="p">})</span>
-
-<span class="c1">// Score matches by number of fields matched (pseudo-confidence)</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">$or</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">        </span><span class="p">{</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1338</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/JCM 2805/</span><span class="p">},</span>
-<span class="w">        </span><span class="p">{</span><span class="s2">&quot;Name and taxonomic classification.strain designation&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/AM1/</span><span class="p">}</span>
-<span class="w">      </span><span class="p">]</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$addFields</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">matchScore</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">$add</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">          </span><span class="p">{</span><span class="nx">$cond</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="nx">$eq</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;$General.DSM-Number&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1338</span><span class="p">]},</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">]},</span>
-<span class="w">          </span><span class="p">{</span><span class="nx">$cond</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="nx">$regexMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$External links.culture collection no.&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">regex</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;JCM 2805&quot;</span><span class="p">}},</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">]},</span>
-<span class="w">          </span><span class="p">{</span><span class="nx">$cond</span><span class="o">:</span><span class="w"> </span><span class="p">[{</span><span class="nx">$regexMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$Name and taxonomic classification.strain designation&quot;</span><span class="p">,</span><span class="w"> </span><span class="nx">regex</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;AM1&quot;</span><span class="p">}},</span><span class="w"> </span><span class="mf">1</span><span class="p">,</span><span class="w"> </span><span class="mf">0</span><span class="p">]}</span>
-<span class="w">        </span><span class="p">]</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span><span class="nx">$sort</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">matchScore</span><span class="o">:</span><span class="w"> </span><span class="o">-</span><span class="mf">1</span><span class="p">}}</span>
-<span class="p">])</span>
-</code></pre></div>
+<p>```javascript
+// Find strain by ANY identifier
+db.strains.find({
+  $or: [
+    {"General.DSM-Number": 1338},
+    {"General.BacDive-ID": 7143},
+    {"General.NCBI tax id.NCBI tax id": 408},
+    {"External links.culture collection no.": /ATCC 14718/},
+    {"Name and taxonomic classification.strain designation": /AM1/},
+    {"Sequence information.Genome sequences.accession": "GCA_000022685"}
+  ]
+})</p>
+<p>// Score matches by number of fields matched (pseudo-confidence)
+db.strains.aggregate([
+  {
+    $match: {
+      $or: [
+        {"General.DSM-Number": 1338},
+        {"External links.culture collection no.": /JCM 2805/},
+        {"Name and taxonomic classification.strain designation": /AM1/}
+      ]
+    }
+  },
+  {
+    $addFields: {
+      matchScore: {
+        $add: [
+          {$cond: [{$eq: ["$General.DSM-Number", 1338]}, 1, 0]},
+          {$cond: [{$regexMatch: {input: "$External links.culture collection no.", regex: "JCM 2805"}}, 1, 0]},
+          {$cond: [{$regexMatch: {input: "$Name and taxonomic classification.strain designation", regex: "AM1"}}, 1, 0]}
+        ]
+      }
+    }
+  },
+  {$sort: {matchScore: -1}}
+])
+```</p>
 <hr />
 <h2 id="important-caveats"><strong>Important Caveats</strong></h2>
 <ol>
@@ -1015,96 +993,98 @@
 </ol>
 <hr />
 <h2 id="example-comprehensive-search-for-dsm1338">Example: Comprehensive Search for DSM:1338</h2>
-<div class="highlight"><pre><span></span><code><span class="c1">// Search by all available identifiers</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">find</span><span class="p">({</span>
-<span class="w">  </span><span class="nx">$or</span><span class="o">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="c1">// Primary DSM number</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">1338</span><span class="p">},</span>
+<p>```javascript
+// Search by all available identifiers
+db.strains.find({
+  $or: [
+    // Primary DSM number
+    {"General.DSM-Number": 1338},</p>
+<pre><code>// BacDive ID
+{"General.BacDive-ID": 7143},
 
-<span class="w">    </span><span class="c1">// BacDive ID</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;General.BacDive-ID&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">7143</span><span class="p">},</span>
+// NCBI taxonomy
+{"General.NCBI tax id.NCBI tax id": 408},
 
-<span class="w">    </span><span class="c1">// NCBI taxonomy</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;General.NCBI tax id.NCBI tax id&quot;</span><span class="o">:</span><span class="w"> </span><span class="mf">408</span><span class="p">},</span>
+// Culture collection IDs
+{"External links.culture collection no.": /(^|,\s*)DSM 1338(\s*,|$)/},
+{"External links.culture collection no.": /(^|,\s*)ATCC 14718(\s*,|$)/},
+{"External links.culture collection no.": /(^|,\s*)NCIB 9133(\s*,|$)/},
+{"External links.culture collection no.": /(^|,\s*)JCM 2805(\s*,|$)/},
 
-<span class="w">    </span><span class="c1">// Culture collection IDs</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/(^|,\s*)DSM 1338(\s*,|$)/</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/(^|,\s*)ATCC 14718(\s*,|$)/</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/(^|,\s*)NCIB 9133(\s*,|$)/</span><span class="p">},</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/(^|,\s*)JCM 2805(\s*,|$)/</span><span class="p">},</span>
+// Strain designation
+{"Name and taxonomic classification.strain designation": /\b(0355|D355|AM1)\b/i},
 
-<span class="w">    </span><span class="c1">// Strain designation</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;Name and taxonomic classification.strain designation&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/\b(0355|D355|AM1)\b/i</span><span class="p">},</span>
+// Species name
+{"Name and taxonomic classification.species": "Methylorubrum extorquens"},
 
-<span class="w">    </span><span class="c1">// Species name</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;Name and taxonomic classification.species&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Methylorubrum extorquens&quot;</span><span class="p">},</span>
+// Synonyms
+{"Name and taxonomic classification.LPSN.synonyms.synonym": "Methylobacterium extorquens"},
 
-<span class="w">    </span><span class="c1">// Synonyms</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;Name and taxonomic classification.LPSN.synonyms.synonym&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;Methylobacterium extorquens&quot;</span><span class="p">},</span>
-
-<span class="w">    </span><span class="c1">// Genome accession</span>
-<span class="w">    </span><span class="p">{</span><span class="s2">&quot;Sequence information.Genome sequences.accession&quot;</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;GCA_000022685&quot;</span><span class="p">}</span>
-<span class="w">  </span><span class="p">]</span>
-<span class="p">})</span>
-</code></pre></div>
+// Genome accession
+{"Sequence information.Genome sequences.accession": "GCA_000022685"}
+</code></pre>
+<p>]
+})
+```</p>
 <hr />
 <h2 id="python-wrapper-function-template">Python Wrapper Function Template</h2>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">search_bacdive_comprehensive</span><span class="p">(</span>
-    <span class="n">collection</span><span class="p">,</span>
-    <span class="n">dsm_number</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">bacdive_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">ncbi_taxon</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">culture_collection_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">strain_designation</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">species_name</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">genome_accession</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Comprehensive BacDive search by any identifier.&quot;&quot;&quot;</span>
+<p>```python
+def search_bacdive_comprehensive(
+    collection,
+    dsm_number=None,
+    bacdive_id=None,
+    ncbi_taxon=None,
+    culture_collection_ids=None,
+    strain_designation=None,
+    species_name=None,
+    genome_accession=None
+):
+    """Comprehensive BacDive search by any identifier."""</p>
+<pre><code>query_parts = []
 
-    <span class="n">query_parts</span> <span class="o">=</span> <span class="p">[]</span>
+if dsm_number:
+    # DSM-Number is stored as integer, not string
+    query_parts.append({"General.DSM-Number": int(dsm_number)})
 
-    <span class="k">if</span> <span class="n">dsm_number</span><span class="p">:</span>
-        <span class="c1"># DSM-Number is stored as integer, not string</span>
-        <span class="n">query_parts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">dsm_number</span><span class="p">)})</span>
+if bacdive_id:
+    query_parts.append({"General.BacDive-ID": bacdive_id})
 
-    <span class="k">if</span> <span class="n">bacdive_id</span><span class="p">:</span>
-        <span class="n">query_parts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;General.BacDive-ID&quot;</span><span class="p">:</span> <span class="n">bacdive_id</span><span class="p">})</span>
+if ncbi_taxon:
+    query_parts.append({"General.NCBI tax id.NCBI tax id": ncbi_taxon})
 
-    <span class="k">if</span> <span class="n">ncbi_taxon</span><span class="p">:</span>
-        <span class="n">query_parts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">&quot;General.NCBI tax id.NCBI tax id&quot;</span><span class="p">:</span> <span class="n">ncbi_taxon</span><span class="p">})</span>
+if culture_collection_ids:
+    for cc_id in culture_collection_ids:
+        pattern = rf"(^|,\s*){re.escape(cc_id)}(\s*,|$)"
+        query_parts.append({
+            "External links.culture collection no.": {"$regex": pattern}
+        })
 
-    <span class="k">if</span> <span class="n">culture_collection_ids</span><span class="p">:</span>
-        <span class="k">for</span> <span class="n">cc_id</span> <span class="ow">in</span> <span class="n">culture_collection_ids</span><span class="p">:</span>
-            <span class="n">pattern</span> <span class="o">=</span> <span class="sa">rf</span><span class="s2">&quot;(^|,\s*)</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">cc_id</span><span class="p">)</span><span class="si">}</span><span class="s2">(\s*,|$)&quot;</span>
-            <span class="n">query_parts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-                <span class="s2">&quot;External links.culture collection no.&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$regex&quot;</span><span class="p">:</span> <span class="n">pattern</span><span class="p">}</span>
-            <span class="p">})</span>
+if strain_designation:
+    query_parts.append({
+        "Name and taxonomic classification.strain designation": {
+            "$regex": rf"\b{re.escape(strain_designation)}\b",
+            "$options": "i"
+        }
+    })
 
-    <span class="k">if</span> <span class="n">strain_designation</span><span class="p">:</span>
-        <span class="n">query_parts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s2">&quot;Name and taxonomic classification.strain designation&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;$regex&quot;</span><span class="p">:</span> <span class="sa">rf</span><span class="s2">&quot;\b</span><span class="si">{</span><span class="n">re</span><span class="o">.</span><span class="n">escape</span><span class="p">(</span><span class="n">strain_designation</span><span class="p">)</span><span class="si">}</span><span class="s2">\b&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;$options&quot;</span><span class="p">:</span> <span class="s2">&quot;i&quot;</span>
-            <span class="p">}</span>
-        <span class="p">})</span>
+if species_name:
+    query_parts.append({
+        "Name and taxonomic classification.species": species_name
+    })
 
-    <span class="k">if</span> <span class="n">species_name</span><span class="p">:</span>
-        <span class="n">query_parts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s2">&quot;Name and taxonomic classification.species&quot;</span><span class="p">:</span> <span class="n">species_name</span>
-        <span class="p">})</span>
+if genome_accession:
+    query_parts.append({
+        "Sequence information.Genome sequences.accession": genome_accession
+    })
 
-    <span class="k">if</span> <span class="n">genome_accession</span><span class="p">:</span>
-        <span class="n">query_parts</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
-            <span class="s2">&quot;Sequence information.Genome sequences.accession&quot;</span><span class="p">:</span> <span class="n">genome_accession</span>
-        <span class="p">})</span>
+if not query_parts:
+    return []
 
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">query_parts</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[]</span>
+query = {"$or": query_parts} if len(query_parts) &gt; 1 else query_parts[0]
 
-    <span class="n">query</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;$or&quot;</span><span class="p">:</span> <span class="n">query_parts</span><span class="p">}</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query_parts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="k">else</span> <span class="n">query_parts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">collection</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">query</span><span class="p">))</span>
-</code></pre></div>
+return list(collection.find(query))
+</code></pre>
+<p>```</p>
 
 
 

@@ -673,19 +673,17 @@
 <p>User provided a mixed list containing both NCBI taxon IDs and BacDive strain IDs from their source data. Analysis reveals these represent <strong>multiple different organisms</strong>, indicating a data quality issue.</p>
 <h2 id="ids-analyzed">IDs Analyzed</h2>
 <h3 id="ncbi-taxon-ids-5-ids">NCBI Taxon IDs (5 IDs)</h3>
-<div class="highlight"><pre><span></span><code>NCBITaxon:408004
+<p><code>NCBITaxon:408004
 NCBITaxon:408047
 NCBITaxon:40805
 NCBITaxon:408050
-NCBITaxon:408073
-</code></pre></div>
+NCBITaxon:408073</code></p>
 <h3 id="bacdive-strain-ids-5-ids">BacDive Strain IDs (5 IDs)</h3>
-<div class="highlight"><pre><span></span><code>163427
+<p><code>163427
 163431
 163437
 163426
-163440
-</code></pre></div>
+163440</code></p>
 <h2 id="findings">Findings</h2>
 <h3 id="ncbi-taxon-ids-not-found-in-bacdive">NCBI Taxon IDs: Not Found in BacDive</h3>
 <p>All 5 NCBI taxon IDs were <strong>not found</strong> anywhere in the BacDive database, including:
@@ -842,28 +840,26 @@ NCBITaxon:408073
 <li><strong>ERROR</strong> if taxon ID is for a different genus</li>
 </ol>
 <h3 id="reconciliation-report-format">Reconciliation Report Format</h3>
-<div class="highlight"><pre><span></span><code>CRITICAL ERROR: Taxonomic mismatch detected
-  Expected: Methylorubrum (Alphaproteobacteria)
-
-  BacDive IDs (valid):
+<p>```
+CRITICAL ERROR: Taxonomic mismatch detected
+  Expected: Methylorubrum (Alphaproteobacteria)</p>
+<p>BacDive IDs (valid):
     - BacDive:163426 → Methylorubrum extorquens (NCBITaxon:408) ✓
     - BacDive:163427 → Methylorubrum rhodesianum (NCBITaxon:29427) ⚠️ DIFFERENT SPECIES
-    - BacDive:163437 → Methylorubrum zatmanii (NCBITaxon:29429) ⚠️ DIFFERENT SPECIES
-
-  NCBI Taxon IDs (INVALID):
+    - BacDive:163437 → Methylorubrum zatmanii (NCBITaxon:29429) ⚠️ DIFFERENT SPECIES</p>
+<p>NCBI Taxon IDs (INVALID):
     - NCBITaxon:408004 → Streptomyces sp. 13-32 ❌ WRONG GENUS (Actinomycetota)
     - NCBITaxon:408047 → Streptomyces sp. 1A01510 ❌ WRONG GENUS (Actinomycetota)
     - NCBITaxon:40805 → Dasytricha ❌ WRONG KINGDOM (Protozoa)
     - NCBITaxon:408050 → Streptomyces sp. 1A01536 ❌ WRONG GENUS (Actinomycetota)
-    - NCBITaxon:408073 → Epalxellidae ❌ WRONG KINGDOM (Protozoa)
-
-Action required: Remove invalid NCBI taxon IDs or verify source data for errors.
-</code></pre></div>
+    - NCBITaxon:408073 → Epalxellidae ❌ WRONG KINGDOM (Protozoa)</p>
+<p>Action required: Remove invalid NCBI taxon IDs or verify source data for errors.
+```</p>
 <h2 id="test-scripts">Test Scripts</h2>
 <h3 id="bacdive-analysis">BacDive Analysis</h3>
 <p>Analysis performed by <code>/tmp/detailed_analysis.py</code>:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>/tmp/detailed_analysis.py
-</code></pre></div>
+<p><code>bash
+uv run python /tmp/detailed_analysis.py</code></p>
 <p>The script:
 1. Groups BacDive results by species
 2. Searches for NCBI taxon IDs in all possible BacDive fields
@@ -871,8 +867,8 @@ Action required: Remove invalid NCBI taxon IDs or verify source data for errors.
 4. Reports unresolvable NCBI taxon IDs</p>
 <h3 id="ncbi-taxonomy-lookup">NCBI Taxonomy Lookup</h3>
 <p>NCBI Taxonomy API queries performed by <code>/tmp/lookup_ncbi_with_names.py</code>:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>/tmp/lookup_ncbi_with_names.py
-</code></pre></div>
+<p><code>bash
+uv run python /tmp/lookup_ncbi_with_names.py</code></p>
 <p>The script:
 1. Queries NCBI Taxonomy API for scientific names, ranks, and lineages
 2. Identifies taxonomic mismatches (wrong genus, wrong kingdom)

@@ -589,27 +589,29 @@
 </ul>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SolutionType</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Classification of stock solutions</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">permissible_values</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">trace_elements</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">trace_elements</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Concentrated trace element mixture</span>
-<span class="w">  </span><span class="nt">vitamin</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vitamin</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Vitamin mixture</span>
-<span class="w">  </span><span class="nt">buffer</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">buffer</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pH buffer stock</span>
-<span class="w">  </span><span class="nt">carbon_source</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">carbon_source</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Concentrated carbon source</span>
-<span class="w">  </span><span class="nt">other</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">other</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Other type of stock solution</span>
-</code></pre></div>
+```yaml
+name: SolutionType
+description: Classification of stock solutions
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+permissible_values:
+  trace_elements:
+    text: trace_elements
+    description: Concentrated trace element mixture
+  vitamin:
+    text: vitamin
+    description: Vitamin mixture
+  buffer:
+    text: buffer
+    description: pH buffer stock
+  carbon_source:
+    text: carbon_source
+    description: Concentrated carbon source
+  other:
+    text: other
+    description: Other type of stock solution
+
+```
 </details>
 
 

@@ -591,16 +591,18 @@ Alias: derived_from</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">derived_from</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Parent medium this formulation is based on. Used for lab-specific modifications</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">of standard media. Creates a provenance chain back to database entries.</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">derived_from</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
-</code></pre></div>
+```yaml
+name: derived_from
+description: Parent medium this formulation is based on. Used for lab-specific modifications
+  of standard media. Creates a provenance chain back to database entries.
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: derived_from
+domain_of:
+- GrowthMedium
+range: GrowthMedium
+
+```
 </details>
 
 

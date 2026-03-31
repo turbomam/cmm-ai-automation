@@ -650,17 +650,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#policy-recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Policy Recommendations
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -872,28 +861,27 @@
 <ol>
 <li>
 <p><strong>Create 3-table structure</strong>:
-   <div class="highlight"><pre><span></span><code>growth_media (media_id, media_name, ph, sterilization, ...)
-ingredients (ingredient_id, name, formula, chebi_id, cas_number, ...)
-media_compositions (media_id, ingredient_id, concentration, unit, role, ...)
-</code></pre></div></p>
+   <code>growth_media (media_id, media_name, ph, sterilization, ...)
+   ingredients (ingredient_id, name, formula, chebi_id, cas_number, ...)
+   media_compositions (media_id, ingredient_id, concentration, unit, role, ...)</code></p>
 </li>
 <li>
 <p><strong>Define role vocabulary</strong> in LinkML schema:
-   <div class="highlight"><pre><span></span><code><span class="nt">enums</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">IngredientRole</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">permissible_values</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">carbon_source</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Primary carbon and energy source</span>
-<span class="w">      </span><span class="nt">nitrogen_source</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Primary nitrogen source</span>
-<span class="w">      </span><span class="nt">buffer</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pH buffering component</span>
-<span class="w">      </span><span class="nt">trace_element</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Essential micronutrient</span>
-<span class="w">      </span><span class="nt">mineral</span><span class="p">:</span>
-<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Essential macromineral cation/anion</span>
-<span class="w">      </span><span class="c1"># ... etc</span>
-</code></pre></div></p>
+   <code>yaml
+   enums:
+     IngredientRole:
+       permissible_values:
+         carbon_source:
+           description: Primary carbon and energy source
+         nitrogen_source:
+           description: Primary nitrogen source
+         buffer:
+           description: pH buffering component
+         trace_element:
+           description: Essential micronutrient
+         mineral:
+           description: Essential macromineral cation/anion
+         # ... etc</code></p>
 </li>
 <li>
 <p><strong>Allow multiple roles</strong>: Change <code>role</code> from string to list</p>
@@ -917,54 +905,52 @@ media_compositions (media_id, ingredient_id, concentration, unit, role, ...)
 <ol>
 <li>
 <p><strong>Remove or clearly mark fake data:</strong>
-   <div class="highlight"><pre><span></span><code><span class="c1"># DELETE or rename to:</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">get_placeholder_arxiv_preprints</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;PLACEHOLDER - These are NOT real publications.&quot;&quot;&quot;</span>
-</code></pre></div></p>
+   <code>python
+   # DELETE or rename to:
+   def get_placeholder_arxiv_preprints() -&gt; List[Dict]:
+       """PLACEHOLDER - These are NOT real publications."""</code></p>
 </li>
 <li>
 <p><strong>Fix NCBI email configuration:</strong>
-   <div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;NCBI_EMAIL&quot;</span><span class="p">,</span> <span class="s2">&quot;your.email@example.com&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">Entrez</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="s2">&quot;your.email@example.com&quot;</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Set NCBI_EMAIL environment variable&quot;</span><span class="p">)</span>
-</code></pre></div></p>
+   <code>python
+   import os
+   Entrez.email = os.environ.get("NCBI_EMAIL", "your.email@example.com")
+   if Entrez.email == "your.email@example.com":
+       raise ValueError("Set NCBI_EMAIL environment variable")</code></p>
 </li>
 </ol>
 <h3 id="short-term-externalize-data">Short-term (Externalize Data)</h3>
 <ol>
 <li>
 <p><strong>Move hardcoded data to TSV/YAML files:</strong>
-   <div class="highlight"><pre><span></span><code>data/seed/
-+-- curated_media.yaml         # From CURATED_MEDIA dict
-+-- curated_publications.tsv   # From get_curated_lanthanide_publications()
-+-- curated_assays.tsv         # From self.curated_assays
-+-- curated_genes.tsv          # From get_lanthanide_genes_database()
-+-- search_config.yaml         # All search terms and defaults
-</code></pre></div></p>
+   <code>data/seed/
+   +-- curated_media.yaml         # From CURATED_MEDIA dict
+   +-- curated_publications.tsv   # From get_curated_lanthanide_publications()
+   +-- curated_assays.tsv         # From self.curated_assays
+   +-- curated_genes.tsv          # From get_lanthanide_genes_database()
+   +-- search_config.yaml         # All search terms and defaults</code></p>
 </li>
 <li>
 <p><strong>Create configuration file:</strong>
-   <div class="highlight"><pre><span></span><code><span class="c1"># config/pipeline.yaml</span>
-<span class="nt">ncbi</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${NCBI_EMAIL}</span>
-
-<span class="nt">search_terms</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">publications</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;lanthanide</span><span class="nv"> </span><span class="s">methanol</span><span class="nv"> </span><span class="s">dehydrogenase&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;XoxF</span><span class="nv"> </span><span class="s">methylotroph&quot;</span>
-<span class="w">  </span><span class="nt">chemicals</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;lanthanophore&quot;</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;methylolanthanin&quot;</span>
-
-<span class="nt">target_organisms</span><span class="p">:</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Methylobacterium</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Methylorubrum</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Paracoccus</span>
-<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Methylosinus</span>
-</code></pre></div></p>
+   ```yaml
+   # config/pipeline.yaml
+   ncbi:
+     email: ${NCBI_EMAIL}</p>
 </li>
 </ol>
+<p>search_terms:
+     publications:
+       - "lanthanide methanol dehydrogenase"
+       - "XoxF methylotroph"
+     chemicals:
+       - "lanthanophore"
+       - "methylolanthanin"</p>
+<p>target_organisms:
+     - Methylobacterium
+     - Methylorubrum
+     - Paracoccus
+     - Methylosinus
+   ```</p>
 <h3 id="medium-term-validation">Medium-term (Validation)</h3>
 <ol>
 <li><strong>Validate media formulations against MediaDive</strong></li>
@@ -974,26 +960,22 @@ media_compositions (media_id, ingredient_id, concentration, unit, role, ...)
 </ol>
 <hr />
 <h2 id="recommended-additional-makefile-targets">Recommended Additional Makefile Targets</h2>
-<div class="highlight"><pre><span></span><code><span class="c"># Add organisms from genes table</span>
-<span class="nf">add-organisms</span><span class="o">:</span><span class="w"> </span><span class="n">install</span>
-<span class="w">    </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/add_missing_organisms.py
-
-<span class="c"># Add source columns</span>
-<span class="nf">add-source-columns</span><span class="o">:</span><span class="w"> </span><span class="n">install</span>
-<span class="w">    </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>src/add_source_column.py
-
-<span class="c"># KG Analysis targets</span>
-<span class="nf">analyze-phenotypes</span><span class="o">:</span><span class="w"> </span><span class="n">install</span>
-<span class="w">    </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>src.kg_analysis.analyze_genome_taxa
-
-<span class="nf">analyze-functions</span><span class="o">:</span><span class="w"> </span><span class="n">install</span>
-<span class="w">    </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>src.kg_analysis.comparative_functions
-
-<span class="nf">analyze-minerals</span><span class="o">:</span><span class="w"> </span><span class="n">install</span>
-<span class="w">    </span>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>src.kg_analysis.find_critical_minerals
-
-<span class="nf">analyze-all</span><span class="o">:</span><span class="w"> </span><span class="n">analyze</span>-<span class="n">phenotypes</span> <span class="n">analyze</span>-<span class="n">functions</span> <span class="n">analyze</span>-<span class="n">minerals</span>
-</code></pre></div>
+<p>```makefile</p>
+<h1 id="add-organisms-from-genes-table">Add organisms from genes table</h1>
+<p>add-organisms: install
+    uv run python src/add_missing_organisms.py</p>
+<h1 id="add-source-columns">Add source columns</h1>
+<p>add-source-columns: install
+    uv run python src/add_source_column.py</p>
+<h1 id="kg-analysis-targets">KG Analysis targets</h1>
+<p>analyze-phenotypes: install
+    uv run python -m src.kg_analysis.analyze_genome_taxa</p>
+<p>analyze-functions: install
+    uv run python -m src.kg_analysis.comparative_functions</p>
+<p>analyze-minerals: install
+    uv run python -m src.kg_analysis.find_critical_minerals</p>
+<p>analyze-all: analyze-phenotypes analyze-functions analyze-minerals
+```</p>
 <hr />
 <h2 id="policy-recommendations">Policy Recommendations</h2>
 <ol>

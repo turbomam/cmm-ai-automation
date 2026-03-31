@@ -584,26 +584,28 @@
 </ul>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MediumType</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Classification</span><span class="nv"> </span><span class="s">of</span><span class="nv"> </span><span class="s">growth</span><span class="nv"> </span><span class="s">media</span><span class="nv"> </span><span class="s">by</span><span class="nv"> </span><span class="s">composition.</span><span class="nv"> </span><span class="s">Note:</span><span class="nv"> </span><span class="s">Functional</span><span class="nv"> </span><span class="s">properties</span>
-<span class="w">  </span><span class="s">like</span><span class="nv"> </span><span class="s">selective/differential</span><span class="nv"> </span><span class="s">are</span><span class="nv"> </span><span class="s">orthogonal</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">should</span><span class="nv"> </span><span class="s">be</span><span class="nv"> </span><span class="s">captured</span><span class="nv"> </span><span class="s">separately</span><span class="nv"> </span><span class="s">if</span>
-<span class="w">  </span><span class="s">needed.&#39;</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">permissible_values</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">minimal</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">minimal</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Defined medium with minimal components</span>
-<span class="w">  </span><span class="nt">complex</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">complex</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Contains undefined components like yeast extract</span>
-<span class="w">  </span><span class="nt">defined</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">defined</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">All components are chemically defined</span>
-<span class="w">  </span><span class="nt">semi_defined</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">semi_defined</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mostly defined but contains some complex components</span>
-</code></pre></div>
+```yaml
+name: MediumType
+description: 'Classification of growth media by composition. Note: Functional properties
+  like selective/differential are orthogonal and should be captured separately if
+  needed.'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+permissible_values:
+  minimal:
+    text: minimal
+    description: Defined medium with minimal components
+  complex:
+    text: complex
+    description: Contains undefined components like yeast extract
+  defined:
+    text: defined
+    description: All components are chemically defined
+  semi_defined:
+    text: semi_defined
+    description: Mostly defined but contains some complex components
+
+```
 </details>
 
 

@@ -501,213 +501,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#search-by-current-or-old-name" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Search by Current or Old Name
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#command-line-testing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Command Line Testing
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Results
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Test Results">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#synonym-matches" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Synonym Matches
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#example-output" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Example Output
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#comparison-with-standard-function" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Comparison with Standard Function
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#implementation-details" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Implementation Details
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Implementation Details">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#search-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Search Strategy
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#performance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Performance
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Files
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#export" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Export
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#common-taxonomic-reclassifications" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Common Taxonomic Reclassifications
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-with-reconciliation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration with Reconciliation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-functions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Functions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Next Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#potential-enhancements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Potential Enhancements
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#notes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Notes
-      
-    </span>
-  </a>
   
 </li>
       
@@ -753,36 +548,33 @@
 <p>This ensures species are found regardless of whether you search by current or historical name.</p>
 <h2 id="usage">Usage</h2>
 <h3 id="basic-usage">Basic Usage</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.strains</span><span class="w"> </span><span class="kn">import</span> <span class="n">search_species_with_synonyms</span><span class="p">,</span> <span class="n">get_bacdive_collection</span>
-
-<span class="n">collection</span> <span class="o">=</span> <span class="n">get_bacdive_collection</span><span class="p">()</span>
-
-<span class="c1"># Search by old name (synonym)</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">search_species_with_synonyms</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="s2">&quot;Sinorhizobium meliloti&quot;</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-    <span class="n">current_name</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;Name and taxonomic classification&quot;</span><span class="p">][</span><span class="s2">&quot;species&quot;</span><span class="p">]</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Current name: </span><span class="si">{</span><span class="n">current_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>  <span class="c1"># &quot;Ensifer meliloti&quot;</span>
-</code></pre></div>
+<p>```python
+from cmm_ai_automation.strains import search_species_with_synonyms, get_bacdive_collection</p>
+<p>collection = get_bacdive_collection()</p>
+<h1 id="search-by-old-name-synonym">Search by old name (synonym)</h1>
+<p>doc = search_species_with_synonyms(collection, "Sinorhizobium meliloti")</p>
+<p>if doc:
+    current_name = doc["Name and taxonomic classification"]["species"]
+    print(f"Current name: {current_name}")  # "Ensifer meliloti"
+```</p>
 <h3 id="search-by-current-or-old-name">Search by Current or Old Name</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Both of these work and return the same document</span>
-<span class="n">doc1</span> <span class="o">=</span> <span class="n">search_species_with_synonyms</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="s2">&quot;Sinorhizobium meliloti&quot;</span><span class="p">)</span>  <span class="c1"># Old name</span>
-<span class="n">doc2</span> <span class="o">=</span> <span class="n">search_species_with_synonyms</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="s2">&quot;Ensifer meliloti&quot;</span><span class="p">)</span>        <span class="c1"># Current name</span>
-
-<span class="c1"># Both return BacDive ID 13547</span>
-</code></pre></div>
+<p>```python</p>
+<h1 id="both-of-these-work-and-return-the-same-document">Both of these work and return the same document</h1>
+<p>doc1 = search_species_with_synonyms(collection, "Sinorhizobium meliloti")  # Old name
+doc2 = search_species_with_synonyms(collection, "Ensifer meliloti")        # Current name</p>
+<h1 id="both-return-bacdive-id-13547">Both return BacDive ID 13547</h1>
+<p>```</p>
 <h3 id="command-line-testing">Command Line Testing</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Run test suite</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.test_species_search_with_synonyms
-
-<span class="c1"># Search specific species</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.test_species_search_with_synonyms<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--species<span class="w"> </span><span class="s2">&quot;Sinorhizobium meliloti&quot;</span>
-
-<span class="c1"># Verbose mode (show all synonyms)</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.test_species_search_with_synonyms<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--species<span class="w"> </span><span class="s2">&quot;Sinorhizobium meliloti&quot;</span><span class="w"> </span>-v
-</code></pre></div>
+<p>```bash</p>
+<h1 id="run-test-suite">Run test suite</h1>
+<p>uv run python -m cmm_ai_automation.scripts.test_species_search_with_synonyms</p>
+<h1 id="search-specific-species">Search specific species</h1>
+<p>uv run python -m cmm_ai_automation.scripts.test_species_search_with_synonyms \
+  --species "Sinorhizobium meliloti"</p>
+<h1 id="verbose-mode-show-all-synonyms">Verbose mode (show all synonyms)</h1>
+<p>uv run python -m cmm_ai_automation.scripts.test_species_search_with_synonyms \
+  --species "Sinorhizobium meliloti" -v
+```</p>
 <h2 id="test-results">Test Results</h2>
 <p>Testing with 25 species from <code>strains.tsv</code>:</p>
 <table>
@@ -822,14 +614,13 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 - <code>Sinorhizobium meliloti</code> → <code>Ensifer meliloti</code>
 - <code>Methylobacterium extorquens</code> → <code>Methylorubrum extorquens</code></p>
 <h2 id="example-output">Example Output</h2>
-<div class="highlight"><pre><span></span><code>$ uv run python -m cmm_ai_automation.scripts.test_species_search_with_synonyms \
-  --species &quot;Sinorhizobium meliloti&quot; -v
-
-================================================================================
+<p>```
+$ uv run python -m cmm_ai_automation.scripts.test_species_search_with_synonyms \
+  --species "Sinorhizobium meliloti" -v</p>
+<p>================================================================================
 Searching for: Sinorhizobium meliloti
-================================================================================
-
-✓ FOUND
+================================================================================</p>
+<p>✓ FOUND
 BacDive ID:       13547
 DSM Number:       30136
 Current species:  Ensifer meliloti
@@ -839,11 +630,10 @@ Family:           Rhizobiaceae
 Type strain:      no
 NCBI Taxon:       382 (species)
 Synonyms:         Sinorhizobium meliloti, Ensifer kummerowiae,
-                  Rhizobium meliloti, Sinorhizobium kummerowiae
-
-Full scientific name:
+                  Rhizobium meliloti, Sinorhizobium kummerowiae</p>
+<p>Full scientific name:
   Ensifer meliloti (Dangeard 1926) Young 2003
-</code></pre></div>
+```</p>
 <h2 id="comparison-with-standard-function">Comparison with Standard Function</h2>
 <table>
 <thead>
@@ -868,30 +658,31 @@ Full scientific name:
 </table>
 <h2 id="implementation-details">Implementation Details</h2>
 <h3 id="search-strategy">Search Strategy</h3>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">search_species_with_synonyms</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">species_name</span><span class="p">):</span>
-    <span class="c1"># Strategy 1: Direct match on current species name (fastest)</span>
-    <span class="n">doc</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span>
-        <span class="s2">&quot;Name and taxonomic classification.species&quot;</span><span class="p">:</span> <span class="n">species_name</span>
-    <span class="p">})</span>
-    <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">doc</span>
+<p>```python
+def search_species_with_synonyms(collection, species_name):
+    # Strategy 1: Direct match on current species name (fastest)
+    doc = collection.find_one({
+        "Name and taxonomic classification.species": species_name
+    })
+    if doc:
+        return doc</p>
+<pre><code># Strategy 2: Match on LPSN species name
+doc = collection.find_one({
+    "Name and taxonomic classification.LPSN.species": species_name
+})
+if doc:
+    return doc
 
-    <span class="c1"># Strategy 2: Match on LPSN species name</span>
-    <span class="n">doc</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span>
-        <span class="s2">&quot;Name and taxonomic classification.LPSN.species&quot;</span><span class="p">:</span> <span class="n">species_name</span>
-    <span class="p">})</span>
-    <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">doc</span>
+# Strategy 3: Search in synonyms (for renamed species)
+doc = collection.find_one({
+    "Name and taxonomic classification.LPSN.synonyms.synonym": species_name
+})
+if doc:
+    return doc
 
-    <span class="c1"># Strategy 3: Search in synonyms (for renamed species)</span>
-    <span class="n">doc</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span>
-        <span class="s2">&quot;Name and taxonomic classification.LPSN.synonyms.synonym&quot;</span><span class="p">:</span> <span class="n">species_name</span>
-    <span class="p">})</span>
-    <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">doc</span>
-
-    <span class="k">return</span> <span class="kc">None</span>
-</code></pre></div>
+return None
+</code></pre>
+<p>```</p>
 <h3 id="performance">Performance</h3>
 <ul>
 <li><strong>Current names</strong>: Fast (~5ms) - direct index hit</li>
@@ -907,8 +698,8 @@ Full scientific name:
 </ul>
 <h2 id="export">Export</h2>
 <p>Added to <code>cmm_ai_automation.strains</code> module:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.strains</span><span class="w"> </span><span class="kn">import</span> <span class="n">search_species_with_synonyms</span>
-</code></pre></div>
+<p><code>python
+from cmm_ai_automation.strains import search_species_with_synonyms</code></p>
 <h2 id="common-taxonomic-reclassifications">Common Taxonomic Reclassifications</h2>
 <p>Based on BacDive data, here are common reclassifications you'll encounter:</p>
 <table>
@@ -944,30 +735,30 @@ Full scientific name:
 </table>
 <h2 id="integration-with-reconciliation">Integration with Reconciliation</h2>
 <p>This function should be used in the validation framework:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Future: src/cmm_ai_automation/validation/validators/species_name.py</span>
+<p>```python</p>
+<h1 id="future-srccmm_ai_automationvalidationvalidatorsspecies_namepy">Future: src/cmm_ai_automation/validation/validators/species_name.py</h1>
+<p>class SpeciesNameValidator(FieldValidator):
+    """Validate species names, checking both current and synonyms."""</p>
+<pre><code>def validate(self, value, context, sheet, row, field):
+    doc = search_species_with_synonyms(self.collection, value)
 
-<span class="k">class</span><span class="w"> </span><span class="nc">SpeciesNameValidator</span><span class="p">(</span><span class="n">FieldValidator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate species names, checking both current and synonyms.&quot;&quot;&quot;</span>
+    if not doc:
+        return [ValidationIssue(
+            severity=Severity.WARNING,
+            message=f"Species not found in BacDive: {value}"
+        )]
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
-        <span class="n">doc</span> <span class="o">=</span> <span class="n">search_species_with_synonyms</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    # Check if it's a synonym
+    current_name = doc["Name and taxonomic classification"]["species"]
+    if current_name != value:
+        return [ValidationIssue(
+            severity=Severity.INFO,
+            message=f"'{value}' is a synonym of '{current_name}'"
+        )]
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">doc</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">ValidationIssue</span><span class="p">(</span>
-                <span class="n">severity</span><span class="o">=</span><span class="n">Severity</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span>
-                <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Species not found in BacDive: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">)]</span>
-
-        <span class="c1"># Check if it&#39;s a synonym</span>
-        <span class="n">current_name</span> <span class="o">=</span> <span class="n">doc</span><span class="p">[</span><span class="s2">&quot;Name and taxonomic classification&quot;</span><span class="p">][</span><span class="s2">&quot;species&quot;</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">current_name</span> <span class="o">!=</span> <span class="n">value</span><span class="p">:</span>
-            <span class="k">return</span> <span class="p">[</span><span class="n">ValidationIssue</span><span class="p">(</span>
-                <span class="n">severity</span><span class="o">=</span><span class="n">Severity</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span>
-                <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&#39; is a synonym of &#39;</span><span class="si">{</span><span class="n">current_name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
-            <span class="p">)]</span>
-
-        <span class="k">return</span> <span class="p">[]</span>
-</code></pre></div>
+    return []
+</code></pre>
+<p>```</p>
 <h2 id="related-functions">Related Functions</h2>
 <p>All BacDive search functions now available:</p>
 <ol>

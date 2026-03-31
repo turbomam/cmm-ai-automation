@@ -492,102 +492,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#biolink-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Biolink Model
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ncats-translator-nodenormalization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NCATS Translator NodeNormalization
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-clients" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Clients
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="API Clients">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#chebi-20-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ChEBI 2.0 REST API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mediadive-mongodb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MediaDive MongoDB
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#curie-prefix-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CURIE Prefix Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Resources
-      
-    </span>
-  </a>
   
 </li>
       
@@ -763,102 +669,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#biolink-model" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Biolink Model
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ncats-translator-nodenormalization" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NCATS Translator NodeNormalization
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#api-clients" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        API Clients
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="API Clients">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#chebi-20-rest-api" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ChEBI 2.0 REST API
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#mediadive-mongodb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MediaDive MongoDB
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Flow
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#curie-prefix-map" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        CURIE Prefix Map
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Resources
-      
-    </span>
-  </a>
   
 </li>
       
@@ -889,11 +701,10 @@
 <h3 id="1-entity-resolution-via-composite-keys">1. Entity Resolution via Composite Keys</h3>
 <p>The primary challenge in ingredient data integration is entity resolution - determining when records from different sources refer to the same chemical entity.</p>
 <p>We use a <strong>composite primary key</strong> based on the <code>(InChIKey, CAS-RN)</code> tuple:</p>
-<div class="highlight"><pre><span></span><code>Key format: {inchikey}|{cas_rn}
+<p><code>Key format: {inchikey}|{cas_rn}
 Examples:
   CSNNHWWHGAXBCP-UHFFFAOYSA-L|7487-88-9  # Magnesium sulfate
-  WQZGKKKJIJFFOK-GASJEMHNSA-N|50-99-7     # D-glucose
-</code></pre></div>
+  WQZGKKKJIJFFOK-GASJEMHNSA-N|50-99-7     # D-glucose</code></p>
 <p><strong>Rationale:</strong>
 - InChIKey provides structural identity (what the molecule IS)
 - CAS-RN provides registration identity (how the molecule is NAMED in commerce)
@@ -937,7 +748,7 @@ Examples:
 3. Manual review can override automatic resolution</p>
 <h3 id="3-iterative-spidering-enrichment">3. Iterative Spidering Enrichment</h3>
 <p>The enrichment process works iteratively, starting from whatever identifiers are available:</p>
-<div class="highlight"><pre><span></span><code>Input: ingredient name or partial identifiers
+<p><code>Input: ingredient name or partial identifiers
   │
   ▼
 ┌─────────────────┐
@@ -960,8 +771,7 @@ Examples:
 └─────────────────┘
   │
   ▼
-Output: EnrichedIngredient with all available data
-</code></pre></div>
+Output: EnrichedIngredient with all available data</code></p>
 <p>Each step may discover new identifiers that enable queries to additional sources.</p>
 <h2 id="community-tools">Community Tools</h2>
 <h3 id="linkml-stack">LinkML Stack</h3>
@@ -978,25 +788,24 @@ Output: EnrichedIngredient with all available data
 - Part of the BBOP/OBO ecosystem</p>
 <h3 id="kgx-knowledge-graph-exchange">KGX (Knowledge Graph Exchange)</h3>
 <p><a href="https://github.com/biolink/kgx">KGX</a> is the standard for knowledge graph interchange in the Translator ecosystem:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">kgx.graph.nx_graph</span><span class="w"> </span><span class="kn">import</span> <span class="n">NxGraph</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kgx.sink.tsv_sink</span><span class="w"> </span><span class="kn">import</span> <span class="n">TsvSink</span>
-
-<span class="c1"># Build graph programmatically</span>
-<span class="n">graph</span> <span class="o">=</span> <span class="n">NxGraph</span><span class="p">()</span>
-<span class="n">graph</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span>
-    <span class="s2">&quot;CHEBI:32599&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;magnesium sulfate&quot;</span><span class="p">,</span>
-    <span class="n">category</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;biolink:SmallMolecule&quot;</span><span class="p">],</span>
-    <span class="n">xref</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CAS:7487-88-9&quot;</span><span class="p">,</span> <span class="s2">&quot;PUBCHEM.COMPOUND:24083&quot;</span><span class="p">],</span>
-    <span class="n">provided_by</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;cmm-ai-automation&quot;</span><span class="p">],</span>
-<span class="p">)</span>
-
-<span class="c1"># Export using TsvSink</span>
-<span class="n">sink</span> <span class="o">=</span> <span class="n">TsvSink</span><span class="p">(</span><span class="n">owner</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">filename</span><span class="o">=</span><span class="s2">&quot;output/cmm&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;tsv&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">node_id</span><span class="p">,</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">graph</span><span class="o">.</span><span class="n">nodes</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="n">sink</span><span class="o">.</span><span class="n">write_node</span><span class="p">({</span><span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="n">node_id</span><span class="p">,</span> <span class="o">**</span><span class="n">data</span><span class="p">})</span>
-<span class="n">sink</span><span class="o">.</span><span class="n">finalize</span><span class="p">()</span>
-</code></pre></div>
+<p>```python
+from kgx.graph.nx_graph import NxGraph
+from kgx.sink.tsv_sink import TsvSink</p>
+<h1 id="build-graph-programmatically">Build graph programmatically</h1>
+<p>graph = NxGraph()
+graph.add_node(
+    "CHEBI:32599",
+    name="magnesium sulfate",
+    category=["biolink:SmallMolecule"],
+    xref=["CAS:7487-88-9", "PUBCHEM.COMPOUND:24083"],
+    provided_by=["cmm-ai-automation"],
+)</p>
+<h1 id="export-using-tsvsink">Export using TsvSink</h1>
+<p>sink = TsvSink(owner=None, filename="output/cmm", format="tsv")
+for node_id, data in graph.nodes(data=True):
+    sink.write_node({"id": node_id, **data})
+sink.finalize()
+```</p>
 <p><strong>Why KGX?</strong>
 - Standard TSV format for nodes/edges
 - Compatible with KG-Microbe and other KG-Hub projects
@@ -1036,42 +845,41 @@ Output: EnrichedIngredient with all available data
 - <code>biolink:same_as</code> - cross-reference equivalence</p>
 <h3 id="ncats-translator-nodenormalization">NCATS Translator NodeNormalization</h3>
 <p>The <a href="https://nodenormalization-sri.renci.org/">NodeNormalization API</a> bridges identifiers across databases:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Query with any identifier</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">node_norm</span><span class="o">.</span><span class="n">get_normalized_nodes</span><span class="p">([</span><span class="s2">&quot;CHEBI:17634&quot;</span><span class="p">])</span>
-
-<span class="c1"># Returns equivalents from multiple databases</span>
-<span class="p">{</span>
-    <span class="s2">&quot;CHEBI:17634&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;CHEBI:17634&quot;</span><span class="p">},</span>
-        <span class="s2">&quot;equivalent_identifiers&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span><span class="s2">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;PUBCHEM.COMPOUND:5793&quot;</span><span class="p">},</span>
-            <span class="p">{</span><span class="s2">&quot;identifier&quot;</span><span class="p">:</span> <span class="s2">&quot;CAS:50-99-7&quot;</span><span class="p">},</span>
-            <span class="o">...</span>
-        <span class="p">]</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<p>```python</p>
+<h1 id="query-with-any-identifier">Query with any identifier</h1>
+<p>response = node_norm.get_normalized_nodes(["CHEBI:17634"])</p>
+<h1 id="returns-equivalents-from-multiple-databases">Returns equivalents from multiple databases</h1>
+<p>{
+    "CHEBI:17634": {
+        "id": {"identifier": "CHEBI:17634"},
+        "equivalent_identifiers": [
+            {"identifier": "PUBCHEM.COMPOUND:5793"},
+            {"identifier": "CAS:50-99-7"},
+            ...
+        ]
+    }
+}
+```</p>
 <h2 id="api-clients">API Clients</h2>
 <h3 id="chebi-20-rest-api">ChEBI 2.0 REST API</h3>
 <p>The new ChEBI 2.0 backend API (launched October 2025) provides much richer data than the legacy SOAP service:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.clients.chebi</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChEBIClient</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">ChEBIClient</span><span class="p">()</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">get_compound</span><span class="p">(</span><span class="s2">&quot;CHEBI:17634&quot;</span><span class="p">)</span>
-
-<span class="c1"># Access roles, synonyms, cross-references</span>
-<span class="n">roles</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_biological_roles</span><span class="p">()</span>
-<span class="n">cas_numbers</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">get_cas_numbers</span><span class="p">()</span>
-</code></pre></div>
+<p>```python
+from cmm_ai_automation.clients.chebi import ChEBIClient</p>
+<p>client = ChEBIClient()
+result = client.get_compound("CHEBI:17634")</p>
+<h1 id="access-roles-synonyms-cross-references">Access roles, synonyms, cross-references</h1>
+<p>roles = result.get_biological_roles()
+cas_numbers = result.get_cas_numbers()
+```</p>
 <h3 id="mediadive-mongodb">MediaDive MongoDB</h3>
 <p>Local MongoDB mirror of MediaDive ingredient catalog:</p>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.clients.mediadive_mongodb</span><span class="w"> </span><span class="kn">import</span> <span class="n">MediaDiveMongoClient</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">MediaDiveMongoClient</span><span class="p">()</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">search_ingredients_by_name</span><span class="p">(</span><span class="s2">&quot;glucose&quot;</span><span class="p">)</span>
-</code></pre></div>
+<p>```python
+from cmm_ai_automation.clients.mediadive_mongodb import MediaDiveMongoClient</p>
+<p>client = MediaDiveMongoClient()
+results = client.search_ingredients_by_name("glucose")
+```</p>
 <h2 id="data-flow">Data Flow</h2>
-<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────┐
+<p><code>┌──────────────────────────────────────────────────────────────┐
 │                    Google Sheets (CMM Data)                   │
 │  ingredients_tab | solutions_tab | media_tab | strains_tab   │
 └──────────────────────────────────────────────────────────────┘
@@ -1105,8 +913,7 @@ Output: EnrichedIngredient with all available data
 │                    KGX TSV Output                             │
 │  cmm_nodes.tsv | cmm_edges.tsv                                │
 │  Compatible with KG-Microbe merge pipeline                    │
-└──────────────────────────────────────────────────────────────┘
-</code></pre></div>
+└──────────────────────────────────────────────────────────────┘</code></p>
 <h2 id="curie-prefix-map">CURIE Prefix Map</h2>
 <p>All CURIEs (Compact URIs) in this project expand to full URIs according to <code>prefix_map.json</code> in the repository root. This follows <a href="https://bioregistry.io/">bioregistry</a> conventions.</p>
 <p>Key prefix expansions:</p>

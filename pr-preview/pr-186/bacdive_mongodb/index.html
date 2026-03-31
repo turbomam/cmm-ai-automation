@@ -501,91 +501,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#exportingusing-bacdive-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exporting/Using BacDive Data
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#python-scripts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Python Scripts
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Python Scripts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#scripts-with-justfile-targets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scripts with Justfile Targets
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#orphaned-scripts-no-justfile-target" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Orphaned Scripts (No Justfile Target)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#library-module" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Library Module
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#mongodb-indexes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MongoDB Indexes
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-flow" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Flow
-      
-    </span>
-  </a>
   
 </li>
       
@@ -655,8 +572,8 @@
 </tbody>
 </table>
 <p>Override variables by placing them before the target:
-<div class="highlight"><pre><span></span><code>just<span class="w"> </span><span class="nv">bacdive_database</span><span class="o">=</span><span class="nb">test</span><span class="w"> </span><span class="nv">bacdive_collection</span><span class="o">=</span><span class="nb">test</span><span class="w"> </span>load-bacdive
-</code></pre></div></p>
+<code>bash
+just bacdive_database=test bacdive_collection=test load-bacdive</code></p>
 <h2 id="justfile-targets">Justfile Targets</h2>
 <p>All BacDive-related targets are in <code>project.justfile</code>:</p>
 <table>
@@ -687,28 +604,25 @@
 </table>
 <p>All targets that read from BacDive MongoDB respect the <code>bacdive_database</code> and <code>bacdive_collection</code> variables.</p>
 <h3 id="loading-bacdive-data">Loading BacDive Data</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Full load (IDs 1-200000, takes several hours)</span>
-just<span class="w"> </span>load-bacdive
-
-<span class="c1"># Test with subset</span>
-just<span class="w"> </span><span class="nv">bacdive_max_id</span><span class="o">=</span><span class="m">300</span><span class="w"> </span>load-bacdive
-
-<span class="c1"># Custom database/collection</span>
-just<span class="w"> </span><span class="nv">bacdive_max_id</span><span class="o">=</span><span class="m">300</span><span class="w"> </span><span class="nv">bacdive_database</span><span class="o">=</span>bdtemp<span class="w"> </span><span class="nv">bacdive_collection</span><span class="o">=</span>bdtemp<span class="w"> </span>load-bacdive
-
-<span class="c1"># Incremental update (new IDs only)</span>
-just<span class="w"> </span><span class="nv">bacdive_min_id</span><span class="o">=</span><span class="m">176393</span><span class="w"> </span>load-bacdive
-</code></pre></div>
+<p>```bash</p>
+<h1 id="full-load-ids-1-200000-takes-several-hours">Full load (IDs 1-200000, takes several hours)</h1>
+<p>just load-bacdive</p>
+<h1 id="test-with-subset">Test with subset</h1>
+<p>just bacdive_max_id=300 load-bacdive</p>
+<h1 id="custom-databasecollection">Custom database/collection</h1>
+<p>just bacdive_max_id=300 bacdive_database=bdtemp bacdive_collection=bdtemp load-bacdive</p>
+<h1 id="incremental-update-new-ids-only">Incremental update (new IDs only)</h1>
+<p>just bacdive_min_id=176393 load-bacdive
+```</p>
 <h3 id="exportingusing-bacdive-data">Exporting/Using BacDive Data</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Export from default database</span>
-just<span class="w"> </span>kgx-export-bacdive
-
-<span class="c1"># Export from custom database</span>
-just<span class="w"> </span><span class="nv">bacdive_database</span><span class="o">=</span>bdtemp<span class="w"> </span><span class="nv">bacdive_collection</span><span class="o">=</span>bdtemp<span class="w"> </span>kgx-export-bacdive
-
-<span class="c1"># Enrich strains from custom database</span>
-just<span class="w"> </span><span class="nv">bacdive_database</span><span class="o">=</span>bdtemp<span class="w"> </span>strains-kgx-from-curies
-</code></pre></div>
+<p>```bash</p>
+<h1 id="export-from-default-database">Export from default database</h1>
+<p>just kgx-export-bacdive</p>
+<h1 id="export-from-custom-database">Export from custom database</h1>
+<p>just bacdive_database=bdtemp bacdive_collection=bdtemp kgx-export-bacdive</p>
+<h1 id="enrich-strains-from-custom-database">Enrich strains from custom database</h1>
+<p>just bacdive_database=bdtemp strains-kgx-from-curies
+```</p>
 <p><strong>Requirements:</strong>
 - MongoDB running locally
 - <code>BACDIVE_EMAIL</code> and <code>BACDIVE_PASSWORD</code> in <code>.env</code> (register at https://bacdive.dsmz.de/)</p>
@@ -799,15 +713,14 @@ just<span class="w"> </span><span class="nv">bacdive_database</span><span class=
 <li><code>General.DSM-Number</code></li>
 </ul>
 <h2 id="data-flow">Data Flow</h2>
-<div class="highlight"><pre><span></span><code>BacDive API
+<p><code>BacDive API
     │
     ▼ (just load-bacdive)
 MongoDB bacdive.strains
     │
     ├──▶ strains_kgx_from_curies.py ──▶ output/kgx/strains_from_curies/
     │
-    └──▶ export_bacdive_kgx.py ──▶ output/kgx/cmm_strains_bacdive_*.jsonl
-</code></pre></div>
+    └──▶ export_bacdive_kgx.py ──▶ output/kgx/cmm_strains_bacdive_*.jsonl</code></p>
 
 
 

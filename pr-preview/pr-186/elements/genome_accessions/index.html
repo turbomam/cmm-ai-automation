@@ -555,13 +555,13 @@ Alias: genome_accessions</p>
 </thead>
 <tbody>
 <tr>
-<td><a href="../Strain/">Strain</a></td>
-<td>A microbial strain enriched with data from multiple sources</td>
+<td><a href="../Taxon/">Taxon</a></td>
+<td>A taxonomic entity from NCBI Taxonomy</td>
 <td>no</td>
 </tr>
 <tr>
-<td><a href="../Taxon/">Taxon</a></td>
-<td>A taxonomic entity from NCBI Taxonomy</td>
+<td><a href="../Strain/">Strain</a></td>
+<td>A microbial strain enriched with data from multiple sources</td>
 <td>no</td>
 </tr>
 </tbody>
@@ -601,18 +601,20 @@ Alias: genome_accessions</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genome_accessions</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Genome assembly accessions (e.g., GCA_000005845.2). Links to NCBI Assembly</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">or other genome databases.</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genome_accessions</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
+```yaml
+name: genome_accessions
+description: Genome assembly accessions (e.g., GCA_000005845.2). Links to NCBI Assembly
+  or other genome databases.
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: genome_accessions
+domain_of:
+- Taxon
+- Strain
+range: string
+multivalued: true
+
+```
 </details>
 
 

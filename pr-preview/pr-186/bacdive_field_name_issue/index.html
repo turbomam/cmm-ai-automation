@@ -500,61 +500,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#important-word-boundary-matching" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Important: Word Boundary Matching
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#alternative-fetch-parent-object" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Alternative: Fetch Parent Object
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommendation-for-reconciliation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommendation for Reconciliation
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Results
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Files
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -579,137 +524,134 @@
 <h1 id="bacdive-mongodb-field-name-issue">BacDive MongoDB Field Name Issue</h1>
 <h2 id="problem">Problem</h2>
 <p>The BacDive MongoDB collection has a field with a <strong>period in the field name</strong>:
-<div class="highlight"><pre><span></span><code>&quot;External links&quot; → &quot;culture collection no.&quot;
-</code></pre></div></p>
+<code>"External links" → "culture collection no."</code></p>
 <p>Note the trailing period after "no"!</p>
 <h2 id="why-this-breaks-standard-queries">Why This Breaks Standard Queries</h2>
 <p>MongoDB interprets periods in field paths as nested object separators. When you try to query:</p>
-<div class="highlight"><pre><span></span><code><span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">findOne</span><span class="p">({</span>
-<span class="w">  </span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="sr">/DSM 1337/</span>
-<span class="p">})</span>
-</code></pre></div>
+<p><code>javascript
+db.strains.findOne({
+  "External links.culture collection no.": /DSM 1337/
+})</code></p>
 <p>MongoDB interprets this as:
 1. Field "External links"
 2. → Nested field "culture collection no"
 3. → Nested field "" (empty string, from the trailing period)</p>
 <p>This causes:
-<div class="highlight"><pre><span></span><code>OperationFailure: FieldPath must not end with a &#39;.&#39;
-</code></pre></div></p>
+<code>OperationFailure: FieldPath must not end with a '.'</code></p>
 <h2 id="evidence">Evidence</h2>
-<div class="highlight"><pre><span></span><code><span class="c1">// This returns 99392 documents</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">count</span><span class="p">({</span><span class="s2">&quot;External links&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$exists</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}})</span>
-
-<span class="c1">// This returns 0 documents!</span>
-<span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">count</span><span class="p">({</span><span class="s2">&quot;External links.culture collection no.&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$exists</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}})</span>
-</code></pre></div>
+<p>```javascript
+// This returns 99392 documents
+db.strains.count({"External links": {$exists: true}})</p>
+<p>// This returns 0 documents!
+db.strains.count({"External links.culture collection no.": {$exists: true}})
+```</p>
 <h2 id="solution-use-aggregation-pipeline">Solution: Use Aggregation Pipeline</h2>
 <p>Use <code>$getField</code> to access fields with special characters:</p>
-<div class="highlight"><pre><span></span><code><span class="nx">db</span><span class="p">.</span><span class="nx">strains</span><span class="p">.</span><span class="nx">aggregate</span><span class="p">([</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;External links&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$exists</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$addFields</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">cc_field</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">$getField</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nx">field</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;culture collection no.&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$External links&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">cc_field</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$regex</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;DSM 1337&quot;</span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">])</span>
-</code></pre></div>
+<p><code>javascript
+db.strains.aggregate([
+  {
+    $match: {
+      "External links": {$exists: true}
+    }
+  },
+  {
+    $addFields: {
+      cc_field: {
+        $getField: {
+          field: "culture collection no.",
+          input: "$External links"
+        }
+      }
+    }
+  },
+  {
+    $match: {
+      cc_field: {$regex: "DSM 1337"}
+    }
+  }
+])</code></p>
 <h2 id="python-implementation">Python Implementation</h2>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
-
-<span class="k">def</span><span class="w"> </span><span class="nf">search_culture_collection</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">search_string</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Search for culture collection ID using aggregation.&quot;&quot;&quot;</span>
-    <span class="n">pipeline</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;$match&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;External links&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$exists&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;$addFields&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;cc_field&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$getField&quot;</span><span class="p">:</span> <span class="p">{</span>
-                    <span class="s2">&quot;field&quot;</span><span class="p">:</span> <span class="s2">&quot;culture collection no.&quot;</span><span class="p">,</span>
-                    <span class="s2">&quot;input&quot;</span><span class="p">:</span> <span class="s2">&quot;$External links&quot;</span>
-                <span class="p">}}</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;$match&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;cc_field&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;$regex&quot;</span><span class="p">:</span> <span class="n">search_string</span><span class="p">}</span>
-            <span class="p">}</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;$limit&quot;</span><span class="p">:</span> <span class="mi">1</span>
-        <span class="p">},</span>
-        <span class="p">{</span>
-            <span class="s2">&quot;$project&quot;</span><span class="p">:</span> <span class="p">{</span>
-                <span class="s2">&quot;BacDive-ID&quot;</span><span class="p">:</span> <span class="s2">&quot;$General.BacDive-ID&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;DSM-Number&quot;</span><span class="p">:</span> <span class="s2">&quot;$General.DSM-Number&quot;</span><span class="p">,</span>
-                <span class="s2">&quot;culture_collection&quot;</span><span class="p">:</span> <span class="s2">&quot;$cc_field&quot;</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">]</span>
-
-    <span class="n">results</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">collection</span><span class="o">.</span><span class="n">aggregate</span><span class="p">(</span><span class="n">pipeline</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">results</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">results</span> <span class="k">else</span> <span class="kc">None</span>
-
-<span class="c1"># Usage</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s2">&quot;mongodb://localhost:27017&quot;</span><span class="p">)</span>
-<span class="n">collection</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s2">&quot;bacdive&quot;</span><span class="p">][</span><span class="s2">&quot;strains&quot;</span><span class="p">]</span>
-
-<span class="c1"># Transform &quot;DSM:1337&quot; → &quot;DSM 1337&quot;</span>
-<span class="n">search_string</span> <span class="o">=</span> <span class="s2">&quot;DSM 1337&quot;</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">search_culture_collection</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">search_string</span><span class="p">)</span>
-</code></pre></div>
+<p>```python
+from pymongo import MongoClient</p>
+<p>def search_culture_collection(collection, search_string):
+    """Search for culture collection ID using aggregation."""
+    pipeline = [
+        {
+            "$match": {
+                "External links": {"$exists": True}
+            }
+        },
+        {
+            "$addFields": {
+                "cc_field": {"$getField": {
+                    "field": "culture collection no.",
+                    "input": "$External links"
+                }}
+            }
+        },
+        {
+            "$match": {
+                "cc_field": {"$regex": search_string}
+            }
+        },
+        {
+            "$limit": 1
+        },
+        {
+            "$project": {
+                "BacDive-ID": "$General.BacDive-ID",
+                "DSM-Number": "$General.DSM-Number",
+                "culture_collection": "$cc_field"
+            }
+        }
+    ]</p>
+<pre><code>results = list(collection.aggregate(pipeline))
+return results[0] if results else None
+</code></pre>
+<h1 id="usage">Usage</h1>
+<p>client = MongoClient("mongodb://localhost:27017")
+collection = client["bacdive"]["strains"]</p>
+<h1 id="transform-dsm1337-dsm-1337">Transform "DSM:1337" → "DSM 1337"</h1>
+<p>search_string = "DSM 1337"
+doc = search_culture_collection(collection, search_string)
+```</p>
 <h2 id="important-word-boundary-matching">Important: Word Boundary Matching</h2>
 <p>The simple regex above has a problem - "DSM 1337" will match "DSM 13378" as a substring!</p>
 <p>Use word boundaries in regex:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">cc_field</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">$regexMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$cc_field&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">regex</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;(^|,\\s*)DSM 1337(\\s*,|$)&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<p><code>javascript
+{
+  $match: {
+    cc_field: {
+      $regexMatch: {
+        input: "$cc_field",
+        regex: "(^|,\\s*)DSM 1337(\\s*,|$)"
+      }
+    }
+  }
+}</code></p>
 <p>Or in MongoDB aggregation 4.2+:</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">  </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$expr</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">$regexMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$cc_field&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nx">regex</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;(^|,\\s*)DSM 1337(\\s*,|$)&quot;</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div>
+<p><code>javascript
+{
+  $match: {
+    $expr: {
+      $regexMatch: {
+        input: "$cc_field",
+        regex: "(^|,\\s*)DSM 1337(\\s*,|$)"
+      }
+    }
+  }
+}</code></p>
 <h2 id="alternative-fetch-parent-object">Alternative: Fetch Parent Object</h2>
 <p>Another approach is to fetch the entire "External links" object and search in Python:</p>
-<div class="highlight"><pre><span></span><code><span class="n">doc</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="p">:</span> <span class="mi">1337</span><span class="p">})</span>
-<span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-    <span class="n">external_links</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;External links&quot;</span><span class="p">,</span> <span class="p">{})</span>
-    <span class="n">cc_string</span> <span class="o">=</span> <span class="n">external_links</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;culture collection no.&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="s2">&quot;DSM 1337&quot;</span> <span class="ow">in</span> <span class="n">cc_string</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Found!&quot;</span><span class="p">)</span>
-</code></pre></div>
+<p>```python
+doc = collection.find_one({"General.DSM-Number": 1337})
+if doc:
+    external_links = doc.get("External links", {})
+    cc_string = external_links.get("culture collection no.", "")</p>
+<pre><code>if "DSM 1337" in cc_string:
+    print("Found!")
+</code></pre>
+<p>```</p>
 <p>This is less efficient but simpler for one-off queries.</p>
 <h2 id="recommendation-for-reconciliation">Recommendation for Reconciliation</h2>
 <p>For the strain reconciliation tool, use <strong>two-stage search</strong>:</p>
@@ -720,25 +662,26 @@
 <p>This provides the best of both worlds:
 - Fast lookups for DSM strains
 - Comprehensive coverage for other culture collections</p>
-<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">find_strain</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">culture_collection_id</span><span class="p">):</span>
-    <span class="c1"># Parse the ID</span>
-    <span class="n">match</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;([A-Z]+)[:\s-]*(\d+)&quot;</span><span class="p">,</span> <span class="n">culture_collection_id</span><span class="p">)</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="n">match</span><span class="p">:</span>
-        <span class="k">return</span> <span class="kc">None</span>
+<p>```python
+def find_strain(collection, culture_collection_id):
+    # Parse the ID
+    match = re.match(r"([A-Z]+)[:\s-]*(\d+)", culture_collection_id)
+    if not match:
+        return None</p>
+<pre><code>prefix = match.group(1).upper()
+number = match.group(2)
 
-    <span class="n">prefix</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-    <span class="n">number</span> <span class="o">=</span> <span class="n">match</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+# Fast path: DSM number
+if prefix == "DSM":
+    doc = collection.find_one({"General.DSM-Number": int(number)})
+    if doc:
+        return doc
 
-    <span class="c1"># Fast path: DSM number</span>
-    <span class="k">if</span> <span class="n">prefix</span> <span class="o">==</span> <span class="s2">&quot;DSM&quot;</span><span class="p">:</span>
-        <span class="n">doc</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">find_one</span><span class="p">({</span><span class="s2">&quot;General.DSM-Number&quot;</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">number</span><span class="p">)})</span>
-        <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">doc</span>
-
-    <span class="c1"># Slow path: Search in culture collection string</span>
-    <span class="n">search_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">number</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="k">return</span> <span class="n">search_via_aggregation</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">search_string</span><span class="p">)</span>
-</code></pre></div>
+# Slow path: Search in culture collection string
+search_string = f"{prefix} {number}"
+return search_via_aggregation(collection, search_string)
+</code></pre>
+<p>```</p>
 <h2 id="test-results">Test Results</h2>
 <p>Tested with 23 culture collection IDs from strains.tsv:
 - <strong>Standard query approach</strong>: 0 found (all failed due to field name issue)

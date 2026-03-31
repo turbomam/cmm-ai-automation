@@ -488,154 +488,158 @@
 <!-- TODO: investigate https://stackoverflow.com/questions/37606292/how-to-create-tabbed-code-blocks-in-mkdocs-or-sphinx -->
 <h3 id="direct">Direct</h3>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Reified</span><span class="nv"> </span><span class="s">relationship:</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">strain</span><span class="se">''</span><span class="s">s</span><span class="nv"> </span><span class="s">growth</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">specific</span><span class="nv"> </span><span class="s">medium.</span><span class="nv"> </span><span class="s">Captures</span>
-<span class="w">  </span><span class="s">observation-specific</span><span class="nv"> </span><span class="s">properties</span><span class="nv"> </span><span class="s">like</span><span class="nv"> </span><span class="s">growth</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">temperature.</span><span class="nv"> </span><span class="s">Predicate:</span><span class="nv"> </span><span class="s">METPO:2000517</span>
-<span class="w">  </span><span class="s">(grows</span><span class="nv"> </span><span class="s">in)</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">METPO:2000518</span><span class="nv"> </span><span class="s">(does</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">grow</span><span class="nv"> </span><span class="s">in).'</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">slots</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject_strain</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object_medium</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grows</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">growth_rate</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">doubling_time</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">incubation_time</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notes</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_records</span>
-<span class="nt">slot_usage</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">subject_strain</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject_strain</span>
-<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">object_medium</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object_medium</span>
-<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
+```yaml
+name: GrowthPreference
+description: 'Reified relationship: a strain''s growth in a specific medium. Captures
+  observation-specific properties like growth rate and temperature. Predicate: METPO:2000517
+  (grows in) or METPO:2000518 (does not grow in).'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+slots:
+- subject_strain
+- object_medium
+- grows
+- growth_rate
+- doubling_time
+- temperature
+- incubation_time
+- notes
+- source_records
+slot_usage:
+  subject_strain:
+    name: subject_strain
+    required: true
+  object_medium:
+    name: object_medium
+    required: true
+
+```
 </details>
 <h3 id="induced">Induced</h3>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'Reified</span><span class="nv"> </span><span class="s">relationship:</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">strain</span><span class="se">''</span><span class="s">s</span><span class="nv"> </span><span class="s">growth</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">a</span><span class="nv"> </span><span class="s">specific</span><span class="nv"> </span><span class="s">medium.</span><span class="nv"> </span><span class="s">Captures</span>
-<span class="w">  </span><span class="s">observation-specific</span><span class="nv"> </span><span class="s">properties</span><span class="nv"> </span><span class="s">like</span><span class="nv"> </span><span class="s">growth</span><span class="nv"> </span><span class="s">rate</span><span class="nv"> </span><span class="s">and</span><span class="nv"> </span><span class="s">temperature.</span><span class="nv"> </span><span class="s">Predicate:</span><span class="nv"> </span><span class="s">METPO:2000517</span>
-<span class="w">  </span><span class="s">(grows</span><span class="nv"> </span><span class="s">in)</span><span class="nv"> </span><span class="s">or</span><span class="nv"> </span><span class="s">METPO:2000518</span><span class="nv"> </span><span class="s">(does</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">grow</span><span class="nv"> </span><span class="s">in).'</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">slot_usage</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">subject_strain</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject_strain</span>
-<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">object_medium</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object_medium</span>
-<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="nt">attributes</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">subject_strain</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject_strain</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The strain that is the subject of the growth relationship.</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">subject_strain</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">object_medium</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object_medium</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">The medium that is the object of the growth relationship.</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">object_medium</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthMedium</span>
-<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">  </span><span class="nt">grows</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grows</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">'True</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">strain</span><span class="nv"> </span><span class="s">grows</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">medium,</span><span class="nv"> </span><span class="s">false</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">does</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">grow.</span><span class="nv"> </span><span class="s">Determines</span>
-<span class="w">      </span><span class="s">predicate:</span><span class="nv"> </span><span class="s">true</span><span class="nv"> </span><span class="s">→</span><span class="nv"> </span><span class="s">METPO:2000517,</span><span class="nv"> </span><span class="s">false</span><span class="nv"> </span><span class="s">→</span><span class="nv"> </span><span class="s">METPO:2000518.'</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grows</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
-<span class="w">  </span><span class="nt">growth_rate</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">growth_rate</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Qualitative growth rate in this medium.</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">growth_rate</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthRate</span>
-<span class="w">  </span><span class="nt">doubling_time</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">doubling_time</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Quantitative growth rate measured as doubling time in hours. Also</span>
-<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">known as generation time.</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">doubling_time</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
-<span class="w">    </span><span class="nt">minimum_value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="w">    </span><span class="nt">unit</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">ucum_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">h</span>
-<span class="w">  </span><span class="nt">temperature</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Growth temperature in degrees Celsius for this observation.</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">temperature</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
-<span class="w">    </span><span class="nt">unit</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">ucum_code</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cel</span>
-<span class="w">  </span><span class="nt">incubation_time</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">incubation_time</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Duration of incubation (e.g., "48 hours", "7 days").</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">incubation_time</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">notes</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notes</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Free-text notes about this component</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">notes</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IngredientComponent</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SolutionComponent</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="w">  </span><span class="nt">source_records</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_records</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Records tracking which source provided which data</span>
-<span class="w">    </span><span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="w">    </span><span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="w">    </span><span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">source_records</span>
-<span class="w">    </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="nt">domain_of</span><span class="p">:</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Taxon</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Genome</span>
-<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="w">    </span><span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SourceRecord</span>
-<span class="w">    </span><span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">inlined</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="w">    </span><span class="nt">inlined_as_list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
+```yaml
+name: GrowthPreference
+description: 'Reified relationship: a strain''s growth in a specific medium. Captures
+  observation-specific properties like growth rate and temperature. Predicate: METPO:2000517
+  (grows in) or METPO:2000518 (does not grow in).'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+slot_usage:
+  subject_strain:
+    name: subject_strain
+    required: true
+  object_medium:
+    name: object_medium
+    required: true
+attributes:
+  subject_strain:
+    name: subject_strain
+    description: The strain that is the subject of the growth relationship.
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: subject_strain
+    owner: GrowthPreference
+    domain_of:
+    - GrowthPreference
+    range: Strain
+    required: true
+  object_medium:
+    name: object_medium
+    description: The medium that is the object of the growth relationship.
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: object_medium
+    owner: GrowthPreference
+    domain_of:
+    - GrowthPreference
+    range: GrowthMedium
+    required: true
+  grows:
+    name: grows
+    description: 'True if strain grows in medium, false if it does not grow. Determines
+      predicate: true → METPO:2000517, false → METPO:2000518.'
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: grows
+    owner: GrowthPreference
+    domain_of:
+    - GrowthPreference
+    range: boolean
+  growth_rate:
+    name: growth_rate
+    description: Qualitative growth rate in this medium.
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: growth_rate
+    owner: GrowthPreference
+    domain_of:
+    - GrowthPreference
+    range: GrowthRate
+  doubling_time:
+    name: doubling_time
+    description: Quantitative growth rate measured as doubling time in hours. Also
+      known as generation time.
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: doubling_time
+    owner: GrowthPreference
+    domain_of:
+    - GrowthPreference
+    range: float
+    minimum_value: 0
+    unit:
+      ucum_code: h
+  temperature:
+    name: temperature
+    description: Growth temperature in degrees Celsius for this observation.
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: temperature
+    owner: GrowthPreference
+    domain_of:
+    - GrowthPreference
+    range: float
+    unit:
+      ucum_code: Cel
+  incubation_time:
+    name: incubation_time
+    description: Duration of incubation (e.g., "48 hours", "7 days").
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: incubation_time
+    owner: GrowthPreference
+    domain_of:
+    - GrowthPreference
+    range: string
+  notes:
+    name: notes
+    description: Free-text notes about this component
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: notes
+    owner: GrowthPreference
+    domain_of:
+    - IngredientComponent
+    - SolutionComponent
+    - GrowthPreference
+    range: string
+  source_records:
+    name: source_records
+    description: Records tracking which source provided which data
+    from_schema: https://w3id.org/turbomam/cmm-ai-automation
+    rank: 1000
+    alias: source_records
+    owner: GrowthPreference
+    domain_of:
+    - GrowthPreference
+    - EnrichedIngredient
+    - Taxon
+    - Genome
+    - Strain
+    range: SourceRecord
+    multivalued: true
+    inlined: true
+    inlined_as_list: true
+
+```
 </details>
 </article>
 </div>

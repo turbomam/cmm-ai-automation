@@ -856,28 +856,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#resources" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resources
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#related-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Related Files
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -976,17 +954,17 @@
 </ul>
 <h3 id="example-nodes">Example Nodes</h3>
 <p><strong>Simple chemical entity:</strong>
-<div class="highlight"><pre><span></span><code>id  name    category    pH  comments
-CHEBI:31440 copper(II) sulfate pentahydrate biolink:ChemicalEntity
-</code></pre></div></p>
+<code>tsv
+id  name    category    pH  comments
+CHEBI:31440 copper(II) sulfate pentahydrate biolink:ChemicalEntity</code></p>
 <p><strong>Stock solution with preparation notes:</strong>
-<div class="highlight"><pre><span></span><code>id  name    category    pH  comments
-uuid:2c015a8c-75e8-43ad-8cf9-a5487d9cf525   PIPES stock 10X biolink:ChemicalMixture 6.75    Adjust to pH 6.75 with KOH; 1 L deionized H2O
-</code></pre></div></p>
+<code>tsv
+id  name    category    pH  comments
+uuid:2c015a8c-75e8-43ad-8cf9-a5487d9cf525   PIPES stock 10X biolink:ChemicalMixture 6.75    Adjust to pH 6.75 with KOH; 1 L deionized H2O</code></p>
 <p><strong>Complex medium with procedural notes:</strong>
-<div class="highlight"><pre><span></span><code>id  name    category    pH  comments
-doi:10.1371/journal.pone.0062957.s005   MP medium from Delaney et al doi:10.1371/journal.pone.0062957   biolink:ComplexMolecularMixture     885 mL milliQ-H2O for final 1 L; mix all components except CaCl2, autoclave, then add CaCl2
-</code></pre></div></p>
+<code>tsv
+id  name    category    pH  comments
+doi:10.1371/journal.pone.0062957.s005   MP medium from Delaney et al doi:10.1371/journal.pone.0062957   biolink:ComplexMolecularMixture     885 mL milliQ-H2O for final 1 L; mix all components except CaCl2, autoclave, then add CaCl2</code></p>
 <h2 id="edge-schema">Edge Schema</h2>
 <h3 id="core-kgx-columns-required">Core KGX Columns (Required)</h3>
 <table>
@@ -1258,30 +1236,30 @@ doi:10.1371/journal.pone.0062957.s005   MP medium from Delaney et al doi:10.1371
 </table>
 <h3 id="example-edges">Example Edges</h3>
 <p><strong>Example 1: Source-specified final concentration</strong> (PDF said "NaH2PO4·H2O 1.88 mM"):
-<div class="highlight"><pre><span></span><code>subject predicate   object  source_specification    source_asserted_final_concentration source_asserted_final_concentration_unit    subject_volume_prepared subject_volume_unit object_molecular_mass   comments
-doi:10.1371/journal.pone.0062957.s005   biolink:has_part    CHEBI:114249    NaH2PO4·H2O 1.88    mM  1   L   137.99
-</code></pre></div>
+<code>tsv
+subject predicate   object  source_specification    source_asserted_final_concentration source_asserted_final_concentration_unit    subject_volume_prepared subject_volume_unit object_molecular_mass   comments
+doi:10.1371/journal.pone.0062957.s005   biolink:has_part    CHEBI:114249    NaH2PO4·H2O 1.88    mM  1   L   137.99</code>
 <strong>Tier 1 (source)</strong>: PDF specified final concentration directly as 1.88 mM
 <strong>Tier 2 (repo)</strong>: Canonical molecular mass from ChEBI used for any needed calculations
 <strong>No Tier 3</strong>: No calculation needed since source gave final concentration</p>
 <p><strong>Example 2: Mass-based stock with calculated concentration</strong> (PDF: "NaH2PO4 22.5 g or 25.9 g NaH2PO4·H2O in 1 L"):
-<div class="highlight"><pre><span></span><code>subject predicate   object  source_specification    source_asserted_mass_added  source_asserted_mass_added_units    source_asserted_stock_volume    source_asserted_stock_volume_unit   source_asserted_X   object_amount_added object_amount_unit  subject_volume_prepared subject_volume_unit calculated_concentration    calculated_concentration_unit   object_molecular_mass   comments
-uuid:a8a5a509-ba8c-4ae6-a6d3-98583066c984   biolink:has_part    CHEBI:114249    NaH2PO4 22.5 g (or 25.9 g NaH2PO4·H2O)  25.9    g   1   L   10  25.9    UO:0000021  1   UO:0000099  0.1876934003    UO:0000062  137.99
-</code></pre></div>
+<code>tsv
+subject predicate   object  source_specification    source_asserted_mass_added  source_asserted_mass_added_units    source_asserted_stock_volume    source_asserted_stock_volume_unit   source_asserted_X   object_amount_added object_amount_unit  subject_volume_prepared subject_volume_unit calculated_concentration    calculated_concentration_unit   object_molecular_mass   comments
+uuid:a8a5a509-ba8c-4ae6-a6d3-98583066c984   biolink:has_part    CHEBI:114249    NaH2PO4 22.5 g (or 25.9 g NaH2PO4·H2O)  25.9    g   1   L   10  25.9    UO:0000021  1   UO:0000099  0.1876934003    UO:0000062  137.99</code>
 <strong>Tier 1 (source)</strong>: PDF gave mass (25.9 g hydrated form) and volume (1 L) for 10X stock
 <strong>Tier 2 (repo)</strong>: Normalized to object_amount_added with UO units; subject_volume_prepared documented
 <strong>Tier 3 (calculated)</strong>: Concentration = 25.9 g / 137.99 g/mol / 1 L = 0.1877 M</p>
 <p><strong>Example 3: Source error documented</strong> (PIPES formula discrepancy):
-<div class="highlight"><pre><span></span><code>subject predicate   object  source_specification    source_asserted_formula source_asserted_stock_concentration source_asserted_stock_concentration_units   source_asserted_X   object_molecular_mass   comments
-uuid:2c015a8c-75e8-43ad-8cf9-a5487d9cf525   biolink:has_part    CHEBI:44933 C8H8N2O6S2  C8H8N2O6S2  300 mM  10  302.37  ChEBI and PubChem both say C8H18N2O6S2, which matches the reported molecular mass
-</code></pre></div>
+<code>tsv
+subject predicate   object  source_specification    source_asserted_formula source_asserted_stock_concentration source_asserted_stock_concentration_units   source_asserted_X   object_molecular_mass   comments
+uuid:2c015a8c-75e8-43ad-8cf9-a5487d9cf525   biolink:has_part    CHEBI:44933 C8H8N2O6S2  C8H8N2O6S2  300 mM  10  302.37  ChEBI and PubChem both say C8H18N2O6S2, which matches the reported molecular mass</code>
 <strong>Tier 1 (source)</strong>: PDF formula C8H8N2O6S2 is WRONG (missing hydrogens)
 <strong>Tier 2 (repo)</strong>: Canonical MW 302.37 from ChEBI matches the correct formula C8H18N2O6S2
 <strong>Comments</strong>: Document the discrepancy - molecular mass is self-consistent even though formula is wrong</p>
 <p><strong>Example 4: Grounding via Wikidata</strong> (K2HPO4 has no ChEBI):
-<div class="highlight"><pre><span></span><code>subject predicate   object  source_specification    source_asserted_final_concentration source_asserted_final_concentration_unit    object_molecular_mass   object_xref comments
-doi:10.1371/journal.pone.0062957.s005   biolink:has_part    PUBCHEM.COMPOUND:16217523   K2HPO4  1.45    mM  228.22  WIKIDATA:Q27288149  WIKIDATA:Q27288149 provides no ChEBI id
-</code></pre></div>
+<code>tsv
+subject predicate   object  source_specification    source_asserted_final_concentration source_asserted_final_concentration_unit    object_molecular_mass   object_xref comments
+doi:10.1371/journal.pone.0062957.s005   biolink:has_part    PUBCHEM.COMPOUND:16217523   K2HPO4  1.45    mM  228.22  WIKIDATA:Q27288149  WIKIDATA:Q27288149 provides no ChEBI id</code>
 <strong>Tier 1 (source)</strong>: PDF specified K2HPO4 at 1.45 mM
 <strong>Tier 2 (repo)</strong>: Grounded to PubChem (no ChEBI available); Wikidata xref documents the grounding path
 <strong>Comments</strong>: Explain why PubChem was used instead of ChEBI</p>
@@ -1388,9 +1366,9 @@ doi:10.1371/journal.pone.0062957.s005   biolink:has_part    PUBCHEM.COMPOUND:162
 <li>See <a href="https://biolink.github.io/biolink-model/">Biolink AgentTypeEnum</a> for complete list</li>
 </ul>
 <h3 id="audit-trail-example">Audit Trail Example</h3>
-<div class="highlight"><pre><span></span><code>source_specification    primary_knowledge_source    publications    agent_type
-NaH2PO4·H2O infores:cmm-ai-automation   PMID:23646164   manual_validation_of_automated_agent
-</code></pre></div>
+<p><code>tsv
+source_specification    primary_knowledge_source    publications    agent_type
+NaH2PO4·H2O infores:cmm-ai-automation   PMID:23646164   manual_validation_of_automated_agent</code></p>
 <p>This enables:
 - Tracing back to exact source text
 - Verifying against original publication
@@ -1398,8 +1376,8 @@ NaH2PO4·H2O infores:cmm-ai-automation   PMID:23646164   manual_validation_of_au
 - Auditing LLM vs human contributions</p>
 <h2 id="validation">Validation</h2>
 <h3 id="validation-script">Validation Script</h3>
-<div class="highlight"><pre><span></span><code>just<span class="w"> </span>validate-kgx-custom
-</code></pre></div>
+<p><code>bash
+just validate-kgx-custom</code></p>
 <p>This runs the custom KGX validator that:
 1. Monkey-patches <code>PrefixManager.is_curie</code> to allow slashes in DOIs
 2. Adds custom prefixes (doi, uuid) from <code>config/kgx_validation_config.yaml</code>
@@ -1415,8 +1393,7 @@ NaH2PO4·H2O infores:cmm-ai-automation   PMID:23646164   manual_validation_of_au
 - <code>knowledge_level</code> and <code>agent_type</code> values
 - At least one provenance field (publications or primary_knowledge_source)</p>
 <p><strong>All edges pass if:</strong>
-<div class="highlight"><pre><span></span><code>SUCCESS: No validation errors found!
-</code></pre></div></p>
+<code>SUCCESS: No validation errors found!</code></p>
 <h2 id="migration-from-legacy-schema">Migration from Legacy Schema</h2>
 <h3 id="deprecated-columns-new-standard">Deprecated Columns → New Standard</h3>
 <table>
@@ -1523,15 +1500,14 @@ NaH2PO4·H2O infores:cmm-ai-automation   PMID:23646164   manual_validation_of_au
 </ol>
 <h3 id="quality-checks">Quality Checks</h3>
 <p>Before committing data changes:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Validate KGX compliance</span>
-just<span class="w"> </span>validate-kgx-custom
-
-<span class="c1"># Run integration tests</span>
-uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/test_delaney_kgx_validation.py<span class="w"> </span>-v
-
-<span class="c1"># Check for common issues</span>
-grep<span class="w"> </span>-E<span class="w"> </span><span class="s2">&quot;^[^\t]*\t[^\t]*\t[^\t]*\t[^\t]*</span>$<span class="s2">&quot;</span><span class="w"> </span>data/private/static/delaney-media-edges.tsv
-</code></pre></div>
+<p>```bash</p>
+<h1 id="validate-kgx-compliance">Validate KGX compliance</h1>
+<p>just validate-kgx-custom</p>
+<h1 id="run-integration-tests">Run integration tests</h1>
+<p>uv run pytest tests/test_delaney_kgx_validation.py -v</p>
+<h1 id="check-for-common-issues">Check for common issues</h1>
+<p>grep -E "^[^\t]<em>\t[^\t]</em>\t[^\t]<em>\t[^\t]</em>$" data/private/static/delaney-media-edges.tsv
+```</p>
 <h2 id="resources">Resources</h2>
 <ul>
 <li><a href="https://github.com/biolink/kgx">KGX Specification</a></li>

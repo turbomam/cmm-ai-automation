@@ -604,42 +604,44 @@
 </ul>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConcentrationUnit</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Units for concentration</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">permissible_values</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">g_per_L</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">g_per_L</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Grams per liter</span>
-<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UO:0000175</span>
-<span class="w">  </span><span class="nt">mg_per_L</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mg_per_L</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Milligrams per liter</span>
-<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UO:0000176</span>
-<span class="w">  </span><span class="nt">ug_per_L</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ug_per_L</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Micrograms per liter</span>
-<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UO:0000301</span>
-<span class="w">  </span><span class="nt">M</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">M</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Molar</span>
-<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UO:0000062</span>
-<span class="w">  </span><span class="nt">mM</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mM</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Millimolar</span>
-<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UO:0000063</span>
-<span class="w">  </span><span class="nt">uM</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uM</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Micromolar</span>
-<span class="w">    </span><span class="nt">meaning</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UO:0000064</span>
-<span class="w">  </span><span class="nt">percent_w_v</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent_w_v</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Weight/volume</span><span class="nv"> </span><span class="s">percentage:</span><span class="nv"> </span><span class="s">%</span><span class="nv"> </span><span class="s">(w/v)&#39;</span>
-<span class="w">  </span><span class="nt">percent_v_v</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">percent_v_v</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Volume/volume</span><span class="nv"> </span><span class="s">percentage:</span><span class="nv"> </span><span class="s">%</span><span class="nv"> </span><span class="s">(v/v)&#39;</span>
-</code></pre></div>
+```yaml
+name: ConcentrationUnit
+description: Units for concentration
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+permissible_values:
+  g_per_L:
+    text: g_per_L
+    description: Grams per liter
+    meaning: UO:0000175
+  mg_per_L:
+    text: mg_per_L
+    description: Milligrams per liter
+    meaning: UO:0000176
+  ug_per_L:
+    text: ug_per_L
+    description: Micrograms per liter
+    meaning: UO:0000301
+  M:
+    text: M
+    description: Molar
+    meaning: UO:0000062
+  mM:
+    text: mM
+    description: Millimolar
+    meaning: UO:0000063
+  uM:
+    text: uM
+    description: Micromolar
+    meaning: UO:0000064
+  percent_w_v:
+    text: percent_w_v
+    description: 'Weight/volume percentage: % (w/v)'
+  percent_v_v:
+    text: percent_v_v
+    description: 'Volume/volume percentage: % (v/v)'
+
+```
 </details>
 
 

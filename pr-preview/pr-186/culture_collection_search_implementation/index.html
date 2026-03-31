@@ -562,213 +562,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#documentation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#usage-examples" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Usage Examples
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Usage Examples">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#simple-search" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Simple Search
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#full-reconciliation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Full Reconciliation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#batch-search" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Batch Search
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#test-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Results
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#technical-details" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Technical Details
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Technical Details">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mongodb-aggregation-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MongoDB Aggregation Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#word-boundary-regex-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Word Boundary Regex Pattern
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#integration-with-validation-framework" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Integration with Validation Framework
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#next-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Next Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Next Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#immediate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Immediate
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#future-enhancements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Future Enhancements
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#known-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Known Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#performance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Performance
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dependencies
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#exports" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Exports
-      
-    </span>
-  </a>
   
 </li>
       
@@ -836,18 +631,16 @@
 - <code>extract_culture_collection_ids()</code> - Extract all CCs from document</p>
 <h3 id="testdemo-script">Test/Demo Script</h3>
 <p><strong><code>src/cmm_ai_automation/scripts/test_culture_collection_search.py</code></strong>
-<div class="highlight"><pre><span></span><code><span class="c1"># Demo (default)</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.test_culture_collection_search
-
-<span class="c1"># Test all predefined IDs</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.test_culture_collection_search<span class="w"> </span>--all
-
-<span class="c1"># Search specific ID</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.test_culture_collection_search<span class="w"> </span>--id<span class="w"> </span><span class="s2">&quot;DSM:1337&quot;</span>
-
-<span class="c1"># Show full document</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.test_culture_collection_search<span class="w"> </span>--id<span class="w"> </span><span class="s2">&quot;DSM:1337&quot;</span><span class="w"> </span>-v
-</code></pre></div></p>
+```bash</p>
+<h1 id="demo-default">Demo (default)</h1>
+<p>uv run python -m cmm_ai_automation.scripts.test_culture_collection_search</p>
+<h1 id="test-all-predefined-ids">Test all predefined IDs</h1>
+<p>uv run python -m cmm_ai_automation.scripts.test_culture_collection_search --all</p>
+<h1 id="search-specific-id">Search specific ID</h1>
+<p>uv run python -m cmm_ai_automation.scripts.test_culture_collection_search --id "DSM:1337"</p>
+<h1 id="show-full-document">Show full document</h1>
+<p>uv run python -m cmm_ai_automation.scripts.test_culture_collection_search --id "DSM:1337" -v
+```</p>
 <h3 id="documentation">Documentation</h3>
 <ul>
 <li><code>docs/bacdive_field_name_issue.md</code> - Field naming issue details</li>
@@ -857,41 +650,37 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 </ul>
 <h2 id="usage-examples">Usage Examples</h2>
 <h3 id="simple-search">Simple Search</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pymongo</span><span class="w"> </span><span class="kn">import</span> <span class="n">MongoClient</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.strains</span><span class="w"> </span><span class="kn">import</span> <span class="n">search_culture_collection</span>
-
-<span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">(</span><span class="s2">&quot;mongodb://localhost:27017&quot;</span><span class="p">)</span>
-<span class="n">collection</span> <span class="o">=</span> <span class="n">client</span><span class="p">[</span><span class="s2">&quot;bacdive&quot;</span><span class="p">][</span><span class="s2">&quot;strains&quot;</span><span class="p">]</span>
-
-<span class="c1"># Search for DSM:1337</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">search_culture_collection</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="s2">&quot;DSM:1337&quot;</span><span class="p">)</span>
-
-<span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found: BacDive ID </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="s1">&#39;General&#39;</span><span class="p">][</span><span class="s1">&#39;BacDive-ID&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
+<p>```python
+from pymongo import MongoClient
+from cmm_ai_automation.strains import search_culture_collection</p>
+<p>client = MongoClient("mongodb://localhost:27017")
+collection = client["bacdive"]["strains"]</p>
+<h1 id="search-for-dsm1337">Search for DSM:1337</h1>
+<p>doc = search_culture_collection(collection, "DSM:1337")</p>
+<p>if doc:
+    print(f"Found: BacDive ID {doc['General']['BacDive-ID']}")
+```</p>
 <h3 id="full-reconciliation">Full Reconciliation</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.strains</span><span class="w"> </span><span class="kn">import</span> <span class="n">reconcile_culture_collection_id</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">reconcile_culture_collection_id</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="s2">&quot;DSM:1337&quot;</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Found: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;found&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Search method: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;search_method&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;BacDive ID: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;bacdive_id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Species: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;species&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;All CC IDs: </span><span class="si">{</span><span class="n">result</span><span class="p">[</span><span class="s1">&#39;all_culture_collections&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</code></pre></div>
+<p>```python
+from cmm_ai_automation.strains import reconcile_culture_collection_id</p>
+<p>result = reconcile_culture_collection_id(collection, "DSM:1337")</p>
+<p>print(f"Found: {result['found']}")
+print(f"Search method: {result['search_method']}")
+print(f"BacDive ID: {result['bacdive_id']}")
+print(f"Species: {result['species']}")
+print(f"All CC IDs: {result['all_culture_collections']}")
+```</p>
 <h3 id="batch-search">Batch Search</h3>
-<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.strains</span><span class="w"> </span><span class="kn">import</span> <span class="n">batch_search_culture_collections</span>
-
-<span class="n">cc_ids</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;DSM:1337&quot;</span><span class="p">,</span> <span class="s2">&quot;ATCC:43883&quot;</span><span class="p">,</span> <span class="s2">&quot;NCIMB:13946&quot;</span><span class="p">]</span>
-<span class="n">results</span> <span class="o">=</span> <span class="n">batch_search_culture_collections</span><span class="p">(</span><span class="n">collection</span><span class="p">,</span> <span class="n">cc_ids</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">cc_id</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">results</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="k">if</span> <span class="n">doc</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✓ </span><span class="si">{</span><span class="n">cc_id</span><span class="si">}</span><span class="s2"> found&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;✗ </span><span class="si">{</span><span class="n">cc_id</span><span class="si">}</span><span class="s2"> not found&quot;</span><span class="p">)</span>
-</code></pre></div>
+<p>```python
+from cmm_ai_automation.strains import batch_search_culture_collections</p>
+<p>cc_ids = ["DSM:1337", "ATCC:43883", "NCIMB:13946"]
+results = batch_search_culture_collections(collection, cc_ids)</p>
+<p>for cc_id, doc in results.items():
+    if doc:
+        print(f"✓ {cc_id} found")
+    else:
+        print(f"✗ {cc_id} not found")
+```</p>
 <h2 id="test-results">Test Results</h2>
 <p>Testing with strains.tsv IDs:</p>
 <table>
@@ -956,41 +745,39 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 <h2 id="technical-details">Technical Details</h2>
 <h3 id="mongodb-aggregation-pipeline">MongoDB Aggregation Pipeline</h3>
 <p>The aggregation approach uses <code>$getField</code> to access fields with special characters:</p>
-<div class="highlight"><pre><span></span><code><span class="p">[</span>
-<span class="w">  </span><span class="c1">// Filter to docs with External links</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="s2">&quot;External links&quot;</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$exists</span><span class="o">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-
-<span class="w">  </span><span class="c1">// Extract the field with period in name</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$addFields</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">cc_field</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">$getField</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nx">field</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;culture collection no.&quot;</span><span class="p">,</span>
-<span class="w">          </span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;$External links&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-
-<span class="w">  </span><span class="c1">// Match with word-boundary regex</span>
-<span class="w">  </span><span class="p">{</span>
-<span class="w">    </span><span class="nx">$match</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">      </span><span class="nx">$expr</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nx">$regexMatch</span><span class="o">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">          </span><span class="nx">input</span><span class="o">:</span><span class="w"> </span><span class="p">{</span><span class="nx">$ifNull</span><span class="o">:</span><span class="w"> </span><span class="p">[</span><span class="s2">&quot;$cc_field&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">]},</span>
-<span class="w">          </span><span class="nx">regex</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;(^|,\\s*)DSM 1337(\\s*,|$)&quot;</span>
-<span class="w">        </span><span class="p">}</span>
-<span class="w">      </span><span class="p">}</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">},</span>
-
-<span class="w">  </span><span class="p">{</span><span class="nx">$limit</span><span class="o">:</span><span class="w"> </span><span class="mf">1</span><span class="p">}</span>
-<span class="p">]</span>
-</code></pre></div>
+<p>```javascript
+[
+  // Filter to docs with External links
+  {
+    $match: {
+      "External links": {$exists: true}
+    }
+  },</p>
+<p>// Extract the field with period in name
+  {
+    $addFields: {
+      cc_field: {
+        $getField: {
+          field: "culture collection no.",
+          input: "$External links"
+        }
+      }
+    }
+  },</p>
+<p>// Match with word-boundary regex
+  {
+    $match: {
+      $expr: {
+        $regexMatch: {
+          input: {$ifNull: ["$cc_field", ""]},
+          regex: "(^|,\s<em>)DSM 1337(\s</em>,|$)"
+        }
+      }
+    }
+  },</p>
+<p>{$limit: 1}
+]
+```</p>
 <h3 id="word-boundary-regex-pattern">Word Boundary Regex Pattern</h3>
 <p>Pattern: <code>(^|,\s*)PREFIX NUMBER(\s*,|$)</code></p>
 <p>Matches:
@@ -1000,31 +787,30 @@ uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </sp
 - ✗ <code>DSM 13378</code> (contains 1337 but different number)</p>
 <h2 id="integration-with-validation-framework">Integration with Validation Framework</h2>
 <p>This module can be used to create a culture collection validator:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Future: src/cmm_ai_automation/validation/validators/culture_collection.py</span>
+<p>```python</p>
+<h1 id="future-srccmm_ai_automationvalidationvalidatorsculture_collectionpy">Future: src/cmm_ai_automation/validation/validators/culture_collection.py</h1>
+<p>from cmm_ai_automation.strains import search_culture_collection</p>
+<p>class CultureCollectionValidator(FieldValidator):
+    """Validate culture collection IDs against BacDive."""</p>
+<pre><code>def validate(self, value, context, sheet, row, field):
+    issues = []
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">cmm_ai_automation.strains</span><span class="w"> </span><span class="kn">import</span> <span class="n">search_culture_collection</span>
+    doc = search_culture_collection(self.collection, value)
 
-<span class="k">class</span><span class="w"> </span><span class="nc">CultureCollectionValidator</span><span class="p">(</span><span class="n">FieldValidator</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate culture collection IDs against BacDive.&quot;&quot;&quot;</span>
+    if not doc:
+        issues.append(ValidationIssue(
+            sheet=sheet,
+            row=row,
+            field=field,
+            issue_type=IssueType.INVALID_ID,
+            severity=Severity.WARNING,
+            value=value,
+            message=f"Culture collection ID not found in BacDive: {value}"
+        ))
 
-    <span class="k">def</span><span class="w"> </span><span class="nf">validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">context</span><span class="p">,</span> <span class="n">sheet</span><span class="p">,</span> <span class="n">row</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
-        <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="n">doc</span> <span class="o">=</span> <span class="n">search_culture_collection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">collection</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">doc</span><span class="p">:</span>
-            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ValidationIssue</span><span class="p">(</span>
-                <span class="n">sheet</span><span class="o">=</span><span class="n">sheet</span><span class="p">,</span>
-                <span class="n">row</span><span class="o">=</span><span class="n">row</span><span class="p">,</span>
-                <span class="n">field</span><span class="o">=</span><span class="n">field</span><span class="p">,</span>
-                <span class="n">issue_type</span><span class="o">=</span><span class="n">IssueType</span><span class="o">.</span><span class="n">INVALID_ID</span><span class="p">,</span>
-                <span class="n">severity</span><span class="o">=</span><span class="n">Severity</span><span class="o">.</span><span class="n">WARNING</span><span class="p">,</span>
-                <span class="n">value</span><span class="o">=</span><span class="n">value</span><span class="p">,</span>
-                <span class="n">message</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Culture collection ID not found in BacDive: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="p">))</span>
-
-        <span class="k">return</span> <span class="n">issues</span>
-</code></pre></div>
+    return issues
+</code></pre>
+<p>```</p>
 <h2 id="next-steps">Next Steps</h2>
 <h3 id="immediate">Immediate</h3>
 <ul>
