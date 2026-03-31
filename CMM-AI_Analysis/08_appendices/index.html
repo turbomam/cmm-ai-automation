@@ -776,10 +776,9 @@
 <hr />
 <h2 id="appendix-a-file-inventory">Appendix A: File Inventory</h2>
 <h3 id="original-excel-file">Original Excel File</h3>
-<div class="highlight"><pre><span></span><code>data/sheet/BER CMM Data for AI.xlsx (254 KB, Dec 4 2025)
-</code></pre></div>
+<p><code>data/sheet/BER CMM Data for AI.xlsx (254 KB, Dec 4 2025)</code></p>
 <h3 id="converted-tsv-files-from-google-sheet">Converted TSV Files (from Google Sheet)</h3>
-<div class="highlight"><pre><span></span><code>data/txt/sheet/
+<p><code>data/txt/sheet/
 +-- BER_CMM_Data_for_AI_assays.tsv              (5 KB)
 +-- BER_CMM_Data_for_AI_bioprocesses.tsv        (2 KB)
 +-- BER_CMM_Data_for_AI_biosamples.tsv          (12 KB)
@@ -795,10 +794,9 @@
 +-- BER_CMM_Data_for_AI_screening_results.tsv   (1 KB)
 +-- BER_CMM_Data_for_AI_strains.tsv             (13 KB)
 +-- BER_CMM_Data_for_AI_taxa_and_genomes.tsv    (60 KB)
-+-- BER_CMM_Data_for_AI_transcriptomics.tsv     (10 KB)
-</code></pre></div>
++-- BER_CMM_Data_for_AI_transcriptomics.tsv     (10 KB)</code></p>
 <h3 id="extended-tsv-files-from-python-scripts">Extended TSV Files (from Python scripts)</h3>
-<div class="highlight"><pre><span></span><code>data/txt/sheet/extended/
+<p><code>data/txt/sheet/extended/
 +-- BER_CMM_Data_for_AI_assays_extended.tsv              (7 KB)
 +-- BER_CMM_Data_for_AI_bioprocesses_extended.tsv        (4 KB)
 +-- BER_CMM_Data_for_AI_biosamples_extended.tsv          (8 KB)
@@ -814,8 +812,7 @@
 +-- BER_CMM_Data_for_AI_screening_results_extended.tsv   (1 KB)
 +-- BER_CMM_Data_for_AI_strains_extended.tsv             (13 KB)
 +-- BER_CMM_Data_for_AI_taxa_and_genomes_extended.tsv    (61 KB)
-+-- BER_CMM_Data_for_AI_transcriptomics_extended.tsv     (10 KB)
-</code></pre></div>
++-- BER_CMM_Data_for_AI_transcriptomics_extended.tsv     (10 KB)</code></p>
 <hr />
 <h2 id="appendix-b-key-file-locations">Appendix B: Key File Locations</h2>
 <h3 id="python-scripts-for-media">Python Scripts for Media</h3>
@@ -854,28 +851,28 @@
 <strong>Output:</strong> <code>data/txt/sheet/*.tsv</code> (overwrites previous)</p>
 <h3 id="method-3-python-extend-scripts-deterministic">Method 3: Python Extend Scripts (Deterministic)</h3>
 <p><strong>Commands:</strong>
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>update-media<span class="w">      </span><span class="c1"># -&gt; extend_media.py -&gt; media_search.py</span>
-make<span class="w"> </span>update-genomes<span class="w">    </span><span class="c1"># -&gt; extend_lanthanide_data.py -&gt; ncbi_search.py</span>
-make<span class="w"> </span>update-pathways<span class="w">   </span><span class="c1"># -&gt; extend_pathways.py -&gt; pathway_search.py</span>
-make<span class="w"> </span>update-genes<span class="w">      </span><span class="c1"># -&gt; extend_genes.py -&gt; gene_search.py</span>
-make<span class="w"> </span>update-structures<span class="w"> </span><span class="c1"># -&gt; extend_structures.py -&gt; structure_search.py</span>
-make<span class="w"> </span>update-publications<span class="w"> </span><span class="c1"># -&gt; extend_publications.py -&gt; publication_search.py</span>
-make<span class="w"> </span>update-datasets<span class="w">   </span><span class="c1"># -&gt; extend_datasets.py -&gt; dataset_search.py</span>
-</code></pre></div></p>
+<code>bash
+make update-media      # -&gt; extend_media.py -&gt; media_search.py
+make update-genomes    # -&gt; extend_lanthanide_data.py -&gt; ncbi_search.py
+make update-pathways   # -&gt; extend_pathways.py -&gt; pathway_search.py
+make update-genes      # -&gt; extend_genes.py -&gt; gene_search.py
+make update-structures # -&gt; extend_structures.py -&gt; structure_search.py
+make update-publications # -&gt; extend_publications.py -&gt; publication_search.py
+make update-datasets   # -&gt; extend_datasets.py -&gt; dataset_search.py</code></p>
 <p><strong>Output:</strong> <code>data/txt/sheet/extended/*_extended.tsv</code></p>
 <h3 id="method-4-hardcoded-data-in-python">Method 4: Hardcoded Data in Python</h3>
 <p><strong>Example:</strong> <code>src/media_search.py</code> lines 135-274</p>
-<div class="highlight"><pre><span></span><code><span class="n">CURATED_MEDIA</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;ATCC:1306&quot;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s2">&quot;media_name&quot;</span><span class="p">:</span> <span class="s2">&quot;ATCC Medium 1306 (Methanol mineral salts)&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;ingredients&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;Methanol&quot;</span><span class="p">,</span> <span class="s2">&quot;formula&quot;</span><span class="p">:</span> <span class="s2">&quot;CH3OH&quot;</span><span class="p">,</span> <span class="s2">&quot;chebi&quot;</span><span class="p">:</span> <span class="s2">&quot;CHEBI:17790&quot;</span><span class="p">},</span>
-            <span class="o">...</span>
-        <span class="p">]</span>
-    <span class="p">},</span>
-    <span class="c1"># 7 media hardcoded here</span>
-<span class="p">}</span>
-</code></pre></div>
+<p><code>python
+CURATED_MEDIA = {
+    "ATCC:1306": {
+        "media_name": "ATCC Medium 1306 (Methanol mineral salts)",
+        "ingredients": [
+            {"name": "Methanol", "formula": "CH3OH", "chebi": "CHEBI:17790"},
+            ...
+        ]
+    },
+    # 7 media hardcoded here
+}</code></p>
 <p>This is <strong>not data entry</strong> - it's code. Changes require editing Python files.</p>
 <h3 id="method-5-kg-microbe-queries">Method 5: KG-Microbe Queries</h3>
 <p><strong>Script:</strong> <code>src/media_search.py</code> functions:
@@ -1095,42 +1092,38 @@ make<span class="w"> </span>update-datasets<span class="w">   </span><span class
 </table>
 <h3 id="linkml-schema-addition">LinkML Schema Addition</h3>
 <p>The schema should also be updated to include these prefixes:</p>
-<div class="highlight"><pre><span></span><code><span class="nt">prefixes</span><span class="p">:</span>
-<span class="w">  </span><span class="c1"># === External Ontologies (OBO Foundry) ===</span>
-<span class="w">  </span><span class="nt">CHEBI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://purl.obolibrary.org/obo/CHEBI_</span>
-<span class="w">  </span><span class="nt">GO</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://purl.obolibrary.org/obo/GO_</span>
-<span class="w">  </span><span class="nt">NCBITaxon</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://purl.obolibrary.org/obo/NCBITaxon_</span>
-<span class="w">  </span><span class="nt">OBI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://purl.obolibrary.org/obo/OBI_</span>
-<span class="w">  </span><span class="nt">ENVO</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://purl.obolibrary.org/obo/ENVO_</span>
-
-<span class="w">  </span><span class="c1"># === External Databases ===</span>
-<span class="w">  </span><span class="nt">UniProtKB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://purl.uniprot.org/uniprot/</span>
-<span class="w">  </span><span class="nt">PDB</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.rcsb.org/structure/</span>
-<span class="w">  </span><span class="nt">KEGG</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.kegg.jp/entry/</span>
-<span class="w">  </span><span class="nt">EC</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.enzyme-database.org/query.php?ec=</span>
-<span class="w">  </span><span class="nt">RHEA</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.rhea-db.org/rhea/</span>
-<span class="w">  </span><span class="nt">PubChem</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://pubchem.ncbi.nlm.nih.gov/compound/</span>
-<span class="w">  </span><span class="nt">ChEMBL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.ebi.ac.uk/chembl/compound_report_card/</span>
-
-<span class="w">  </span><span class="c1"># === Literature ===</span>
-<span class="w">  </span><span class="nt">DOI</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://doi.org/</span>
-<span class="w">  </span><span class="nt">PMID</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http://www.ncbi.nlm.nih.gov/pubmed/</span>
-
-<span class="w">  </span><span class="c1"># === MediaDive (DSMZ) ===</span>
-<span class="w">  </span><span class="nt">mediadive.medium</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://mediadive.dsmz.de/medium/</span>
-<span class="w">  </span><span class="nt">mediadive.solution</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://mediadive.dsmz.de/solution/</span>
-
-<span class="w">  </span><span class="c1"># === KG-Microbe Internal (LBL) ===</span>
-<span class="w">  </span><span class="c1"># Note: These are internal IDs, not resolvable URIs</span>
-<span class="w">  </span><span class="c1"># Query kg-microbe.duckdb for actual data</span>
-<span class="w">  </span><span class="nt">kgm.ingredient</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tag:kg-microbe.lbl.gov,2024:ingredient/</span>
-<span class="w">  </span><span class="nt">kgm.solution</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tag:kg-microbe.lbl.gov,2024:solution/</span>
-<span class="w">  </span><span class="nt">kgm.medium</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tag:kg-microbe.lbl.gov,2024:medium/</span>
-
-<span class="w">  </span><span class="c1"># === Culture Collections ===</span>
-<span class="w">  </span><span class="nt">ATCC</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.atcc.org/products/</span>
-<span class="w">  </span><span class="nt">DSMZ</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://www.dsmz.de/collection/catalogue/details/culture/DSM-</span>
-</code></pre></div>
+<p>```yaml
+prefixes:
+  # === External Ontologies (OBO Foundry) ===
+  CHEBI: http://purl.obolibrary.org/obo/CHEBI_
+  GO: http://purl.obolibrary.org/obo/GO_
+  NCBITaxon: http://purl.obolibrary.org/obo/NCBITaxon_
+  OBI: http://purl.obolibrary.org/obo/OBI_
+  ENVO: http://purl.obolibrary.org/obo/ENVO_</p>
+<p># === External Databases ===
+  UniProtKB: http://purl.uniprot.org/uniprot/
+  PDB: https://www.rcsb.org/structure/
+  KEGG: https://www.kegg.jp/entry/
+  EC: https://www.enzyme-database.org/query.php?ec=
+  RHEA: https://www.rhea-db.org/rhea/
+  PubChem: https://pubchem.ncbi.nlm.nih.gov/compound/
+  ChEMBL: https://www.ebi.ac.uk/chembl/compound_report_card/</p>
+<p># === Literature ===
+  DOI: https://doi.org/
+  PMID: http://www.ncbi.nlm.nih.gov/pubmed/</p>
+<p># === MediaDive (DSMZ) ===
+  mediadive.medium: https://mediadive.dsmz.de/medium/
+  mediadive.solution: https://mediadive.dsmz.de/solution/</p>
+<p># === KG-Microbe Internal (LBL) ===
+  # Note: These are internal IDs, not resolvable URIs
+  # Query kg-microbe.duckdb for actual data
+  kgm.ingredient: tag:kg-microbe.lbl.gov,2024:ingredient/
+  kgm.solution: tag:kg-microbe.lbl.gov,2024:solution/
+  kgm.medium: tag:kg-microbe.lbl.gov,2024:medium/</p>
+<p># === Culture Collections ===
+  ATCC: https://www.atcc.org/products/
+  DSMZ: https://www.dsmz.de/collection/catalogue/details/culture/DSM-
+```</p>
 <h3 id="benefits-of-a-prefix-registry">Benefits of a Prefix Registry</h3>
 <ol>
 <li><strong>Self-documenting</strong>: Users can understand what <code>ingredient:1633</code> means</li>
@@ -1141,14 +1134,14 @@ make<span class="w"> </span>update-datasets<span class="w">   </span><span class
 </ol>
 <hr />
 <h2 id="appendix-e-chebi-id-overlap-analysis">Appendix E: CHEBI ID Overlap Analysis</h2>
-<div class="highlight"><pre><span></span><code>media_ingredients.ontology_id values with CHEBI: ~48 unique IDs
-chemicals.chebi_id values: ~30 unique IDs
-
-Overlap examples:
+<p>```
+media_ingredients.ontology_id values with CHEBI: ~48 unique IDs
+chemicals.chebi_id values: ~30 unique IDs</p>
+<p>Overlap examples:
 - CHEBI:17790 (Methanol) - in both tables
 - CHEBI:17234 (Glucose) - in both tables
 - CHEBI:32599 (MgSO4*7H2O) - only in media_ingredients
-</code></pre></div>
+```</p>
 <p>The <strong>chemicals</strong> table focuses on <strong>REE-related compounds</strong> (lanthanides, lanthanophores), while <strong>media_ingredients</strong> has <strong>common lab chemicals</strong> (salts, buffers). They serve different purposes but share the CHEBI namespace.</p>
 <hr />
 <h2 id="appendix-f-schema-validation-features">Appendix F: Schema Validation Features</h2>

@@ -584,25 +584,27 @@
 </ul>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ConflictResolution</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">How a data conflict between sources was resolved. Primary APIs are considered</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">authoritative for their own ID types.</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">permissible_values</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">primary_source_wins</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">primary_source_wins</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Primary/authoritative source value was used</span>
-<span class="w">  </span><span class="nt">manual_review</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manual_review</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Conflict flagged for manual review</span>
-<span class="w">  </span><span class="nt">merged</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merged</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Values were merged (e.g., for lists)</span>
-<span class="w">  </span><span class="nt">unresolved</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unresolved</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Conflict not yet resolved</span>
-</code></pre></div>
+```yaml
+name: ConflictResolution
+description: How a data conflict between sources was resolved. Primary APIs are considered
+  authoritative for their own ID types.
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+permissible_values:
+  primary_source_wins:
+    text: primary_source_wins
+    description: Primary/authoritative source value was used
+  manual_review:
+    text: manual_review
+    description: Conflict flagged for manual review
+  merged:
+    text: merged
+    description: Values were merged (e.g., for lists)
+  unresolved:
+    text: unresolved
+    description: Conflict not yet resolved
+
+```
 </details>
 
 

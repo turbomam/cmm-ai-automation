@@ -719,40 +719,40 @@
 - This is "KGX-shaped data" not "KGX-compliant data"</p>
 <hr />
 <h2 id="1-repository-state">1. Repository State</h2>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span><span class="nb">cd</span><span class="w"> </span>~/gitrepos/kg-microbe
-$<span class="w"> </span>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>-5
-e2861c4<span class="w"> </span>Merge<span class="w"> </span>pull<span class="w"> </span>request<span class="w"> </span><span class="c1">#479 from Knowledge-Graph-Hub/trembl-fix</span>
-201cb9e<span class="w"> </span>Replace<span class="w"> </span>hardcoded<span class="w"> </span>TrEMBL<span class="w"> </span>prefix<span class="w"> </span>with<span class="w"> </span>TREMBL_PREFIX<span class="w"> </span>constant
-4fe320e<span class="w"> </span>Correct<span class="w"> </span>misleading<span class="w"> </span>comment<span class="w"> </span><span class="k">in</span><span class="w"> </span>Rhea<span class="w"> </span>mappings<span class="w"> </span>transform
-16321e8<span class="w"> </span>Filter<span class="w"> </span>out<span class="w"> </span>TrEMBL<span class="w"> </span>protein<span class="w"> </span>nodes<span class="w"> </span>from<span class="w"> </span>EC<span class="w"> </span>ontology<span class="w"> </span>transform
-43c0db5<span class="w"> </span>Merge<span class="w"> </span>pull<span class="w"> </span>request<span class="w"> </span><span class="c1">#477 from Knowledge-Graph-Hub/ontology-case</span>
-</code></pre></div>
+<p><code>bash
+$ cd ~/gitrepos/kg-microbe
+$ git log --oneline -5
+e2861c4 Merge pull request #479 from Knowledge-Graph-Hub/trembl-fix
+201cb9e Replace hardcoded TrEMBL prefix with TREMBL_PREFIX constant
+4fe320e Correct misleading comment in Rhea mappings transform
+16321e8 Filter out TrEMBL protein nodes from EC ontology transform
+43c0db5 Merge pull request #477 from Knowledge-Graph-Hub/ontology-case</code></p>
 <p><strong>Transformed data available:</strong>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>ls<span class="w"> </span>data/transformed/
-bacdive<span class="w">  </span>bactotraits<span class="w">  </span>edge_patterns.tsv<span class="w">  </span>madin_etal<span class="w">  </span>ontologies
-</code></pre></div></p>
+<code>bash
+$ ls data/transformed/
+bacdive  bactotraits  edge_patterns.tsv  madin_etal  ontologies</code></p>
 <hr />
 <h2 id="2-node-file-headers">2. Node File Headers</h2>
 <h3 id="bacdive-bactotraits-madin_etal-identical">Bacdive, Bactotraits, Madin_etal (identical)</h3>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>head<span class="w"> </span>-1<span class="w"> </span>data/transformed/bacdive/nodes.tsv
-id<span class="w">  </span>category<span class="w">    </span>name<span class="w">    </span>description<span class="w"> </span>xref<span class="w">    </span>provided_by<span class="w"> </span>synonym<span class="w"> </span>iri<span class="w"> </span>object<span class="w">  </span>predicate<span class="w">   </span>relation<span class="w">    </span>same_as<span class="w"> </span>subject<span class="w"> </span>subsets
-</code></pre></div>
+<p><code>bash
+$ head -1 data/transformed/bacdive/nodes.tsv
+id  category    name    description xref    provided_by synonym iri object  predicate   relation    same_as subject subsets</code></p>
 <p><strong>Issue:</strong> Edge-specific columns present in node files:
 - <code>subject</code> - should only be in edges
 - <code>predicate</code> - should only be in edges
 - <code>object</code> - should only be in edges
 - <code>relation</code> - should only be in edges (also deprecated in Biolink 3.x)</p>
 <h3 id="ontology-files-cleaner">Ontology Files (cleaner)</h3>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>head<span class="w"> </span>-1<span class="w"> </span>data/transformed/ontologies/ec_nodes.tsv
-id<span class="w">  </span>category<span class="w">    </span>name<span class="w">    </span>provided_by<span class="w"> </span>synonym<span class="w"> </span>deprecated<span class="w">  </span>iri<span class="w"> </span>same_as
-</code></pre></div>
+<p><code>bash
+$ head -1 data/transformed/ontologies/ec_nodes.tsv
+id  category    name    provided_by synonym deprecated  iri same_as</code></p>
 <p>Ontology transforms don't have this schema pollution.</p>
 <hr />
 <h2 id="3-edge-file-headers">3. Edge File Headers</h2>
 <h3 id="all-sources-identical">All Sources (identical)</h3>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>head<span class="w"> </span>-1<span class="w"> </span>data/transformed/bacdive/edges.tsv
-subject<span class="w"> </span>predicate<span class="w">   </span>object<span class="w">  </span>relation<span class="w">    </span>primary_knowledge_source
-</code></pre></div>
+<p><code>bash
+$ head -1 data/transformed/bacdive/edges.tsv
+subject predicate   object  relation    primary_knowledge_source</code></p>
 <p><strong>Only 5 columns.</strong></p>
 <p><strong>Missing required Biolink 3.x fields:</strong>
 - <code>knowledge_level</code> - Required enum indicating how assertion was made
@@ -760,7 +760,8 @@ subject<span class="w"> </span>predicate<span class="w">   </span>object<span cl
 <p><strong>The <code>relation</code> field is deprecated</strong> in Biolink 3.x, should use <code>predicate</code> only.</p>
 <hr />
 <h2 id="4-primary-knowledge-source-format">4. Primary Knowledge Source Format</h2>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cut<span class="w"> </span>-f5<span class="w"> </span>data/transformed/bacdive/edges.tsv<span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u<span class="w"> </span><span class="p">|</span><span class="w"> </span>head<span class="w"> </span>-10
+<p><code>bash
+$ cut -f5 data/transformed/bacdive/edges.tsv | sort -u | head -10
 bacdive
 bacdive:1
 bacdive:10
@@ -770,14 +771,14 @@ bacdive:10000
 bacdive:100001
 bacdive:100002
 bacdive:100003
-primary_knowledge_source
-</code></pre></div>
+primary_knowledge_source</code></p>
 <p><strong>Issue:</strong> Values are <code>bacdive</code> or <code>bacdive:NUMBER</code></p>
 <p><strong>Should be:</strong> <code>infores:bacdive</code></p>
 <p>The <code>infores:</code> prefix is required per KGX specification. It references the Biolink information-resource-registry where databases are registered with metadata.</p>
 <hr />
 <h2 id="5-curie-prefix-analysis">5. CURIE Prefix Analysis</h2>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cat<span class="w"> </span>data/transformed/*/nodes.tsv<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f1<span class="w"> </span><span class="p">|</span><span class="w"> </span>sed<span class="w"> </span><span class="s1">&#39;s/:.*/:/&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sort<span class="w"> </span>-u
+<p><code>bash
+$ cat data/transformed/*/nodes.tsv | cut -f1 | sed 's/:.*/:/' | sort -u
 bacdive.isolation_source:
 carbon_substrates:
 CAS-RN:
@@ -795,8 +796,7 @@ NCBITaxon:
 pathways:
 pato:
 po:
-UBERON:
-</code></pre></div>
+UBERON:</code></p>
 <h3 id="bioregistry-registration-status">Bioregistry Registration Status</h3>
 <table>
 <thead>
@@ -856,26 +856,26 @@ UBERON:
 <hr />
 <h2 id="6-curie-format-validation">6. CURIE Format Validation</h2>
 <h3 id="spaces-in-ids-original-issue-430">Spaces in IDs (Original Issue #430)</h3>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cat<span class="w"> </span>data/transformed/*/nodes.tsv<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot; &quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-<span class="m">0</span>
-</code></pre></div>
+<p><code>bash
+$ cat data/transformed/*/nodes.tsv | cut -f1 | grep " " | wc -l
+0</code></p>
 <p><strong>Result:</strong> No spaces found in current node IDs. This appears to be fixed.</p>
 <h3 id="extra-colons-original-issue-430">Extra Colons (Original Issue #430)</h3>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>cat<span class="w"> </span>data/transformed/*/nodes.tsv<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-f1<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;:-:&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-<span class="m">0</span>
-</code></pre></div>
+<p><code>bash
+$ cat data/transformed/*/nodes.tsv | cut -f1 | grep ":-:" | wc -l
+0</code></p>
 <p><strong>Result:</strong> No extra colons found. This appears to be fixed.</p>
 <hr />
 <h2 id="7-predicate-analysis">7. Predicate Analysis</h2>
 <h3 id="recent-fix-for-capable_of">Recent Fix for <code>capable_of</code></h3>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>git<span class="w"> </span>log<span class="w"> </span>--oneline<span class="w"> </span>--grep<span class="o">=</span><span class="s2">&quot;capable_of&quot;</span><span class="w"> </span>-5
-19aeb82<span class="w"> </span>Replace<span class="w"> </span>biolink:capable_of<span class="w"> </span>with<span class="w"> </span>METPO:2000103<span class="w"> </span><span class="k">in</span><span class="w"> </span>BactoTraits<span class="w"> </span>and<span class="w"> </span>Madin<span class="w"> </span>et<span class="w"> </span>al<span class="w"> </span>transforms
-</code></pre></div>
+<p><code>bash
+$ git log --oneline --grep="capable_of" -5
+19aeb82 Replace biolink:capable_of with METPO:2000103 in BactoTraits and Madin et al transforms</code></p>
 <p><strong>Commit date:</strong> December 2025</p>
 <p><strong>Verification:</strong>
-<div class="highlight"><pre><span></span><code>$<span class="w"> </span>grep<span class="w"> </span><span class="s2">&quot;capable_of&quot;</span><span class="w"> </span>data/transformed/*/edges.tsv<span class="w"> </span><span class="p">|</span><span class="w"> </span>wc<span class="w"> </span>-l
-<span class="m">0</span>
-</code></pre></div></p>
+<code>bash
+$ grep "capable_of" data/transformed/*/edges.tsv | wc -l
+0</code></p>
 <p><strong>Result:</strong> <code>biolink:capable_of</code> has been replaced with METPO predicates. Issue #438 appears addressed.</p>
 <hr />
 <h2 id="8-recent-positive-changes">8. Recent Positive Changes</h2>
@@ -937,11 +937,11 @@ UBERON:
 <hr />
 <h2 id="11-reproducibility">11. Reproducibility</h2>
 <p>All commands in this document can be run against the kg-microbe repository to verify findings:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/kg-microbe
-git<span class="w"> </span>checkout<span class="w"> </span>e2861c4<span class="w">  </span><span class="c1"># or main for latest</span>
-
-<span class="c1"># Run verification commands from sections above</span>
-</code></pre></div>
+<p>```bash
+cd ~/gitrepos/kg-microbe
+git checkout e2861c4  # or main for latest</p>
+<h1 id="run-verification-commands-from-sections-above">Run verification commands from sections above</h1>
+<p>```</p>
 <hr />
 <p><strong>Document created:</strong> 2026-01-08
 <strong>Based on:</strong> kg-microbe commit e2861c4</p>

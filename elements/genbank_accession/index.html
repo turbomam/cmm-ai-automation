@@ -596,17 +596,19 @@ Alias: genbank_accession</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genbank_accession</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GenBank assembly accession (GCA_NNNNNNNN.N format). These are the primary</span>
-<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">genome assembly identifiers.</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">genbank_accession</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Genome</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">pattern</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">^GCA_\d{9}\.\d+$</span>
-</code></pre></div>
+```yaml
+name: genbank_accession
+description: GenBank assembly accession (GCA_NNNNNNNN.N format). These are the primary
+  genome assembly identifiers.
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: genbank_accession
+domain_of:
+- Genome
+range: string
+pattern: ^GCA_\d{9}\.\d+$
+
+```
 </details>
 
 

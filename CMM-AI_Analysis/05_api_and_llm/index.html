@@ -986,9 +986,9 @@
 <li>
 <p><strong>FAKE Data Created by LLM</strong>:
    <code>publication_search.py</code> lines 172-205 contain fabricated publications:
-   <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://arxiv.org/abs/2309.12345&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>  <span class="c1"># DOES NOT EXIST</span>
-<span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://arxiv.org/abs/2308.54321&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>  <span class="c1"># DOES NOT EXIST</span>
-</code></pre></div>
+   <code>python
+   {"url": "https://arxiv.org/abs/2309.12345", ...},  # DOES NOT EXIST
+   {"url": "https://arxiv.org/abs/2308.54321", ...},  # DOES NOT EXIST</code>
    This is classic LLM hallucination - generating plausible-looking but non-existent URLs.</p>
 </li>
 <li>

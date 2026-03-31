@@ -489,28 +489,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#local-id-registry-datalocal_media_registrytsv" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Local ID Registry (data/local_media_registry.tsv)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#dependencies" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Dependencies
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -608,11 +586,12 @@
 </tbody>
 </table>
 <h2 id="usage">Usage</h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># Export grounded media nodes</span>
-uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.export_grounded_media_kgx<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--input<span class="w"> </span><span class="s2">&quot;/path/to/growth_media.tsv&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--output<span class="w"> </span>output/kgx
-</code></pre></div>
+<p>```bash</p>
+<h1 id="export-grounded-media-nodes">Export grounded media nodes</h1>
+<p>uv run python -m cmm_ai_automation.scripts.export_grounded_media_kgx \
+    --input "/path/to/growth_media.tsv" \
+    --output output/kgx
+```</p>
 <h2 id="local-id-registry-datalocal_media_registrytsv">Local ID Registry (<code>data/local_media_registry.tsv</code>)</h2>
 <p>Maintained registry for media that do not exist in public databases.</p>
 <table>

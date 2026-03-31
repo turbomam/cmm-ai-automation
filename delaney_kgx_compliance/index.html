@@ -767,78 +767,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#validation-fails-with-category-capitalization-error" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validation Fails with "Category capitalization error"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validation-fails-with-missing-required-field-knowledge_level" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validation Fails with "Missing required field: knowledge_level"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#validation-fails-with-missing-required-field-agent_type" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Validation Fails with "Missing required field: agent_type"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#test-fails-with-edge-objects-dont-have-nodes" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Test Fails with "edge objects don't have nodes"
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#getting-help" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Getting Help
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -906,19 +834,19 @@
 <h2 id="validation-and-fixing">Validation and Fixing</h2>
 <h3 id="validate-current-files">Validate Current Files</h3>
 <p>Check if your files are compliant:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.validate_fix_delaney_kgx<span class="w"> </span>--validate-only
-</code></pre></div>
+<p><code>bash
+uv run python -m cmm_ai_automation.scripts.validate_fix_delaney_kgx --validate-only</code></p>
 <h3 id="fix-issues-automatically">Fix Issues Automatically</h3>
 <p>Generate compliant fixed files:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>python<span class="w"> </span>-m<span class="w"> </span>cmm_ai_automation.scripts.validate_fix_delaney_kgx
-</code></pre></div>
+<p><code>bash
+uv run python -m cmm_ai_automation.scripts.validate_fix_delaney_kgx</code></p>
 <p>This creates:
 - <code>data/private/delaney-media-kgx-nodes-fixed.tsv</code>
 - <code>data/private/delaney-media-kgx-edges-fixed.tsv</code></p>
 <h3 id="run-compliance-tests">Run Compliance Tests</h3>
 <p>Verify compliance with comprehensive tests:</p>
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>pytest<span class="w"> </span>tests/test_delaney_kgx_validation.py<span class="w"> </span>-v
-</code></pre></div>
+<p><code>bash
+uv run pytest tests/test_delaney_kgx_validation.py -v</code></p>
 <p>All 14 tests should pass:
 - ✅ Node structure validation
 - ✅ Edge structure validation
@@ -939,9 +867,9 @@
 <h3 id="issue-3-missing-nodes-for-edge-objects">Issue 3: Missing Nodes for Edge Objects</h3>
 <p><strong>Problem</strong>: Edge points to <code>CHEBI:114249</code> but no node exists for it</p>
 <p><strong>Solution</strong>: Create a node:
-<div class="highlight"><pre><span></span><code>id  category    name
-CHEBI:114249    biolink:ChemicalEntity  Sodium dihydrogen phosphate monohydrate
-</code></pre></div></p>
+<code>tsv
+id  category    name
+CHEBI:114249    biolink:ChemicalEntity  Sodium dihydrogen phosphate monohydrate</code></p>
 <h2 id="maintaining-compliance">Maintaining Compliance</h2>
 <h3 id="when-adding-new-data">When Adding New Data</h3>
 <ol>
@@ -969,11 +897,11 @@ CHEBI:114249    biolink:ChemicalEntity  Sodium dihydrogen phosphate monohydrate
 </ol>
 <h3 id="automated-validation-in-ci">Automated Validation in CI</h3>
 <p>Add to your GitHub Actions workflow:</p>
-<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Validate KGX files</span>
-<span class="w">  </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
-<span class="w">    </span><span class="no">uv run python -m cmm_ai_automation.scripts.validate_fix_delaney_kgx --validate-only</span>
-<span class="w">    </span><span class="no">uv run pytest tests/test_delaney_kgx_validation.py</span>
-</code></pre></div>
+<p><code>yaml
+- name: Validate KGX files
+  run: |
+    uv run python -m cmm_ai_automation.scripts.validate_fix_delaney_kgx --validate-only
+    uv run pytest tests/test_delaney_kgx_validation.py</code></p>
 <h2 id="kgx-field-reference">KGX Field Reference</h2>
 <h3 id="node-fields">Node Fields</h3>
 <table>
@@ -1107,18 +1035,18 @@ CHEBI:114249    biolink:ChemicalEntity  Sodium dihydrogen phosphate monohydrate
 <li><a href="https://biolink.github.io/biolink-model/related_to/">Biolink Predicate Hierarchy</a></li>
 </ul>
 <h2 id="example-creating-a-new-medium">Example: Creating a New Medium</h2>
-<div class="highlight"><pre><span></span><code># nodes file
-id  category    name
+<p>```tsv</p>
+<h1 id="nodes-file">nodes file</h1>
+<p>id  category    name
 doi:10.1234/journal.001 biolink:ComplexMolecularMixture My Custom Medium
 uuid:solution-abc   biolink:ChemicalMixture 10X Buffer Solution
-CHEBI:15377 biolink:ChemicalEntity  Water
-
-# edges file
-subject predicate   object  knowledge_level agent_type  amount  units
+CHEBI:15377 biolink:ChemicalEntity  Water</p>
+<h1 id="edges-file">edges file</h1>
+<p>subject predicate   object  knowledge_level agent_type  amount  units
 doi:10.1234/journal.001 biolink:has_part    uuid:solution-abc   knowledge_assertion manual_agent    100 mL
 doi:10.1234/journal.001 biolink:has_part    CHEBI:15377 knowledge_assertion manual_agent    900 mL
 uuid:solution-abc   biolink:has_part    CHEBI:15377 knowledge_assertion manual_agent    1   L
-</code></pre></div>
+```</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="validation-fails-with-category-capitalization-error">Validation Fails with "Category capitalization error"</h3>
 <p><strong>Fix</strong>: Change <code>Biolink:</code> to <code>biolink:</code> (lowercase)</p>

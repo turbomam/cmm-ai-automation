@@ -495,139 +495,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#scripts-referenced-in-makefile-40-scripts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scripts Referenced in Makefile (40 scripts)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#scripts-not-in-makefile-17-orphaned" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Scripts NOT in Makefile (17 orphaned)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Scripts NOT in Makefile (17 orphaned)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#utility-scripts-should-probably-have-targets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Utility Scripts (should probably have targets)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#library-modules-used-by-other-scripts-ok-to-not-have-targets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Library Modules (used by other scripts - OK to not have targets)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#auto-generated-examples-ok-to-not-have-targets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Auto-generated / Examples (OK to not have targets)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kg_analysis-scripts-not-in-makefile-5-orphaned" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        kg_analysis/ Scripts NOT in Makefile (5 orphaned)
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#hardcoded-data-and-configuration-in-python-scripts" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Hardcoded Data and Configuration in Python Scripts
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Hardcoded Data and Configuration in Python Scripts">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#summary" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#inventory-of-hardcoded-data" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Inventory of Hardcoded Data
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#makefile-target-categories" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Makefile Target Categories
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#summary-of-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Summary of Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -738,34 +605,43 @@
 - <code>make add-annotations</code>
 - <code>make test</code></p>
 <h3 id="recommended-fix">Recommended Fix</h3>
-<div class="highlight"><pre><span></span><code><span class="c"># Line 111: Fix update-pathways</span>
-<span class="err">-</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">extend_pathways.py</span>
-<span class="err">+</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">src/extend_pathways.py</span>
-
-<span class="c"># Line 119: Fix update-datasets</span>
-<span class="err">-</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">extend_datasets.py</span>
-<span class="err">+</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">src/extend_datasets.py</span>
-
-<span class="c"># Line 152: Fix update-genes</span>
-<span class="err">-</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">extend_genes.py</span>
-<span class="err">+</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">src/extend_genes.py</span>
-
-<span class="c"># Line 160: Fix update-structures</span>
-<span class="err">-</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">extend_structures.py</span>
-<span class="err">+</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">src/extend_structures.py</span>
-
-<span class="c"># Line 168: Fix update-publications</span>
-<span class="err">-</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">extend_publications.py</span>
-<span class="err">+</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">src/extend_publications.py</span>
-
-<span class="c"># Line 307: Fix add-annotations</span>
-<span class="err">-</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">add_annotation_urls.py</span>
-<span class="err">+</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">src/add_annotation_urls.py</span>
-
-<span class="c"># Line 313: Fix test</span>
-<span class="err">-</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">test_annotation_urls.py</span>
-<span class="err">+</span><span class="w">   </span><span class="err">uv</span><span class="w"> </span><span class="err">run</span><span class="w"> </span><span class="err">python</span><span class="w"> </span><span class="err">src/test_annotation_urls.py</span>
-</code></pre></div>
+<p>```makefile</p>
+<h1 id="line-111-fix-update-pathways">Line 111: Fix update-pathways</h1>
+<ul>
+<li>uv run python extend_pathways.py</li>
+<li>uv run python src/extend_pathways.py</li>
+</ul>
+<h1 id="line-119-fix-update-datasets">Line 119: Fix update-datasets</h1>
+<ul>
+<li>uv run python extend_datasets.py</li>
+<li>uv run python src/extend_datasets.py</li>
+</ul>
+<h1 id="line-152-fix-update-genes">Line 152: Fix update-genes</h1>
+<ul>
+<li>uv run python extend_genes.py</li>
+<li>uv run python src/extend_genes.py</li>
+</ul>
+<h1 id="line-160-fix-update-structures">Line 160: Fix update-structures</h1>
+<ul>
+<li>uv run python extend_structures.py</li>
+<li>uv run python src/extend_structures.py</li>
+</ul>
+<h1 id="line-168-fix-update-publications">Line 168: Fix update-publications</h1>
+<ul>
+<li>uv run python extend_publications.py</li>
+<li>uv run python src/extend_publications.py</li>
+</ul>
+<h1 id="line-307-fix-add-annotations">Line 307: Fix add-annotations</h1>
+<ul>
+<li>uv run python add_annotation_urls.py</li>
+<li>uv run python src/add_annotation_urls.py</li>
+</ul>
+<h1 id="line-313-fix-test">Line 313: Fix test</h1>
+<ul>
+<li>uv run python test_annotation_urls.py</li>
+<li>uv run python src/test_annotation_urls.py
+```</li>
+</ul>
 <hr />
 <h2 id="scripts-referenced-in-makefile-40-scripts">Scripts Referenced in Makefile (40 scripts)</h2>
 <p>The Makefile references these scripts through various targets:</p>

@@ -590,208 +590,8 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#deduplication-strategy" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Deduplication Strategy
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#kg_node_ids-column-structure" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        kg_node_ids Column Structure
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="kg_node_ids Column Structure">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#format-specification" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Format Specification
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#coverage-pattern" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Coverage Pattern
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#data-validation-results" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Data Validation Results
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Data Validation Results">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#no-mismatches-found" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        ✓ No Mismatches Found
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#incomplete-records-19-rows" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Incomplete Records (19 rows)
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommendations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommendations
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Recommendations">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#quick-wins-can-implement-immediately" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quick Wins (Can implement immediately)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#requires-investigation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Requires Investigation
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#long-term-improvements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Long-term Improvements
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#action-items" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Action Items
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Action Items">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#high-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        High Priority
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#medium-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Medium Priority
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#low-priority" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Low Priority
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#files-generated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Files Generated
-      
-    </span>
-  </a>
   
 </li>
       
@@ -914,13 +714,11 @@
 <h3 id="issue-1-source-field-pollution-high-priority">❌ Issue 1: Source Field Pollution (HIGH PRIORITY)</h3>
 <p><strong>Problem:</strong> 63 records (30%) have FTP URLs in the <code>source</code> field</p>
 <p><strong>Expected:</strong>
-<div class="highlight"><pre><span></span><code>source: &quot;UniProt API search: lanM, xoxF, mxaF...&quot;
-source: &quot;extend1&quot;
-source: &quot;fix_validation&quot;
-</code></pre></div></p>
+<code>source: "UniProt API search: lanM, xoxF, mxaF..."
+source: "extend1"
+source: "fix_validation"</code></p>
 <p><strong>Actual (wrong):</strong>
-<div class="highlight"><pre><span></span><code>source: &quot;ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/333/655/...&quot;
-</code></pre></div></p>
+<code>source: "ftp://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/333/655/..."</code></p>
 <p><strong>Root Cause:</strong>
 - Early implementation used <code>source</code> for FTP URLs (no separate column existed)
 - <code>Annotation download URL</code> column was added later via <code>add_annotation_urls.py</code>
@@ -1014,27 +812,28 @@ source: &quot;fix_validation&quot;
 </table>
 <p><strong>Key Insight:</strong> The majority (132/211 = 62.6%) of organisms were discovered via <strong>UniProt protein searches</strong>, not genome searches. These organisms have lanthanide-relevant proteins (xoxF, lanM, mxaF, exaF) but may not have sequenced genomes.</p>
 <h3 id="automated-maintenance-workflows">Automated Maintenance Workflows</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Core extension scripts (run periodically)</span>
-make<span class="w"> </span>update-genomes<span class="w">                 </span><span class="c1"># NCBI Assembly search</span>
-src/extend_from_lanm.py<span class="w">             </span><span class="c1"># UniProt protein search (majority method)</span>
-src/add_missing_organisms.py<span class="w">        </span><span class="c1"># Validation fixes</span>
-src/annotate_kg_identifiers.py<span class="w">     </span><span class="c1"># Adds KG linkage</span>
-src/add_annotation_urls.py<span class="w">         </span><span class="c1"># Generates download URLs</span>
-</code></pre></div>
+<p>```bash</p>
+<h1 id="core-extension-scripts-run-periodically">Core extension scripts (run periodically)</h1>
+<p>make update-genomes                 # NCBI Assembly search
+src/extend_from_lanm.py             # UniProt protein search (majority method)
+src/add_missing_organisms.py        # Validation fixes
+src/annotate_kg_identifiers.py     # Adds KG linkage
+src/add_annotation_urls.py         # Generates download URLs
+```</p>
 <h3 id="deduplication-strategy">Deduplication Strategy</h3>
 <p>Current approach:
-<div class="highlight"><pre><span></span><code><span class="n">df</span><span class="o">.</span><span class="n">drop_duplicates</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Scientific name&quot;</span><span class="p">],</span> <span class="n">keep</span><span class="o">=</span><span class="s2">&quot;first&quot;</span><span class="p">)</span>
-</code></pre></div></p>
+<code>python
+df.drop_duplicates(subset=["Scientific name"], keep="first")</code></p>
 <p><strong>Gap:</strong> Doesn't catch duplicate taxon IDs with different names (NCBITaxon:270351, 157278)</p>
 <p><strong>Proposed:</strong>
-<div class="highlight"><pre><span></span><code><span class="c1"># Check for duplicate taxon IDs</span>
-<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;NCBITaxon id&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">)</span>
-</code></pre></div></p>
+```python</p>
+<h1 id="check-for-duplicate-taxon-ids">Check for duplicate taxon IDs</h1>
+<p>df.groupby('NCBITaxon id').filter(lambda x: len(x) &gt; 1)
+```</p>
 <hr />
 <h2 id="kg_node_ids-column-structure">kg_node_ids Column Structure</h2>
 <h3 id="format-specification">Format Specification</h3>
-<div class="highlight"><pre><span></span><code>NCBITaxon:270351|kg-microbe; NCBITaxon:270351|kg-microbe-function
-</code></pre></div>
+<p><code>NCBITaxon:270351|kg-microbe; NCBITaxon:270351|kg-microbe-function</code></p>
 <p><strong>Components:</strong>
 - <code>NCBITaxon:XXXXX</code> - Organism's NCBI Taxonomy ID
 - <code>|</code> - Pipe delimiter separates ID from KG name

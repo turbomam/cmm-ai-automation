@@ -517,167 +517,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#missing-provenance" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Missing Provenance
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Missing Provenance">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-we-cannot-determine" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What We Cannot Determine
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ingredient-roles-no-references" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ingredient Roles - No References
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#assay-protocol-concerns" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Assay Protocol Concerns
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#gene-database-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Gene Database Issues
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#documentation-gaps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Documentation Gaps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Documentation Gaps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#what-is-documented" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What IS Documented
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#what-is-not-documented" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        What is NOT Documented
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#agentsmd-is-outdated" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        AGENTS.md is Outdated
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#reproducibility-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reproducibility Issues
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Reproducibility Issues">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#reproducible" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Reproducible
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#not-reproducible" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        NOT Reproducible
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#questions-requiring-human-answers" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Questions Requiring Human Answers
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -796,14 +635,14 @@
 <h2 id="fake-publications-critical-data-quality-issue">FAKE Publications (Critical Data Quality Issue)</h2>
 <p><strong>File</strong>: <code>src/publication_search.py</code> lines 172-205</p>
 <p><strong>These DOIs/URLs DO NOT EXIST:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="c1"># From search_arxiv_preprints() - lines 170-187</span>
-<span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://arxiv.org/abs/2309.12345&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>  <span class="c1"># FAKE</span>
-<span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://arxiv.org/abs/2308.54321&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>  <span class="c1"># FAKE</span>
-
-<span class="c1"># From search_biorxiv_preprints() - lines 190-213</span>
-<span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.biorxiv.org/content/10.1101/2023.09.15.557123v1&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>  <span class="c1"># FAKE</span>
-<span class="p">{</span><span class="s2">&quot;url&quot;</span><span class="p">:</span> <span class="s2">&quot;https://www.biorxiv.org/content/10.1101/2023.08.22.554321v1&quot;</span><span class="p">,</span> <span class="o">...</span><span class="p">},</span>  <span class="c1"># FAKE</span>
-</code></pre></div>
+<p>```python</p>
+<h1 id="from-search_arxiv_preprints-lines-170-187">From search_arxiv_preprints() - lines 170-187</h1>
+<p>{"url": "https://arxiv.org/abs/2309.12345", ...},  # FAKE
+{"url": "https://arxiv.org/abs/2308.54321", ...},  # FAKE</p>
+<h1 id="from-search_biorxiv_preprints-lines-190-213">From search_biorxiv_preprints() - lines 190-213</h1>
+<p>{"url": "https://www.biorxiv.org/content/10.1101/2023.09.15.557123v1", ...},  # FAKE
+{"url": "https://www.biorxiv.org/content/10.1101/2023.08.22.554321v1", ...},  # FAKE
+```</p>
 <p><strong>This is classic LLM hallucination</strong> - generating plausible-looking but non-existent URLs.</p>
 <p><strong>Impact</strong>: If these functions are called, fabricated data will contaminate the database.</p>
 <p><strong>Required action</strong>: DELETE these fake entries from the codebase.</p>

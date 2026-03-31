@@ -827,7 +827,7 @@
 <hr />
 <h2 id="the-two-data-systems">The Two Data Systems</h2>
 <h3 id="system-a-google-sheets-xlsx-tsv">System A: Google Sheets -&gt; XLSX -&gt; TSV</h3>
-<div class="highlight"><pre><span></span><code>Collaborators type/paste into Google Sheets
+<p><code>Collaborators type/paste into Google Sheets
     | (manual process, undocumented)
     v
 Marcin downloads as XLSX
@@ -839,8 +839,7 @@ data/sheet/BER CMM Data for AI.xlsx (254 KB, Dec 4 2025)
 make convert-excel (runs src/convert_sheets.py)
     |
     v
-data/txt/sheet/BER_CMM_Data_for_AI_*.tsv (16 files)
-</code></pre></div>
+data/txt/sheet/BER_CMM_Data_for_AI_*.tsv (16 files)</code></p>
 <p><strong>Characteristics:</strong>
 - Contains manual entries, possibly LLM-generated content
 - Has UTF-8 encoding issues (mojibake: see <a href="../03_data_quality_issues/">Chapter 3</a>)
@@ -848,7 +847,7 @@ data/txt/sheet/BER_CMM_Data_for_AI_*.tsv (16 files)
 - No version control on Google Sheet edits
 - No record of who entered what or when</p>
 <h3 id="system-b-python-extend-scripts">System B: Python Extend Scripts</h3>
-<div class="highlight"><pre><span></span><code>Seed data (hardcoded in Python or from TSV)
+<p><code>Seed data (hardcoded in Python or from TSV)
     |
     v
 API queries (NCBI, KEGG, UniProt, PDB, KG-Microbe)
@@ -857,8 +856,7 @@ API queries (NCBI, KEGG, UniProt, PDB, KG-Microbe)
 src/extend_*.py scripts
     |
     v
-data/txt/sheet/extended/BER_CMM_Data_for_AI_*_extended.tsv (16 files)
-</code></pre></div>
+data/txt/sheet/extended/BER_CMM_Data_for_AI_*_extended.tsv (16 files)</code></p>
 <p><strong>Characteristics:</strong>
 - Reproducible (run <code>make update-*</code> commands)
 - Clean UTF-8 encoding
@@ -1097,15 +1095,14 @@ data/txt/sheet/extended/BER_CMM_Data_for_AI_*_extended.tsv (16 files)
 </table>
 <h3 id="denormalization-issue">Denormalization Issue</h3>
 <p>The <code>media_name</code> column in media_ingredients is <strong>redundant</strong> - it duplicates data from growth_media. This violates 3NF:</p>
-<div class="highlight"><pre><span></span><code>media_ingredients.media_id -&gt; growth_media.media_id -&gt; growth_media.media_name
-</code></pre></div>
+<p><code>media_ingredients.media_id -&gt; growth_media.media_id -&gt; growth_media.media_name</code></p>
 <p>If <code>media_name</code> changes in growth_media, it must be updated in 64 rows of media_ingredients.</p>
 <hr />
 <h2 id="mediaingredients-data-model-design-analysis">Media/Ingredients Data Model Design Analysis</h2>
 <h3 id="current-state-assessment">Current State Assessment</h3>
 <h4 id="1-normalization-violations">1. Normalization Violations</h4>
 <p><strong>Current structure</strong> (denormalized):
-<div class="highlight"><pre><span></span><code>media_ingredients.tsv contains:
+<code>media_ingredients.tsv contains:
 - ingredient_id (PK)
 - ingredient_name
 - media_id (FK)
@@ -1116,8 +1113,7 @@ data/txt/sheet/extended/BER_CMM_Data_for_AI_*_extended.tsv (16 files)
 - concentration
 - unit
 - role
-- kg_microbe_nodes
-</code></pre></div></p>
+- kg_microbe_nodes</code></p>
 <p><strong>Recommended 3-table structure</strong>:</p>
 <table>
 <thead>
@@ -1299,7 +1295,7 @@ data/txt/sheet/extended/BER_CMM_Data_for_AI_*_extended.tsv (16 files)
 <hr />
 <h2 id="linkml-schema-and-data-table-relationships">LinkML Schema and Data Table Relationships</h2>
 <h3 id="data-flow-architecture">Data Flow Architecture</h3>
-<div class="highlight"><pre><span></span><code>+-----------------------------------------------------------------------------+
+<p><code>+-----------------------------------------------------------------------------+
 |                           DATA SOURCES                                       |
 +-----------------------------------------------------------------------------+
 |  Google Sheets -&gt; XLSX -&gt; TSV (data/txt/sheet/*.tsv)                        |
@@ -1322,8 +1318,7 @@ data/txt/sheet/extended/BER_CMM_Data_for_AI_*_extended.tsv (16 files)
 +-----------------------------------------------------------------------------+
 |                       linkml-validate                                        |
 |  Validates YAML against schema/lanthanide_bioprocessing.yaml                |
-+-----------------------------------------------------------------------------+
-</code></pre></div>
++-----------------------------------------------------------------------------+</code></p>
 <h3 id="schema-class-to-tsv-file-mapping">Schema Class to TSV File Mapping</h3>
 <table>
 <thead>

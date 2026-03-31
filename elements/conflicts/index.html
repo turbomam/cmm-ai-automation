@@ -555,13 +555,13 @@ Alias: conflicts</p>
 </thead>
 <tbody>
 <tr>
-<td><a href="../EnrichedIngredient/">EnrichedIngredient</a></td>
-<td>A chemical entity enriched with data from multiple sources</td>
+<td><a href="../Strain/">Strain</a></td>
+<td>A microbial strain enriched with data from multiple sources</td>
 <td>no</td>
 </tr>
 <tr>
-<td><a href="../Strain/">Strain</a></td>
-<td>A microbial strain enriched with data from multiple sources</td>
+<td><a href="../EnrichedIngredient/">EnrichedIngredient</a></td>
+<td>A chemical entity enriched with data from multiple sources</td>
 <td>no</td>
 </tr>
 </tbody>
@@ -601,19 +601,21 @@ Alias: conflicts</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conflicts</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Recorded conflicts between data sources</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">conflicts</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Strain</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DataConflict</span>
-<span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="nt">inlined</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="nt">inlined_as_list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
+```yaml
+name: conflicts
+description: Recorded conflicts between data sources
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: conflicts
+domain_of:
+- EnrichedIngredient
+- Strain
+range: DataConflict
+multivalued: true
+inlined: true
+inlined_as_list: true
+
+```
 </details>
 
 

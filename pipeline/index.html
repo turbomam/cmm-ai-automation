@@ -479,161 +479,6 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#neo4j" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Neo4j
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#docker" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Docker
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pipeline-steps" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pipeline Steps
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pipeline Steps">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#step-1-load-source-data-into-mongodb" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 1: Load Source Data into MongoDB
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-2-mongodb-maintenance-optional" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 2: MongoDB Maintenance (Optional)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-3-export-to-kgx-format" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 3: Export to KGX Format
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-4-load-into-neo4j" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 4: Load into Neo4j
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#step-5-query-and-explore" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Step 5: Query and Explore
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#google-sheets-pipeline" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Google Sheets Pipeline
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#troubleshooting" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Troubleshooting
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Troubleshooting">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mongodb-connection-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MongoDB Connection Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#neo4j-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Neo4j Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#kgx-export-issues" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        KGX Export Issues
-      
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
@@ -663,7 +508,7 @@
 <h1 id="data-pipeline">Data Pipeline</h1>
 <p>This document describes the CMM data pipeline from source data to knowledge graph.</p>
 <h2 id="overview">Overview</h2>
-<div class="highlight"><pre><span></span><code>Google Sheets          MediaDive API         BacDive API
+<p><code>Google Sheets          MediaDive API         BacDive API
      │                      │                     │
      ▼                      ▼                     ▼
 ┌─────────────┐      ┌─────────────┐       ┌─────────────┐
@@ -685,26 +530,26 @@
        ┌─────────────┐             ┌─────────────┐
        │    Neo4j    │             │   RDF/JSONL │
        │ Graph DB    │             │   exports   │
-       └─────────────┘             └─────────────┘
-</code></pre></div>
+       └─────────────┘             └─────────────┘</code></p>
 <h2 id="infrastructure-requirements">Infrastructure Requirements</h2>
 <h3 id="mongodb">MongoDB</h3>
 <p>MongoDB stores source data from MediaDive and BacDive APIs.</p>
 <p><strong>Installation (Ubuntu/Debian):</strong>
-<div class="highlight"><pre><span></span><code><span class="c1"># Install MongoDB Community Edition</span>
-wget<span class="w"> </span>-qO<span class="w"> </span>-<span class="w"> </span>https://www.mongodb.org/static/pgp/server-7.0.asc<span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>apt-key<span class="w"> </span>add<span class="w"> </span>-
-<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>sudo<span class="w"> </span>tee<span class="w"> </span>/etc/apt/sources.list.d/mongodb-org-7.0.list
-sudo<span class="w"> </span>apt-get<span class="w"> </span>update
-sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>mongodb-org
-sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>mongod
-sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>mongod
-</code></pre></div></p>
+```bash</p>
+<h1 id="install-mongodb-community-edition">Install MongoDB Community Edition</h1>
+<p>wget -qO - https://www.mongodb.org/static/pgp/server-7.0.asc | sudo apt-key add -
+echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-7.0.list
+sudo apt-get update
+sudo apt-get install -y mongodb-org
+sudo systemctl start mongod
+sudo systemctl enable mongod
+```</p>
 <p><strong>Or via Docker:</strong>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>mongodb<span class="w"> </span>-p<span class="w"> </span><span class="m">27017</span>:27017<span class="w"> </span>mongo:7
-</code></pre></div></p>
+<code>bash
+docker run -d --name mongodb -p 27017:27017 mongo:7</code></p>
 <p><strong>Verify:</strong>
-<div class="highlight"><pre><span></span><code>mongosh<span class="w"> </span>--eval<span class="w"> </span><span class="s2">&quot;db.adminCommand(&#39;ping&#39;)&quot;</span>
-</code></pre></div></p>
+<code>bash
+mongosh --eval "db.adminCommand('ping')"</code></p>
 <p><strong>Collections used:</strong>
 | Database | Collection | Description |
 |----------|------------|-------------|
@@ -717,16 +562,16 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">en
 <h3 id="neo4j">Neo4j</h3>
 <p>Neo4j stores the final knowledge graph for querying and visualization.</p>
 <p><strong>Start via Docker (recommended):</strong>
-<div class="highlight"><pre><span></span><code>just<span class="w"> </span>neo4j-start
-</code></pre></div></p>
+<code>bash
+just neo4j-start</code></p>
 <p>This runs:
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>run<span class="w"> </span>-d<span class="w"> </span>--name<span class="w"> </span>cmm-neo4j<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-p<span class="w"> </span><span class="m">7474</span>:7474<span class="w"> </span>-p<span class="w"> </span><span class="m">7687</span>:7687<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-v<span class="w"> </span>cmm-neo4j-data:/data<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">NEO4J_AUTH</span><span class="o">=</span>neo4j/<span class="si">${</span><span class="nv">NEO4J_PASSWORD</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-e<span class="w"> </span><span class="nv">NEO4J_PLUGINS</span><span class="o">=</span><span class="s1">&#39;[&quot;apoc&quot;]&#39;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>neo4j:5
-</code></pre></div></p>
+<code>bash
+docker run -d --name cmm-neo4j \
+  -p 7474:7474 -p 7687:7687 \
+  -v cmm-neo4j-data:/data \
+  -e NEO4J_AUTH=neo4j/${NEO4J_PASSWORD} \
+  -e NEO4J_PLUGINS='["apoc"]' \
+  neo4j:5</code></p>
 <p><strong>Access:</strong>
 - Browser UI: http://localhost:7474
 - Bolt protocol: bolt://localhost:7687</p>
@@ -735,34 +580,33 @@ sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">en
 <p>Required for Neo4j. Install from https://docs.docker.com/get-docker/</p>
 <h2 id="pipeline-steps">Pipeline Steps</h2>
 <h3 id="step-1-load-source-data-into-mongodb">Step 1: Load Source Data into MongoDB</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Load MediaDive base data (media, solutions, ingredients)</span>
-<span class="c1"># Time: ~10 seconds</span>
-just<span class="w"> </span>load-mediadive
-
-<span class="c1"># Fetch detailed data (media details, ingredient details, strains)</span>
-<span class="c1"># Time: 3-4+ hours (~64,000 API calls with rate limiting)</span>
-just<span class="w"> </span>load-mediadive-details
-
-<span class="c1"># Optional: Load BacDive strain data</span>
-<span class="c1"># Requires BACDIVE_EMAIL and BACDIVE_PASSWORD in .env</span>
-just<span class="w"> </span>load-bacdive
-</code></pre></div>
+<p>```bash</p>
+<h1 id="load-mediadive-base-data-media-solutions-ingredients">Load MediaDive base data (media, solutions, ingredients)</h1>
+<h1 id="time-10-seconds">Time: ~10 seconds</h1>
+<p>just load-mediadive</p>
+<h1 id="fetch-detailed-data-media-details-ingredient-details-strains">Fetch detailed data (media details, ingredient details, strains)</h1>
+<h1 id="time-3-4-hours-64000-api-calls-with-rate-limiting">Time: 3-4+ hours (~64,000 API calls with rate limiting)</h1>
+<p>just load-mediadive-details</p>
+<h1 id="optional-load-bacdive-strain-data">Optional: Load BacDive strain data</h1>
+<h1 id="requires-bacdive_email-and-bacdive_password-in-env">Requires BACDIVE_EMAIL and BACDIVE_PASSWORD in .env</h1>
+<p>just load-bacdive
+```</p>
 <h3 id="step-2-mongodb-maintenance-optional">Step 2: MongoDB Maintenance (Optional)</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Merge unique data before dropping redundant collections</span>
-just<span class="w"> </span>mediadive-merge-references
-just<span class="w"> </span>mediadive-merge-bacdive-ids
-
-<span class="c1"># Drop redundant collections (runs merge first)</span>
-just<span class="w"> </span>mediadive-drop-redundant
-
-<span class="c1"># Backup/restore</span>
-just<span class="w"> </span>mediadive-backup
-just<span class="w"> </span>mediadive-restore<span class="w"> </span><span class="m">20251219</span>
-</code></pre></div>
+<p>```bash</p>
+<h1 id="merge-unique-data-before-dropping-redundant-collections">Merge unique data before dropping redundant collections</h1>
+<p>just mediadive-merge-references
+just mediadive-merge-bacdive-ids</p>
+<h1 id="drop-redundant-collections-runs-merge-first">Drop redundant collections (runs merge first)</h1>
+<p>just mediadive-drop-redundant</p>
+<h1 id="backuprestore">Backup/restore</h1>
+<p>just mediadive-backup
+just mediadive-restore 20251219
+```</p>
 <h3 id="step-3-export-to-kgx-format">Step 3: Export to KGX Format</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Clean and export MediaDive to KGX</span>
-just<span class="w"> </span>mediadive-kgx-clean-export
-</code></pre></div>
+<p>```bash</p>
+<h1 id="clean-and-export-mediadive-to-kgx">Clean and export MediaDive to KGX</h1>
+<p>just mediadive-kgx-clean-export
+```</p>
 <p><strong>Output files:</strong>
 - <code>output/kgx/mediadive_nodes.tsv</code> - All nodes (media, strains, ingredients, solutions)
 - <code>output/kgx/mediadive_edges.tsv</code> - All edges (grows_in, contains)</p>
@@ -780,80 +624,75 @@ just<span class="w"> </span>mediadive-kgx-clean-export
 | RO:0001019 | contains (medium/solution→ingredient) | ~53,000 |</p>
 <h3 id="step-4-load-into-neo4j">Step 4: Load into Neo4j</h3>
 <p>Multiple data sources available:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Option A: Merged KGX (curated Google Sheets data)</span>
-<span class="c1"># - Experimental strains, media, growth results</span>
-<span class="c1"># - Requires: just kgx-merge-all</span>
-just<span class="w"> </span>neo4j-upload-merged
-
-<span class="c1"># Option B: MediaDive KGX (reference database)</span>
-<span class="c1"># - Full MediaDive growth media collection</span>
-<span class="c1"># - Proper list handling (xref, synonym as arrays)</span>
-just<span class="w"> </span>neo4j-upload-mediadive
-
-<span class="c1"># Option C: MediaDive with custom labels</span>
-<span class="c1"># - Custom labels (GrowthMedium, Strain, Ingredient, Solution)</span>
-<span class="c1"># - Lists stored as pipe-delimited strings</span>
-just<span class="w"> </span>neo4j-upload-mediadive-custom
-</code></pre></div>
+<p>```bash</p>
+<h1 id="option-a-merged-kgx-curated-google-sheets-data">Option A: Merged KGX (curated Google Sheets data)</h1>
+<h1 id="-experimental-strains-media-growth-results">- Experimental strains, media, growth results</h1>
+<h1 id="-requires-just-kgx-merge-all">- Requires: just kgx-merge-all</h1>
+<p>just neo4j-upload-merged</p>
+<h1 id="option-b-mediadive-kgx-reference-database">Option B: MediaDive KGX (reference database)</h1>
+<h1 id="-full-mediadive-growth-media-collection">- Full MediaDive growth media collection</h1>
+<h1 id="-proper-list-handling-xref-synonym-as-arrays">- Proper list handling (xref, synonym as arrays)</h1>
+<p>just neo4j-upload-mediadive</p>
+<h1 id="option-c-mediadive-with-custom-labels">Option C: MediaDive with custom labels</h1>
+<h1 id="-custom-labels-growthmedium-strain-ingredient-solution">- Custom labels (GrowthMedium, Strain, Ingredient, Solution)</h1>
+<h1 id="-lists-stored-as-pipe-delimited-strings">- Lists stored as pipe-delimited strings</h1>
+<p>just neo4j-upload-mediadive-custom
+```</p>
 <h3 id="step-5-query-and-explore">Step 5: Query and Explore</h3>
 <p><strong>Neo4j Browser:</strong> http://localhost:7474</p>
 <p><strong>Sample queries:</strong>
-<div class="highlight"><pre><span></span><code><span class="err">--</span><span class="w"> </span><span class="n">Count</span><span class="w"> </span><span class="n">nodes</span><span class="w"> </span><span class="k">by</span><span class="w"> </span><span class="n">category</span>
-<span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">n</span><span class="p">)</span><span class="w"> </span><span class="k">RETURN</span><span class="w"> </span><span class="n">n</span><span class="p">.</span><span class="n">category</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">(*)</span><span class="w"> </span><span class="k">ORDER</span><span class="w"> </span><span class="k">BY</span><span class="w"> </span><span class="n">count</span><span class="p">(*)</span><span class="w"> </span><span class="k">DESC</span>
-
-<span class="err">--</span><span class="w"> </span><span class="n">Find</span><span class="w"> </span><span class="n">media</span><span class="w"> </span><span class="n">containing</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">specific</span><span class="w"> </span><span class="n">ingredient</span>
-<span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">m</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">CONTAINS</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="p">=</span><span class="w"> </span><span class="s">&#39;Agar&#39;</span>
-<span class="k">RETURN</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">id</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="m">10</span>
-
-<span class="err">--</span><span class="w"> </span><span class="n">Find</span><span class="w"> </span><span class="n">strains</span><span class="w"> </span><span class="n">that</span><span class="w"> </span><span class="n">grow</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="n">medium</span>
-<span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">s</span><span class="p">)</span><span class="o">-[</span><span class="p">:</span><span class="n">GROWS_IN</span><span class="o">]-&gt;</span><span class="p">(</span><span class="n">m</span><span class="p">)</span>
-<span class="k">WHERE</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="n">name</span><span class="w"> </span><span class="n">CONTAINS</span><span class="w"> </span><span class="s">&#39;Nutrient&#39;</span>
-<span class="k">RETURN</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="n">culture_collection_id</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="m">10</span>
-
-<span class="err">--</span><span class="w"> </span><span class="n">Get</span><span class="w"> </span><span class="n">ingredient</span><span class="w"> </span><span class="n">cross</span><span class="err">-</span><span class="n">references</span>
-<span class="k">MATCH</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="p">:</span><span class="n">Node</span><span class="p">)</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">xref</span><span class="w"> </span><span class="n">IS</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span>
-<span class="k">RETURN</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">.</span><span class="n">xref</span><span class="w"> </span><span class="k">LIMIT</span><span class="w"> </span><span class="m">10</span>
-</code></pre></div></p>
+```cypher
+-- Count nodes by category
+MATCH (n) RETURN n.category, count(<em>) ORDER BY count(</em>) DESC</p>
+<p>-- Find media containing a specific ingredient
+MATCH (m)-[:CONTAINS]-&gt;(i)
+WHERE i.name = 'Agar'
+RETURN m.name, m.id LIMIT 10</p>
+<p>-- Find strains that grow on a medium
+MATCH (s)-[:GROWS_IN]-&gt;(m)
+WHERE m.name CONTAINS 'Nutrient'
+RETURN s.name, s.culture_collection_id LIMIT 10</p>
+<p>-- Get ingredient cross-references
+MATCH (i:Node) WHERE i.xref IS NOT NULL
+RETURN i.name, i.xref LIMIT 10
+```</p>
 <h2 id="google-sheets-pipeline">Google Sheets Pipeline</h2>
 <p>Separate from MediaDive, data can also come from Google Sheets:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Download sheets to TSV</span>
-just<span class="w"> </span>download-sheets
-
-<span class="c1"># Export to KGX (strains, growth, media-ingredients)</span>
-just<span class="w"> </span>strains-kgx-from-curies<span class="w"> </span>&lt;input.tsv&gt;<span class="w"> </span>&lt;id_column&gt;
-just<span class="w"> </span>kgx-export-growth
-just<span class="w"> </span>kgx-export-media-ingredients
-
-<span class="c1"># Or all at once</span>
-just<span class="w"> </span>kgx-export-all
-</code></pre></div>
+<p>```bash</p>
+<h1 id="download-sheets-to-tsv">Download sheets to TSV</h1>
+<p>just download-sheets</p>
+<h1 id="export-to-kgx-strains-growth-media-ingredients">Export to KGX (strains, growth, media-ingredients)</h1>
+<p>just strains-kgx-from-curies <input.tsv> <id_column>
+just kgx-export-growth
+just kgx-export-media-ingredients</p>
+<h1 id="or-all-at-once">Or all at once</h1>
+<p>just kgx-export-all
+```</p>
 <h2 id="troubleshooting">Troubleshooting</h2>
 <h3 id="mongodb-connection-issues">MongoDB Connection Issues</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Check if mongod is running</span>
-sudo<span class="w"> </span>systemctl<span class="w"> </span>status<span class="w"> </span>mongod
-
-<span class="c1"># Check connection</span>
-mongosh<span class="w"> </span>--eval<span class="w"> </span><span class="s2">&quot;db.adminCommand(&#39;ping&#39;)&quot;</span>
-</code></pre></div>
+<p>```bash</p>
+<h1 id="check-if-mongod-is-running">Check if mongod is running</h1>
+<p>sudo systemctl status mongod</p>
+<h1 id="check-connection">Check connection</h1>
+<p>mongosh --eval "db.adminCommand('ping')"
+```</p>
 <h3 id="neo4j-issues">Neo4j Issues</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Check container status</span>
-just<span class="w"> </span>neo4j-status
-
-<span class="c1"># View logs</span>
-docker<span class="w"> </span>logs<span class="w"> </span>cmm-neo4j
-
-<span class="c1"># Full reset (deletes all data)</span>
-just<span class="w"> </span>neo4j-clean
-just<span class="w"> </span>neo4j-start
-</code></pre></div>
+<p>```bash</p>
+<h1 id="check-container-status">Check container status</h1>
+<p>just neo4j-status</p>
+<h1 id="view-logs">View logs</h1>
+<p>docker logs cmm-neo4j</p>
+<h1 id="full-reset-deletes-all-data">Full reset (deletes all data)</h1>
+<p>just neo4j-clean
+just neo4j-start
+```</p>
 <h3 id="kgx-export-issues">KGX Export Issues</h3>
-<div class="highlight"><pre><span></span><code><span class="c1"># Verify MongoDB has data</span>
-mongosh<span class="w"> </span>mediadive<span class="w"> </span>--eval<span class="w"> </span><span class="s2">&quot;db.media_details.countDocuments()&quot;</span>
-
-<span class="c1"># Check output files</span>
-ls<span class="w"> </span>-la<span class="w"> </span>output/kgx/
-</code></pre></div>
+<p>```bash</p>
+<h1 id="verify-mongodb-has-data">Verify MongoDB has data</h1>
+<p>mongosh mediadive --eval "db.media_details.countDocuments()"</p>
+<h1 id="check-output-files">Check output files</h1>
+<p>ls -la output/kgx/
+```</p>
 
 
 

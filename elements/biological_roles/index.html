@@ -596,17 +596,19 @@ Alias: biological_roles</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biological_roles</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Biological</span><span class="nv"> </span><span class="s">roles</span><span class="nv"> </span><span class="s">from</span><span class="nv"> </span><span class="s">ChEBI</span><span class="nv"> </span><span class="s">(ChEBI</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">authoritative).</span><span class="nv"> </span><span class="s">Examples:</span><span class="nv"> </span><span class="s">nutrient,</span>
-<span class="w">  </span><span class="s">metabolite,</span><span class="nv"> </span><span class="s">cofactor.&#39;</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">biological_roles</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnrichedIngredient</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
-<span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
+```yaml
+name: biological_roles
+description: 'Biological roles from ChEBI (ChEBI is authoritative). Examples: nutrient,
+  metabolite, cofactor.'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: biological_roles
+domain_of:
+- EnrichedIngredient
+range: string
+multivalued: true
+
+```
 </details>
 
 

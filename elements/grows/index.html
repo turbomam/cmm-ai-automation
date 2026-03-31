@@ -591,16 +591,18 @@ Alias: grows</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grows</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;True</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">strain</span><span class="nv"> </span><span class="s">grows</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">medium,</span><span class="nv"> </span><span class="s">false</span><span class="nv"> </span><span class="s">if</span><span class="nv"> </span><span class="s">it</span><span class="nv"> </span><span class="s">does</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">grow.</span><span class="nv"> </span><span class="s">Determines</span>
-<span class="w">  </span><span class="s">predicate:</span><span class="nv"> </span><span class="s">true</span><span class="nv"> </span><span class="s">→</span><span class="nv"> </span><span class="s">METPO:2000517,</span><span class="nv"> </span><span class="s">false</span><span class="nv"> </span><span class="s">→</span><span class="nv"> </span><span class="s">METPO:2000518.&#39;</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">grows</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GrowthPreference</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
-</code></pre></div>
+```yaml
+name: grows
+description: 'True if strain grows in medium, false if it does not grow. Determines
+  predicate: true → METPO:2000517, false → METPO:2000518.'
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: grows
+domain_of:
+- GrowthPreference
+range: boolean
+
+```
 </details>
 
 

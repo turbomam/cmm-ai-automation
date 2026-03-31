@@ -560,13 +560,13 @@ Alias: has_ingredient_component</p>
 <td>no</td>
 </tr>
 <tr>
-<td><a href="../Mixture/">Mixture</a></td>
-<td>Abstract base class for things composed of ingredients</td>
+<td><a href="../Solution/">Solution</a></td>
+<td>A pre-made concentrated mixture of ingredients, typically diluted into media</td>
 <td>no</td>
 </tr>
 <tr>
-<td><a href="../Solution/">Solution</a></td>
-<td>A pre-made concentrated mixture of ingredients, typically diluted into media</td>
+<td><a href="../Mixture/">Mixture</a></td>
+<td>Abstract base class for things composed of ingredients</td>
 <td>no</td>
 </tr>
 </tbody>
@@ -606,18 +606,20 @@ Alias: has_ingredient_component</p>
 </table>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_ingredient_component</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Ingredients contained in this mixture with their concentrations</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">alias</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">has_ingredient_component</span>
-<span class="nt">domain_of</span><span class="p">:</span>
-<span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Mixture</span>
-<span class="nt">range</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">IngredientComponent</span>
-<span class="nt">multivalued</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="nt">inlined</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-<span class="nt">inlined_as_list</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
-</code></pre></div>
+```yaml
+name: has_ingredient_component
+description: Ingredients contained in this mixture with their concentrations
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+alias: has_ingredient_component
+domain_of:
+- Mixture
+range: IngredientComponent
+multivalued: true
+inlined: true
+inlined_as_list: true
+
+```
 </details>
 
 

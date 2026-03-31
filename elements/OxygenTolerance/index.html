@@ -589,27 +589,29 @@
 </ul>
 <h2 id="linkml-source">LinkML Source</h2>
 <details>
-<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">OxygenTolerance</span>
-<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Oxygen requirement categories for microorganisms.</span>
-<span class="nt">from_schema</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://w3id.org/turbomam/cmm-ai-automation</span>
-<span class="nt">rank</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1000</span>
-<span class="nt">permissible_values</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">aerobe</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aerobe</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Requires oxygen for growth.</span>
-<span class="w">  </span><span class="nt">anaerobe</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">anaerobe</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cannot tolerate oxygen; grows only anaerobically.</span>
-<span class="w">  </span><span class="nt">facultative_anaerobe</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">facultative_anaerobe</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Can grow with or without oxygen.</span>
-<span class="w">  </span><span class="nt">microaerophile</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">microaerophile</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Requires low oxygen concentrations.</span>
-<span class="w">  </span><span class="nt">aerotolerant_anaerobe</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">text</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">aerotolerant_anaerobe</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Anaerobic metabolism but tolerates oxygen.</span>
-</code></pre></div>
+```yaml
+name: OxygenTolerance
+description: Oxygen requirement categories for microorganisms.
+from_schema: https://w3id.org/turbomam/cmm-ai-automation
+rank: 1000
+permissible_values:
+  aerobe:
+    text: aerobe
+    description: Requires oxygen for growth.
+  anaerobe:
+    text: anaerobe
+    description: Cannot tolerate oxygen; grows only anaerobically.
+  facultative_anaerobe:
+    text: facultative_anaerobe
+    description: Can grow with or without oxygen.
+  microaerophile:
+    text: microaerophile
+    description: Requires low oxygen concentrations.
+  aerotolerant_anaerobe:
+    text: aerotolerant_anaerobe
+    description: Anaerobic metabolism but tolerates oxygen.
+
+```
 </details>
 
 

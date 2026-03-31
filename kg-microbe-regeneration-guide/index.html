@@ -467,167 +467,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#download-step" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Download Step
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Download Step">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#mediadive-special-handling" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        MediaDive Special Handling
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#transform-step" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Transform Step
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Transform Step">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#ontology-processing" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Ontology Processing
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#pre-processed-files" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Pre-processed Files
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Pre-processed Files">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#potential-workarounds-for-slow-downloads" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Potential Workarounds for Slow Downloads
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#memory-requirements" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Memory Requirements
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#output-locations" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Output Locations
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#testingsnippet-mode" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Testing/Snippet Mode
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#makefile-targets" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Makefile Targets
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#edge-pattern-analysis" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Edge Pattern Analysis
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#resolved-questions" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Resolved Questions
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#todo-investigate" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        TODO: Investigate
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -655,25 +494,23 @@
 </blockquote>
 <h2 id="overview">Overview</h2>
 <p>To regenerate KG-Microbe transformations from scratch:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/kg-microbe
-poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>download<span class="w">    </span><span class="c1"># Download raw data</span>
-poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w">   </span><span class="c1"># Transform to KGX format</span>
-poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>merge<span class="w">       </span><span class="c1"># Merge transformed graphs</span>
-</code></pre></div>
+<p><code>bash
+cd ~/gitrepos/kg-microbe
+poetry run kg download    # Download raw data
+poetry run kg transform   # Transform to KGX format
+poetry run kg merge       # Merge transformed graphs</code></p>
 <h2 id="quick-start-using-pre-processed-databases">Quick Start: Using Pre-processed Databases</h2>
 <p><strong>To avoid slow ontology processing (saves hours + 500GB RAM), download pre-built databases:</strong></p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/gitrepos/kg-microbe
-
-<span class="c1"># Option A: Download just ChEBI (3.7 GB) - for testing or madin_etal transform</span>
-wget<span class="w"> </span><span class="s1">&#39;https://drive.google.com/uc?export=download&amp;id=1UlQW9oXu7f7Y3FTVCVvGc1lH-_we9ds6&#39;</span><span class="w"> </span>-O<span class="w"> </span>data/raw/chebi.db
-
-<span class="c1"># Option B: Download full raw data tarball (includes both chebi.db and ncbitaxon.db)</span>
-wget<span class="w"> </span>https://portal.nersc.gov/project/m4689/KGMicrobe-raw-20250222.tar.gz
-tar<span class="w"> </span>-xzf<span class="w"> </span>KGMicrobe-raw-20250222.tar.gz<span class="w"> </span>-C<span class="w"> </span>data/raw/
-
-<span class="c1"># Then run transform (skips ROBOT processing for ontologies with .db files)</span>
-poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>transform<span class="w"> </span>-s<span class="w"> </span>madin_etal<span class="w">  </span><span class="c1"># Or other sources</span>
-</code></pre></div>
+<p>```bash
+cd ~/gitrepos/kg-microbe</p>
+<h1 id="option-a-download-just-chebi-37-gb-for-testing-or-madin_etal-transform">Option A: Download just ChEBI (3.7 GB) - for testing or madin_etal transform</h1>
+<p>wget 'https://drive.google.com/uc?export=download&amp;id=1UlQW9oXu7f7Y3FTVCVvGc1lH-_we9ds6' -O data/raw/chebi.db</p>
+<h1 id="option-b-download-full-raw-data-tarball-includes-both-chebidb-and-ncbitaxondb">Option B: Download full raw data tarball (includes both chebi.db and ncbitaxon.db)</h1>
+<p>wget https://portal.nersc.gov/project/m4689/KGMicrobe-raw-20250222.tar.gz
+tar -xzf KGMicrobe-raw-20250222.tar.gz -C data/raw/</p>
+<h1 id="then-run-transform-skips-robot-processing-for-ontologies-with-db-files">Then run transform (skips ROBOT processing for ontologies with .db files)</h1>
+<p>poetry run kg transform -s madin_etal  # Or other sources
+```</p>
 <h2 id="download-step">Download Step</h2>
 <p>Downloads data from <code>download.yaml</code> into <code>data/raw/</code>:</p>
 <p><strong>Key ontology files downloaded:</strong>
@@ -715,8 +552,8 @@ poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </sp
 3. Converts to JSON: <code>ncbitaxon_removed_subset.json</code>
 4. Transforms to KGX format</p>
 <p><strong>Environment variables for ROBOT:</strong>
-<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">ROBOT_JAVA_ARGS</span><span class="o">=</span><span class="s2">&quot;-Xmx12g -XX:+UseG1GC&quot;</span><span class="w">  </span><span class="c1"># Adjust memory as needed</span>
-</code></pre></div></p>
+<code>bash
+export ROBOT_JAVA_ARGS="-Xmx12g -XX:+UseG1GC"  # Adjust memory as needed</code></p>
 <h2 id="pre-processed-files">Pre-processed Files</h2>
 <p><strong>SQLite databases in <code>data/raw/</code>:</strong>
 - <code>ncbitaxon.db</code> (11 GB) - Pre-processed NCBITaxon
@@ -726,12 +563,12 @@ poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </sp
 <p><strong>Option 1: Download pre-processed SQLite databases from Google Drive (RECOMMENDED)</strong></p>
 <p>Skip the slow ROBOT processing by downloading pre-built SQLite databases:</p>
 <p><strong>ChEBI database (3.7 GB):</strong>
-<div class="highlight"><pre><span></span><code><span class="c1"># Download from Google Drive</span>
-https://drive.google.com/file/d/1UlQW9oXu7f7Y3FTVCVvGc1lH-_we9ds6/view?usp<span class="o">=</span>drive_link
-
-<span class="c1"># Save to kg-microbe/data/raw/chebi.db</span>
-<span class="c1"># Then skip the chebi transform step</span>
-</code></pre></div></p>
+```bash</p>
+<h1 id="download-from-google-drive">Download from Google Drive</h1>
+<p>https://drive.google.com/file/d/1UlQW9oXu7f7Y3FTVCVvGc1lH-_we9ds6/view?usp=drive_link</p>
+<h1 id="save-to-kg-microbedatarawchebidb">Save to kg-microbe/data/raw/chebi.db</h1>
+<h1 id="then-skip-the-chebi-transform-step">Then skip the chebi transform step</h1>
+<p>```</p>
 <p><strong>NCBITaxon database (11.8 GB):</strong>
 - Download from NERSC portal: https://portal.nersc.gov/project/m4689/KGMicrobe-raw-20250222.tar.gz
 - This tarball (KGMicrobe-raw-20250222.tar.gz) contains ALL raw data including both .db files
@@ -763,7 +600,7 @@ https://drive.google.com/file/d/1UlQW9oXu7f7Y3FTVCVvGc1lH-_we9ds6/view?usp<span 
 - Consider using NERSC or other HPC resources for full pipeline</p>
 <h2 id="output-locations">Output Locations</h2>
 <p><strong>Transformed data:</strong>
-<div class="highlight"><pre><span></span><code>data/transformed/
+<code>data/transformed/
 ├── bacdive/
 │   ├── edges.tsv (127M)
 │   ├── nodes.tsv (13M)
@@ -773,26 +610,24 @@ https://drive.google.com/file/d/1UlQW9oXu7f7Y3FTVCVvGc1lH-_we9ds6/view?usp<span 
 │   └── nodes.tsv
 └── madin_etal/
     ├── edges.tsv
-    └── nodes.tsv
-</code></pre></div></p>
+    └── nodes.tsv</code></p>
 <p><strong>Merged data:</strong>
-<div class="highlight"><pre><span></span><code>data/merged/kg-microbe-core/
-data/merged/kg-microbe-biomedical/
-</code></pre></div></p>
+<code>data/merged/kg-microbe-core/
+data/merged/kg-microbe-biomedical/</code></p>
 <h2 id="testingsnippet-mode">Testing/Snippet Mode</h2>
 <p>For testing without full downloads:
-<div class="highlight"><pre><span></span><code>poetry<span class="w"> </span>run<span class="w"> </span>kg<span class="w"> </span>download<span class="w"> </span>--snippet-only<span class="w">  </span><span class="c1"># Downloads only first 5 KB of each source</span>
-</code></pre></div></p>
+<code>bash
+poetry run kg download --snippet-only  # Downloads only first 5 KB of each source</code></p>
 <h2 id="makefile-targets">Makefile Targets</h2>
 <p>Additional useful targets:
-<div class="highlight"><pre><span></span><code>make<span class="w"> </span>run-summary<span class="w">          </span><span class="c1"># Show statistics on merged KG</span>
-make<span class="w"> </span>neo4j-upload<span class="w">         </span><span class="c1"># Upload to Neo4j</span>
-</code></pre></div></p>
+<code>bash
+make run-summary          # Show statistics on merged KG
+make neo4j-upload         # Upload to Neo4j</code></p>
 <h2 id="edge-pattern-analysis">Edge Pattern Analysis</h2>
 <p>After transform, analyze edge patterns:
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>~/gitrepos/cmm-ai-automation/src/cmm_ai_automation/scripts/edge_patterns_by_source.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>~/gitrepos/kg-microbe/data/transformed<span class="w"> </span>&gt;<span class="w"> </span>edge_patterns.tsv
-</code></pre></div></p>
+<code>bash
+python ~/gitrepos/cmm-ai-automation/src/cmm_ai_automation/scripts/edge_patterns_by_source.py \
+  ~/gitrepos/kg-microbe/data/transformed &gt; edge_patterns.tsv</code></p>
 <h2 id="resolved-questions">Resolved Questions</h2>
 <ul>
 <li>✅ <strong>Where do <code>ncbitaxon.db</code> and <code>chebi.db</code> come from?</strong></li>

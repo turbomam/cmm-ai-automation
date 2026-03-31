@@ -467,95 +467,6 @@
   
 </li>
       
-        <li class="md-nav__item">
-  <a href="#quality-audit" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Quality Audit
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Quality Audit">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#1-high-confidence-matches-valid" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        1. High-Confidence Matches (Valid)
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#2-low-confidence-matches-false-positives" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        2. Low-Confidence Matches (False Positives)
-      
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Low-Confidence Matches (False Positives)">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#case-study-mp-medium" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Case Study: "MP medium"
-      
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#case-study-lb-medium" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Case Study: "LB medium"
-      
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#impact-on-knowledge-graph" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Impact on Knowledge Graph
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#recommended-mitigation" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Recommended Mitigation
-      
-    </span>
-  </a>
-  
-</li>
-      
     </ul>
   
 </nav>
@@ -585,9 +496,10 @@
 <p>Our investigation reveals that these mappings were generated using broad keyword matching strategies, resulting in a high rate of false positives that require filtering.</p>
 <h2 id="provenance-investigation">Provenance Investigation</h2>
 <p>Code analysis of the sibling <code>CMM-AI</code> repository (specifically <code>src/media_search.py</code>) identified the likely mechanism for generating these links:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># Query pattern found in CMM-AI/src/media_search.py</span>
-<span class="n">query</span> <span class="o">=</span> <span class="s2">&quot;SELECT * FROM nodes WHERE id LIKE &#39;medium:%&#39; AND name LIKE &#39;%</span><span class="si">{keyword}</span><span class="s2">%&#39;&quot;</span>
-</code></pre></div>
+<p>```python</p>
+<h1 id="query-pattern-found-in-cmm-aisrcmedia_searchpy">Query pattern found in CMM-AI/src/media_search.py</h1>
+<p>query = "SELECT * FROM nodes WHERE id LIKE 'medium:%' AND name LIKE '%{keyword}%'"
+```</p>
 <p>This approach uses a SQL-style <code>LIKE</code> operator on the media name. While effective for recall, it lacks semantic disambiguation, causing common acronyms (like "MP") to match unrelated media that merely contain those letters in their name.</p>
 <h2 id="quality-audit">Quality Audit</h2>
 <p>We audited the mappings against the <strong>MediaDive</strong> database (the source of <code>medium:</code> IDs) and <strong>TogoMedium</strong>.</p>
