@@ -14,4 +14,4 @@ Only the latest release is supported with security updates.
 
 ## Security Updates
 
-Dependencies are monitored by Dependabot. Security updates are applied as they become available.
+GitHub Actions dependencies are monitored by Dependabot. Security updates for Python dependencies are applied manually as they become available.
