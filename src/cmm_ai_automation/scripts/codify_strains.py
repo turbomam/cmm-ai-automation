@@ -41,7 +41,7 @@ logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
 DEFAULT_INPUT = "./data/private/strains.tsv"
-DEFAULT_CHROMA_PATH = "./data/chroma_ncbitaxon"
+DEFAULT_CHROMA_PATH = "/media/mark/990PRO-2TB/chromadb/cmm-ai-automation/chroma_ncbitaxon"
 DEFAULT_COLLECTION_NAME = "ncbitaxon_embeddings"
 DEFAULT_DISTANCE_THRESHOLD = 0.3
 EMBEDDING_MODEL = "text-embedding-3-small"

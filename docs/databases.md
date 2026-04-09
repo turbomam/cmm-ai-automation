@@ -67,13 +67,17 @@ This document describes the databases used by cmm-ai-automation and the scripts 
 
 ### NCBITaxon ChromaDB
 
-- **Path**: `data/chroma_ncbitaxon`
+- **Path**: `/media/mark/990PRO-2TB/chromadb/cmm-ai-automation/chroma_ncbitaxon` (990PRO portable NVMe)
 - **Size**: ~18 GB
 - **Collection**: `ncbitaxon_embeddings`
 - **Indexer**: `src/cmm_ai_automation/scripts/build_ncbitaxon_chromadb.py`
-- **Description**: Pre-computed embeddings for the entire NCBITaxon ontology (~2M+ terms) for semantic search of taxonomic terms. Uses `text-embedding-3-small` embeddings.
-- **Source**: OLS (Ontology Lookup Service) embeddings SQLite database
+- **Description**: Pre-computed embeddings for the entire NCBITaxon ontology (~2.65M terms) for semantic search of taxonomic terms. Uses `text-embedding-3-small` embeddings.
+- **Source**: OLS embeddings SQLite database at `/media/mark/990PRO-2TB/OLS/legacy-sqlite/embeddings.db`
 - **Used by**: `codify_strains.py` for finding NCBITaxon IDs from strain names
+
+> **Note (2026-03-05):** All ChromaDB stores moved from `data/` to 990PRO-2TB portable NVMe.
+> BacDive and MediaDive ChromaDB stores also at `/media/mark/990PRO-2TB/chromadb/cmm-ai-automation/`.
+> Python script defaults updated accordingly. See `/media/mark/990PRO-2TB/chromadb/cmm-ai-automation/README.md` for full inventory.
 
 ---
 

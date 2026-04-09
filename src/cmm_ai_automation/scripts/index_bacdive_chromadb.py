@@ -24,7 +24,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # ChromaDB path
-CHROMA_PATH = "data/chroma_bacdive"
+CHROMA_PATH = "/media/mark/990PRO-2TB/chromadb/cmm-ai-automation/chroma_bacdive"
 
 
 def normalize_culture_collection_id(raw_id: str) -> list[str]:

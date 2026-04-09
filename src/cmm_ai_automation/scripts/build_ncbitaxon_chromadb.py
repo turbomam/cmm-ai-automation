@@ -27,8 +27,8 @@ from tqdm import tqdm  # type: ignore[import-untyped]
 logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
 logger = logging.getLogger(__name__)
 
-DEFAULT_SOURCE_DB = "/home/mark/work/large/ontologies/embeddings.db"
-DEFAULT_CHROMA_PATH = "./data/chroma_ncbitaxon"
+DEFAULT_SOURCE_DB = "/media/mark/990PRO-2TB/OLS/legacy-sqlite/embeddings.db"
+DEFAULT_CHROMA_PATH = "/media/mark/990PRO-2TB/chromadb/cmm-ai-automation/chroma_ncbitaxon"
 DEFAULT_COLLECTION_NAME = "ncbitaxon_embeddings"
 BATCH_SIZE = 5000
 

@@ -360,7 +360,7 @@ A local copy of OLS text embeddings is available for semantic search and term ma
 
 | Property | Value |
 |----------|-------|
-| Location | `/home/mark/work/large/ontologies/embeddings.db` |
+| Location | `/media/mark/990PRO-2TB/OLS/legacy-sqlite/embeddings.db` |
 | Size | 288 GB |
 | Total embeddings | ~9.5 million |
 | Model | OpenAI `text-embedding-3-small` (1536 dimensions) |

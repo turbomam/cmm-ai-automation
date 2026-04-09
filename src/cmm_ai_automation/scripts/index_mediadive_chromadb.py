@@ -26,7 +26,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-CHROMA_PATH = "data/chroma_mediadive"
+CHROMA_PATH = "/media/mark/990PRO-2TB/chromadb/cmm-ai-automation/chroma_mediadive"
 MONGODB_URI = "mongodb://localhost:27017/"
 
 # Test cases derived from Google Sheet TSVs
