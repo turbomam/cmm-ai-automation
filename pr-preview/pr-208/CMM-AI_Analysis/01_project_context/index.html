@@ -1,0 +1,951 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://turbomam.github.io/cmm-ai-automation/CMM-AI_Analysis/01_project_context/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.0">
+    
+    
+      
+        <title>Chapter 1: Project Context - cmm-ai-automation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.618322db.min.css">
+      
+      
+
+
+    
+    
+
+      
+    
+<script src="../../assets/pymdownx-extras/material-extra-theme-2ek1P7jT.js" type="text/javascript"></script>
+<script src="../../assets/pymdownx-extras/material-extra-3rdparty-BUCF4rjN.js" type="text/javascript"></script>
+
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../css/ansi-colours.css">
+    
+      <link rel="stylesheet" href="../../css/jupyter-cells.css">
+    
+      <link rel="stylesheet" href="../../css/pandas-dataframe.css">
+    
+      <link rel="stylesheet" href="../../assets/pymdownx-extras/extra-c6ab11540a.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#chapter-1-project-context" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+
+<header class="md-header" data-md-component="header">
+  <nav
+    class="md-header__inner md-grid"
+    aria-label="header.title"
+  >
+    <a
+      href="https://turbomam.github.io/cmm-ai-automation/"
+      title="cmm-ai-automation"
+      class="md-header__button md-logo"
+      aria-label="cmm-ai-automation"
+    >
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            cmm-ai-automation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Chapter 1: Project Context
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="md-header__options">
+      <div class="md-header-nav__scheme md-header-nav__button md-source__icon md-icon">
+          <a
+            href="javascript:toggleScheme();"
+            title="Light mode"
+            class="light-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="Dark mode"
+            class="dark-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+          </a>
+          <a
+            href="javascript:toggleScheme();"
+            title="System preference"
+            class="system-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M7.5 2c-1.79 1.15-3 3.18-3 5.5s1.21 4.35 3.03 5.5C4.46 13 2 10.54 2 7.5A5.5 5.5 0 0 1 7.5 2m11.57 1.5 1.43 1.43L4.93 20.5 3.5 19.07zm-6.18 2.43L11.41 5 9.97 6l.42-1.7L9 3.24l1.75-.12.58-1.65L12 3.1l1.73.03-1.35 1.13zm-3.3 3.61-1.16-.73-1.12.78.34-1.32-1.09-.83 1.36-.09.45-1.29.51 1.27 1.36.03-1.05.87zM19 13.5a5.5 5.5 0 0 1-5.5 5.5c-1.22 0-2.35-.4-3.26-1.07l7.69-7.69c.67.91 1.07 2.04 1.07 3.26m-4.4 6.58 2.77-1.15-.24 3.35zm4.33-2.7 1.15-2.77 2.2 2.54zm1.15-4.96-1.14-2.78 3.34.24zM9.63 18.93l2.77 1.15-2.53 2.19z"/></svg>
+          </a>
+           <a
+            href="javascript:toggleScheme();"
+            title="Unknown scheme"
+            class="unknown-mode"
+          >
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m15.07 11.25-.9.92C13.45 12.89 13 13.5 13 15h-2v-.5c0-1.11.45-2.11 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41a2 2 0 0 0-2-2 2 2 0 0 0-2 2H8a4 4 0 0 1 4-4 4 4 0 0 1 4 4 3.2 3.2 0 0 1-.93 2.25M13 19h-2v-2h2M12 2A10 10 0 0 0 2 12a10 10 0 0 0 10 10 10 10 0 0 0 10-10c0-5.53-4.5-10-10-10"/></svg>
+          </a>
+      </div>
+    </div>
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="cmm-ai-automation" class="md-nav__button md-logo" aria-label="cmm-ai-automation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m19 2-5 4.5v11l5-4.5zM6.5 5C4.55 5 2.45 5.4 1 6.5v14.66c0 .25.25.5.5.5.1 0 .15-.07.25-.07 1.35-.65 3.3-1.09 4.75-1.09 1.95 0 4.05.4 5.5 1.5 1.35-.85 3.8-1.5 5.5-1.5 1.65 0 3.35.31 4.75 1.06.1.05.15.03.25.03.25 0 .5-.25.5-.5V6.5c-.6-.45-1.25-.75-2-1V19c-1.1-.35-2.3-.5-3.5-.5-1.7 0-4.15.65-5.5 1.5V6.5C10.55 5.4 8.45 5 6.5 5"/></svg>
+
+    </a>
+    cmm-ai-automation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/turbomam/cmm-ai-automation" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../best-practices/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Best Practices
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../elements/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Schema
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../togomedium/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    TogoMedium
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../about/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    About
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#doe-ber-critical-minerals-proposal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DOE BER Critical Minerals Proposal
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DOE BER Critical Minerals Proposal">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#funding-leadership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Funding &amp; Leadership
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scientific-goals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scientific Goals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-knowledge-graph-kg-cmree" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Knowledge Graph (KG-CMREE)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-11-from-proposal-aiml-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1.1 from Proposal (AI/ML Framework)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#year-1-deliverables-relevant-to-data" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Year 1 Deliverables (Relevant to Data)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-organisms-mentioned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Organisms Mentioned
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-chemicalsmolecules" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Chemicals/Molecules
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connection-to-ber-data-lakehouse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection to BER Data Lakehouse
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-data-tables-map-to-proposal-tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Data Tables Map to Proposal Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Data Tables Map to Proposal Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-intended-data-flow-from-proposal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Intended Data Flow (from Proposal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-sheets-should-capture-based-on-proposal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Sheets SHOULD Capture (Based on Proposal)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Problem
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+  
+                  
+
+
+  
+  
+
+
+<h1 id="chapter-1-project-context">Chapter 1: Project Context</h1>
+<p><a href="../00_index/">&lt;- Back to Index</a> | <a href="../02_data_model_analysis/">Next: Data Model Analysis -&gt;</a></p>
+<hr />
+<h2 id="doe-ber-critical-minerals-proposal">DOE BER Critical Minerals Proposal</h2>
+<h3 id="funding-leadership">Funding &amp; Leadership</h3>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Project Title</strong></td>
+<td>Advanced Biorecovery of Critical Minerals through AI/ML-Guided Design of Microbial Chassis and Bioadsorbent</td>
+</tr>
+<tr>
+<td><strong>Prime Lab</strong></td>
+<td>Lawrence Berkeley National Laboratory</td>
+</tr>
+<tr>
+<td><strong>Partner</strong></td>
+<td>University of California, Berkeley</td>
+</tr>
+<tr>
+<td><strong>Principal Investigator</strong></td>
+<td>Ning Sun (nsun@lbl.gov)</td>
+</tr>
+<tr>
+<td><strong>Co-PIs</strong></td>
+<td>Marcin Joachimiak, Rebecca Abergel, Romy Chakraborty, Yasuo Yoshikuni, N. Cecilia Martinez-Gomez</td>
+</tr>
+<tr>
+<td><strong>Funding</strong></td>
+<td>$850,000</td>
+</tr>
+<tr>
+<td><strong>Period</strong></td>
+<td>12 months (Year 1)</td>
+</tr>
+<tr>
+<td><strong>Proposal Document</strong></td>
+<td><code>data/proposal/BER CMM Pilot Proposal-revised .docx</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="scientific-goals">Scientific Goals</h3>
+<p>The project aims to develop <strong>AI/ML-guided biorecovery technology</strong> for rare earth elements (REEs) through:</p>
+<ol>
+<li><strong>Bioleaching</strong> - Microbial extraction of REEs from waste</li>
+<li><strong>Biomineralization</strong> - Microbial precipitation of REE minerals</li>
+<li><strong>Bioadsorption</strong> - Microbial binding/accumulation of REEs</li>
+</ol>
+<h3 id="the-knowledge-graph-kg-cmree">The Knowledge Graph (KG-CMREE)</h3>
+<p>From the proposal:</p>
+<blockquote>
+<p>"The AI/ML framework for microbial biomineralization centers on constructing a comprehensive AI-ready data substrate in the form of a <strong>Knowledge Graph for Critical Minerals and Rare Earth Elements (KG-CMREE)</strong>."</p>
+</blockquote>
+<p>This explains why the CMM-AI repo exists - it's building the data foundation for KG-CMREE.</p>
+<h3 id="task-11-from-proposal-aiml-framework">Task 1.1 from Proposal (AI/ML Framework)</h3>
+<blockquote>
+<p>"Working with this core data resource we will apply both symbolic rule-mining to extract interpretable IF-THEN rules and advanced graph learning techniques including Graph Transformers to rank candidate taxa, pathways, and proteins for REE recovery."</p>
+</blockquote>
+<p><strong>Multi-Agent System Components:</strong>
+- <strong>Literature and Data Mining Agent</strong> - LLM-assisted extraction from lanthanome publications
+- <strong>Experiment Design Agent</strong> - Uses historical outcomes and predictive models
+- <strong>Failure Analysis Agent</strong> - Learns from unsuccessful experiments</p>
+<h3 id="year-1-deliverables-relevant-to-data">Year 1 Deliverables (Relevant to Data)</h3>
+<ol>
+<li>Establish spectroscopic assays for REE quantification (HTP)</li>
+<li>Identify/validate microbial strains with high REE bioaccumulation via AI/ML</li>
+<li>Establish HTP pipeline for strain screening</li>
+<li><strong>Establish AI/ML-guided framework as unified source of data integration</strong></li>
+</ol>
+<hr />
+<h2 id="key-organisms-mentioned">Key Organisms Mentioned</h2>
+<ul>
+<li><em>Methylobacterium extorquens AM1</em> (methylolanthanin producer)</li>
+<li><em>Methylorubrum</em> species</li>
+<li><em>Acidithiobacillus ferrooxidans</em>, <em>A. thiooxidans</em> (extremophiles)</li>
+<li><em>Leptospirillum ferrooxidans</em>, <em>Sulfobacillus thermosulfidooxidans</em></li>
+<li><em>Pichia kudriavzevii</em> (fungal chassis)</li>
+<li>Martinez-Gomez collection (~20 strains with REE transport mechanisms)</li>
+</ul>
+<h2 id="key-chemicalsmolecules">Key Chemicals/Molecules</h2>
+<ul>
+<li><strong>Lanthanophores</strong> (REE chelators): methylolanthanin (MLL), rodopetrobactin</li>
+<li><strong>Antenna ligands</strong>: beta-diketonates, hydroxypyridinone derivatives</li>
+<li><strong>Target REEs</strong>: Eu3+, Tb3+, gadolinium</li>
+</ul>
+<hr />
+<h2 id="connection-to-ber-data-lakehouse">Connection to BER Data Lakehouse</h2>
+<p>From BBOP Slack (Chris Mungall, Oct 2025):</p>
+<blockquote>
+<p>"BER are also positioning the DLH concept more broadly for the cross-DOE AmSC, and possibly even manhattan project 2. We should make sure our groundbreaking KG work doesn't get too far ahead of DLH. It's better to own a table in the DLH and derive the KG from that than doing something unconnected."</p>
+</blockquote>
+<p>This suggests the CMM-AI data tables may eventually need to align with DOE's broader <strong>Data Lakehouse</strong> initiative, and that:
+- KG-CMREE should derive from DLH tables (not be independent)
+- There's pressure for "analytics ready flattened denormalized forms"
+- The <code>linkml/valuesets</code> repo contains "PVs for things like critical minerals"</p>
+<hr />
+<h2 id="how-data-tables-map-to-proposal-tasks">How Data Tables Map to Proposal Tasks</h2>
+<p>The 16 Google Sheet tabs are <strong>seed data for KG-CMREE</strong> - the Knowledge Graph that drives the AI/ML framework:</p>
+<table>
+<thead>
+<tr>
+<th>Data Table</th>
+<th>Proposal Connection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>taxa_and_genomes</strong></td>
+<td>Candidate taxa for REE recovery (Task 2.1: "strains from Martinez-Gomez collection ~20")</td>
+</tr>
+<tr>
+<td><strong>genes_and_proteins</strong></td>
+<td>Lanthanophore biosynthetic clusters, REE-binding proteins (Task 2.1: "novel biosynthetic clusters producing novel lanthanophores")</td>
+</tr>
+<tr>
+<td><strong>pathways</strong></td>
+<td>Metabolic pathways for REE metabolism (Task 1.1: "rank candidate taxa, pathways, and proteins")</td>
+</tr>
+<tr>
+<td><strong>chemicals</strong></td>
+<td>Lanthanophores, chelators, REEs themselves (methylolanthanin, rodopetrobactin, beta-diketonates)</td>
+</tr>
+<tr>
+<td><strong>strains</strong></td>
+<td>Martinez-Gomez collection strains, ATCC/DSMZ culture collection IDs</td>
+</tr>
+<tr>
+<td><strong>growth_media</strong> / <strong>media_ingredients</strong></td>
+<td>Culture conditions for REE bioaccumulation experiments (Task 2.1: "grown comparing use of REE in soluble vs insoluble form")</td>
+</tr>
+<tr>
+<td><strong>assays</strong></td>
+<td>TRL assay, ICP-OES, FACS methods (Task 1.2: spectroscopic assay development)</td>
+</tr>
+<tr>
+<td><strong>screening_results</strong></td>
+<td>HTP strain screening output (Task 1.3: "6,000 samples per day")</td>
+</tr>
+<tr>
+<td><strong>bioprocesses</strong></td>
+<td>Bioleaching, biomineralization, bioadsorption conditions</td>
+</tr>
+<tr>
+<td><strong>protocols</strong></td>
+<td>SOPs for the HTP pipeline</td>
+</tr>
+<tr>
+<td><strong>publications</strong></td>
+<td>Lanthanome literature for the "Literature and Data Mining Agent"</td>
+</tr>
+<tr>
+<td><strong>macromolecular_structures</strong></td>
+<td>REE-binding protein structures for AI/ML prediction</td>
+</tr>
+<tr>
+<td><strong>biosamples</strong></td>
+<td>Environmental samples for isolate discovery</td>
+</tr>
+<tr>
+<td><strong>datasets</strong> / <strong>transcriptomics</strong></td>
+<td>Multi-omics data feeding into KG-CMREE</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-intended-data-flow-from-proposal">The Intended Data Flow (from Proposal)</h3>
+<div class="highlight"><pre><span></span><code>Experimental Collaborators (Martinez-Gomez lab, etc.)
+    |
+    v
+Google Sheets (manual entry of strains, assay results, media formulations)
+    |
+    v
+KG-CMREE (Knowledge Graph)
+    |
+    v
+AI/ML Agents (Literature Mining, Experiment Design, Failure Analysis)
+    |
+    v
+DBTL Loop predictions -&gt; back to experimentalists
+</code></pre></div>
+<h3 id="why-this-matters">Why This Matters</h3>
+<p>The Google Sheets aren't just a data dump - they're <strong>the human-machine interface</strong> for the DBTL (Design-Build-Test-Learn) cycle:</p>
+<ol>
+<li><strong>Experimentalists</strong> enter screening results, new strains, assay data</li>
+<li><strong>KG-CMREE</strong> integrates this with literature and database knowledge</li>
+<li><strong>AI agents</strong> make predictions about which strains/conditions to try next</li>
+<li><strong>Results</strong> feed back into the sheets</li>
+</ol>
+<h3 id="what-the-sheets-should-capture-based-on-proposal">What the Sheets SHOULD Capture (Based on Proposal)</h3>
+<p><strong>screening_results</strong> (Task 1.3 - HTP screening pipeline):
+- Strain barcode
+- REE type tested (Eu3+, Tb3+, etc.)
+- TRL assay measurements
+- Hit classification
+- Link back to strain in strains table</p>
+<p><strong>strains</strong> (Task 2.1 - strain engineering):
+- Martinez-Gomez collection IDs
+- Lanthanophore gene clusters identified
+- Growth rate/yield on different REEs
+- Transcriptomic profile references</p>
+<p><strong>assays</strong> (Task 1.2 - spectroscopic assay development):
+- TRL assay parameters (antenna ligands, detection limits)
+- ICP-OES protocols
+- FACS sorting criteria</p>
+<p>The current tables have the right <em>structure</em> but the <em>workflow</em> for populating them from experiments isn't documented or automated.</p>
+<hr />
+<h2 id="the-core-problem">The Core Problem</h2>
+<p>The current workflow is <strong>broken for the DBTL cycle</strong> because:</p>
+<table>
+<thead>
+<tr>
+<th>Issue</th>
+<th>Impact on Proposal Goals</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>No real-time sync</strong></td>
+<td>KG-CMREE can't see latest experimental data (XLSX download is manual)</td>
+</tr>
+<tr>
+<td><strong>No structured entry</strong></td>
+<td>Experimentalists can type anything; no validation against schema</td>
+</tr>
+<tr>
+<td><strong>No provenance</strong></td>
+<td>Can't tell if a strain recommendation came from AI or was manually entered</td>
+</tr>
+<tr>
+<td><strong>Two disconnected tables</strong></td>
+<td><code>data/txt/sheet/</code> vs <code>extended/</code> means AI predictions and human data aren't merged</td>
+</tr>
+<tr>
+<td><strong>No feedback loop</strong></td>
+<td>AI agent outputs don't flow back to experimentalists in structured form</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><a href="../00_index/">&lt;- Back to Index</a> | <a href="../02_data_model_analysis/">Next: Data Model Analysis -&gt;</a></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+  
+
+              </article>
+            </div>
+          
+          
+  <script>var tabs=__md_get("__tabs");if(Array.isArray(tabs))e:for(var set of document.querySelectorAll(".tabbed-set")){var labels=set.querySelector(".tabbed-labels");for(var tab of tabs)for(var label of labels.getElementsByTagName("label"))if(label.innerText.trim()===tab){var input=document.getElementById(label.htmlFor);input.checked=!0;continue e}}</script>
+
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        
+
+<footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-copyright">
+        
+        Made with
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+          Material for MkDocs
+        </a>
+        with emoji by
+        <a href="https://github.com/twitter/twemoji" target="_blank" rel="noopener">
+          Twemoji
+        </a>
+      </div>
+      
+<div class="md-social">
+  
+</div>
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+      <div class="md-progress" data-md-component="progress" role="progressbar"></div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.tabs.link", "header.autohide", "navigation.expand", "navigation.instant", "navigation.instant.progress", "navigation.tracking", "search.suggest", "content.code.copy"], "search": "../../assets/javascripts/workers/search.7a47a382.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.e71a0d61.min.js"></script>
+      
+        <script src="../../assets/pymdownx-extras/extra-loader-B5CKpNQx.js"></script>
+      
+    
+  </body>
+</html>
